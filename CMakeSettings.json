@@ -1,0 +1,64 @@
+{
+    "configurations": [
+      {
+        "name": "x86-Debug",
+        "generator": "Visual Studio 15 2017",
+        "configurationType": "Debug",
+        "buildRoot": "${env.LOCALAPPDATA}\\CMakeBuild\\${workspaceHash}\\build\\${name}",
+        "cmakeCommandArgs": "-DCMAKE_BUILD_TYPE=Debug",
+        "buildCommandArgs": "-m -v:minimal",
+        "ctestCommandArgs": "",
+        "variables": [
+          {
+            "name": "gtest_force_shared_crt",
+            "value": "ON"
+          }
+        ]
+      },
+      {
+        "name": "x86-Release",
+        "generator": "Visual Studio 15 2017",
+        "configurationType": "Release",
+        "buildRoot": "${env.LOCALAPPDATA}\\CMakeBuild\\${workspaceHash}\\build\\${name}",
+        "cmakeCommandArgs": "-DCMAKE_BUILD_TYPE=Release",
+        "buildCommandArgs": "-m -v:minimal",
+        "ctestCommandArgs": "",
+        "variables": [
+          {
+            "name": "gtest_force_shared_crt",
+            "value": "ON"
+          }
+        ]
+      },
+      {
+        "name": "x64-Debug",
+        "generator": "Visual Studio 15 2017 Win64",
+        "configurationType": "Debug",
+        "buildRoot": "${env.LOCALAPPDATA}\\CMakeBuild\\${workspaceHash}\\build\\${name}",
+        "cmakeCommandArgs": "-DCMAKE_BUILD_TYPE=Debug",
+        "buildCommandArgs": "-m -v:minimal",
+        "ctestCommandArgs": "",
+        "variables": [
+          {
+            "name": "gtest_force_shared_crt",
+            "value": "ON"
+          }
+        ]
+      },
+      {
+        "name": "x64-Release",
+        "generator": "Visual Studio 15 2017 Win64",
+        "configurationType": "Release",
+        "buildRoot": "${env.LOCALAPPDATA}\\CMakeBuild\\${workspaceHash}\\build\\${name}",
+        "cmakeCommandArgs": "-DCMAKE_BUILD_TYPE=Release",
+        "buildCommandArgs": "-m -v:minimal",
+        "ctestCommandArgs": "",
+        "variables": [
+          {
+            "name": "gtest_force_shared_crt",
+            "value": "ON"
+          }
+        ]
+      }
+    ]
+}

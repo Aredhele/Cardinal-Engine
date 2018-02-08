@@ -30,3 +30,20 @@
 *.exe
 *.out
 *.app
+
+# CLion project
+.idea/
+cmake-build-debug/
+cmake-build-release/
+
+# Visual Studio project
+.vs/
+*.ilk
+*.pdb
+
+# Generated files
+*.pc
+
+# Own ignored files
+Lib/
+Bin/
