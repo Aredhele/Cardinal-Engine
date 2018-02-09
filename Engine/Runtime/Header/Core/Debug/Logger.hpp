@@ -1,0 +1,8 @@
+//
+// Created by Aredhele on 09/02/2018.
+//
+
+#ifndef CARDINALENGINE_LOGGER_HPP
+#define CARDINALENGINE_LOGGER_HPP
+
+#endif //CARDINALENGINE_LOGGER_HPP
