@@ -1,4 +1,5 @@
-# Copyright (C) 2017-2018 Disparity Engine
+# Copyright (C) 2018-2019 Cardinal Engine
+# Vincent STEHLY--CALISTO, vincentstehly@hotmail.fr
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +15,7 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-ADD_SUBDIRECTORY(UnitTest)
-ADD_SUBDIRECTORY(SDL2)
 ADD_SUBDIRECTORY(Glew)
+ADD_SUBDIRECTORY(Glfw)
 ADD_SUBDIRECTORY(Glm)
+ADD_SUBDIRECTORY(UnitTest)
