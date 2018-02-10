@@ -30,16 +30,22 @@
 #   define NO_INLINE            __attribute__ ((noinline))
 #   define ALIGNMENT(ALIGNMENT) __attribute__ ((aligned (ALIGNMENT)))
 #   define FORCE_INLINE         __attribute__ ((always_inline))
+#   define DEBUG_BREAK()        __asm__       ("int $03;")
 
 #elif defined(CARDINAL_USE_MSVC)
 #   define RESTRICT             __restrict
 #   define NO_INLINE            __declspec    (noinline)
 #   define ALIGNMENT(ALIGNMENT) __declspec    (align (ALIGNMENT))
 #   define FORCE_INLINE         __forceinline
+#   define DEBUG_BREAK()        __debugbreak()
 
 #else
 // None
 
 #endif
+
+/// \brief  Alias the main function with a custom name
+///         Not really usefull, but kinda cool
+#define Cardinal_EntryPoint  main
 
 #endif // !CARDINAL_COMPILER_HH__

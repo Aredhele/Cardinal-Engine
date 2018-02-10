@@ -1,4 +1,4 @@
-/// Copyright (C) 2018-2019, Cardinal Engine
+/// Copyright (C) 2018-2019 Cardinal Engine
 /// Vincent STEHLY--CALISTO, vincentstehly@hotmail.fr
 ///
 /// This program is free software; you can redistribute it and/or modify
@@ -15,13 +15,15 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       Expect.hh
-/// \date       10/02/2018
+/// \file       Main.cpp
+/// \date       08/02/2018
 /// \project    Cardinal Engine
-/// \package    Core/Assertion/
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_EXPECT_HPP__
-#define CARDINAL_ENGINE_EXPECT_HPP__
+#include "Platform/Configuration/Configuration.hh"
 
-#endif // !CARDINAL_ENGINE_EXPECT_HPP__
+/// \brief  Cardinal Engine entry point
+int Cardinal_EntryPoint(int argc, char ** argv)
+{
+    return 0;
+}
