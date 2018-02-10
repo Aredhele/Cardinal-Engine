@@ -24,6 +24,9 @@
 #ifndef CARDINAL_ENGINE_WINDOW_HPP__
 #define CARDINAL_ENGINE_WINDOW_HPP__
 
+#include "Glew/include/GL/glew.h"
+#include "Glfw/include/GLFW/glfw3.h"
+
 /// \namespace cardinal
 namespace cardinal
 {
@@ -32,13 +35,37 @@ namespace cardinal
 /// \brief
 class Window
 {
-public :
+public:
 
-    /// \brief  Default constructor
+    /// \brief Default constructor
     explicit Window();
 
+    /// \brief  Constructor
+    /// \param  width The width of the window
+    /// \param  height The heigth of the window
+    /// \param  szTitle The title of the window
+    explicit Window(int width, int height, const char * szTitle);
+
     /// \brief  Destructor
-    virtual ~Window();
+    ~Window();
+
+    /// \brief  Initializes the OpenGL context
+    /// \param  width The width of the window
+    /// \param  height The heigth of the window
+    /// \param  szTitle The title of the window
+    void Initialize(int width, int height, const char * szTitle);
+
+    GLFWwindow * GetContext() const { return m_pWindow; }
+
+
+private:
+
+    /// \brief Destroy the current OpenGL context
+    void Destroy();
+
+private:
+
+    GLFWwindow * m_pWindow;
 };
 
 } // !namespace

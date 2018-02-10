@@ -19,7 +19,9 @@
 INCLUDE_DIRECTORIES(${CARDINAL_ENGINE_DIR}/Runtime/Header)
 
 # Compile all tests
-ADD_EXECUTABLE(CARDINAL_ENGINE Entry.cpp)
+ADD_EXECUTABLE(CARDINAL_ENGINE Entry.cpp
+        Core/Debug/Logger.cpp
+        Rendering/Context/Window.cpp)
 
 # But tests depends on GTEST and GMOCK
 ADD_DEPENDENCIES(CARDINAL_ENGINE glfw glew)

@@ -21,9 +21,22 @@
 /// \author     Vincent STEHLY--CALISTO
 
 #include "Platform/Configuration/Configuration.hh"
+#include "Rendering/Context/Window.hpp"
 
 /// \brief  Cardinal Engine entry point
 int Cardinal_EntryPoint(int argc, char ** argv)
 {
+    cardinal::Window window(1024, 768, "Cardinal");
+
+    do
+    {
+
+
+        glfwPollEvents();
+        glfwSwapBuffers(window.GetContext());
+    }
+    while( glfwGetKey(window.GetContext(), GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
+           glfwWindowShouldClose(window.GetContext()) == 0 );
+
     return 0;
 }

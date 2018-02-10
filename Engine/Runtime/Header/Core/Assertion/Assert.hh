@@ -24,6 +24,9 @@
 #ifndef CARDINAL_ENGINE_ASSERT_HH__
 #define CARDINAL_ENGINE_ASSERT_HH__
 
+#include <string>
+#include <cstring>
+
 #include "Platform/Configuration/Configuration.hh"
 
 /// \namespace  cardinal
