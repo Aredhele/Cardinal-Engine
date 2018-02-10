@@ -15,23 +15,33 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       RenderingEngine.hpp
-/// \date       09/02/2018
+/// \file       ShaderCompiler.hpp
+/// \date       10/02/2018
 /// \project    Cardinal Engine
-/// \package    Core/Rendering
+/// \package    Rendering/Shader
 /// \author     Vincent STEHLY--CALISTO
+
+#ifndef CARDINAL_ENGINE_SHADER_COMPILER_HPP__
+#define CARDINAL_ENGINE_SHADER_COMPILER_HPP__
+
+#include "Glew/include/GL/glew.h"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \class  RenderingEngine
-/// \brief  Main rendering class
-class RenderingEngine
+/// \class  ShaderCompiler
+/// \brief  Tool to compile shaders
+class ShaderCompiler
 {
 public :
 
-    // TODO
+    /// \brief Loads a shader from the given paths
+    /// \param czVertexShader The path to the vertex shader
+    /// \param csFragmentShader The path to the fragment shader
+    static GLuint LoadShaders(const char * czVertexShader,const char * csFragmentShader);
 };
 
 } // !namespace
+
+#endif // !CARDINAL_ENGINE_SHADER_COMPILER_HPP__

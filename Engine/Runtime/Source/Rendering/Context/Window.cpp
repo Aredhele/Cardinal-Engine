@@ -109,7 +109,7 @@ void Window::Initialize(int width, int height, const char *szTitle)
     }
 
     Logger::LogInfo("Context successfully initialized.");
-    Logger::LogInfo("OpenGL Version : %s\n", glGetString(GL_VERSION));
+    Logger::LogInfo("OpenGL Version : %s", glGetString(GL_VERSION));
 
     // Post-conditions
     ASSERT_NOT_NULL(m_pWindow);
@@ -123,6 +123,13 @@ void Window::Destroy()
         glfwDestroyWindow(m_pWindow);
         glfwTerminate();
     }
+}
+
+/// \brief  Returns the current glfw window
+/// \return A pointer on the glfw window
+GLFWwindow * Window::GetContext() const
+{
+    return m_pWindow;
 }
 
 } // !namespace

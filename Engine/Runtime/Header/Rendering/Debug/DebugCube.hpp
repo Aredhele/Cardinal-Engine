@@ -15,23 +15,56 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       RenderingEngine.hpp
-/// \date       09/02/2018
+/// \file       DebugCube.hpp
+/// \date       10/02/2018
 /// \project    Cardinal Engine
-/// \package    Core/Rendering
+/// \package    Core/Debug
 /// \author     Vincent STEHLY--CALISTO
+
+#ifndef CARDINAL_ENGINE_DEBUG_CUBE_HPP__
+#define CARDINAL_ENGINE_DEBUG_CUBE_HPP__
+
+#include "Glm/glm/glm.hpp"
+#include "Glew/include/GL/glew.h"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \class  RenderingEngine
-/// \brief  Main rendering class
-class RenderingEngine
+/// \class DebugCube
+/// \brief Simple 3D cube for debug purpose
+class DebugCube
 {
 public :
 
-    // TODO
+    glm::vec3 position;
+    glm::mat4 model;
+
+    static const float s_vertex_buffer[108];
+    static const float s_color_buffer [108];
+
+public:
+
+    /// \brief  Constructor
+    DebugCube();
+
+    /// \brief  Destructor
+    ~DebugCube();
+
+    void Translate(glm::vec3 const& translation);
+
+    /// \brief  Renders the cube
+    void Render(glm::mat4 const& P, glm::mat4 const& V);
+
+private:
+
+    GLuint m_vbo;
+    GLuint m_cbo;
+    GLuint m_vao;
+    GLuint m_shader;
+    GLint  m_matrixID;
 };
 
 } // !namespace
+
+#endif // !CARDINAL_ENGINE_DEBUG_CUBE_HPP__

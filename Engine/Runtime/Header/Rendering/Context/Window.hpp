@@ -55,8 +55,9 @@ public:
     /// \param  szTitle The title of the window
     void Initialize(int width, int height, const char * szTitle);
 
-    GLFWwindow * GetContext() const { return m_pWindow; }
-
+    /// \brief  Returns the current glfw window
+    /// \return A pointer on the glfw window
+    GLFWwindow * GetContext() const;
 
 private:
 

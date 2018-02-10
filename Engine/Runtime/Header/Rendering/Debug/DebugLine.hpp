@@ -15,23 +15,52 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       RenderingEngine.hpp
-/// \date       09/02/2018
+/// \file       DebugLine.hpp
+/// \date       10/02/2018
 /// \project    Cardinal Engine
-/// \package    Core/Rendering
+/// \package    Rendering/Debug
 /// \author     Vincent STEHLY--CALISTO
+
+#ifndef CARDINAL_ENGINE_DEBUG_LINE_HPP__
+#define CARDINAL_ENGINE_DEBUG_LINE_HPP__
+
+#include "Glm/glm/glm.hpp"
+#include "Glew/include/GL/glew.h"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \class  RenderingEngine
-/// \brief  Main rendering class
-class RenderingEngine
+/// \class  DebugLine
+/// \brief  Draws a line
+class DebugLine
 {
-public :
+public:
 
-    // TODO
+    glm::vec3 position;
+    glm::vec3 direction;
+    glm::mat4 model;
+
+public:
+
+    /// \brief  Constructor
+    DebugLine(glm::vec3 const& pos, glm::vec3 const& dir, glm::vec3 const& color);
+
+    /// \brief  Destructor
+    ~DebugLine();
+
+    /// \brief  Renders the cube
+    void Render(glm::mat4 const& P, glm::mat4 const& V);
+
+private:
+
+    GLuint m_vbo;
+    GLuint m_cbo;
+    GLuint m_vao;
+    GLuint m_shader;
+    GLint  m_matrixID;
 };
 
 } // !namespace
+
+#endif // !CARDINAL_ENGINE_DEBUG_LINE_HPP__
