@@ -102,7 +102,7 @@ DebugCube::~DebugCube()
 
 void DebugCube::Translate(glm::vec3 const& translation)
 {
-    model = glm::translate(translation);
+    model = glm::translate(model, translation);
 }
 
 /// \brief  Renders the cube

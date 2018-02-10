@@ -77,6 +77,50 @@ void HandleInput(cardinal::Window & window, cardinal::Camera & camera, float dt)
     if (glfwGetKey(window.GetContext(), GLFW_KEY_A) == GLFW_PRESS) camera.Translate(-camera.GetRight() * dt * speed);
 }
 
+
+static float g_vertex_buffer[18] =
+{
+   0.0f, 0.0f, 0.0f,
+   0.0f, 0.0f, 2.0f,
+   0.0f, 2.0f, 0.0f,
+
+   0.0f, 0.0f, 0.0f,
+   0.0f, 2.0f, 0.0f,
+   2.0f, 0.0f, 0.0f,
+};
+
+static float g_color_buffer[18] =
+{
+    1.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, 0.0f,
+    0.0f, 0.0f, 1.0f,
+
+    1.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, 0.0f,
+    0.0f, 0.0f, 1.0f
+};
+
+static unsigned short g_index_buffer[6]
+{
+    0, 1, 2, 0, 2, 3
+};
+
+static float g_vertices_buffer[12]
+{
+    0.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 2.0f,
+    0.0f, 2.0f, 0.0f,
+    2.0f, 0.0f, 0.0
+};
+
+static float g_colors_buffer[12]
+{
+    1.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, 0.0f,
+    0.0f, 0.0f, 1.0f,
+    0.0f, 1.0f, 0.0f,
+};
+
 /// \brief  Cardinal Engine entry point
 int Cardinal_EntryPoint(int argc, char ** argv)
 {
@@ -107,12 +151,11 @@ int Cardinal_EntryPoint(int argc, char ** argv)
         grid.push_back(pLine);
     }
 
-
     // Test
     cardinal::DebugCube cube_1;
     cardinal::DebugLine line_1(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(3.0f, 0.0f,  0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    cardinal::DebugLine line_2(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -3.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    cardinal::DebugLine line_3(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 3.0f,  0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    cardinal::DebugLine line_2(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 3.0f,  0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    cardinal::DebugLine line_3(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f,  3.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
     // Measure time/ FPS
     int fpsCounter = 0;
@@ -123,6 +166,56 @@ int Cardinal_EntryPoint(int argc, char ** argv)
 
     glfwSetInputMode(window.GetContext(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     glfwSetInputMode(window.GetContext(), GLFW_STICKY_KEYS, GL_TRUE);
+
+
+    /// TMP 1
+    glm::mat4 m = glm::mat4(1.0f);
+    GLuint vao;
+    GLuint vbo;
+    GLuint vco;
+    GLuint shader;
+    GLint id;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer), g_vertex_buffer, GL_STATIC_DRAW);
+
+    glGenBuffers(1, &vco);
+    glBindBuffer(GL_ARRAY_BUFFER, vco);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer), g_color_buffer, GL_STATIC_DRAW);
+
+    shader   = cardinal::ShaderCompiler::LoadShaders("Resources/Shaders/vsbase.glsl", "Resources/Shaders/fsbase.glsl");
+    id = glGetUniformLocation(shader, "MVP");
+    /// TMP
+
+    /// TMP 2
+    glm::mat4 m1 = glm::mat4(1.0f);
+    GLuint vao1;
+    GLuint vbo1;
+    GLuint vco1;
+    GLuint index;
+    GLuint shader1;
+    GLint  id1;
+    glGenVertexArrays(1, &vao1);
+    glBindVertexArray(vao1);
+
+    glGenBuffers(1, &index);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(g_index_buffer) ,g_index_buffer, GL_STATIC_DRAW);
+
+    glGenBuffers(1, &vbo1);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo1);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertices_buffer), g_vertices_buffer, GL_STATIC_DRAW);
+
+    glGenBuffers(1, &vco1);
+    glBindBuffer(GL_ARRAY_BUFFER, vco1);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_colors_buffer), g_colors_buffer, GL_STATIC_DRAW);
+
+    shader1   = cardinal::ShaderCompiler::LoadShaders("Resources/Shaders/vsbase.glsl", "Resources/Shaders/fsbase.glsl");
+    id1 = glGetUniformLocation(shader, "MVP");
+    /// TMP 2
 
     do
     {
@@ -143,6 +236,7 @@ int Cardinal_EntryPoint(int argc, char ** argv)
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        cube_1.Translate(glm::vec3(0.0f, 1.0f, 0.0f) * 0.00016f);
         //cube_1.Render(Projection, camera.GetViewMatrix());
         line_1.Render(Projection, camera.GetViewMatrix());
         line_2.Render(Projection, camera.GetViewMatrix());
@@ -152,6 +246,46 @@ int Cardinal_EntryPoint(int argc, char ** argv)
         {
             pLine->Render(Projection, camera.GetViewMatrix());
         }
+
+        glm::mat4 MVP = Projection * camera.GetViewMatrix() * m;
+
+        /*glUseProgram(shader);
+        glUniformMatrix4fv(id, 1, GL_FALSE, &MVP[0][0]);
+
+        glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
+
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, vco);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
+
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);*/
+
+        glUseProgram(shader1);
+        glUniformMatrix4fv(id1, 1, GL_FALSE, &MVP[0][0]);
+
+        glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo1);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
+
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, vco1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index);
+
+        glDrawElements(
+                GL_TRIANGLES,      // mode
+                6,    // count
+                GL_UNSIGNED_SHORT,   // type
+                (void*)0);
+
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
 
         glfwPollEvents();
         glfwSwapBuffers(window.GetContext());
