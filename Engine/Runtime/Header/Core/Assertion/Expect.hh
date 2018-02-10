@@ -1,0 +1,8 @@
+//
+// Created by Aredhele on 10/02/2018.
+//
+
+#ifndef CARDINALENGINE_EXPECT_HPP
+#define CARDINALENGINE_EXPECT_HPP
+
+#endif //CARDINALENGINE_EXPECT_HPP

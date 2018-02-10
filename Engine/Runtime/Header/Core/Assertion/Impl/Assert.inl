@@ -1,0 +1,8 @@
+//
+// Created by Aredhele on 10/02/2018.
+//
+
+#ifndef CARDINALENGINE_ASSERT_INL
+#define CARDINALENGINE_ASSERT_INL
+
+#endif //CARDINALENGINE_ASSERT_INL

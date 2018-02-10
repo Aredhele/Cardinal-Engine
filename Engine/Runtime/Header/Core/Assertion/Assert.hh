@@ -1,0 +1,8 @@
+//
+// Created by Aredhele on 10/02/2018.
+//
+
+#ifndef CARDINALENGINE_ASSERT_H
+#define CARDINALENGINE_ASSERT_H
+
+#endif //CARDINALENGINE_ASSERT_H
