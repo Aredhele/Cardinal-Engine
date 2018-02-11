@@ -21,6 +21,8 @@
 /// \package    Rendering/Context
 /// \author     Vincent STEHLY--CALISTO
 
+#include "Glew/include/GL/glew.h"
+
 #include "Core/Debug/Logger.hpp"
 #include "Core/Assertion/Assert.hh"
 #include "Rendering/Context/Window.hpp"

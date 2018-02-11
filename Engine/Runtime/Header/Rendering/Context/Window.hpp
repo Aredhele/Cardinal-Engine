@@ -24,7 +24,6 @@
 #ifndef CARDINAL_ENGINE_WINDOW_HPP__
 #define CARDINAL_ENGINE_WINDOW_HPP__
 
-#include "Glew/include/GL/glew.h"
 #include "Glfw/include/GLFW/glfw3.h"
 
 /// \namespace cardinal
