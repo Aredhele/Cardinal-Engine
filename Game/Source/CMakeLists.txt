@@ -21,7 +21,8 @@ INCLUDE_DIRECTORIES(
         ${CARDINAL_GAME_DIR}/Header)
 
 # Compile game with the engine
-ADD_EXECUTABLE(Game Main.cpp)
+ADD_EXECUTABLE(Game
+        Main.cpp)
 
 # But tests depends on GTEST and GMOCK
 ADD_DEPENDENCIES(Game CardinalEngine)

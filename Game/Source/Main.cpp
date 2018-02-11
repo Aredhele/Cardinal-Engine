@@ -26,6 +26,8 @@
 #include "Platform/Configuration/Configuration.hh"
 #include <Runtime/Header/Rendering/Debug/DebugLine.hpp>
 #include <Runtime/Header/Core/Debug/Logger.hpp>
+#include <iostream>
+#include "World/Cube.hpp"
 
 double lastMouseX = 0.0;
 double lastMouseY = 0.0;
@@ -152,6 +154,10 @@ void HandleInput(cardinal::Window & window, cardinal::Camera & camera, float dt)
 
 /// \brief  Cardinal Engine entry point
 int Cardinal_EntryPoint(int argc, char ** argv) {
+
+    std::cout << "Bool size : " << sizeof(bool) << std::endl;
+    Cube cube;
+
 
     cardinal::RenderingEngine engine;
     cardinal::Camera camera;
