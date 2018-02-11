@@ -21,6 +21,9 @@
 /// \author     Vincent STEHLY--CALISTO
 
 #include <vector>
+#include <Runtime/Header/Rendering/Optimization/VBOIndexer.hpp>
+#include <iostream>
+#include <chrono>
 #include "Core/Debug/Logger.hpp"
 #include "Platform/Configuration/Configuration.hh"
 
@@ -217,6 +220,93 @@ int Cardinal_EntryPoint(int argc, char ** argv)
     id1 = glGetUniformLocation(shader, "MVP");
     /// TMP 2
 
+
+
+    std::vector<glm::vec3> vertices;
+    vertices.emplace_back(glm::vec3(0.0f, 0.0f, 0.0f));
+    vertices.emplace_back(glm::vec3(0.0f, 0.0f, 2.0f));
+    vertices.emplace_back(glm::vec3(0.0f, 2.0f, 0.0f));
+    vertices.emplace_back(glm::vec3(0.0f, 0.0f, 0.0f));
+    vertices.emplace_back(glm::vec3(0.0f, 2.0f, 0.0f));
+    vertices.emplace_back(glm::vec3(2.0f, 0.0f, 0.0f));
+
+    std::vector<glm::vec3> colors;
+    colors.emplace_back(glm::vec3(1.0f, 0.0f, 0.0f));
+    colors.emplace_back(glm::vec3(0.0f, 1.0f, 0.0f));
+    colors.emplace_back(glm::vec3(0.0f, 0.0f, 1.0f));
+    colors.emplace_back(glm::vec3(1.0f, 0.0f, 0.0f));
+    colors.emplace_back(glm::vec3(0.0f, 1.0f, 0.0f));
+    colors.emplace_back(glm::vec3(0.0f, 0.0f, 1.0f));
+
+    std::vector<unsigned short> outIndexes;
+    std::vector<glm::vec3>      outVertices;
+    std::vector<glm::vec3>      outColors;
+
+    auto startT = std::chrono::steady_clock::now();
+    for(int i = 0; i < 1000; ++i)
+        cardinal::VBOIndexer::Index(vertices, colors, outIndexes, outVertices, outColors);
+    auto endT = std::chrono::steady_clock::now();
+
+    auto elapsed =
+            std::chrono::duration_cast<std::chrono::milliseconds>(endT - startT);
+    std::cout << "Indexation done in " << elapsed.count() << " ms" << std::endl;
+
+    for(unsigned short indice : outIndexes)
+    {
+       // std::cout << "Index : " << indice << std::endl;
+    }
+
+    /// TMP 2
+    glm::mat4 m2 = glm::mat4(1.0f);
+    GLuint vao2;
+    GLuint vbo2;
+    GLuint vco2;
+    GLuint index2;
+    GLuint shader2;
+    GLint  id2;
+    glGenVertexArrays(1, &vao2);
+    glBindVertexArray(vao2);
+
+    glGenBuffers(1, &index2);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index2);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, outIndexes.size() * sizeof(unsigned short) ,&outIndexes[0], GL_STATIC_DRAW);
+
+    glGenBuffers(1, &vbo2);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo2);
+    glBufferData(GL_ARRAY_BUFFER, outVertices.size() * sizeof(glm::vec3), &outVertices[0], GL_STATIC_DRAW);
+
+    glGenBuffers(1, &vco2);
+    glBindBuffer(GL_ARRAY_BUFFER, vco2);
+    glBufferData(GL_ARRAY_BUFFER, outColors.size() * sizeof(glm::vec3), &outColors[0], GL_STATIC_DRAW);
+
+    shader2   = cardinal::ShaderCompiler::LoadShaders("Resources/Shaders/vsbase.glsl", "Resources/Shaders/fsbase.glsl");
+    id2 = glGetUniformLocation(shader, "MVP");
+    /// TMP 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     do
     {
         // Fixed delta time
@@ -265,7 +355,7 @@ int Cardinal_EntryPoint(int argc, char ** argv)
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);*/
 
-        glUseProgram(shader1);
+        /*glUseProgram(shader1);
         glUniformMatrix4fv(id1, 1, GL_FALSE, &MVP[0][0]);
 
         glEnableVertexAttribArray(0);
@@ -277,6 +367,28 @@ int Cardinal_EntryPoint(int argc, char ** argv)
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index);
+
+        glDrawElements(
+                GL_TRIANGLES,      // mode
+                6,    // count
+                GL_UNSIGNED_SHORT,   // type
+                (void*)0);
+
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);*/
+
+        glUseProgram(shader2);
+        glUniformMatrix4fv(id2, 1, GL_FALSE, &MVP[0][0]);
+
+        glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo2);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
+
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, vco2);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index2);
 
         glDrawElements(
                 GL_TRIANGLES,      // mode
