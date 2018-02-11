@@ -15,23 +15,4 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-# Adds all runtime header
-INCLUDE_DIRECTORIES(${CARDINAL_ENGINE_DIR}/Runtime/Header)
-
-# Compile all tests
-ADD_LIBRARY(CardinalEngine STATIC
-        Core/Debug/Logger.cpp
-        Rendering/Context/Window.cpp
-        Rendering/Debug/DebugCube.cpp
-        Rendering/Shader/ShaderCompiler.cpp
-        Rendering/Camera/Camera.cpp
-        Rendering/Debug/DebugLine.cpp
-        Rendering/Optimization/VBOIndexer.cpp
-        Rendering/RenderingEngine.cpp
-        Rendering/Renderer/MeshRenderer.cpp)
-
-# But tests depends on GTEST and GMOCK
-ADD_DEPENDENCIES(CardinalEngine glfw glew)
-
-# Linking ...
-TARGET_LINK_LIBRARIES(CardinalEngine ${COMPILER_DEPENDENCIES} glfw glew ${PLATFORM_DEPENDENCIES})
+ADD_SUBDIRECTORY(Source)

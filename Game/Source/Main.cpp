@@ -17,8 +17,9 @@
 
 /// \file       Main.cpp
 /// \date       08/02/2018
-/// \project    Cardinal Engine
+/// \project    Game
 /// \author     Vincent STEHLY--CALISTO
+
 
 #include <Runtime/Header/Rendering/Renderer/MeshRenderer.hpp>
 #include "Rendering/RenderingEngine.hpp"
@@ -150,48 +151,47 @@ void HandleInput(cardinal::Window & window, cardinal::Camera & camera, float dt)
 }
 
 /// \brief  Cardinal Engine entry point
-int Cardinal_EntryPoint(int argc, char ** argv)
-{
+int Cardinal_EntryPoint(int argc, char ** argv) {
 
     cardinal::RenderingEngine engine;
     cardinal::Camera camera;
 
-    if(!engine.Initialize(1024, 768, "Cardinal", 60.0f, false))
-    {
-       return -1;
+    if (!engine.Initialize(1024, 768, "Cardinal", 60.0f, false)) {
+        return -1;
     }
 
-    cardinal::Window * window = engine.GetWindow();
+    cardinal::Window *window = engine.GetWindow();
     engine.SetCamera(&camera);
 
-    glm::vec3 color = glm::vec3(0.5f, 0.5f,  0.5f);
+    glm::vec3 color = glm::vec3(0.5f, 0.5f, 0.5f);
     glm::vec3 start = glm::vec3(-9.5, 0.0f, -9.5f);
 
-    std::vector<cardinal::DebugLine*> grid;
-    for(int i = 0; i < 20; ++i)
-    {
-        cardinal::DebugLine * pLine = new cardinal::DebugLine(glm::vec3(-9.5 + 1.0f * i, 0.0f, -9.5f), glm::vec3(0.0f,  0.0f,  19.0f),  color);
+    std::vector<cardinal::DebugLine *> grid;
+    for (int i = 0; i < 20; ++i) {
+        cardinal::DebugLine *pLine = new cardinal::DebugLine(
+                glm::vec3(-9.5 + 1.0f * i, 0.0f, -9.5f),
+                glm::vec3(0.0f, 0.0f, 19.0f), color);
         grid.push_back(pLine);
     }
 
-    for(int j = 0; j < 20; ++j)
-    {
-        cardinal::DebugLine * pLine = new cardinal::DebugLine(glm::vec3(-9.5f, 0.0f, -9.5f + 1.0f * j), glm::vec3(19.0f,  0.0f,  0.0f),  color);
+    for (int j = 0; j < 20; ++j) {
+        cardinal::DebugLine *pLine = new cardinal::DebugLine(
+                glm::vec3(-9.5f, 0.0f, -9.5f + 1.0f * j),
+                glm::vec3(19.0f, 0.0f, 0.0f), color);
         grid.push_back(pLine);
     }
 
     int fpsCounter = 0;
     std::string currentFPS = "0 FPS";
     double currentTime = glfwGetTime();
-    double lastTime    = currentTime;
-    double dLastTime   = currentTime;
+    double lastTime = currentTime;
+    double dLastTime = currentTime;
 
     glfwSetInputMode(window->GetContext(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     glfwSetInputMode(window->GetContext(), GLFW_STICKY_KEYS, GL_TRUE);
 
     std::vector<glm::vec3> vertices;
-    for(int i = 0; i < 108;  i += 3)
-    {
+    for (int i = 0; i < 108; i += 3) {
         vertices.emplace_back(
                 g_vertex_buffer_data[i + 0],
                 g_vertex_buffer_data[i + 1],
@@ -199,29 +199,27 @@ int Cardinal_EntryPoint(int argc, char ** argv)
     }
 
     std::vector<glm::vec3> colors;
-    for(int i = 0; i < 108;  i += 3)
-    {
+    for (int i = 0; i < 108; i += 3) {
         colors.emplace_back(
-               1.0f,
-               1.0f,
-               1.0f);
+                1.0f,
+                1.0f,
+                1.0f);
     }
 
     cardinal::MeshRenderer renderer;
     renderer.Initialize(vertices, colors);
     engine.Register(&renderer);
 
-    do
-    {
+    do {
         // Fixed delta time
         currentTime = glfwGetTime();
 
         // camera.LookAt(glm::vec3(0.0f));
-        HandleInput(*window, camera, static_cast<float>(currentTime - dLastTime));
+        HandleInput(*window, camera,
+                    static_cast<float>(currentTime - dLastTime));
         dLastTime = currentTime;
 
-        if(currentTime - lastTime >= 1.0f)
-        {
+        if (currentTime - lastTime >= 1.0f) {
             currentFPS = std::to_string(fpsCounter) + " FPS";
             cardinal::Logger::LogInfo(currentFPS.c_str());
 
@@ -231,8 +229,7 @@ int Cardinal_EntryPoint(int argc, char ** argv)
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        for(cardinal::DebugLine * pLine : grid)
-        {
+        for (cardinal::DebugLine *pLine : grid) {
             pLine->Render(engine.GetProjectionMatrix(), camera.GetViewMatrix());
         }
 
@@ -240,9 +237,8 @@ int Cardinal_EntryPoint(int argc, char ** argv)
         glfwPollEvents();
         engine.Render(0.0);
         fpsCounter++;
-    }
-    while( glfwGetKey(window->GetContext(), GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
-           glfwWindowShouldClose(window->GetContext()) == 0 );
+    } while (glfwGetKey(window->GetContext(), GLFW_KEY_ESCAPE) != GLFW_PRESS &&
+             glfwWindowShouldClose(window->GetContext()) == 0);
 
     return 0;
 }
