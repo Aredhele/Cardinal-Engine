@@ -27,7 +27,8 @@ ADD_EXECUTABLE(CARDINAL_ENGINE Entry.cpp
         Rendering/Camera/Camera.cpp
         Rendering/Debug/DebugLine.cpp
         Rendering/Optimization/VBOIndexer.cpp
-        Rendering/RenderingEngine.cpp)
+        Rendering/RenderingEngine.cpp
+        Rendering/Renderer/MeshRenderer.cpp)
 
 # But tests depends on GTEST and GMOCK
 ADD_DEPENDENCIES(CARDINAL_ENGINE glfw glew)

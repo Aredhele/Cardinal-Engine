@@ -189,23 +189,23 @@ void assert_is_lower_than(const T & rhs,
 
 #else
 
-#   define ASSERT_TRUE    (...)
-#   define ASSERT_FALSE   (...)
-#   define ASSERT_EQ      (...)
-#   define ASSERT_NE      (...)
-#   define ASSERT_NULL    (...)
-#   define ASSERT_NOT_NULL(...)
-#   define ASSERT_GT      (...)
-#   define ASSERT_LT      (...)
+#   define ASSERT_TRUE
+#   define ASSERT_FALSE
+#   define ASSERT_EQ
+#   define ASSERT_NE
+#   define ASSERT_NULL
+#   define ASSERT_NOT_NULL
+#   define ASSERT_GT
+#   define ASSERT_LT
 
-#   define ASSERT_TRUE_MSG     (...)
-#   define ASSERT_FALSE_MSG    (...)
-#   define ASSERT_EQ_MSG       (...)
-#   define ASSERT_NE_MSG       (...)
-#   define ASSERT_NULL_MSG     (...)
-#   define ASSERT_NOT_NULL_MSG (...)
-#   define ASSERT_GT_MSG       (...)
-#   define ASSERT_LT_MSG       (...)
+#   define ASSERT_TRUE_MSG
+#   define ASSERT_FALSE_MSG
+#   define ASSERT_EQ_MSG
+#   define ASSERT_NE_MSG
+#   define ASSERT_NULL_MSG
+#   define ASSERT_NOT_NULL_MSG
+#   define ASSERT_GT_MSG
+#   define ASSERT_LT_MSG
 
 #endif // DEBUG
 

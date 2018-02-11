@@ -22,6 +22,7 @@
 /// \author     Vincent STEHLY--CALISTO
 
 #include "Core/Debug/Logger.hpp"
+#include "Rendering/Renderer/MeshRenderer.hpp"
 #include "Rendering/RenderingEngine.hpp"
 
 /// \namespace cardinal
@@ -53,7 +54,14 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle, flo
     // TODO
 
     // Configures OpenGL pipeline
-    // TODO
+    glDepthFunc(GL_LESS);
+    glEnable   (GL_DEPTH_TEST);
+
+    // TODO : Makes clear color configurable
+    glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+
+    // TODO : Removes magic values
+    m_projectionMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
 
     m_frameDelta   = 1.0 / fps;
     m_frameTime    = 0.0;
@@ -116,11 +124,43 @@ void RenderingEngine::Render(float step)
 /// \param step The normalized progression in the frame
 void RenderingEngine::RenderFrame(float step)
 {
-    // Clear
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // TODO
+
+    // Gets the projection matrix
+    glm::mat4 Projection = m_projectionMatrix;
+
+    // Gets the view matrix
+    glm::mat4 View = m_pCamera->GetViewMatrix();
+
+    // Creates Projection View
+    glm::mat4 ProjectView = Projection * View;
 
     // Draw
-    // Render all objects
+    size_t rendererCount = m_meshRenderer.size();
+    for(int nRenderer = 0; nRenderer < rendererCount; ++nRenderer)
+    {
+        // Buffers the renderer
+        MeshRenderer * pRenderer = m_meshRenderer[nRenderer];
+
+        // Create MVP matrix and setup shaders
+        glm::mat4 MVP = ProjectView * pRenderer->m_model;
+
+        // TODO : ShaderManager
+        glUseProgram(pRenderer->m_shaderID);
+        glUniformMatrix4fv(pRenderer->m_matrixID, 1, GL_FALSE, &MVP[0][0]);
+
+        // Render it
+        glBindVertexArray(pRenderer->m_vao);
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+
+        glDrawElements(GL_TRIANGLES, pRenderer->m_elementsCount, GL_UNSIGNED_SHORT, nullptr);
+    }
+
+    // Cleanup
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glBindVertexArray(0);
 
     //  Display
     glfwSwapBuffers(m_window.GetContext());
@@ -138,10 +178,22 @@ void RenderingEngine::Shutdow()
     // TODO
 }
 
-/// \brief  Returns a pointer on the window
+/// \brief Returns a pointer on the window
 Window * RenderingEngine::GetWindow()
 {
     return &m_window;
+}
+
+/// \brief TMP
+glm::mat4 const &RenderingEngine::GetProjectionMatrix()
+{
+    return m_projectionMatrix;
+}
+
+/// \brief TMP
+void RenderingEngine::Register(class MeshRenderer *pRenderer)
+{
+    m_meshRenderer.push_back(pRenderer);
 }
 
 } // !namespace

@@ -92,18 +92,15 @@ void DebugLine::Render(glm::mat4 const& P, glm::mat4 const& V)
     glUseProgram(m_shader);
     glUniformMatrix4fv(m_matrixID, 1, GL_FALSE, &MVP[0][0]);
 
+    glBindVertexArray(m_vao);
     glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
-
     glEnableVertexAttribArray(1);
-    glBindBuffer(GL_ARRAY_BUFFER, m_cbo);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
 
     glDrawArrays(GL_LINES, 0, 2);
 
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(0);
+    glBindVertexArray(0);
 }
 
 } // !namespace

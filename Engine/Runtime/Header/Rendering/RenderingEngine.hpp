@@ -24,6 +24,7 @@
 #ifndef CARDINAL_ENGINE_RENDERING_ENGINE_HPP__
 #define CARDINAL_ENGINE_RENDERING_ENGINE_HPP__
 
+#include <vector>
 #include "Rendering/Context/Window.hpp"
 #include "Rendering/Camera/Camera.hpp"
 
@@ -58,6 +59,12 @@ public:
     /// \brief  Returns a pointer on the window
     Window * GetWindow();
 
+    /// TMP
+    glm::mat4 const& GetProjectionMatrix();
+
+    // TMP
+    void Register(class MeshRenderer * pRenderer);
+
 private:
 
     /// \brief Frame rendering implementation
@@ -79,8 +86,11 @@ private:
     double m_currentFps;
     double m_elapsedTime;
 
-    uint64_t m_fpsCounter;
-    uint64_t m_frameCount;
+    uint64_t  m_fpsCounter;
+    uint64_t  m_frameCount;
+    glm::mat4 m_projectionMatrix;
+
+    std::vector<class MeshRenderer*> m_meshRenderer;
 };
 
 } // !namespace

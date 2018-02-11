@@ -25,6 +25,7 @@
 #define CARDINAL_ENGINE_CAMERA_HPP__
 
 #include "Glm/glm/glm.hpp"
+#include "Glm/glm/ext.hpp"
 
 /// \namespace cardinal
 namespace cardinal
