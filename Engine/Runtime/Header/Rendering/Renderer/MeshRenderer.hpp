@@ -47,20 +47,21 @@ public :
     /// \brief Initializes the mesh
     /// \param indexes The indexes of the mesh
     /// \param vertices The vertices of the mesh
-    /// \param colors The colors of the mesh
+    /// \param uvs The colors of the mesh
     void Initialize(
             std::vector<unsigned short> const& indexes,
             std::vector<glm::vec3>      const& vertices,
-            std::vector<glm::vec3>      const& colors);
+            std::vector<glm::vec2>      const& uvs);
 
 private:
 
     friend class RenderingEngine;
 
     GLuint    m_vao;
+    GLuint    m_texture;
     GLuint    m_indexesObject;
     GLuint    m_verticesObject;
-    GLuint    m_colorsObject;
+    GLuint    m_uvsObject;
     GLuint    m_shaderID;
     GLint     m_matrixID;
     GLsizei   m_elementsCount;

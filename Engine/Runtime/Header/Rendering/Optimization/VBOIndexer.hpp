@@ -40,6 +40,7 @@ class VBOIndexer
 {
 public :
 
+    // TODO : Update docs
     /// \brief Indexes vertices who shares same properties
     /// \param inVertices  The input vertices vector
     /// \param inColors    The input colors vector
@@ -48,10 +49,10 @@ public :
     /// \param outColors   The output colors vector
     static void Index(
             std::vector<glm::vec3> const& inVertices,
-            std::vector<glm::vec3> const& inColors,
+            std::vector<glm::vec2> const& inUVs,
             std::vector<unsigned short> & outIndexes,
             std::vector<glm::vec3>      & outVertices,
-            std::vector<glm::vec3>      & outColors);
+            std::vector<glm::vec2>      & outUVs);
 
 private:
 
@@ -59,7 +60,7 @@ private:
     struct sPackedVertex
     {
         glm::vec3 position; ///< Stores the position of a vertex
-        glm::vec3 color;    ///< Stores the color of a vertex
+        glm::vec2 uv;        ///< Stores the color of a vertex
 
         /// \brief Compare helper method
         bool operator<(const sPackedVertex other) const

@@ -24,19 +24,19 @@
 #include <chrono>
 #include <iostream>
 #include <Runtime/Header/Rendering/Optimization/VBOIndexer.hpp>
+#include <Runtime/Header/Core/Maths/Noise/PerlinNoise.hpp>
 #include "World/Chunk.hpp"
 #include "Core/Debug/Logger.hpp"
 
 /* static */ std::vector<glm::vec3>      Chunk::s_chunkVertexBuffer;
-/* static */ std::vector<glm::vec3>      Chunk::s_chunkColorBuffer;
+/* static */ std::vector<glm::vec2>      Chunk::s_chunkUVsBuffer;
 
 /* static */ std::vector<unsigned short> Chunk::s_chunkIndexesBuffer;
 /* static */ std::vector<glm::vec3>      Chunk::s_chunkIndexedVertexBuffer;
-/* static */ std::vector<glm::vec3>      Chunk::s_chunkIndexedColorBuffer;
+/* static */ std::vector<glm::vec2>      Chunk::s_chunkIndexedUVsBuffer;
 
 /* static */ const float Chunk::s_triangles[108] =
 {
-
         -1.0f, -1.0f,  1.0f,    -1.0f,  1.0f, -1.0f,     -1.0f, -1.0f, -1.0f,    -1.0f, -1.0f,  1.0f,    -1.0f,  1.0f,  1.0f,    -1.0f,  1.0f, -1.0f, /* Face 1 */
         -1.0f,  1.0f,  1.0f,     1.0f,  1.0f, -1.0f,     -1.0f,  1.0f, -1.0f,    -1.0f,  1.0f,  1.0f,     1.0f,  1.0f,  1.0f,     1.0f,  1.0f, -1.0f, /* Face 2 */
          1.0f,  1.0f,  1.0f,     1.0f, -1.0f, -1.0f,      1.0f,  1.0f, -1.0f,     1.0f,  1.0f,  1.0f,     1.0f, -1.0f,  1.0f,     1.0f, -1.0f, -1.0f, /* Face 3 */
@@ -51,10 +51,10 @@ void Chunk::InitializeBuffers()
     if(s_chunkVertexBuffer.size()  != s_vertexCount)
     {
         s_chunkVertexBuffer = std::vector<glm::vec3>(s_vertexCount);
-        s_chunkColorBuffer  = std::vector<glm::vec3>(s_vertexCount);
+        s_chunkUVsBuffer    = std::vector<glm::vec2>(s_vertexCount);
 
         s_chunkIndexesBuffer.reserve       (s_vertexCount);
-        s_chunkIndexedColorBuffer.reserve  (s_colorCount);
+        s_chunkIndexedUVsBuffer.reserve    (s_uvsCount);
         s_chunkIndexedVertexBuffer.reserve (s_vertexCount);
 
         cardinal::Logger::LogInfo("Chunk static buffer initialized");
@@ -75,28 +75,37 @@ Chunk::~Chunk() // NOLINT
 
 void Chunk::Initialize()
 {
-    // TMP
+    Generate();
+    Batch();
+}
+
+void Chunk::Generate()
+{
+    // 2D terrain
     for(int x = 0; x < s_chunkSize; ++x)
     {
         for(int y = 0; y < s_chunkSize; ++y)
         {
-            for(int z = 0; z< s_chunkSize; ++z)
-            {
-                int color = rand() % 4;
-
-                if(color == 0)      m_cubes[x][y][z].SetType(Cube::EType::Dirt);
-                else if(color == 1) m_cubes[x][y][z].SetType(Cube::EType::Grass);
-                else if(color == 2) m_cubes[x][y][z].SetType(Cube::EType::Water);
-                else if(color == 3) m_cubes[x][y][z].SetType(Cube::EType::Grass);
-                else
-                {
-                    m_cubes[x][y][z].SetType(Cube::EType::Water);
-                }
-            }
+            float z = 0.5f + (cardinal::PerlinNoise::Sample2D(x, y, 10.0f));
+            SetCol(x, static_cast<int>(z * 16), y);
         }
     }
+}
 
-    Batch();
+void Chunk::SetCol(int x, int y, int z)
+{
+    std::cout << "Z = " << z << std::endl;
+    for(int i = 0; i < s_chunkSize; ++i)
+    {
+        if(i <= z)
+        {
+            m_cubes[x][y][i].SetType(Cube::EType::Dirt);
+        }
+        else
+        {
+            m_cubes[x][y][i].SetType(Cube::EType::Air);
+        }
+    }
 }
 
 /// \brief Builds the chunk vao
@@ -108,10 +117,15 @@ void Chunk::Batch()
     glm::vec3 green(0.0f, 1.0f, 0.0f);
     glm::vec3 blue (0.0f, 0.0f, 1.0f);
 
+    glm::vec2 uv1(    0.0f,         1.0f); // 0,03125 0,96875
+    glm::vec2 uv2(0.03125f,         1.0f);
+    glm::vec2 uv3(0.03125f,     0.96875f);
+    glm::vec2 uv4(    0.0f,     0.96875f);
+
     // Always resize to the max capacity
     // to not reallocate the vector memory
     s_chunkVertexBuffer.resize(s_vertexCount);
-    s_chunkColorBuffer.resize (s_vertexCount);
+    s_chunkUVsBuffer.resize (s_vertexCount);
 
     // Static batching
     size_t vertexIndex = 0;
@@ -165,37 +179,37 @@ void Chunk::Batch()
                     size_t faceIndex = nFace * 18;
 
                     // TODO : SIMD
-                    s_chunkColorBuffer [vertexIndex]   = color;
+                    s_chunkUVsBuffer   [vertexIndex]   = uv1;
                     s_chunkVertexBuffer[vertexIndex].x = s_triangles[faceIndex +  0] * half + offset.x;
                     s_chunkVertexBuffer[vertexIndex].y = s_triangles[faceIndex +  1] * half + offset.y;
                     s_chunkVertexBuffer[vertexIndex].z = s_triangles[faceIndex +  2] * half + offset.z;
 
                     vertexIndex += 1;
-                    s_chunkColorBuffer [vertexIndex]   = color;
+                    s_chunkUVsBuffer [vertexIndex]     = uv2;
                     s_chunkVertexBuffer[vertexIndex].x = s_triangles[faceIndex +  3] * half + offset.x;
                     s_chunkVertexBuffer[vertexIndex].y = s_triangles[faceIndex +  4] * half + offset.y;
                     s_chunkVertexBuffer[vertexIndex].z = s_triangles[faceIndex +  5] * half + offset.z;
 
                     vertexIndex += 1;
-                    s_chunkColorBuffer [vertexIndex]   = color;
+                    s_chunkUVsBuffer [vertexIndex]     = uv3;
                     s_chunkVertexBuffer[vertexIndex].x = s_triangles[faceIndex +  6] * half + offset.x;
                     s_chunkVertexBuffer[vertexIndex].y = s_triangles[faceIndex +  7] * half + offset.y;
                     s_chunkVertexBuffer[vertexIndex].z = s_triangles[faceIndex +  8] * half + offset.z;
 
                     vertexIndex += 1;
-                    s_chunkColorBuffer [vertexIndex]   = color;
+                    s_chunkUVsBuffer [vertexIndex]     = uv1;
                     s_chunkVertexBuffer[vertexIndex].x = s_triangles[faceIndex +  9] * half + offset.x;
                     s_chunkVertexBuffer[vertexIndex].y = s_triangles[faceIndex + 10] * half + offset.y;
                     s_chunkVertexBuffer[vertexIndex].z = s_triangles[faceIndex + 11] * half + offset.z;
 
                     vertexIndex += 1;
-                    s_chunkColorBuffer [vertexIndex]   = color;
+                    s_chunkUVsBuffer [vertexIndex]     = uv3;
                     s_chunkVertexBuffer[vertexIndex].x = s_triangles[faceIndex + 12] * half + offset.x;
                     s_chunkVertexBuffer[vertexIndex].y = s_triangles[faceIndex + 13] * half + offset.y;
                     s_chunkVertexBuffer[vertexIndex].z = s_triangles[faceIndex + 14] * half + offset.z;
 
                     vertexIndex += 1;
-                    s_chunkColorBuffer [vertexIndex]   = color;
+                    s_chunkUVsBuffer [vertexIndex]     = uv4;
                     s_chunkVertexBuffer[vertexIndex].x = s_triangles[faceIndex + 15] * half + offset.x;
                     s_chunkVertexBuffer[vertexIndex].y = s_triangles[faceIndex + 16] * half + offset.y;
                     s_chunkVertexBuffer[vertexIndex].z = s_triangles[faceIndex + 17] * half + offset.z;
@@ -207,11 +221,11 @@ void Chunk::Batch()
     }
 
     s_chunkVertexBuffer.resize(vertexIndex);
-    s_chunkColorBuffer.resize (vertexIndex);
+    s_chunkUVsBuffer.resize (vertexIndex);
 
     // Indexing
-    cardinal::VBOIndexer::Index(s_chunkVertexBuffer, s_chunkColorBuffer, s_chunkIndexesBuffer, s_chunkIndexedVertexBuffer, s_chunkIndexedColorBuffer);
-    m_renderer.Initialize(s_chunkIndexesBuffer, s_chunkIndexedVertexBuffer, s_chunkIndexedColorBuffer);
+    cardinal::VBOIndexer::Index(s_chunkVertexBuffer, s_chunkUVsBuffer, s_chunkIndexesBuffer, s_chunkIndexedVertexBuffer, s_chunkIndexedUVsBuffer);
+    m_renderer.Initialize(s_chunkIndexesBuffer, s_chunkIndexedVertexBuffer, s_chunkIndexedUVsBuffer);
 
     auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - startT);
     auto elapsedUs = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - startT);
@@ -221,10 +235,10 @@ void Chunk::Batch()
     std::cout << "Output vertices : " << s_chunkIndexedVertexBuffer.size() << std::endl;
 
     s_chunkVertexBuffer.clear();
-    s_chunkColorBuffer.clear();
+    s_chunkUVsBuffer.clear();
 
     s_chunkIndexesBuffer.clear();
-    s_chunkIndexedColorBuffer.clear();
+    s_chunkIndexedUVsBuffer.clear();
     s_chunkIndexedVertexBuffer.clear();
 }
 

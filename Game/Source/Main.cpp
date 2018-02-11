@@ -194,7 +194,7 @@ int main(int argc, char ** argv)
     glfwSetInputMode(window->GetContext(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     glfwSetInputMode(window->GetContext(), GLFW_STICKY_KEYS, GL_TRUE);
 
-    std::vector<glm::vec3> vertices;
+    /*std::vector<glm::vec3> vertices;
     for (int i = 0; i < 108; i += 3) {
         vertices.emplace_back(
                 g_vertex_buffer_data[i + 0],
@@ -212,13 +212,13 @@ int main(int argc, char ** argv)
 
     std::vector<unsigned short> indexes;
     std::vector<glm::vec3>      iVertex;
-    std::vector<glm::vec3>      iColors;
+    std::vector<glm::vec2>      iColors;
 
-    cardinal::VBOIndexer::Index(vertices, colors, indexes, iVertex, iColors);
+    cardinal::VBOIndexer::Index(vertices, colors, indexes, iVertex, iColors);*/
 
-    cardinal::MeshRenderer renderer;
-    renderer.Initialize(indexes, iVertex, iColors);
-    engine.Register(&renderer);
+   // cardinal::MeshRenderer renderer;
+    //renderer.Initialize(indexes, iVertex, iColors);
+    //engine.Register(&renderer);
 
     Chunk::InitializeBuffers();
     Chunk chunk;

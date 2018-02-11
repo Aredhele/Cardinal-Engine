@@ -21,6 +21,7 @@ INCLUDE_DIRECTORIES(${CARDINAL_ENGINE_DIR}/Runtime/Header)
 # Compile all tests
 ADD_LIBRARY(CardinalEngine STATIC
         Core/Debug/Logger.cpp
+        Core/Maths/Noise/PerlinNoise.cpp
         Rendering/Context/Window.cpp
         Rendering/Debug/DebugCube.cpp
         Rendering/Shader/ShaderCompiler.cpp
@@ -28,7 +29,8 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Debug/DebugLine.cpp
         Rendering/Optimization/VBOIndexer.cpp
         Rendering/RenderingEngine.cpp
-        Rendering/Renderer/MeshRenderer.cpp)
+        Rendering/Renderer/MeshRenderer.cpp
+        Rendering/Texture/TextureLoader.cpp)
 
 # But tests depends on GTEST and GMOCK
 ADD_DEPENDENCIES(CardinalEngine glfw glew)

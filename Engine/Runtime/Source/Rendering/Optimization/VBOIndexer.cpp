@@ -35,11 +35,11 @@ namespace cardinal
 /// \param outColors   The output colors vector
 /* static */ void VBOIndexer::Index(
         const std::vector<glm::vec3> &inVertices,
-        const std::vector<glm::vec3> &inColors,
+        const std::vector<glm::vec2> &inUVs,
 
         std::vector<unsigned short> &outIndexes,
         std::vector<glm::vec3> &outVertices,
-        std::vector<glm::vec3> &outColors)
+        std::vector<glm::vec2> &outUVs)
 {
     std::map<sPackedVertex, unsigned short> output;
 
@@ -48,7 +48,7 @@ namespace cardinal
     for (size_t nVertex = 0; nVertex < inVerticesSize; ++nVertex)
     {
         unsigned short index;
-        sPackedVertex pack = {inVertices[nVertex], inColors[nVertex]};
+        sPackedVertex pack = {inVertices[nVertex], inUVs[nVertex]};
 
         bool bIsFound = GetSimilarVertexIndex(pack, output, index);
 
@@ -59,7 +59,7 @@ namespace cardinal
         else
         {
             outVertices.push_back(inVertices[nVertex]);
-            outColors.push_back  (inColors[nVertex]);
+            outUVs.push_back  (inUVs[nVertex]);
 
             size_t newIndex = outVertices.size() - 1;
             outIndexes.push_back(static_cast<unsigned short>(newIndex));

@@ -21,6 +21,7 @@
 /// \package    Rendering/Renderer
 /// \author     Vincent STEHLY--CALISTO
 
+#include <Runtime/Header/Rendering/Texture/TextureLoader.hpp>
 #include "Rendering/Renderer/MeshRenderer.hpp"
 #include "Rendering/Optimization/VBOIndexer.hpp"
 #include "Rendering/Shader/ShaderCompiler.hpp"
@@ -51,7 +52,7 @@ MeshRenderer::~MeshRenderer()
 void MeshRenderer::Initialize(
         std::vector<unsigned short> const& indexes,
         std::vector<glm::vec3>      const& vertices,
-        std::vector<glm::vec3>      const& colors)
+        std::vector<glm::vec2>      const& uvs)
 {
     // TODO Assertions
 
@@ -75,12 +76,12 @@ void MeshRenderer::Initialize(
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
 
-    glGenBuffers(1, &m_colorsObject);
-    glBindBuffer(GL_ARRAY_BUFFER, m_colorsObject);
-    glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec3), &colors[0], GL_STATIC_DRAW);
+    glGenBuffers(1, &m_uvsObject);
+    glBindBuffer(GL_ARRAY_BUFFER, m_uvsObject);
+    glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
 
     m_elementsCount = static_cast<GLsizei>(indexes.size());
 
@@ -91,6 +92,8 @@ void MeshRenderer::Initialize(
             "Resources/Shaders/fsbase.glsl");
 
     m_matrixID = glGetUniformLocation(m_shaderID, "MVP");
+
+    m_texture = TextureLoader::LoadBMPTexture("Resources/Textures/BlockAtlas.bmp");
 
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);

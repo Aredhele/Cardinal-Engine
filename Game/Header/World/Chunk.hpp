@@ -36,15 +36,15 @@ public:
     static const unsigned s_chunkSize       = 16;
     static const unsigned s_chunkBlockCount = s_chunkSize * s_chunkSize * s_chunkSize;
 
-    static const unsigned s_colorCount  = s_chunkBlockCount * 36;
+    static const unsigned s_uvsCount    = s_chunkBlockCount * 24;
     static const unsigned s_vertexCount = s_chunkBlockCount * 36;
 
     static std::vector<glm::vec3> s_chunkVertexBuffer;
-    static std::vector<glm::vec3> s_chunkColorBuffer;
+    static std::vector<glm::vec2> s_chunkUVsBuffer;
 
     static std::vector<unsigned short> s_chunkIndexesBuffer;
     static std::vector<glm::vec3>      s_chunkIndexedVertexBuffer;
-    static std::vector<glm::vec3>      s_chunkIndexedColorBuffer;
+    static std::vector<glm::vec2>      s_chunkIndexedUVsBuffer;
 
     static const float s_triangles[108];
 
@@ -61,6 +61,8 @@ public:
 
     /// \brief Initializes a debug chunk
     void Initialize();
+    void Generate();
+    void SetCol(int x, int y, int z);
 
     /// TODO : Removes
     /// \brief Returns the mesh renderer
