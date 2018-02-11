@@ -27,7 +27,9 @@
 #include <Runtime/Header/Rendering/Debug/DebugLine.hpp>
 #include <Runtime/Header/Core/Debug/Logger.hpp>
 #include <iostream>
+#include <Runtime/Header/Rendering/Optimization/VBOIndexer.hpp>
 #include "World/Cube.hpp"
+#include "World/Chunk.hpp"
 
 double lastMouseX = 0.0;
 double lastMouseY = 0.0;
@@ -153,16 +155,12 @@ void HandleInput(cardinal::Window & window, cardinal::Camera & camera, float dt)
 }
 
 /// \brief  Cardinal Engine entry point
-int Cardinal_EntryPoint(int argc, char ** argv) {
-
-    std::cout << "Bool size : " << sizeof(bool) << std::endl;
-    Cube cube;
-
-
+int main(int argc, char ** argv)
+{
     cardinal::RenderingEngine engine;
     cardinal::Camera camera;
 
-    if (!engine.Initialize(1024, 768, "Cardinal", 60.0f, false)) {
+    if (!engine.Initialize(1024, 768, "Cardinal", 10000.0f, false)) {
         return -1;
     }
 
@@ -212,9 +210,20 @@ int Cardinal_EntryPoint(int argc, char ** argv) {
                 1.0f);
     }
 
+    std::vector<unsigned short> indexes;
+    std::vector<glm::vec3>      iVertex;
+    std::vector<glm::vec3>      iColors;
+
+    cardinal::VBOIndexer::Index(vertices, colors, indexes, iVertex, iColors);
+
     cardinal::MeshRenderer renderer;
-    renderer.Initialize(vertices, colors);
+    renderer.Initialize(indexes, iVertex, iColors);
     engine.Register(&renderer);
+
+    Chunk::InitializeBuffers();
+    Chunk chunk;
+    chunk.Initialize();
+    engine.Register(chunk.GetMeshRenderer());
 
     do {
         // Fixed delta time

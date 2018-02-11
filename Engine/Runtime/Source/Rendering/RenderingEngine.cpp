@@ -55,13 +55,14 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle, flo
 
     // Configures OpenGL pipeline
     glDepthFunc(GL_LESS);
+    glEnable   (GL_CULL_FACE);
     glEnable   (GL_DEPTH_TEST);
 
     // TODO : Makes clear color configurable
     glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
     // TODO : Removes magic values
-    m_projectionMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
+    m_projectionMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
 
     m_frameDelta   = 1.0 / fps;
     m_frameTime    = 0.0;

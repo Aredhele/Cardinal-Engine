@@ -20,3 +20,61 @@
 /// \project    Cardinal Engine
 /// \package    World/Chunk
 /// \author     Vincent STEHLY--CALISTO
+
+#ifndef CARDINAL_ENGINE_CHUNK_HPP__
+#define CARDINAL_ENGINE_CHUNK_HPP__
+
+#include "World/Cube.hpp"
+#include "Rendering/Renderer/MeshRenderer.hpp"
+
+/// \class Chunk
+/// \brief Represents a world chunk of cube
+class Chunk
+{
+public:
+
+    static const unsigned s_chunkSize       = 16;
+    static const unsigned s_chunkBlockCount = s_chunkSize * s_chunkSize * s_chunkSize;
+
+    static const unsigned s_colorCount  = s_chunkBlockCount * 36;
+    static const unsigned s_vertexCount = s_chunkBlockCount * 36;
+
+    static std::vector<glm::vec3> s_chunkVertexBuffer;
+    static std::vector<glm::vec3> s_chunkColorBuffer;
+
+    static std::vector<unsigned short> s_chunkIndexesBuffer;
+    static std::vector<glm::vec3>      s_chunkIndexedVertexBuffer;
+    static std::vector<glm::vec3>      s_chunkIndexedColorBuffer;
+
+    static const float s_triangles[108];
+
+public:
+
+    /// \brief Static initialization of buffers
+    static void InitializeBuffers();
+
+    /// \brief Constructor
+    Chunk();
+
+    /// \brief Destructor
+    ~Chunk();
+
+    /// \brief Initializes a debug chunk
+    void Initialize();
+
+    /// TODO : Removes
+    /// \brief Returns the mesh renderer
+    cardinal::MeshRenderer * GetMeshRenderer();
+
+private:
+
+    /// \brief Builds the chunk vao
+    void Batch();
+
+private:
+
+    cardinal::MeshRenderer m_renderer;
+    Cube m_cubes[s_chunkSize][s_chunkSize][s_chunkSize];
+};
+
+#endif // !CARDINAL_ENGINE_CHUNK_HPP__

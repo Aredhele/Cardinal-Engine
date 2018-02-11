@@ -53,7 +53,7 @@ inline bool Cube::IsVisible() const
 /// \return The type of the cube
 inline Cube::EType Cube::GetType() const
 {
-    m_type;
+    return m_type;
 }
 
 /// \brief Tells if the block is solid or not

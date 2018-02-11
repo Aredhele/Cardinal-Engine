@@ -45,25 +45,20 @@ MeshRenderer::~MeshRenderer()
 }
 
 /// \brief Initializes the mesh
+/// \param indexes The indexes of the mesh
 /// \param vertices The vertices of the mesh
 /// \param colors The colors of the mesh
 void MeshRenderer::Initialize(
-        std::vector<glm::vec3> const &vertices,
-        std::vector<glm::vec3> const &colors)
+        std::vector<unsigned short> const& indexes,
+        std::vector<glm::vec3>      const& vertices,
+        std::vector<glm::vec3>      const& colors)
 {
     // TODO Assertions
 
     // Instrumentation
     Logger::LogInfo("Begin mesh renderer initialization ...");
-    Logger::LogInfo("Input vertices count = %d", vertices.size() * 3);
 
     double startTime = glfwGetTime();
-
-    std::vector<unsigned short> indexes;
-    std::vector<glm::vec3>      indexedVertices;
-    std::vector<glm::vec3>      indexedColors;
-
-    VBOIndexer::Index(vertices, colors, indexes, indexedVertices, indexedColors);
 
     // Generating vao
     glGenVertexArrays(1, &m_vao);
@@ -75,14 +70,14 @@ void MeshRenderer::Initialize(
 
     glGenBuffers(1, &m_verticesObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_verticesObject);
-    glBufferData(GL_ARRAY_BUFFER, indexedVertices.size() * sizeof(glm::vec3), &indexedVertices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
 
     glGenBuffers(1, &m_colorsObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_colorsObject);
-    glBufferData(GL_ARRAY_BUFFER, indexedColors.size() * sizeof(glm::vec3), &indexedColors[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec3), &colors[0], GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
@@ -102,7 +97,6 @@ void MeshRenderer::Initialize(
     glBindVertexArray(0);
 
     double elapsed = glfwGetTime() - startTime;
-    Logger::LogInfo("Output vertices count = %d", indexedVertices.size() * 3);
     Logger::LogInfo("Mesh renderer initialization completed in %lf seconds", elapsed);
 }
 

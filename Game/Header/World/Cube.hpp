@@ -25,18 +25,18 @@
 #define CARDINAL_ENGINE_CUBE_HPP__
 
 /// \class Cube
-/// \brief Stores informations about a cube
+/// \brief Stores information about a cube
 class Cube
 {
 public:
 
-    static const int s_CubeSize = 3;
+    static const int s_CubeSize = 4;
 
 public:
 
     /// \enum  EType
     /// \brief Represents the type of a cube
-    enum class EType : unsigned char
+    enum class EType
     {
         Air   = 0x0,
         Dirt  = 0x1,

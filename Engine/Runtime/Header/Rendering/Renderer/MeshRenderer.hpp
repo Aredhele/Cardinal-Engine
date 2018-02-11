@@ -45,11 +45,13 @@ public :
     ~MeshRenderer();
 
     /// \brief Initializes the mesh
+    /// \param indexes The indexes of the mesh
     /// \param vertices The vertices of the mesh
     /// \param colors The colors of the mesh
     void Initialize(
-            std::vector<glm::vec3> const& vertices,
-            std::vector<glm::vec3> const& colors);
+            std::vector<unsigned short> const& indexes,
+            std::vector<glm::vec3>      const& vertices,
+            std::vector<glm::vec3>      const& colors);
 
 private:
 
