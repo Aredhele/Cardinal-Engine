@@ -15,18 +15,4 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-# Adds all runtime header
-INCLUDE_DIRECTORIES(
-        ${CARDINAL_ENGINE_DIR}/Header/
-        ${CARDINAL_GAME_DIR}/Header/)
-
-# Compile game with the engine
-ADD_EXECUTABLE(Game
-        Main.cpp
-        World/Chunk.cpp)
-
-# But tests depends on GTEST and GMOCK
-ADD_DEPENDENCIES(Game CardinalEngine)
-
-# Linking ...
-TARGET_LINK_LIBRARIES(Game ${COMPILER_DEPENDENCIES} CardinalEngine)
+ADD_SUBDIRECTORY(Runtime)

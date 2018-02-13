@@ -23,10 +23,12 @@
 
 #include <chrono>
 #include <iostream>
-#include <Runtime/Header/Rendering/Optimization/VBOIndexer.hpp>
-#include <Runtime/Header/Core/Maths/Noise/PerlinNoise.hpp>
+#include "Runtime/Rendering/Optimization/VBOIndexer.hpp"
+#include "Runtime/Core/Maths/Noise/PerlinNoise.hpp"
 #include "World/Chunk.hpp"
-#include "Core/Debug/Logger.hpp"
+#include "Runtime/Core/Debug/Logger.hpp"
+#include "World/World.hpp"
+#include "Runtime/Core/Maths/Noise/NYPerlin.hpp"
 
 /* static */ std::vector<glm::vec3>      Chunk::s_chunkVertexBuffer;
 /* static */ std::vector<glm::vec2>      Chunk::s_chunkUVsBuffer;
@@ -81,29 +83,64 @@ void Chunk::Initialize()
 
 void Chunk::Generate()
 {
+    /*NYPerlin perlin;
+
+    float TweakA = 5.0f;
+    float TweakB = 2.0f;
+    float TweakC = 3.0f;
+
     // 2D terrain
     for(int x = 0; x < s_chunkSize; ++x)
     {
         for(int y = 0; y < s_chunkSize; ++y)
         {
-            float z = 0.5f + (cardinal::PerlinNoise::Sample2D(x, y, 10.0f));
-            SetCol(x, static_cast<int>(z * 16), y);
+            for(int z = 0; z < s_chunkSize; ++z)
+            {
+                Cube & cube = m_cubes[x][y][z];
+
+                float modif = 0.04;
+
+                float sample = perlin.sample(modif*x, modif*y, modif*z);
+
+                sample /= pow((float)z / (float)s_chunkSize, TweakA) / TweakB + TweakC;
+
+                glTranslated(x*Cube::s_CubeSize, y*Cube::s_CubeSize, z*Cube::s_CubeSize);
+                if (sample < 0.5f)
+                {
+                    cube.SetType(Cube::EType::Water);
+                    cube.SetVisible(true);
+                }
+                else
+                {
+                    cube.SetType(Cube::EType::Dirt);
+                    cube.SetVisible(true);
+                }
+            }
+
+            //float z = cardinal::PerlinNoise::Sample2D(tr.x + x, tr.z + y, 40.0f) * 16.0f;
+            //SetCol(x, y, static_cast<int>(z));
         }
-    }
+    }*/
 }
 
 void Chunk::SetCol(int x, int y, int z)
 {
-    std::cout << "Z = " << z << std::endl;
+    z += 8;
     for(int i = 0; i < s_chunkSize; ++i)
     {
-        if(i <= z)
+        if(i < z)
         {
-            m_cubes[x][y][i].SetType(Cube::EType::Dirt);
+            m_cubes[x][i][y].SetType(Cube::EType::Dirt);
+        }
+        else if(i == z)
+        {
+
+            m_cubes[x][i][y].SetType(Cube::EType::Grass);
+
         }
         else
         {
-            m_cubes[x][y][i].SetType(Cube::EType::Air);
+            m_cubes[x][i][y].SetType(Cube::EType::Air);
         }
     }
 }
@@ -117,10 +154,12 @@ void Chunk::Batch()
     glm::vec3 green(0.0f, 1.0f, 0.0f);
     glm::vec3 blue (0.0f, 0.0f, 1.0f);
 
-    glm::vec2 uv1(    0.0f,         1.0f); // 0,03125 0,96875
-    glm::vec2 uv2(0.03125f,         1.0f);
-    glm::vec2 uv3(0.03125f,     0.96875f);
-    glm::vec2 uv4(    0.0f,     0.96875f);
+    float textureStep = 1.0f / 16.0f;
+
+    glm::vec2 uv1;
+    glm::vec2 uv2;
+    glm::vec2 uv3;
+    glm::vec2 uv4;
 
     // Always resize to the max capacity
     // to not reallocate the vector memory
@@ -144,13 +183,34 @@ void Chunk::Batch()
                     continue;
                 }
 
-                // Gets cube color
+                // Sets cube uvs
                 glm::vec3 color;
                 switch(cube.GetType())
                 {
-                    case Cube::EType::Dirt:  color = red;   break;
-                    case Cube::EType::Grass: color = green; break;
-                    case Cube::EType::Water: color = blue;  break;
+                    case Cube::EType::Dirt:
+                    {
+                        uv1 = glm::vec2(2.0f * textureStep, 15.0f * textureStep);
+                        uv2 = glm::vec2(3.0f * textureStep, 15.0f * textureStep);
+                        uv3 = glm::vec2(3.0f * textureStep, 1.0f);
+                        uv4 = glm::vec2(2.0f * textureStep, 1.0f);
+
+                    }   break;
+                    case Cube::EType::Grass:
+                    {
+                        uv1 = glm::vec2(0.0f, 15.0f * textureStep);
+                        uv2 = glm::vec2(textureStep, 15.0f * textureStep);
+                        uv3 = glm::vec2(textureStep, 1.0f);
+                        uv4 = glm::vec2(0.0f, 1.0f);
+                        break;
+                    }
+                    case Cube::EType::Water:
+                    {
+                        uv1 = glm::vec2(0.0f, 15.0f * textureStep);
+                        uv2 = glm::vec2(textureStep, 15.0f * textureStep);
+                        uv3 = glm::vec2(textureStep, 1.0f);
+                        uv4 = glm::vec2(0.0f, 1.0f);
+                        break;
+                    }
                     default: break;
                 }
 
@@ -197,19 +257,19 @@ void Chunk::Batch()
                     s_chunkVertexBuffer[vertexIndex].z = s_triangles[faceIndex +  8] * half + offset.z;
 
                     vertexIndex += 1;
-                    s_chunkUVsBuffer [vertexIndex]     = uv1;
+                    s_chunkUVsBuffer [vertexIndex]     = uv3;
                     s_chunkVertexBuffer[vertexIndex].x = s_triangles[faceIndex +  9] * half + offset.x;
                     s_chunkVertexBuffer[vertexIndex].y = s_triangles[faceIndex + 10] * half + offset.y;
                     s_chunkVertexBuffer[vertexIndex].z = s_triangles[faceIndex + 11] * half + offset.z;
 
                     vertexIndex += 1;
-                    s_chunkUVsBuffer [vertexIndex]     = uv3;
+                    s_chunkUVsBuffer [vertexIndex]     = uv4;
                     s_chunkVertexBuffer[vertexIndex].x = s_triangles[faceIndex + 12] * half + offset.x;
                     s_chunkVertexBuffer[vertexIndex].y = s_triangles[faceIndex + 13] * half + offset.y;
                     s_chunkVertexBuffer[vertexIndex].z = s_triangles[faceIndex + 14] * half + offset.z;
 
                     vertexIndex += 1;
-                    s_chunkUVsBuffer [vertexIndex]     = uv4;
+                    s_chunkUVsBuffer [vertexIndex]     = uv1;
                     s_chunkVertexBuffer[vertexIndex].x = s_triangles[faceIndex + 15] * half + offset.x;
                     s_chunkVertexBuffer[vertexIndex].y = s_triangles[faceIndex + 16] * half + offset.y;
                     s_chunkVertexBuffer[vertexIndex].z = s_triangles[faceIndex + 17] * half + offset.z;

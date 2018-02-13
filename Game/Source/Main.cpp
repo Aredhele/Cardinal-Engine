@@ -21,20 +21,22 @@
 /// \author     Vincent STEHLY--CALISTO
 
 
-#include <Runtime/Header/Rendering/Renderer/MeshRenderer.hpp>
-#include "Rendering/RenderingEngine.hpp"
-#include "Platform/Configuration/Configuration.hh"
-#include <Runtime/Header/Rendering/Debug/DebugLine.hpp>
-#include <Runtime/Header/Core/Debug/Logger.hpp>
+#include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
+#include "Runtime/Rendering/RenderingEngine.hpp"
+#include "Runtime/Platform/Configuration/Configuration.hh"
+#include "Runtime/Rendering/Debug/DebugLine.hpp"
+#include "Runtime/Core/Debug/Logger.hpp"
 #include <iostream>
-#include <Runtime/Header/Rendering/Optimization/VBOIndexer.hpp>
+#include "Runtime/Rendering/Optimization/VBOIndexer.hpp"
+#include <World/World.hpp>
 #include "World/Cube.hpp"
 #include "World/Chunk.hpp"
 
 double lastMouseX = 0.0;
 double lastMouseY = 0.0;
 
-float speed = 15.0f;
+float speed = 50.0f;
+float run = 30.0f;
 float mouseSensitivity = 0.002f;
 
 static const GLfloat g_vertex_buffer_data[] = {
@@ -126,6 +128,11 @@ void HandleInput(cardinal::Window & window, cardinal::Camera & camera, float dt)
 
     camera.Rotate  (static_cast<float>(-deltaX * mouseSensitivity));
     camera.RotateUp(static_cast<float>(-deltaY * mouseSensitivity));
+    bool bAlt = false;
+    if(glfwGetKey(window.GetContext(), GLFW_KEY_LEFT_ALT))
+    {
+        bAlt = true;
+    }
 
     glm::vec2 mousePos    (mouseX, mouseY);
     glm::vec2 windowSize  (1024.0f, 768.0f);
@@ -137,7 +144,9 @@ void HandleInput(cardinal::Window & window, cardinal::Camera & camera, float dt)
 
     if (glm::distance(mousePos, windowCenter) > maxMousePosRadius)
     {
-        glfwSetCursorPos(window.GetContext(), 1024/2, 768/2);
+        if(!bAlt)
+            glfwSetCursorPos(window.GetContext(), 1024/2, 768/2);
+
         lastMouseX = windowCenter.x;
         lastMouseY = windowCenter.y;
     }
@@ -147,12 +156,21 @@ void HandleInput(cardinal::Window & window, cardinal::Camera & camera, float dt)
         lastMouseY = mousePos.y;
     }
 
+
+
+    float speedCoeff = 1.0f;
+    if(glfwGetKey(window.GetContext(), GLFW_KEY_LEFT_SHIFT))
+    {
+        speedCoeff = 2.0f;
+    }
+
     // camera.LookAt(glm::vec3(0.0f));
-    if (glfwGetKey(window.GetContext(), GLFW_KEY_W) == GLFW_PRESS) camera.Translate( camera.GetDirection() * dt * speed);
-    if (glfwGetKey(window.GetContext(), GLFW_KEY_S) == GLFW_PRESS) camera.Translate(-camera.GetDirection() * dt * speed);
-    if (glfwGetKey(window.GetContext(), GLFW_KEY_D) == GLFW_PRESS) camera.Translate( camera.GetRight() * dt * speed);
-    if (glfwGetKey(window.GetContext(), GLFW_KEY_A) == GLFW_PRESS) camera.Translate(-camera.GetRight() * dt * speed);
+    if (glfwGetKey(window.GetContext(), GLFW_KEY_W) == GLFW_PRESS) camera.Translate( camera.GetDirection() * dt * speed * speedCoeff);
+    if (glfwGetKey(window.GetContext(), GLFW_KEY_S) == GLFW_PRESS) camera.Translate(-camera.GetDirection() * dt * speed * speedCoeff);
+    if (glfwGetKey(window.GetContext(), GLFW_KEY_D) == GLFW_PRESS) camera.Translate( camera.GetRight() * dt * speed * speedCoeff);
+    if (glfwGetKey(window.GetContext(), GLFW_KEY_A) == GLFW_PRESS) camera.Translate(-camera.GetRight() * dt * speed * speedCoeff);
 }
+
 
 /// \brief  Cardinal Engine entry point
 int main(int argc, char ** argv)
@@ -160,7 +178,7 @@ int main(int argc, char ** argv)
     cardinal::RenderingEngine engine;
     cardinal::Camera camera;
 
-    if (!engine.Initialize(1024, 768, "Cardinal", 10000.0f, false)) {
+    if (!engine.Initialize(1600, 900, "Cardinal", 10000.0f, false)) {
         return -1;
     }
 
@@ -191,7 +209,7 @@ int main(int argc, char ** argv)
     double lastTime = currentTime;
     double dLastTime = currentTime;
 
-    glfwSetInputMode(window->GetContext(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+   // glfwSetInputMode(window->GetContext(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     glfwSetInputMode(window->GetContext(), GLFW_STICKY_KEYS, GL_TRUE);
 
     /*std::vector<glm::vec3> vertices;
@@ -219,11 +237,18 @@ int main(int argc, char ** argv)
    // cardinal::MeshRenderer renderer;
     //renderer.Initialize(indexes, iVertex, iColors);
     //engine.Register(&renderer);
+    glEnable( GL_LINE_SMOOTH );
+    glEnable(GL_BLEND);
+    glLineWidth(100);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     Chunk::InitializeBuffers();
-    Chunk chunk;
-    chunk.Initialize();
-    engine.Register(chunk.GetMeshRenderer());
+  //  Chunk chunk;
+  //  chunk.Initialize();
+   // engine.Register(chunk.GetMeshRenderer());
+
+    World world;
+    world.GenerateWorld(engine);
 
     do {
         // Fixed delta time

@@ -25,7 +25,7 @@
 #define CARDINAL_ENGINE_CHUNK_HPP__
 
 #include "World/Cube.hpp"
-#include "Rendering/Renderer/MeshRenderer.hpp"
+#include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
 
 /// \class Chunk
 /// \brief Represents a world chunk of cube
@@ -68,6 +68,12 @@ public:
     /// \brief Returns the mesh renderer
     cardinal::MeshRenderer * GetMeshRenderer();
 
+    void Translate(glm::vec3 const& t)
+    {
+        tr = t;
+        m_renderer.Translate(t);
+    }
+    Cube m_cubes[s_chunkSize][s_chunkSize][s_chunkSize];
 private:
 
     /// \brief Builds the chunk vao
@@ -75,8 +81,9 @@ private:
 
 private:
 
+    glm::vec3 tr;
     cardinal::MeshRenderer m_renderer;
-    Cube m_cubes[s_chunkSize][s_chunkSize][s_chunkSize];
+    //Cube m_cubes[s_chunkSize][s_chunkSize][s_chunkSize];
 };
 
 #endif // !CARDINAL_ENGINE_CHUNK_HPP__

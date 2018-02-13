@@ -16,17 +16,24 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 # Adds all runtime header
-INCLUDE_DIRECTORIES(
-        ${CARDINAL_ENGINE_DIR}/Header/
-        ${CARDINAL_GAME_DIR}/Header/)
+INCLUDE_DIRECTORIES(${CARDINAL_ENGINE_DIR}/Header/)
 
-# Compile game with the engine
-ADD_EXECUTABLE(Game
-        Main.cpp
-        World/Chunk.cpp)
+# Compile all tests
+ADD_LIBRARY(CardinalEngine STATIC
+        Core/Debug/Logger.cpp
+        Core/Maths/Noise/PerlinNoise.cpp
+        Rendering/Context/Window.cpp
+        Rendering/Debug/DebugCube.cpp
+        Rendering/Shader/ShaderCompiler.cpp
+        Rendering/Camera/Camera.cpp
+        Rendering/Debug/DebugLine.cpp
+        Rendering/Optimization/VBOIndexer.cpp
+        Rendering/RenderingEngine.cpp
+        Rendering/Renderer/MeshRenderer.cpp
+        Rendering/Texture/TextureLoader.cpp)
 
 # But tests depends on GTEST and GMOCK
-ADD_DEPENDENCIES(Game CardinalEngine)
+ADD_DEPENDENCIES(CardinalEngine glfw glew)
 
 # Linking ...
-TARGET_LINK_LIBRARIES(Game ${COMPILER_DEPENDENCIES} CardinalEngine)
+TARGET_LINK_LIBRARIES(CardinalEngine ${COMPILER_DEPENDENCIES} glfw glew ${PLATFORM_DEPENDENCIES})

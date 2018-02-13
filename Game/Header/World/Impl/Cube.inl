@@ -24,7 +24,7 @@
 /// \brief Constructor
 inline Cube::Cube()
 {
-    m_bIsVisible = true;
+    m_bIsVisible = false;
     m_type       = EType::Air;
 }
 
