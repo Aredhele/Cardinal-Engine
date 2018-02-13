@@ -16,105 +16,74 @@
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 /// \file       TextureLoader.cpp
-/// \date       11/02/2018
+/// \date       13/02/2018
 /// \project    Cardinal Engine
-/// \package    Rendering/Texture
+/// \package    Runtime/Rendering/Texture
 /// \author     Vincent STEHLY--CALISTO
 
-#include <cstdio>
 #include "Runtime/Core/Debug/Logger.hpp"
+#include "Runtime/Core/Assertion/Assert.hh"
 #include "Runtime/Rendering/Texture/TextureLoader.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// TMP
-GLuint cardinal::TextureLoader::LoadBMPTexture(char const* szPath)
+/* static */ TextureLoader * TextureLoader::s_pInstance = nullptr;
+
+/// \brief Default constructor
+TextureLoader::TextureLoader()
+: m_pDataBuffer(nullptr)
 {
-   // Logger::LogInfo("Reading texture %s", szPath);
+    // None
+}
 
-    // Data read from the header of the BMP file
-    unsigned char header[54];
-    unsigned int dataPos;
-    unsigned int imageSize;
-    unsigned int width, height;
-    // Actual RGB data
-    unsigned char * data;
+/// \brief Initializes the loader manager
+///        Initializes the loader instance
+void TextureLoader::Initialize()
+{
+    if(TextureLoader::s_pInstance == nullptr)
+    {
+        TextureLoader::s_pInstance = new TextureLoader();
+        TextureLoader::s_pInstance->m_pDataBuffer = new uchar[1024 * 2024];
 
-    // Open the file
-    FILE * file = fopen(szPath,"rb");
-    if (!file){
-        Logger::LogInfo("%s could not be opened. Are you in the right directory ?", szPath);
-        getchar();
-        return 0;
+        ASSERT_NOT_NULL(TextureLoader::s_pInstance->m_pDataBuffer);
+        Logger::LogInfo("Texture loader successfully initialized");
     }
-
-    // Read the header, i.e. the 54 first bytes
-
-    // If less than 54 bytes are read, problem
-    if ( fread(header, 1, 54, file)!=54 ){
-        Logger::LogError("Not a correct BMP file");
-        fclose(file);
-        return 0;
+    else
+    {
+        Logger::LogWaring("The texture loader is already initialized");
     }
-    // A BMP files always begins with "BM"
-    if ( header[0]!='B' || header[1]!='M' ){
-        Logger::LogError("Not a correct BMP file");
-        fclose(file);
-        return 0;
+}
+
+/// \brief Destroys the loader manager
+///        Destroys the loader instance
+void TextureLoader::Shutdown()
+{
+    if(TextureLoader::s_pInstance != nullptr)
+    {
+        delete[] TextureLoader::s_pInstance->m_pDataBuffer;
+        delete   TextureLoader::s_pInstance;
+
+        TextureLoader::s_pInstance = nullptr;
+        Logger::LogInfo("Texture loader successfully destroyed");
     }
-    // Make sure this is a 24bpp file
-    if ( *(int*)&(header[0x1E])!=0  )         { Logger::LogError("Not a correct BMP file");    fclose(file); return 0;}
-    if ( *(int*)&(header[0x1C])!=24 )         { Logger::LogError("Not a correct BMP file");    fclose(file); return 0;}
+    else
+    {
+        Logger::LogWaring("The texture loader is already destroyed");
+    }
+}
 
-    // Read the information about the image
-    dataPos    = *(int*)&(header[0x0A]);
-    imageSize  = *(int*)&(header[0x22]);
-    width      = *(int*)&(header[0x12]);
-    height     = *(int*)&(header[0x16]);
+/// \brief Loads a texture from a path and register it into the engine
+void TextureLoader::LoadTexture(std::string const& path)
+{
+    // TODO
+}
 
-    // Some BMP files are misformatted, guess missing information
-    if (imageSize==0)    imageSize=width*height*3; // 3 : one byte for each Red, Green and Blue component
-    if (dataPos==0)      dataPos=54; // The BMP header is done that way
-
-    // Create a buffer
-    data = new unsigned char [imageSize];
-
-    // Read the actual data from the file into the buffer
-    fread(data,1,imageSize,file);
-
-    // Everything is in memory now, the file can be closed.
-    fclose (file);
-
-    // Create one OpenGL texture
-    GLuint textureID;
-    glGenTextures(1, &textureID);
-
-    // "Bind" the newly created texture : all future texture functions will modify this texture
-    glBindTexture(GL_TEXTURE_2D, textureID);
-
-    // Give the image to OpenGL
-    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, data);
-
-    // OpenGL has now copied the data. Free our own version
-    delete [] data;
-
-    // Poor filtering, or ...
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-    // ... nice trilinear filtering ...
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  //  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  //  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  //  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-
-    // ... which requires mipmaps. Generate them automatically.
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-    // Return the ID of the texture we just created
-    return textureID;
+/// \brief Loads a bunch of textures from a list
+void TextureLoader::LoadTextures(std::vector<std::string> const& paths)
+{
+    // TODO
 }
 
 } // !namespace

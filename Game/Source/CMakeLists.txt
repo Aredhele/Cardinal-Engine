@@ -18,7 +18,7 @@
 # Adds all runtime header
 INCLUDE_DIRECTORIES(
         ${CARDINAL_ENGINE_DIR}/Header/
-        ${CARDINAL_GAME_DIR}/Header/)
+        ${CARDINAL_GAME_DIR}/Header)
 
 # Compile game with the engine
 ADD_EXECUTABLE(Game

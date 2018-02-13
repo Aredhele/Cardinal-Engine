@@ -31,6 +31,12 @@ namespace cardinal
 
 /* static */ TextureManager * TextureManager::s_pInstance = nullptr;
 
+/// \brief Default constructor
+TextureManager::TextureManager()
+{
+    // None
+}
+
 /// \brief Initializes the texture manager
 ///        Initializes the manager instance
 /* static */ void cardinal::TextureManager::Initialize()

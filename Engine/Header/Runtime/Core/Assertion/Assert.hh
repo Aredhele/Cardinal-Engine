@@ -192,9 +192,6 @@ void assert_is_lower_than(const T & lhs,
         cardinal::impl::assert_is_lower_than(LHS, RHS, #LHS, #RHS, MSG, \
             __FILE__, __func__, __LINE__);
 
-//  Includes implementation of assertions
-#   include "Runtime/Core/Assertion/Impl/Assert.inl"
-
 #else
 
 #   define ASSERT_TRUE
@@ -216,5 +213,8 @@ void assert_is_lower_than(const T & lhs,
 #   define ASSERT_LT_MSG
 
 #endif // DEBUG
+
+//  Includes implementation of assertions
+#   include "Runtime/Core/Assertion/Impl/Assert.inl"
 
 #endif // !CARDINAL_ENGINE_ASSERT_HH__

@@ -25,7 +25,7 @@
 namespace cardinal { namespace impl {
 
 /// \brief  Displays the assertion message
-void assert_print(const char *szName, const char *szExpr, const char *szMsg,
+inline void assert_print(const char *szName, const char *szExpr, const char *szMsg,
                   const char *szFile, const char *szFunc, int32 line)
 {
     fprintf(stderr, "FILE\t : %s\nLINE\t : %d\nFUNCTION : %s\n"
@@ -34,7 +34,7 @@ void assert_print(const char *szName, const char *szExpr, const char *szMsg,
 }
 
 /// \brief  Checks if the expression is true
-void assert_true(bool bExpr, const char *szExpr, const char *szMsg,
+inline void assert_true(bool bExpr, const char *szExpr, const char *szMsg,
                  const char *szFile, const char *szFunc, int32 line)
 {
     if (!bExpr)
@@ -45,7 +45,7 @@ void assert_true(bool bExpr, const char *szExpr, const char *szMsg,
 }
 
 /// \brief  Checks sif the expression is false
-void assert_false(bool bExpr, const char *szExpr, const char *szMsg,
+inline void assert_false(bool bExpr, const char *szExpr, const char *szMsg,
                   const char *szFile, const char *szFunc, int32 line)
 {
     if (bExpr)
@@ -57,7 +57,7 @@ void assert_false(bool bExpr, const char *szExpr, const char *szMsg,
 
 /// \brief  Checks if rhs and lhs are equal
 template<class T, class U>
-void assert_equal(const T &lhs, const T &rhs,
+inline void assert_equal(const T &lhs, const T &rhs,
                   const char * szLhs, const char * szRhs,
                   const char * szMsg, const char * szFile,
                   const char * szFunc, int32 line)
@@ -74,7 +74,7 @@ void assert_equal(const T &lhs, const T &rhs,
 
 /// \brief  Checks if rhs and lhs are different
 template <class T, class U>
-void assert_non_equal(const T &lhs, const U &rhs,
+inline void assert_non_equal(const T &lhs, const U &rhs,
                       const char * szLhs, const char * szRhs,
                       const char * szMsg, const char * szFile,
                       const char * szFunc, int32 line)
@@ -90,7 +90,7 @@ void assert_non_equal(const T &lhs, const U &rhs,
 }
 
 /// \brief  Checks if ptr is null pointer
-void assert_is_null(void *ptr, const char *szExpr, const char *szMsg,
+inline void assert_is_null(void *ptr, const char *szExpr, const char *szMsg,
                     const char *szFile, const char *szFunc, int32 line)
 {
     if (ptr != nullptr)
@@ -101,7 +101,7 @@ void assert_is_null(void *ptr, const char *szExpr, const char *szMsg,
 }
 
 /// \brief  Checks if ptr is not null pointer
-void assert_is_not_null(void *ptr, const char *szExpr, const char *szMsg,
+inline void assert_is_not_null(void *ptr, const char *szExpr, const char *szMsg,
                         const char *szFile, const char *szFunc, int32 line)
 {
     if (ptr == nullptr)
@@ -113,7 +113,7 @@ void assert_is_not_null(void *ptr, const char *szExpr, const char *szMsg,
 
 /// \brief  Checks if rhs is greater than lhs
 template <class T, class U>
-void assert_is_greater_than(const T & lhs, const U & rhs,
+inline void assert_is_greater_than(const T & lhs, const U & rhs,
                             const char * szLhs, const char * szRhs,
                             const char * szMsg, const char * szFile,
                             const char * szFunc, int32 line)
@@ -130,7 +130,7 @@ void assert_is_greater_than(const T & lhs, const U & rhs,
 
 /// \brief  Checks if rhs is lower than lhs
 template <class T, class U>
-void assert_is_lower_than(const T & lhs, const U & rhs,
+inline void assert_is_lower_than(const T & lhs, const U & rhs,
                           const char * szLhs, const char * szRhs,
                           const char * szMsg, const char * szFile,
                           const char * szFunc, int32 line)

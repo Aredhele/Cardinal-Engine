@@ -27,7 +27,7 @@
 #include <vector>
 #include "Glm/glm/glm.hpp"
 #include "Glm/glm/ext.hpp"
-#include "Glew/include/GL/glew.h"
+#include "Runtime/Platform/Configuration/Configuration.hh"
 
 /// \namespace cardinal
 namespace cardinal
@@ -63,14 +63,14 @@ private:
 
     friend class RenderingEngine;
 
-    GLuint    m_vao;
-    GLuint    m_texture;
-    GLuint    m_indexesObject;
-    GLuint    m_verticesObject;
-    GLuint    m_uvsObject;
-    GLuint    m_shaderID;
-    GLint     m_matrixID;
-    GLsizei   m_elementsCount;
+    uint    m_vao;
+    uint    m_texture;
+    uint    m_indexesObject;
+    uint    m_verticesObject;
+    uint    m_uvsObject;
+    uint    m_shaderID;
+    int     m_matrixID;
+    int     m_elementsCount;
     glm::mat4 m_model;
 
     // TODO : Shader ID

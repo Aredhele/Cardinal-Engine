@@ -93,7 +93,7 @@ void MeshRenderer::Initialize(
 
     m_matrixID = glGetUniformLocation(m_shaderID, "MVP");
 
-    m_texture = TextureLoader::LoadBMPTexture("Resources/Textures/BlockAtlas.bmp");
+ //   m_texture = TextureLoader::LoadBMPTexture("Resources/Textures/BlockAtlas.bmp");
 
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);

@@ -24,9 +24,12 @@
 #ifndef CARDINAL_ENGINE_TEXTURE_LOADER_HPP__
 #define CARDINAL_ENGINE_TEXTURE_LOADER_HPP__
 
-/// \namespace cardinal
-#include "Glew/include/GL/glew.h"
+#include <string>
+#include <vector>
 
+#include "Runtime/Platform/Configuration/Configuration.hh"
+
+/// \namespace cardinal
 namespace cardinal
 {
 
@@ -34,10 +37,35 @@ namespace cardinal
 /// \brief
 class TextureLoader
 {
+private:
+
+    static TextureLoader * s_pInstance; ///< The loader instance
+
 public:
 
-    /// TMP
-    static GLuint LoadBMPTexture(char const* szPath);
+    // TODO : Encapsulate all static methods
+
+    /// \brief Initializes the texture loader
+    ///        Initializes the loader instance
+    static void Initialize();
+
+    /// \brief Destroys the texture loader
+    ///        Destroys the loader instance
+    static void Shutdown  ();
+
+    /// \brief Loads a texture from a path and register it into the engine
+    static void LoadTexture(std::string const& path);
+
+    /// \brief Loads a bunch of textures from a list
+    static void LoadTextures(std::vector<std::string> const& paths);
+
+private:
+
+    /// \brief Default constructor
+    TextureLoader();
+
+    // TODO : Uses the main engine stack allocator
+    uchar * m_pDataBuffer;
 };
 
 } // !namespace

@@ -21,9 +21,12 @@
 /// \package    Rendering
 /// \author     Vincent STEHLY--CALISTO
 
+#include "Glew/include/GL/glew.h"
 #include "Runtime/Core/Debug/Logger.hpp"
-#include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
 #include "Runtime/Rendering/RenderingEngine.hpp"
+#include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
+#include "Runtime/Rendering/Texture/TextureLoader.hpp"
+#include "Runtime/Rendering/Texture/TextureManager.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -35,7 +38,7 @@ namespace cardinal
 /// \param szTitle The title of the window
 /// \param fps The fps limit
 /// \param bInterpolate Should the engine interpolate frame ?
-bool RenderingEngine::Initialize(int width, int height, const char *szTitle, float fps, bool bInterpolate)
+bool RenderingEngine::Initialize(int width, int height, const char * szTitle, float fps, bool bInterpolate)
 {
     Logger::LogInfo("Initializing the Rendering Engine ...");
     Logger::LogInfo("Initializing OpenGL context ...");
@@ -50,8 +53,9 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle, flo
     // Allocates memory
     // TODO
 
-    // Loads & Compiles shaders
-    // TODO
+    // Loads Textures & Compiles shaders
+    TextureManager::Initialize();
+    TextureLoader::Initialize();
 
     // Configures OpenGL pipeline
     glDepthFunc(GL_LESS);
@@ -62,7 +66,7 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle, flo
     glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
     // TODO : Removes magic values
-    m_projectionMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 12000.0f);
+    m_projectionMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
 
     m_frameDelta   = 1.0 / fps;
     m_frameTime    = 0.0;
@@ -74,7 +78,7 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle, flo
     m_currentFps   = 0;
     m_fpsCounter   = 0;
 
-    Logger::LogInfo("Rendering engine successfully initialized");
+    Logger::LogInfo("Rendering engine successfully initialized in %3.4lf s.", glfwGetTime());
 }
 
 /// \brief Renders the frame
@@ -181,6 +185,7 @@ void RenderingEngine::SetCamera(Camera * pCamera)
 void RenderingEngine::Shutdow()
 {
     // TODO
+    TextureManager::Shutdown();
 }
 
 /// \brief Returns a pointer on the window

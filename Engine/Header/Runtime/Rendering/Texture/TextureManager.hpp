@@ -70,9 +70,12 @@ private:
 
 private:
 
-    // Constructor private here
+    /// \brief  Default constuctor
+    TextureManager();
 
     // TODO : Use IDs
+    // TODO : Destructor
+
     std::unordered_map<std::string, uint> m_textureIDs;
 };
 
