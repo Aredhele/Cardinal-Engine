@@ -30,7 +30,8 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Optimization/VBOIndexer.cpp
         Rendering/RenderingEngine.cpp
         Rendering/Renderer/MeshRenderer.cpp
-        Rendering/Texture/TextureLoader.cpp)
+        Rendering/Texture/TextureLoader.cpp
+        Rendering/Texture/TextureManager.cpp)
 
 # But tests depends on GTEST and GMOCK
 ADD_DEPENDENCIES(CardinalEngine glfw glew)

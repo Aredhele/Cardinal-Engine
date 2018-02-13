@@ -56,14 +56,16 @@ void assert_false(bool bExpr, const char *szExpr, const char *szMsg,
 }
 
 /// \brief  Checks if rhs and lhs are equal
-template<class T>
-void assert_equal(const T &rhs, const T &lhs, const char *szMsg,
-                  const char *szFile, const char *szFunc, int32 line)
+template<class T, class U>
+void assert_equal(const T &lhs, const T &rhs,
+                  const char * szLhs, const char * szRhs,
+                  const char * szMsg, const char * szFile,
+                  const char * szFunc, int32 line)
 {
-    if (rhs != lhs)
+    if (lhs != rhs)
     {
-        std::string expr = std::to_string(rhs) + " == " +
-                           std::to_string(lhs);
+        std::string expr = std::string(szLhs) + " == " +
+                           std::string(szRhs);
 
         assert_print("ASSERT_EQ", expr.c_str(), szMsg, szFile, szFunc, line);
         DEBUG_BREAK();
@@ -71,14 +73,16 @@ void assert_equal(const T &rhs, const T &lhs, const char *szMsg,
 }
 
 /// \brief  Checks if rhs and lhs are different
-template<class T>
-void assert_non_equal(const T &rhs, const T &lhs, const char *szMsg,
-                      const char *szFile, const char *szFunc, int32 line)
+template <class T, class U>
+void assert_non_equal(const T &lhs, const U &rhs,
+                      const char * szLhs, const char * szRhs,
+                      const char * szMsg, const char * szFile,
+                      const char * szFunc, int32 line)
 {
-    if (rhs == lhs)
+    if (lhs == rhs)
     {
-        std::string expr = std::to_string(rhs) + " != " +
-                           std::to_string(lhs);
+        std::string expr = std::string(szLhs) + " != " +
+                           std::string(szRhs);
 
         assert_print("ASSERT_NE", expr.c_str(), szMsg, szFile, szFunc, line);
         DEBUG_BREAK();
@@ -108,14 +112,16 @@ void assert_is_not_null(void *ptr, const char *szExpr, const char *szMsg,
 }
 
 /// \brief  Checks if rhs is greater than lhs
-template <class T>
-void assert_is_greater_than(const T & rhs, const T & lhs, const char * szMsg,
-                            const char * szFile, const char * szFunc, int32 line)
+template <class T, class U>
+void assert_is_greater_than(const T & lhs, const U & rhs,
+                            const char * szLhs, const char * szRhs,
+                            const char * szMsg, const char * szFile,
+                            const char * szFunc, int32 line)
 {
-    if(rhs < lhs)
+    if(lhs < rhs)
     {
-        std::string expr = std::to_string(rhs) + " > " +
-                           std::to_string(lhs);
+        std::string expr = std::string(szLhs) + " > " +
+                           std::string(szRhs);
 
         assert_print("ASSERT_GT", expr.c_str(), szMsg, szFile, szFunc, line);
         DEBUG_BREAK();
@@ -123,14 +129,16 @@ void assert_is_greater_than(const T & rhs, const T & lhs, const char * szMsg,
 }
 
 /// \brief  Checks if rhs is lower than lhs
-template <class T>
-void assert_is_lower_than(const T & rhs, const T & lhs, const char * szMsg,
-                          const char * szFile, const char * szFunc, int32 line)
+template <class T, class U>
+void assert_is_lower_than(const T & lhs, const U & rhs,
+                          const char * szLhs, const char * szRhs,
+                          const char * szMsg, const char * szFile,
+                          const char * szFunc, int32 line)
 {
-    if(rhs > lhs)
+    if(lhs > rhs)
     {
-        std::string expr = std::to_string(rhs) + " < " +
-                           std::to_string(lhs);
+        std::string expr = std::string(szLhs) + " < " +
+                           std::string(szRhs);
 
         assert_print("ASSERT_LT", expr.c_str(), szMsg, szFile, szFunc, line);
         DEBUG_BREAK();

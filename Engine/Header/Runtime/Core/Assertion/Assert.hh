@@ -63,18 +63,22 @@ void assert_false(bool bExpr,
                   int32 line);
 
 /// \brief  Checks if rhs and lhs are equal
-template <class T>
-void assert_equal(const T & rhs,
-                  const T & lhs,
+template <class T, class U>
+void assert_equal(const T & lhs,
+                  const U & rhs,
+                  const char * szLhs,
+                  const char * szRhs,
                   const char * szMsg,
                   const char * szFile,
                   const char * szFunc,
                   int32 line);
 
 /// \brief  Checks if rhs and lhs are different
-template <class T>
-void assert_non_equal(const T & rhs,
-                      const T & lhs,
+template <class T, class U>
+void assert_non_equal(const T & lhs,
+                      const U & rhs,
+                      const char * szLhs,
+                      const char * szRhs,
                       const char * szMsg,
                       const char * szFile,
                       const char * szFunc,
@@ -97,18 +101,22 @@ void assert_is_not_null(void * ptr,
                         int32 line);
 
 /// \brief  Checks if rhs is greater than lhs
-template <class T>
-void assert_is_greater_than(const T & rhs,
-                            const T & lhs,
+template <class T, class U>
+void assert_is_greater_than(const T & lhs,
+                            const U & rhs,
+                            const char * szLhs,
+                            const char * szRhs,
                             const char * szMsg,
                             const char * szFile,
                             const char * szFunc,
                             int32 line);
 
 /// \brief  Checks if rhs is lower than lhs
-template <class T>
-void assert_is_lower_than(const T & rhs,
-                          const T & lhs,
+template <class T, class U>
+void assert_is_lower_than(const T & lhs,
+                          const U & rhs,
+                          const char * szLhs,
+                          const char * szRhs,
                           const char * szMsg,
                           const char * szFile,
                           const char * szFunc,
@@ -128,12 +136,12 @@ void assert_is_lower_than(const T & rhs,
         cardinal::impl::assert_false(EXPR, #EXPR, "None", \
             __FILE__, __func__, __LINE__);
 
-#   define ASSERT_EQ(RHS, LHS) \
-        cardinal::impl::assert_equal(RHS, LHS, "None", \
+#   define ASSERT_EQ(LHS, RHS) \
+        cardinal::impl::assert_equal(LHS, RHS, #LHS, #RHS, "None", \
             __FILE__, __func__, __LINE__);
 
-#   define ASSERT_NE(RHS, LHS) \
-        cardinal::impl::assert_non_equal(RHS, LHS, "None", \
+#   define ASSERT_NE(LHS, RHS) \
+        cardinal::impl::assert_non_equal(LHS, RHS, #LHS, #RHS, "None", \
             __FILE__, __func__, __LINE__);
 
 #   define ASSERT_NULL(PTR) \
@@ -144,12 +152,12 @@ void assert_is_lower_than(const T & rhs,
         cardinal::impl::assert_is_not_null(PTR, #PTR, "None", \
             __FILE__, __func__, __LINE__);
 
-#   define ASSERT_GT(RHS, LHS) \
-        cardinal::impl::assert_is_greater_than(RHS, LHS, "None", \
+#   define ASSERT_GT(LHS, RHS) \
+        cardinal::impl::assert_is_greater_than(LHS, RHS, #LHS, #RHS, "None", \
             __FILE__, __func__, __LINE__);
 
-#   define ASSERT_LT(RHS, LHS) \
-        cardinal::impl::assert_is_lower_than(RHS, LHS, "None", \
+#   define ASSERT_LT(LHS, RHS) \
+        cardinal::impl::assert_is_lower_than(LHS, RHS, #LHS, #RHS, "None", \
             __FILE__, __func__, __LINE__);
 
 #   define ASSERT_TRUE_MSG(EXPR, MSG) \
@@ -160,12 +168,12 @@ void assert_is_lower_than(const T & rhs,
         cardinal::impl::assert_false(EXPR, #EXPR, MSG, \
             __FILE__, __func__, __LINE__);
 
-#   define ASSERT_EQ_MSG(RHS, LHS, MSG) \
-        cardinal::impl::assert_equal(RHS, LHS, MSG, \
+#   define ASSERT_EQ_MSG(LHS, RHS, MSG) \
+        cardinal::impl::assert_equal(LHS, RHS, #LHS, #RHS, MSG, \
             __FILE__, __func__, __LINE__);
 
-#   define ASSERT_NE_MSG(RHS, LHS, MSG) \
-        cardinal::impl::assert_non_equal(RHS, LHS, MSG, \
+#   define ASSERT_NE_MSG(LHS, RHS, MSG) \
+        cardinal::impl::assert_non_equal(LHS, RHS, #LHS, #RHS, MSG, \
             __FILE__, __func__, __LINE__);
 
 #   define ASSERT_NULL_MSG(PTR, MSG) \
@@ -176,12 +184,12 @@ void assert_is_lower_than(const T & rhs,
         cardinal::impl::assert_is_not_null(PTR, #PTR, MSG, \
             __FILE__, __func__, __LINE__);
 
-#   define ASSERT_GT_MSG(RHS, LHS, MSG) \
-        cardinal::impl::assert_is_greater_than(RHS, LHS, MSG, \
+#   define ASSERT_GT_MSG(LHS, RHS, MSG) \
+        cardinal::impl::assert_is_greater_than(LHS, RHS, #LHS, #RHS, MSG, \
             __FILE__, __func__, __LINE__);
 
-#   define ASSERT_LT_MSG(RHS, LHS, MSG) \
-        cardinal::impl::assert_is_lower_than(RHS, LHS, MSG, \
+#   define ASSERT_LT_MSG(LHS, RHS, MSG) \
+        cardinal::impl::assert_is_lower_than(LHS, RHS, #LHS, #RHS, MSG, \
             __FILE__, __func__, __LINE__);
 
 //  Includes implementation of assertions
