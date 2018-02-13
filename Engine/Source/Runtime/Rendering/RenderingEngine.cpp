@@ -50,9 +50,6 @@ bool RenderingEngine::Initialize(int width, int height, const char * szTitle, fl
         return false;
     }
 
-    // Allocates memory
-    // TODO
-
     // Loads Textures & Compiles shaders
     TextureManager::Initialize();
     TextureLoader::Initialize();

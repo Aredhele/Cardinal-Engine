@@ -21,11 +21,11 @@
 /// \package    Runtime/Rendering/Texture
 /// \author     Vincent STEHLY--CALISTO
 
-/// \namespace cardinal
 #include "Runtime/Core/Debug/Logger.hpp"
 #include "Runtime/Core/Assertion/Assert.hh"
 #include "Runtime/Rendering/Texture/TextureManager.hpp"
 
+/// \namespace cardinal
 namespace cardinal
 {
 

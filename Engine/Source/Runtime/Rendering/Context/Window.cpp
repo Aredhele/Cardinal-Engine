@@ -111,7 +111,7 @@ void Window::Initialize(int width, int height, const char *szTitle)
     }
 
     Logger::LogInfo("Context successfully initialized.");
-    Logger::LogInfo("OpenGL Version : %s", glGetString(GL_VERSION));
+    Logger::LogInfo("OpenGL Version %s", glGetString(GL_VERSION));
 
     // Post-conditions
     ASSERT_NOT_NULL(m_pWindow);
