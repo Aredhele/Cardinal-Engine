@@ -59,6 +59,8 @@ public :
         m_model = glm::translate(m_model, Translation);
     }
 
+    void Setup();
+
 private:
 
     friend class RenderingEngine;

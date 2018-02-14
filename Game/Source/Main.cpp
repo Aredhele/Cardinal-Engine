@@ -6,7 +6,7 @@
 #include "Runtime/Rendering/Debug/DebugLine.hpp"
 #include <World/World.hpp>
 #include <iostream>
-#include "World/ByteCube.hpp"
+#include "World/Cube/ByteCube.hpp"
 
 void HandleInput(cardinal::Window & window, cardinal::Camera & camera, float dt);
 
@@ -54,8 +54,10 @@ int main()
     World world;
    world.GenerateWorld(engine);
 
-    // ByteCube cube;
-
+    ByteCube cube;
+  //  cube.SetType(ByteCube::EType::Dirt);
+    cube.SetType(ByteCube::EType::Grass);
+    std::cout << "TYPE : " << (unsigned)cube.GetType() << std::endl;
 
     do {
         // Fixed delta time

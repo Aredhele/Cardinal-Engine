@@ -18,7 +18,7 @@
 /// \file       ByteCube.hpp
 /// \date       11/02/2018
 /// \project    Cardinal Engine
-/// \package    World
+/// \package    World/Cube
 /// \author     Vincent STEHLY--CALISTO
 
 #ifndef CARDINAL_ENGINE_BYTE_CUBE_HPP__
@@ -78,6 +78,6 @@ private:
    unsigned char m_properties;
 };
 
-#include "Impl/ByteCube.inl"
+#include "World/Cube/Impl/ByteCube.inl"
 
 #endif // !CARDINAL_ENGINE_BYTE_CUBE_HPP__

@@ -104,4 +104,11 @@ void MeshRenderer::Initialize(
  //   Logger::LogInfo("Mesh renderer initialization completed in %lf seconds", elapsed);
 }
 
+void MeshRenderer::Setup()
+{
+   // glEnable(GL_TEXTURE_2D);
+   // glActiveTexture( GL_TEXTURE0 );
+   // glBindTexture(GL_TEXTURE_2D, m_texture);
+}
+
 } // !namespace

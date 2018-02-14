@@ -24,7 +24,7 @@
 #ifndef CARDINAL_ENGINE_CHUNK_HPP__
 #define CARDINAL_ENGINE_CHUNK_HPP__
 
-#include "World/ByteCube.hpp"
+#include "World/Cube/ByteCube.hpp"
 #include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
 
 /// \class Chunk
@@ -60,8 +60,8 @@ public:
     ~Chunk();
 
     /// \brief Initializes a debug chunk
-    void Initialize();
-    void Generate();
+    void Initialize(int zz);
+    void Generate(int zz);
     void SetCol(int x, int y, int z);
 
     /// TODO : Removes

@@ -26,10 +26,10 @@
 
 #include "Runtime/Rendering/RenderingEngine.hpp"
 #include "Runtime/Core/Maths/Noise/NYPerlin.hpp"
-#include "World/Chunk.hpp"
+#include "World/Chunk/Chunk.hpp"
 
 #define MAT_SIZE 8 //en nombre de chunks
-#define MAT_HEIGHT 8 //en nombre de chunks
+#define MAT_HEIGHT 2 //en nombre de chunks
 #define MAT_SIZE_CUBES (MAT_SIZE * Chunk::s_chunkSize)
 #define MAT_HEIGHT_CUBES (MAT_HEIGHT * Chunk::s_chunkSize)
 
@@ -65,10 +65,17 @@ public :
             }
         }
 
-        NYPerlin perlin;
+
+
         float TweakA = 16.0f;
         float TweakB = 10.0f;
         float TweakC = 300.0f;
+
+
+        NYPerlin perlin;
+       // float TweakA = 16.0f;
+       // float TweakB = 100.0f;
+       // float TweakC = 300.0f;
 
         // 2D terrain
         for(int x = 0; x < MAT_SIZE_CUBES; ++x)
@@ -103,7 +110,6 @@ public :
             }
         }
 
-
         for(int xx = 0; xx < MAT_SIZE; ++xx)
         {
             for(int y = 0; y < MAT_SIZE; ++y)
@@ -113,7 +119,7 @@ public :
                     m_chunks[xx][y][z].Translate(glm::vec3(xx * 16 * ByteCube::s_cubeSize,
                                                             y * 16 * ByteCube::s_cubeSize,
                                                             z * 16 * ByteCube::s_cubeSize));
-                    m_chunks[xx][y][z].Initialize();
+                    m_chunks[xx][y][z].Initialize(z);
                     engine.Register(m_chunks[xx][y][z].GetMeshRenderer());
                 }
             }
