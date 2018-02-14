@@ -34,8 +34,9 @@ namespace cardinal
 
 /// \brief  Imports a BMP file into the engine
 /// \param  szPath The path to the file to import
-/// \param  pBuffer The buffer to store texture data
-/* static */ bool TextureImporter::ImportTexture_BMP(const char* szPath, uchar * pBuffer)
+/// \param  property The properties of the texture
+/// \param  True on success, false on failure
+/* static */ bool TextureImporter::ImportTexture_BMP(const char* szPath, TextureProperty & property)
 {
     uchar header[54];
     uint  dataPos       = 0;
@@ -91,6 +92,9 @@ namespace cardinal
     width     = *(uint *) &(header[0x12]);
     height    = *(uint *) &(header[0x16]);
 
+    property.width  = width;
+    property.height = height;
+
     if (imageSize == 0)
     {
         // RGB
@@ -103,7 +107,7 @@ namespace cardinal
     }
 
     // Gets texture data
-    fread(pBuffer, 1, imageSize, file);
+    fread(property.pBuffer, 1, imageSize, file);
     fclose(file);
 
     Logger::LogInfo("Texture %s successfully imported", szPath);

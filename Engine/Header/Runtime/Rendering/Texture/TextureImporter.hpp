@@ -36,11 +36,19 @@ class TextureImporter
 {
 public :
 
+    /// \brief Stores informations about a texture
+    struct TextureProperty
+    {
+        uchar * pBuffer; ///< The data of the texture
+        uint    width;   ///< The width of the texture
+        uint    height;  ///< The height of the texture
+    };
+
     /// \brief  Imports a BMP file into the engine
     /// \param  szPath The path to the file to import
-    /// \param  pBuffer The buffer to store texture data
+    /// \param  property The properties of the texture
     /// \param  True on success, false on failure
-    static bool ImportTexture_BMP(const char* szPath, uchar * pBuffer);
+    static bool ImportTexture_BMP(const char* szPath, TextureProperty & property);
 };
 
 } // !namespace

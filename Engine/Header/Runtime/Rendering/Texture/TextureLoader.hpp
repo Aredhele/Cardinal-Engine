@@ -28,6 +28,7 @@
 #include <vector>
 
 #include "Runtime/Platform/Configuration/Configuration.hh"
+#include "Runtime/Rendering/Texture/TextureImporter.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -53,11 +54,23 @@ public:
     ///        Destroys the loader instance
     static void Shutdown  ();
 
-    /// \brief Loads a texture from a path and register it into the engine
-    static void LoadTexture(std::string const& path);
+    /// \brief Loads a texture from a path and register it into the
+    /// \param key The key of the texture
+    /// \param path The path of the texture
+    static void LoadTexture(std::string const& key, std::string const& path);
 
     /// \brief Loads a bunch of textures from a list
-    static void LoadTextures(std::vector<std::string> const& paths);
+    /// \param keys Texture keys
+    /// \param paths Texture paths
+    static void LoadTextures(std::vector<std::string> const& keys,
+                             std::vector<std::string> const& paths);
+
+private:
+
+    /// \brief Binds the texture and load into OpenGL
+    /// \param property Properties of the texture
+    /// \return The ID of the texture
+    static uint BindTexture(TextureImporter::TextureProperty const& property);
 
 private:
 
