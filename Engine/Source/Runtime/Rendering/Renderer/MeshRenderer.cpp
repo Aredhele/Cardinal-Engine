@@ -21,13 +21,16 @@
 /// \package    Rendering/Renderer
 /// \author     Vincent STEHLY--CALISTO
 
+#include "Glew/include/GL/glew.h"
+#include "Glfw/glfw3.h"
+
+#include "Runtime/Rendering/Texture/TextureManager.hpp"
+#include "Runtime/Rendering/Shader/ShaderManager.hpp"
 #include "Runtime/Rendering/Texture/TextureLoader.hpp"
 #include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
 #include "Runtime/Rendering/Optimization/VBOIndexer.hpp"
-#include "Runtime/Rendering/Shader/ShaderCompiler.hpp"
 
-#include "Glfw/glfw3.h"
-#include "Runtime/Core/Debug/Logger.hpp"
+
 
 /// \namespace cardinal
 namespace cardinal
@@ -87,13 +90,11 @@ void MeshRenderer::Initialize(
 
     // Loading shaders
     // TODO : Remove
-    m_shaderID = ShaderCompiler::LoadShaders(
-            "Resources/Shaders/vsbase.glsl",
-            "Resources/Shaders/fsbase.glsl");
+    m_shaderID = ShaderManager::GetShaderID("Default");
 
     m_matrixID = glGetUniformLocation(m_shaderID, "MVP");
 
- //   m_texture = TextureLoader::LoadBMPTexture("Resources/Textures/BlockAtlas.bmp");
+    m_texture = TextureManager::GetTextureID("Blocks");
 
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);

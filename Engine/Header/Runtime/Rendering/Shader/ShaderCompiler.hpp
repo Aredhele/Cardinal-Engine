@@ -24,7 +24,7 @@
 #ifndef CARDINAL_ENGINE_SHADER_COMPILER_HPP__
 #define CARDINAL_ENGINE_SHADER_COMPILER_HPP__
 
-#include "Glew/include/GL/glew.h"
+#include "Runtime/Platform/Configuration/Configuration.hh"
 
 /// \namespace cardinal
 namespace cardinal
@@ -39,7 +39,7 @@ public :
     /// \brief Loads a shader from the given paths
     /// \param czVertexShader The path to the vertex shader
     /// \param csFragmentShader The path to the fragment shader
-    static GLuint LoadShaders(const char * czVertexShader,const char * csFragmentShader);
+    static uint LoadShaders(const char * czVertexShader,const char * csFragmentShader);
 };
 
 } // !namespace

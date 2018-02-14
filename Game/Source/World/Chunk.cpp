@@ -289,10 +289,10 @@ void Chunk::Batch()
 
     auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - startT);
     auto elapsedUs = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - startT);
-    std::cout << "Batched vertices : " << s_chunkVertexBuffer.size() << std::endl;
-    std::cout << "Chunk batched in " << elapsedMs.count() << " ms" << std::endl;
-    std::cout << "Chunk batched in " << elapsedUs.count() << " us" << std::endl;
-    std::cout << "Output vertices : " << s_chunkIndexedVertexBuffer.size() << std::endl;
+   // std::cout << "Batched vertices : " << s_chunkVertexBuffer.size() << std::endl;
+   // std::cout << "Chunk batched in " << elapsedMs.count() << " ms" << std::endl;
+   // std::cout << "Chunk batched in " << elapsedUs.count() << " us" << std::endl;
+   // std::cout << "Output vertices : " << s_chunkIndexedVertexBuffer.size() << std::endl;
 
     s_chunkVertexBuffer.clear();
     s_chunkUVsBuffer.clear();

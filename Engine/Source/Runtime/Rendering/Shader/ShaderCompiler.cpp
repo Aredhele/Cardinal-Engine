@@ -26,6 +26,7 @@
 #include <fstream>
 #include <sstream>
 
+#include "Glew/include/GL/glew.h"
 #include "Runtime/Core/Debug/Logger.hpp"
 #include "Runtime/Rendering/Shader/ShaderCompiler.hpp"
 
@@ -36,7 +37,7 @@ namespace cardinal
 /// \brief Loads a shader from the given paths
 /// \param czVertexShader The path to the vertex shader
 /// \param csFragmentShader The path to the fragment shader
-GLuint ShaderCompiler::LoadShaders(
+uint ShaderCompiler::LoadShaders(
         const char * czVertexShader,
         const char * csFragmentShader)
 {
@@ -83,7 +84,7 @@ GLuint ShaderCompiler::LoadShaders(
     int InfoLogLength;
 
     // Compile Vertex Shader
-  //  Logger::LogInfo("Compiling shader : %s", czVertexShader);
+    Logger::LogInfo("Compiling shader : %s", czVertexShader);
     char const * VertexSourcePointer = VertexShaderCode.c_str();
     glShaderSource (VertexShaderID, 1, &VertexSourcePointer , nullptr);
     glCompileShader(VertexShaderID);
@@ -100,7 +101,7 @@ GLuint ShaderCompiler::LoadShaders(
     }
 
     // Compile Fragment Shader
- //   Logger::LogInfo("Compiling shader : %s", csFragmentShader);
+    Logger::LogInfo("Compiling shader : %s", csFragmentShader);
     char const * FragmentSourcePointer = FragmentShaderCode.c_str();
     glShaderSource (FragmentShaderID, 1, &FragmentSourcePointer , nullptr);
     glCompileShader(FragmentShaderID);
@@ -116,7 +117,6 @@ GLuint ShaderCompiler::LoadShaders(
     }
 
     // Link the program
-  //  Logger::LogInfo("Linking shaders");
     GLuint ProgramID = glCreateProgram();
 
     glAttachShader(ProgramID, VertexShaderID);

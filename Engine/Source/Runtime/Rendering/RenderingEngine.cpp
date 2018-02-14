@@ -21,12 +21,15 @@
 /// \package    Rendering
 /// \author     Vincent STEHLY--CALISTO
 
+
 #include "Glew/include/GL/glew.h"
 #include "Runtime/Core/Debug/Logger.hpp"
 #include "Runtime/Rendering/RenderingEngine.hpp"
 #include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
 #include "Runtime/Rendering/Texture/TextureLoader.hpp"
 #include "Runtime/Rendering/Texture/TextureManager.hpp"
+#include "Runtime/Rendering/Shader/ShaderManager.hpp"
+#include "Runtime/Rendering/Shader/ShaderCompiler.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -50,9 +53,18 @@ bool RenderingEngine::Initialize(int width, int height, const char * szTitle, fl
         return false;
     }
 
-    // Loads Textures & Compiles shaders
+    // Texture initializes
     TextureManager::Initialize();
     TextureLoader::Initialize();
+
+    // Shader initializes
+    ShaderManager::Initialize();
+
+    // Loads Textures
+    TextureLoader::LoadTexture("Block", "Resources/Textures/BlockAtlas.bmp"); //< TODO : Remove
+
+    // Loads shaders
+    ShaderManager::Register("Default", ShaderCompiler::LoadShaders("Resources/Shaders/vsbase.glsl", "Resources/Shaders/fsbase.glsl")); //< TODO : Remove
 
     // Configures OpenGL pipeline
     glDepthFunc(GL_LESS);

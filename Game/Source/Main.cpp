@@ -1,8 +1,10 @@
 
+
 #include "Glew/include/GL/glew.h"
 #include "Runtime/Rendering/RenderingEngine.hpp"
 #include "Runtime/Core/Debug/Logger.hpp"
 #include "Runtime/Rendering/Debug/DebugLine.hpp"
+#include <World/World.hpp>
 
 void HandleInput(cardinal::Window & window, cardinal::Camera & camera, float dt);
 
@@ -24,7 +26,7 @@ int main()
     double lastTime    = currentTime;
     double dLastTime   = currentTime;
 
-    glm::vec3 color = glm::vec3(0.5f, 0.5f, 0.5f);
+    /*glm::vec3 color = glm::vec3(0.5f, 0.5f, 0.5f);
     glm::vec3 start = glm::vec3(-9.5, 0.0f, -9.5f);
 
     std::vector<cardinal::DebugLine *> grid;
@@ -40,7 +42,15 @@ int main()
                 glm::vec3(-9.5f, 0.0f, -9.5f + 1.0f * j),
                 glm::vec3(19.0f, 0.0f, 0.0f), color);
         grid.push_back(pLine);
-    }
+    }*/
+
+    Chunk::InitializeBuffers();
+    //  Chunk chunk;
+    //  chunk.Initialize();
+    // engine.Register(chunk.GetMeshRenderer());
+
+    World world;
+    world.GenerateWorld(engine);
 
     do {
         // Fixed delta time
@@ -61,9 +71,9 @@ int main()
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        for (cardinal::DebugLine *pLine : grid) {
-            pLine->Render(engine.GetProjectionMatrix(), camera.GetViewMatrix());
-        }
+        //for (cardinal::DebugLine *pLine : grid) {
+       //     pLine->Render(engine.GetProjectionMatrix(), camera.GetViewMatrix());
+       // }
 
         //engine.Render(0.0f);
         glfwPollEvents();
