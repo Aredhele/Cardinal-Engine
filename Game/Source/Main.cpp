@@ -46,16 +46,16 @@ int main()
         grid.push_back(pLine);
     }*/
 
-   // Chunk::InitializeBuffers();
-    //  Chunk chunk;
-    //  chunk.Initialize();
-    // engine.Register(chunk.GetMeshRenderer());
+   Chunk::InitializeBuffers();
+    //Chunk chunk;
+    //hunk.Initialize();
+   // engine.Register(chunk.GetMeshRenderer());
 
-  //  World world;
-   // world.GenerateWorld(engine);
+    World world;
+   world.GenerateWorld(engine);
 
-    ByteCube cube;
-   
+    // ByteCube cube;
+
 
     do {
         // Fixed delta time

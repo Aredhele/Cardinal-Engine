@@ -40,7 +40,7 @@ class World
 public :
 
     Chunk *** m_chunks;
-    Cube * GetCube(int x, int y, int z)
+    ByteCube * GetCube(int x, int y, int z)
     {
         if (x < 0)x = 0;
         if (y < 0)y = 0;
@@ -77,7 +77,7 @@ public :
             {
                 for(int z = 0; z < MAT_HEIGHT_CUBES; ++z)
                 {
-                    Cube * cube = GetCube(x, y, z);
+                    ByteCube * cube = GetCube(x, y, z);
 
                     float modif = 0.04;
                     float sample = perlin.sample(modif*x, modif*y, modif*z);
@@ -88,13 +88,13 @@ public :
                    // glTranslated(x*Cube::s_CubeSize, y*Cube::s_CubeSize, z*Cube::s_CubeSize);
                     if (sample < 0.5f)
                     {
-                        cube->SetType(Cube::EType::Air);
-                        cube->SetVisible(true);
+                        cube->SetType(ByteCube::EType::Air);
+                        cube->Enable();
                     }
                     else
                     {
-                        cube->SetType(Cube::EType::Dirt);
-                        cube->SetVisible(true);
+                        cube->SetType(ByteCube::EType::Dirt);
+                        cube->Enable();
                     }
                 }
 
@@ -110,9 +110,9 @@ public :
             {
                 for(int z = 0; z < MAT_HEIGHT; ++z)
                 {
-                    m_chunks[xx][y][z].Translate(glm::vec3(xx * 16 * Cube::s_CubeSize,
-                                                            y * 16 * Cube::s_CubeSize,
-                                                            z * 16 * Cube::s_CubeSize));
+                    m_chunks[xx][y][z].Translate(glm::vec3(xx * 16 * ByteCube::s_cubeSize,
+                                                            y * 16 * ByteCube::s_cubeSize,
+                                                            z * 16 * ByteCube::s_cubeSize));
                     m_chunks[xx][y][z].Initialize();
                     engine.Register(m_chunks[xx][y][z].GetMeshRenderer());
                 }

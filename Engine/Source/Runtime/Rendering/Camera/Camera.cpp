@@ -33,7 +33,7 @@ Camera::Camera()
 {
     m_fov = 45.0f;
 
-    m_up        = glm::vec3(0.0f, 1.0f,   0.0f);
+    m_up        = glm::vec3(0.0f, 0.0f,   1.0f);
     m_right     = glm::vec3(1.0f, 0.0f,   0.0f);
     m_lookAt    = glm::vec3(0.0f, 0.0f,   0.0f);
     m_position  = glm::vec3(6.0f, 10.0f, -10.0f);
@@ -55,7 +55,7 @@ void Camera::UpdateVectors()
     m_direction -= m_position;
     m_direction  = glm::normalize(m_direction);
 
-    m_up    = glm::vec3(0.0f, 1.0f, 0.0f);
+    m_up    = glm::vec3(0.0f, 0.0f, 1.0f);
     m_right = glm::cross(m_direction, m_up);
     m_right = glm::normalize(m_right);
 

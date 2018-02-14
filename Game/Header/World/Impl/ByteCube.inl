@@ -21,8 +21,6 @@
 /// \package    World/Impl
 /// \author     Vincent STEHLY--CALISTO
 
-#include "World/ByteCube.hpp"
-
 /// \brief Constructor
 inline ByteCube::ByteCube()
 {

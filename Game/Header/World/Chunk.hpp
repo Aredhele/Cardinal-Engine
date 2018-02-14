@@ -24,7 +24,7 @@
 #ifndef CARDINAL_ENGINE_CHUNK_HPP__
 #define CARDINAL_ENGINE_CHUNK_HPP__
 
-#include "World/Cube.hpp"
+#include "World/ByteCube.hpp"
 #include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
 
 /// \class Chunk
@@ -73,7 +73,7 @@ public:
         tr = t;
         m_renderer.Translate(t);
     }
-    Cube m_cubes[s_chunkSize][s_chunkSize][s_chunkSize];
+    ByteCube m_cubes[s_chunkSize][s_chunkSize][s_chunkSize];
 private:
 
     /// \brief Builds the chunk vao

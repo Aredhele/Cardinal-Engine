@@ -130,17 +130,17 @@ void Chunk::SetCol(int x, int y, int z)
     {
         if(i < z)
         {
-            m_cubes[x][i][y].SetType(Cube::EType::Dirt);
+            m_cubes[x][i][y].SetType(ByteCube::EType::Dirt);
         }
         else if(i == z)
         {
 
-            m_cubes[x][i][y].SetType(Cube::EType::Grass);
+            m_cubes[x][i][y].SetType(ByteCube::EType::Grass);
 
         }
         else
         {
-            m_cubes[x][i][y].SetType(Cube::EType::Air);
+            m_cubes[x][i][y].SetType(ByteCube::EType::Air);
         }
     }
 }
@@ -168,7 +168,7 @@ void Chunk::Batch()
 
     // Static batching
     size_t vertexIndex = 0;
-    float half         = Cube::s_CubeSize / 2.0f;
+    float half         = ByteCube::s_cubeSize / 2.0f;
 
     for(unsigned x = 0; x < s_chunkSize; ++x) // NOLINT
     {
@@ -177,7 +177,7 @@ void Chunk::Batch()
             for(unsigned z = 0; z < s_chunkSize; ++z)
             {
                 // Pre-conditions
-                Cube & cube = m_cubes[x][y][z];
+                ByteCube & cube = m_cubes[x][y][z];
                 if(!cube.IsVisible() || !cube.IsSolid())
                 {
                     continue;
@@ -187,7 +187,7 @@ void Chunk::Batch()
                 glm::vec3 color;
                 switch(cube.GetType())
                 {
-                    case Cube::EType::Dirt:
+                    case ByteCube::EType::Dirt:
                     {
                         uv1 = glm::vec2(2.0f * textureStep, 15.0f * textureStep);
                         uv2 = glm::vec2(3.0f * textureStep, 15.0f * textureStep);
@@ -195,7 +195,7 @@ void Chunk::Batch()
                         uv4 = glm::vec2(2.0f * textureStep, 1.0f);
 
                     }   break;
-                    case Cube::EType::Grass:
+                    case ByteCube::EType::Grass:
                     {
                         uv1 = glm::vec2(0.0f, 15.0f * textureStep);
                         uv2 = glm::vec2(textureStep, 15.0f * textureStep);
@@ -203,7 +203,7 @@ void Chunk::Batch()
                         uv4 = glm::vec2(0.0f, 1.0f);
                         break;
                     }
-                    case Cube::EType::Water:
+                    case ByteCube::EType::Water:
                     {
                         uv1 = glm::vec2(0.0f, 15.0f * textureStep);
                         uv2 = glm::vec2(textureStep, 15.0f * textureStep);
@@ -231,9 +231,9 @@ void Chunk::Batch()
 
                     glm::vec3 offset
                     (
-                        x * Cube::s_CubeSize,
-                        y * Cube::s_CubeSize,
-                        z * Cube::s_CubeSize
+                        x * ByteCube::s_cubeSize,
+                        y * ByteCube::s_cubeSize,
+                        z * ByteCube::s_cubeSize
                     );
 
                     size_t faceIndex = nFace * 18;
