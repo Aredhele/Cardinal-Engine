@@ -21,35 +21,41 @@
 /// \package    World
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_CUBE_HPP__
-#define CARDINAL_ENGINE_CUBE_HPP__
+#ifndef CARDINAL_ENGINE_BYTE_CUBE_HPP__
+#define CARDINAL_ENGINE_BYTE_CUBE_HPP__
 
-/// \class Cube
+/// \class ByteCube
 /// \brief Stores information about a cube
-class Cube
+class ByteCube
 {
 public:
 
-    static const int s_CubeSize = 4;
+    static const int s_cubeSize = 4;
+    static const unsigned char s_typeMask  = 0xF1; ///< 1111 0001
+    static const unsigned char s_stateMask = 0xE;  ///< 0000 1110
 
 public:
 
     /// \enum  EType
     /// \brief Represents the type of a cube
-    enum class EType
+    enum EType : unsigned char
     {
-        Air   = 0x0,
-        Dirt  = 0x1,
-        Grass = 0x2,
-        Water = 0x3
+        Air   = 0x0 << 1, ///< 0000 0000
+        Dirt  = 0x1 << 1, ///< 0000 0010
+        Grass = 0x2 << 1, ///< 0000 0100
+        Water = 0x3 << 1, ///< 0000 0110
+        Lava  = 0x4 << 1, ///< 0000 1000
+        Rock  = 0x5 << 1  ///< 0000 1010
     };
 
     /// \brief Constructor
-    inline Cube();
+    inline ByteCube();
 
-    /// \brief Sets the visible state of the cube
-    /// \param bVisible The state
-    inline void SetVisible(bool bVisible);
+    /// \brief Shows the cube
+    inline void Enable();
+
+    /// \brief Hides the cube
+    inline void Disable();
 
     /// \brief Sets the type of the cube
     /// \param bVisible The new type
@@ -69,10 +75,9 @@ public:
 
 private:
 
-    EType m_type;
-    bool  m_bIsVisible;
+   unsigned char m_properties;
 };
 
-#include "Impl/Cube.inl"
+#include "Impl/ByteCube.inl"
 
-#endif // !CARDINAL_ENGINE_CUBE_HPP__
+#endif // !CARDINAL_ENGINE_BYTE_CUBE_HPP__

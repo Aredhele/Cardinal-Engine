@@ -5,6 +5,8 @@
 #include "Runtime/Core/Debug/Logger.hpp"
 #include "Runtime/Rendering/Debug/DebugLine.hpp"
 #include <World/World.hpp>
+#include <iostream>
+#include "World/ByteCube.hpp"
 
 void HandleInput(cardinal::Window & window, cardinal::Camera & camera, float dt);
 
@@ -44,13 +46,16 @@ int main()
         grid.push_back(pLine);
     }*/
 
-    Chunk::InitializeBuffers();
+   // Chunk::InitializeBuffers();
     //  Chunk chunk;
     //  chunk.Initialize();
     // engine.Register(chunk.GetMeshRenderer());
 
-    World world;
-    world.GenerateWorld(engine);
+  //  World world;
+   // world.GenerateWorld(engine);
+
+    ByteCube cube;
+   
 
     do {
         // Fixed delta time
