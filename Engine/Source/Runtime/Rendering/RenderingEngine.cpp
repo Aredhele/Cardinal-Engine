@@ -70,6 +70,7 @@ bool RenderingEngine::Initialize(int width, int height, const char * szTitle, fl
     glDepthFunc(GL_LESS);
     glFrontFace(GL_CW);
     glEnable   (GL_CULL_FACE);
+    glCullFace (GL_BACK);
     glEnable   (GL_DEPTH_TEST);
 
     // TODO : Makes clear color configurable
@@ -170,7 +171,7 @@ void RenderingEngine::RenderFrame(float step)
         glBindVertexArray(pRenderer->m_vao);
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
-      
+
         glDrawElements(GL_TRIANGLES, pRenderer->m_elementsCount, GL_UNSIGNED_SHORT, nullptr);
     }
 
