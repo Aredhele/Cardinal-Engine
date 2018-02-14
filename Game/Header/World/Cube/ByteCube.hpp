@@ -34,6 +34,8 @@ public:
     static const unsigned char s_typeMask  = 0xF1; ///< 1111 0001
     static const unsigned char s_stateMask = 0xE;  ///< 0000 1110
 
+    static const float s_vertices[108];
+
 public:
 
     /// \enum  EType

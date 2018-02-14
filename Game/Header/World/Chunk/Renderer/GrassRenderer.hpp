@@ -24,7 +24,8 @@
 #ifndef CARDINAL_ENGINE_GRASS_RENDERER_HPP__
 #define CARDINAL_ENGINE_GRASS_RENDERER_HPP__
 
-#include"Runtime/Rendering/Renderer/MeshRenderer.hpp"
+#include "World/Detail/Grass.hpp"
+#include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
 
 /// \class GrassRenderer
 /// \brief Renders all the grass in the chunk
@@ -45,7 +46,6 @@ public:
     static std::vector<glm::vec3>      s_chunkIndexedVertexBuffer;
     static std::vector<glm::vec2>      s_chunkIndexedUVsBuffer;
 
-    static const float s_triangles[108];
 
 public:
 
