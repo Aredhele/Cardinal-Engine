@@ -24,6 +24,8 @@
 #ifndef CARDINAL_ENGINE_GRASS_HPP__
 #define CARDINAL_ENGINE_GRASS_HPP__
 
+#include "Glm/glm/glm.hpp"
+
 /// \class Grass
 /// \brief Stores grass information
 class Grass
@@ -32,6 +34,9 @@ public:
 
     /// \brief Stores grass vertices
     static const float s_vertices[36];
+
+    glm::vec2 uv[3];
+    glm::vec3 vertex[3];
 };
 
 #endif // !CARDINAL_ENGINE_GRASS_HPP__

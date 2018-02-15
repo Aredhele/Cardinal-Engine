@@ -69,9 +69,11 @@ bool RenderingEngine::Initialize(int width, int height, const char * szTitle, fl
     // Configures OpenGL pipeline
     glDepthFunc(GL_LESS);
     glFrontFace(GL_CW);
-    glEnable   (GL_CULL_FACE);
-    glCullFace (GL_BACK);
+    //glEnable   (GL_CULL_FACE);
+    //glCullFace (GL_BACK);
     glEnable   (GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // TODO : Makes clear color configurable
     glClearColor(0.0f, 0.709f, 0.866f, 1.0f);

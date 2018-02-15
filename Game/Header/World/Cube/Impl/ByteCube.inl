@@ -64,7 +64,7 @@ inline  void ByteCube::SetType(ByteCube::EType type)
 /// \return True or false
 inline bool ByteCube::IsSolid() const
 {
-    return (GetType() != EType::Air);
+    return (GetType() != EType::Air && GetType() != EType::Grass1);
 }
 
 

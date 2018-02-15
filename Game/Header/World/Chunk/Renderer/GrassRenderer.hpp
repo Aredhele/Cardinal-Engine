@@ -24,31 +24,30 @@
 #ifndef CARDINAL_ENGINE_GRASS_RENDERER_HPP__
 #define CARDINAL_ENGINE_GRASS_RENDERER_HPP__
 
+#include <chrono>
+#include <iostream>
+
+#include "World/WorldBuffers.hpp"
+#include "World/WorldSettings.hpp"
 #include "World/Detail/Grass.hpp"
+#include "World/Cube/ByteCube.hpp"
 #include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
 
 /// \class GrassRenderer
-/// \brief Renders all the grass in the chunk
+/// \brief Renders all grass blocks in the chunks
 class GrassRenderer
 {
 public:
 
+    /// \brief Static batching for grass cubes
+    /// \param pCubes The cubes of the chunk
+    void Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize]);
 
-    static const unsigned s_chunkBlockCount = s_chunkSize * s_chunkSize * s_chunkSize;
+    /// \brief Returns the mesh renderer
+    cardinal::MeshRenderer * GetMeshRenderer();
 
-    static const unsigned s_uvsCount    = s_chunkBlockCount * 24;
-    static const unsigned s_vertexCount = s_chunkBlockCount * 36;
-
-    static std::vector<glm::vec3> s_chunkVertexBuffer;
-    static std::vector<glm::vec2> s_chunkUVsBuffer;
-
-    static std::vector<unsigned short> s_chunkIndexesBuffer;
-    static std::vector<glm::vec3>      s_chunkIndexedVertexBuffer;
-    static std::vector<glm::vec2>      s_chunkIndexedUVsBuffer;
-
-
-public:
-
+    /// \brief Translate the chunk grass renderer
+    void Translate(glm::vec3 const& translation);
 
 private:
 

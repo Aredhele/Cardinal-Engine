@@ -26,7 +26,7 @@
 
 #include "Runtime/Rendering/RenderingEngine.hpp"
 
-#include "World/WorldSettings.hpp"
+#include "World/Chunk/Renderer/GrassRenderer.hpp"
 #include "World/Chunk/Renderer/TerrainRenderer.hpp"
 
 /// \class Chunk
@@ -50,11 +50,13 @@ public:
     void RegisterChunk(cardinal::RenderingEngine & engine)
     {
         engine.Register(m_terrainRenderer.GetMeshRenderer());
+        engine.Register(m_grassRenderer.GetMeshRenderer());
     }
 
     void Translate(glm::vec3 const& t)
     {
         m_terrainRenderer.Translate(t);
+        m_grassRenderer.Translate(t);
     }
 
     /// \brief The cubes in the chunks
@@ -68,6 +70,7 @@ private:
 
 private:
 
+    GrassRenderer   m_grassRenderer;
     TerrainRenderer m_terrainRenderer;
 };
 

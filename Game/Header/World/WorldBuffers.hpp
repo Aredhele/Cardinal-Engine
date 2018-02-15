@@ -30,17 +30,23 @@
 #include "Runtime/Core/Debug/Logger.hpp"
 #include "Runtime/Platform/Configuration/Configuration.hh"
 
+#include "World/Detail/Grass.hpp"
+
 /// \class WorldBuffers
 /// \brief Stores usefull buffers to avoid memory allocations
 class WorldBuffers
 {
 public:
 
+    // Terrain
     static std::vector<glm::vec2> s_chunkUVsBuffer;
     static std::vector<glm::vec3> s_chunkVertexBuffer;
     static std::vector<ushort>    s_chunkIndexesBuffer;
     static std::vector<glm::vec2> s_chunkIndexedUVsBuffer;
     static std::vector<glm::vec3> s_chunkIndexedVertexBuffer;
+
+    // Details
+    static std::vector<Grass> s_grassBuffer;
 
 public:
 

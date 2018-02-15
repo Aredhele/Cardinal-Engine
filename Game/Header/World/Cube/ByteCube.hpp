@@ -42,12 +42,13 @@ public:
     /// \brief Represents the type of a cube
     enum EType : unsigned char
     {
-        Air   = 0x0 << 1, ///< 0000 0000
-        Dirt  = 0x1 << 1, ///< 0000 0010
-        Grass = 0x2 << 1, ///< 0000 0100
-        Water = 0x3 << 1, ///< 0000 0110
-        Lava  = 0x4 << 1, ///< 0000 1000
-        Rock  = 0x5 << 1  ///< 0000 1010
+        Air    = 0x0 << 1, ///< 0000 0000
+        Dirt   = 0x1 << 1, ///< 0000 0010
+        Grass  = 0x2 << 1, ///< 0000 0100
+        Water  = 0x3 << 1, ///< 0000 0110
+        Lava   = 0x4 << 1, ///< 0000 1000
+        Rock   = 0x5 << 1, ///< 0000 1010
+        Grass1 = 0x6 << 1, ///< 0000 1100
     };
 
     /// \brief Constructor

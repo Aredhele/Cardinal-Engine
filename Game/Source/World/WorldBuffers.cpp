@@ -24,11 +24,15 @@
 #include "World/WorldBuffers.hpp"
 #include "World/WorldSettings.hpp"
 
+// Terrain
 /* static */ std::vector<glm::vec2>  WorldBuffers::s_chunkUVsBuffer;
 /* static */ std::vector<glm::vec3>  WorldBuffers::s_chunkVertexBuffer;
 /* static */ std::vector<ushort>     WorldBuffers::s_chunkIndexesBuffer;
 /* static */ std::vector<glm::vec2>  WorldBuffers::s_chunkIndexedUVsBuffer;
 /* static */ std::vector<glm::vec3>  WorldBuffers::s_chunkIndexedVertexBuffer;
+
+// Details
+/* static */ std::vector<Grass> WorldBuffers::s_grassBuffer;
 
 /// \brief Initializes all world buffers
 /* static */ void WorldBuffers::Initialize()
@@ -39,6 +43,9 @@
     s_chunkIndexesBuffer.reserve       (WorldSettings::s_chunkVertexCount);
     s_chunkIndexedUVsBuffer.reserve    (WorldSettings::s_chunkUVsCount);
     s_chunkIndexedVertexBuffer.reserve (WorldSettings::s_chunkVertexCount);
+
+    // Details
+    WorldBuffers::s_grassBuffer.reserve(WorldSettings::s_chunkBlockCount * 2);
 
     cardinal::Logger::LogInfo("World static buffers initialized");
 }
