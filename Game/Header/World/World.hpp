@@ -30,8 +30,8 @@
 
 #define MAT_SIZE 8 //en nombre de chunks
 #define MAT_HEIGHT 2 //en nombre de chunks
-#define MAT_SIZE_CUBES (MAT_SIZE * Chunk::s_chunkSize)
-#define MAT_HEIGHT_CUBES (MAT_HEIGHT * Chunk::s_chunkSize)
+#define MAT_SIZE_CUBES (MAT_SIZE * WorldSettings::s_chunkSize)
+#define MAT_HEIGHT_CUBES (MAT_HEIGHT * WorldSettings::s_chunkSize)
 
 /// \class  World
 /// \brief
@@ -45,15 +45,17 @@ public :
         if (x < 0)x = 0;
         if (y < 0)y = 0;
         if (z < 0)z = 0;
-        if (x >= MAT_SIZE   * Chunk::s_chunkSize)  x = (MAT_SIZE    * Chunk::s_chunkSize) - 1;
-        if (y >= MAT_SIZE   * Chunk::s_chunkSize)  y = (MAT_SIZE    * Chunk::s_chunkSize) - 1;
-        if (z >= MAT_HEIGHT *  Chunk::s_chunkSize) z = (MAT_HEIGHT  * Chunk::s_chunkSize) - 1;
+        if (x >= MAT_SIZE   * WorldSettings::s_chunkSize)  x = (MAT_SIZE    * WorldSettings::s_chunkSize) - 1;
+        if (y >= MAT_SIZE   * WorldSettings::s_chunkSize)  y = (MAT_SIZE    * WorldSettings::s_chunkSize) - 1;
+        if (z >= MAT_HEIGHT * WorldSettings::s_chunkSize) z = (MAT_HEIGHT  * WorldSettings::s_chunkSize) - 1;
 
-        return &(m_chunks[x /  Chunk::s_chunkSize][y /  Chunk::s_chunkSize][z /  Chunk::s_chunkSize].m_cubes[x %  Chunk::s_chunkSize][y %  Chunk::s_chunkSize][z %  Chunk::s_chunkSize]);
+        return &(m_chunks[x /  WorldSettings::s_chunkSize][y /  WorldSettings::s_chunkSize][z /  WorldSettings::s_chunkSize].m_cubes[x % WorldSettings::s_chunkSize][y %  WorldSettings::s_chunkSize][z %  WorldSettings::s_chunkSize]);
     }
 
     void GenerateWorld(cardinal::RenderingEngine & engine)
     {
+        WorldBuffers::Initialize();
+
         // Allocating chunk
         m_chunks = new Chunk **[MAT_SIZE];
         for(int i = 0; i < MAT_SIZE; ++i)
@@ -104,9 +106,6 @@ public :
                         cube->Enable();
                     }
                 }
-
-                //float z = cardinal::PerlinNoise::Sample2D(tr.x + x, tr.z + y, 40.0f) * 16.0f;
-                //SetCol(x, y, static_cast<int>(z));
             }
         }
 
@@ -120,7 +119,7 @@ public :
                                                             y * 16 * ByteCube::s_cubeSize,
                                                             z * 16 * ByteCube::s_cubeSize));
                     m_chunks[xx][y][z].Initialize(z);
-                    engine.Register(m_chunks[xx][y][z].GetMeshRenderer());
+                    m_chunks[xx][y][z].RegisterChunk(engine);
                 }
             }
         }

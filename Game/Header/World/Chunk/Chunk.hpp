@@ -24,34 +24,16 @@
 #ifndef CARDINAL_ENGINE_CHUNK_HPP__
 #define CARDINAL_ENGINE_CHUNK_HPP__
 
-#include "World/Cube/ByteCube.hpp"
-#include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
+#include "Runtime/Rendering/RenderingEngine.hpp"
+
+#include "World/WorldSettings.hpp"
+#include "World/Chunk/Renderer/TerrainRenderer.hpp"
 
 /// \class Chunk
 /// \brief Represents a world chunk of cube
 class Chunk
 {
 public:
-
-    static const unsigned s_chunkSize       = 16;
-    static const unsigned s_chunkBlockCount = s_chunkSize * s_chunkSize * s_chunkSize;
-
-    static const unsigned s_uvsCount    = s_chunkBlockCount * 24;
-    static const unsigned s_vertexCount = s_chunkBlockCount * 36;
-
-    static std::vector<glm::vec3> s_chunkVertexBuffer;
-    static std::vector<glm::vec2> s_chunkUVsBuffer;
-
-    static std::vector<unsigned short> s_chunkIndexesBuffer;
-    static std::vector<glm::vec3>      s_chunkIndexedVertexBuffer;
-    static std::vector<glm::vec2>      s_chunkIndexedUVsBuffer;
-
-    static const float s_triangles[108];
-
-public:
-
-    /// \brief Static initialization of buffers
-    static void InitializeBuffers();
 
     /// \brief Constructor
     Chunk();
@@ -62,28 +44,31 @@ public:
     /// \brief Initializes a debug chunk
     void Initialize(int zz);
     void Generate(int zz);
-    void SetCol(int x, int y, int z);
 
     /// TODO : Removes
     /// \brief Returns the mesh renderer
-    cardinal::MeshRenderer * GetMeshRenderer();
+    void RegisterChunk(cardinal::RenderingEngine & engine)
+    {
+        engine.Register(m_terrainRenderer.GetMeshRenderer());
+    }
 
     void Translate(glm::vec3 const& t)
     {
-        tr = t;
-        m_renderer.Translate(t);
+        m_terrainRenderer.Translate(t);
     }
-    ByteCube m_cubes[s_chunkSize][s_chunkSize][s_chunkSize];
+
+    /// \brief The cubes in the chunks
+    ByteCube m_cubes[WorldSettings::s_chunkSize]
+                    [WorldSettings::s_chunkSize]
+                    [WorldSettings::s_chunkSize];
 private:
 
     /// \brief Builds the chunk vao
-    void Batch();
+    void BatchChunk();
 
 private:
 
-    glm::vec3 tr;
-    cardinal::MeshRenderer m_renderer;
-    //Cube m_cubes[s_chunkSize][s_chunkSize][s_chunkSize];
+    TerrainRenderer m_terrainRenderer;
 };
 
 #endif // !CARDINAL_ENGINE_CHUNK_HPP__

@@ -46,7 +46,7 @@ int main()
         grid.push_back(pLine);
     }*/
 
-   Chunk::InitializeBuffers();
+
     //Chunk chunk;
     //hunk.Initialize();
    // engine.Register(chunk.GetMeshRenderer());

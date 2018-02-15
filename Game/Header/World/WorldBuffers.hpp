@@ -15,26 +15,37 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       WorldSettings.hpp
+/// \file       WorldBuffers.hpp
 /// \date       15/02/2018
 /// \project    Cardinal Engine
 /// \package    World
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_WORLD_SETTINGS_HPP__
-#define CARDINAL_ENGINE_WORLD_SETTINGS_HPP__
+#ifndef CARDINAL_ENGINE_WORLD_BUFFERS_HPP__
+#define CARDINAL_ENGINE_WORLD_BUFFERS_HPP__
 
-/// \class WorldSettings
-/// \brief Stores world global settings
-class WorldSettings
+#include <vector>
+#include "Glm/glm/glm.hpp"
+
+#include "Runtime/Core/Debug/Logger.hpp"
+#include "Runtime/Platform/Configuration/Configuration.hh"
+
+/// \class WorldBuffers
+/// \brief Stores usefull buffers to avoid memory allocations
+class WorldBuffers
 {
 public:
 
-    static const unsigned s_chunkSize          = 16;
-    static const unsigned s_chunkBlockCount    = 16 * 16 * 16;
-    static const unsigned s_chunkUVsCount      = WorldSettings::s_chunkBlockCount * 24;
-    static const unsigned s_chunkVertexCount   = WorldSettings::s_chunkBlockCount * 36;
-    static constexpr const float s_textureStep = 1.0f / 16.0f;
+    static std::vector<glm::vec2> s_chunkUVsBuffer;
+    static std::vector<glm::vec3> s_chunkVertexBuffer;
+    static std::vector<ushort>    s_chunkIndexesBuffer;
+    static std::vector<glm::vec2> s_chunkIndexedUVsBuffer;
+    static std::vector<glm::vec3> s_chunkIndexedVertexBuffer;
+
+public:
+
+    /// \brief Initializes all world buffers
+    static void Initialize();
 };
 
-#endif // !CARDINAL_ENGINE_WORLD_SETTINGS_HPP__
+#endif // !CARDINAL_ENGINE_WORLD_BUFFERS_HPP__

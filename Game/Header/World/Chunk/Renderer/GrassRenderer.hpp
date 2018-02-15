@@ -18,7 +18,7 @@
 /// \file       GrassRenderer.hpp
 /// \date       14/02/2018
 /// \project    Cardinal Engine
-/// \package    World/Chunk
+/// \package    World/Chunk/Renderer
 /// \author     Vincent STEHLY--CALISTO
 
 #ifndef CARDINAL_ENGINE_GRASS_RENDERER_HPP__

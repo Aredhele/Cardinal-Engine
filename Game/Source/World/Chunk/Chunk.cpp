@@ -21,47 +21,8 @@
 /// \package    World
 /// \author     Vincent STEHLY--CALISTO
 
-#include <chrono>
 #include <iostream>
-#include "Runtime/Rendering/Optimization/VBOIndexer.hpp"
-#include "Runtime/Core/Maths/Noise/PerlinNoise.hpp"
 #include "World/Chunk/Chunk.hpp"
-#include "Runtime/Core/Debug/Logger.hpp"
-#include "World/World.hpp"
-#include "World/Cube/UVManager.hpp"
-
-/* static */ std::vector<glm::vec3>      Chunk::s_chunkVertexBuffer;
-/* static */ std::vector<glm::vec2>      Chunk::s_chunkUVsBuffer;
-
-/* static */ std::vector<unsigned short> Chunk::s_chunkIndexesBuffer;
-/* static */ std::vector<glm::vec3>      Chunk::s_chunkIndexedVertexBuffer;
-/* static */ std::vector<glm::vec2>      Chunk::s_chunkIndexedUVsBuffer;
-
-/* static */ const float Chunk::s_triangles[108] =
-{
-        -1.0f, -1.0f, -1.0f,    -1.0f,  1.0f, -1.0f,     -1.0f,  1.0f,  1.0f,                   -1.0f,  1.0f,  1.0f,      -1.0f, -1.0f,  1.0f,    -1.0f, -1.0f, -1.0f, /* Face LEFT  */
-        -1.0f,  1.0f, -1.0f,     1.0f,  1.0f, -1.0f,      1.0f,  1.0f,  1.0f,                1.0f,  1.0f,  1.0f,      -1.0f,  1.0f,  1.0f,    -1.0f,  1.0f, -1.0f, /* Face FRONT */
-        1.0f,  1.0f, -1.0f,     1.0f, -1.0f, -1.0f,      1.0f, -1.0f,  1.0f,      1.0f, -1.0f,  1.0f,       1.0f,  1.0f,  1.0f,     1.0f,  1.0f, -1.0f, /* Face RIGHT */
-        1.0f, -1.0f, -1.0f,    -1.0f, -1.0f, -1.0f,     -1.0f, -1.0f,  1.0f,     -1.0f, -1.0f,  1.0f,       1.0,  -1.0f,  1.0f,     1.0f, -1.0f, -1.0f, /* Face BACK  */
-        -1.0f, 1.0f,  1.0f,   1.0f, 1.0f,  1.0f,      1.0f,  -1.0f,  1.0f,     1.0f, -1.0f,  1.0f,    -1.0f,  -1.0f,  1.0f,    -1.0f, 1.0f , 1.0f, /* Face TOP */
-        1.0f, -1.0f, -1.0f,  1.0f, 1.0f, -1.0f,    -1.0f,  1.0f, -1.0f,          -1.0f,  1.0f, -1.0f,      -1.0f,  -1.0f, -1.0f,  1.0f, -1.0f, -1.0f,     /* Face BOTTOM */
-};
-
-/// \brief Static initialization of buffers
-void Chunk::InitializeBuffers()
-{
-    if(s_chunkVertexBuffer.size()  != s_vertexCount)
-    {
-        s_chunkVertexBuffer = std::vector<glm::vec3>(s_vertexCount);
-        s_chunkUVsBuffer    = std::vector<glm::vec2>(s_vertexCount);
-
-        s_chunkIndexesBuffer.reserve       (s_vertexCount);
-        s_chunkIndexedUVsBuffer.reserve    (s_uvsCount);
-        s_chunkIndexedVertexBuffer.reserve (s_vertexCount);
-
-        cardinal::Logger::LogInfo("Chunk static buffer initialized");
-    }
-}
 
 /// \brief Constructor
 Chunk::Chunk()
@@ -78,26 +39,26 @@ Chunk::~Chunk() // NOLINT
 void Chunk::Initialize(int zz)
 {
     Generate(zz);
-    Batch();
+    BatchChunk();
 }
 
 void Chunk::Generate(int zz)
 {
-    for(unsigned x = 0; x < s_chunkSize; ++x) // NOLINT
+    for(unsigned x = 0; x < WorldSettings::s_chunkSize; ++x) // NOLINT
     {
-        for (unsigned y = 0; y < s_chunkSize; ++y)
+        for (unsigned y = 0; y < WorldSettings::s_chunkSize; ++y)
         {
             int maxZ = -1;
-            for (unsigned z = 0; z < s_chunkSize; ++z)
+            for (unsigned z = 0; z < WorldSettings::s_chunkSize; ++z)
             {
                 if(m_cubes[x][y][z].GetType() != ByteCube::EType::Air)
                 {
                     maxZ = z;
                 }
 
-                if(zz * s_chunkSize + z  <= 16 && m_cubes[x][y][z].GetType() != ByteCube::EType::Air)
+                if(zz * WorldSettings::s_chunkSize + z  <= 16 && m_cubes[x][y][z].GetType() != ByteCube::EType::Air)
                 {
-                    int tz = zz * s_chunkSize + z;
+                    int tz = zz * WorldSettings::s_chunkSize + z;
 
                     float ratio = (1.0f - (tz / 16.0f)) * 100.0f;
 
@@ -115,199 +76,8 @@ void Chunk::Generate(int zz)
     }
 }
 
-void Chunk::SetCol(int x, int y, int z)
+void Chunk::BatchChunk()
 {
-    z += 8;
-    for(int i = 0; i < s_chunkSize; ++i)
-    {
-        if(i < z)
-        {
-            m_cubes[x][i][y].SetType(ByteCube::EType::Dirt);
-        }
-        else if(i == z)
-        {
-
-            m_cubes[x][i][y].SetType(ByteCube::EType::Grass);
-
-        }
-        else
-        {
-            m_cubes[x][i][y].SetType(ByteCube::EType::Air);
-        }
-    }
-}
-
-/// \brief Builds the chunk vao
-void Chunk::Batch()
-{
-    auto startT = std::chrono::steady_clock::now();
-
-    glm::vec3 red  (1.0f, 0.0f, 0.0f);
-    glm::vec3 green(0.0f, 1.0f, 0.0f);
-    glm::vec3 blue (0.0f, 0.0f, 1.0f);
-
-    float textureStep = 1.0f / 16.0f;
-
-    glm::vec2 uv1;
-    glm::vec2 uv2;
-    glm::vec2 uv3;
-    glm::vec2 uv4;
-
-    // Always resize to the max capacity
-    // to not reallocate the vector memory
-    s_chunkVertexBuffer.resize(s_vertexCount);
-    s_chunkUVsBuffer.resize (s_vertexCount);
-
-    // Static batching
-    size_t vertexIndex = 0;
-    float half         = ByteCube::s_cubeSize / 2.0f;
-
-    for(unsigned x = 0; x < s_chunkSize; ++x) // NOLINT
-    {
-        for(unsigned y = 0; y < s_chunkSize; ++y)
-        {
-            for(unsigned z = 0; z < s_chunkSize; ++z)
-            {
-                // Pre-conditions
-                ByteCube & cube = m_cubes[x][y][z];
-                if(!cube.IsVisible() || !cube.IsSolid())
-                {
-                    continue;
-                }
-
-                // Sets cube uvs
-                glm::vec3 color;
-                switch(cube.GetType())
-                {
-                    case ByteCube::EType::Dirt:
-                    {
-                        uv1 = glm::vec2(2.0f * textureStep, 15.0f * textureStep);
-                        uv2 = glm::vec2(3.0f * textureStep, 15.0f * textureStep);
-                        uv3 = glm::vec2(3.0f * textureStep, 1.0f);
-                        uv4 = glm::vec2(2.0f * textureStep, 1.0f);
-
-                    }   break;
-                    case ByteCube::EType::Grass:
-                    {
-                        uv1 = glm::vec2(0.0f, 15.0f * textureStep);
-                        uv2 = glm::vec2(textureStep, 15.0f * textureStep);
-                        uv3 = glm::vec2(textureStep, 1.0f);
-                        uv4 = glm::vec2(0.0f, 1.0f);
-                        break;
-                    }
-                    case ByteCube::EType::Water:
-                    {
-                        uv1 = glm::vec2(0.0f, 15.0f * textureStep);
-                        uv2 = glm::vec2(textureStep, 15.0f * textureStep);
-                        uv3 = glm::vec2(textureStep, 1.0f);
-                        uv4 = glm::vec2(0.0f, 1.0f);
-                        break;
-                    }
-                    default: break;
-                }
-
-                // Face by face batching
-                for(unsigned nFace = 0; nFace < 6; ++nFace)
-                {
-                    // Checks for face visibility
-                    // Order :
-                    if((nFace == 0 && x != 0               && m_cubes[x - 1][y][z].IsSolid()) ||
-                       (nFace == 2 && x != s_chunkSize - 1 && m_cubes[x + 1][y][z].IsSolid()) ||
-                       (nFace == 3 && y != 0               && m_cubes[x][y - 1][z].IsSolid()) ||
-                       (nFace == 1 && y != s_chunkSize - 1 && m_cubes[x][y + 1][z].IsSolid()) ||
-                       (nFace == 5 && z != 0               && m_cubes[x][y][z - 1].IsSolid()) ||
-                       (nFace == 4 && z != s_chunkSize - 1 && m_cubes[x][y][z + 1].IsSolid()))
-                    {
-                        continue;
-                    }
-
-                    glm::vec3 offset
-                    (
-                        x * ByteCube::s_cubeSize,
-                        y * ByteCube::s_cubeSize,
-                        z * ByteCube::s_cubeSize
-                    );
-
-                    size_t faceIndex = nFace * 18;
-
-                    float UVx =  UVManager::UV[cube.GetType() >> 1][nFace * 2 + 0] * textureStep;
-                    float UVy =  UVManager::UV[cube.GetType() >> 1][nFace * 2 + 1] * textureStep;
-
-                   // std::cout << (unsigned)cube.GetType() << std::endl;
-
-                    // TODO : SIMD
-                    s_chunkUVsBuffer   [vertexIndex].x   = UVx;
-                    s_chunkUVsBuffer   [vertexIndex].y   = UVy;
-                    s_chunkVertexBuffer[vertexIndex].x = s_triangles[faceIndex +  0] * half + offset.x;
-                    s_chunkVertexBuffer[vertexIndex].y = s_triangles[faceIndex +  1] * half + offset.y;
-                    s_chunkVertexBuffer[vertexIndex].z = s_triangles[faceIndex +  2] * half + offset.z;
-
-                    vertexIndex += 1;
-                    s_chunkUVsBuffer   [vertexIndex].x   = UVx + textureStep;
-                    s_chunkUVsBuffer   [vertexIndex].y   = UVy;
-                    s_chunkVertexBuffer[vertexIndex].x = s_triangles[faceIndex +  3] * half + offset.x;
-                    s_chunkVertexBuffer[vertexIndex].y = s_triangles[faceIndex +  4] * half + offset.y;
-                    s_chunkVertexBuffer[vertexIndex].z = s_triangles[faceIndex +  5] * half + offset.z;
-
-                    vertexIndex += 1;
-                    s_chunkUVsBuffer   [vertexIndex].x   = UVx + textureStep;
-                    s_chunkUVsBuffer   [vertexIndex].y   = UVy + textureStep;
-                    s_chunkVertexBuffer[vertexIndex].x = s_triangles[faceIndex +  6] * half + offset.x;
-                    s_chunkVertexBuffer[vertexIndex].y = s_triangles[faceIndex +  7] * half + offset.y;
-                    s_chunkVertexBuffer[vertexIndex].z = s_triangles[faceIndex +  8] * half + offset.z;
-
-                    vertexIndex += 1;
-                    s_chunkUVsBuffer   [vertexIndex].x   = UVx + textureStep;
-                    s_chunkUVsBuffer   [vertexIndex].y   = UVy + textureStep;
-                    s_chunkVertexBuffer[vertexIndex].x = s_triangles[faceIndex +  9] * half + offset.x;
-                    s_chunkVertexBuffer[vertexIndex].y = s_triangles[faceIndex + 10] * half + offset.y;
-                    s_chunkVertexBuffer[vertexIndex].z = s_triangles[faceIndex + 11] * half + offset.z;
-
-                    vertexIndex += 1;
-                    s_chunkUVsBuffer   [vertexIndex].x   = UVx;
-                    s_chunkUVsBuffer   [vertexIndex].y   = UVy + textureStep;
-                    s_chunkVertexBuffer[vertexIndex].x = s_triangles[faceIndex + 12] * half + offset.x;
-                    s_chunkVertexBuffer[vertexIndex].y = s_triangles[faceIndex + 13] * half + offset.y;
-                    s_chunkVertexBuffer[vertexIndex].z = s_triangles[faceIndex + 14] * half + offset.z;
-
-                    vertexIndex += 1;
-                    s_chunkUVsBuffer   [vertexIndex].x   = UVx;
-                    s_chunkUVsBuffer   [vertexIndex].y   = UVy;
-                    s_chunkVertexBuffer[vertexIndex].x = s_triangles[faceIndex + 15] * half + offset.x;
-                    s_chunkVertexBuffer[vertexIndex].y = s_triangles[faceIndex + 16] * half + offset.y;
-                    s_chunkVertexBuffer[vertexIndex].z = s_triangles[faceIndex + 17] * half + offset.z;
-
-                    vertexIndex += 1;
-                }
-            }
-        }
-    }
-
-    s_chunkVertexBuffer.resize(vertexIndex);
-    s_chunkUVsBuffer.resize (vertexIndex);
-
-    // Indexing
-    cardinal::VBOIndexer::Index(s_chunkVertexBuffer, s_chunkUVsBuffer, s_chunkIndexesBuffer, s_chunkIndexedVertexBuffer, s_chunkIndexedUVsBuffer);
-    m_renderer.Initialize(s_chunkIndexesBuffer, s_chunkIndexedVertexBuffer, s_chunkIndexedUVsBuffer);
-
-    auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - startT);
-    auto elapsedUs = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - startT);
-   // std::cout << "Batched vertices : " << s_chunkVertexBuffer.size() << std::endl;
-   // std::cout << "Chunk batched in " << elapsedMs.count() << " ms" << std::endl;
-   // std::cout << "Chunk batched in " << elapsedUs.count() << " us" << std::endl;
-   // std::cout << "Output vertices : " << s_chunkIndexedVertexBuffer.size() << std::endl;
-
-    s_chunkVertexBuffer.clear();
-    s_chunkUVsBuffer.clear();
-
-    s_chunkIndexesBuffer.clear();
-    s_chunkIndexedUVsBuffer.clear();
-    s_chunkIndexedVertexBuffer.clear();
-}
-
-/// \brief Returns the mesh renderer
-cardinal::MeshRenderer *Chunk::GetMeshRenderer()
-{
-    return &m_renderer;
+    m_terrainRenderer.Batch(m_cubes);
 }
 
