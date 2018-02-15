@@ -41,7 +41,8 @@ public:
 
     /// \brief Static batching for grass cubes
     /// \param pCubes The cubes of the chunk
-    void Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize]);
+    /// \param position The position of the camera
+    void Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize], glm::vec3 const& position);
 
     /// \brief Returns the mesh renderer
     cardinal::MeshRenderer * GetMeshRenderer();

@@ -36,7 +36,7 @@ Camera::Camera()
     m_up        = glm::vec3(0.0f, 0.0f,   1.0f);
     m_right     = glm::vec3(1.0f, 0.0f,   0.0f);
     m_lookAt    = glm::vec3(0.0f, 0.0f,   0.0f);
-    m_position  = glm::vec3(6.0f, 10.0f, -10.0f);
+    m_position  = glm::vec3(6.0f, 10.0f,  30.0f);
     m_direction = glm::vec3(0.0f, 0.0f,   1.0f);
 
     m_viewMatrix = glm::lookAt(m_position, m_lookAt, m_up);

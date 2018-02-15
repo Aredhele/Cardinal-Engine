@@ -60,7 +60,7 @@ public :
     }
 
     void Setup();
-
+    std::string name;
 private:
 
     friend class RenderingEngine;

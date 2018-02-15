@@ -69,10 +69,10 @@ bool RenderingEngine::Initialize(int width, int height, const char * szTitle, fl
     // Configures OpenGL pipeline
     glDepthFunc(GL_LESS);
     glFrontFace(GL_CW);
-    //glEnable   (GL_CULL_FACE);
-    //glCullFace (GL_BACK);
+    glEnable   (GL_CULL_FACE);
+    glCullFace (GL_BACK);
     glEnable   (GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
+    glEnable    (GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // TODO : Makes clear color configurable
@@ -159,6 +159,15 @@ void RenderingEngine::RenderFrame(float step)
     size_t rendererCount = m_meshRenderer.size();
     for(int nRenderer = 0; nRenderer < rendererCount; ++nRenderer)
     {
+        if(m_meshRenderer[nRenderer]->name == "Grass")
+        {
+            glDisable   (GL_CULL_FACE);
+            glDisable   (GL_DEPTH_WRITEMASK);
+
+            glEnable    (GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        }
+
         // Buffers the renderer
         MeshRenderer * pRenderer = m_meshRenderer[nRenderer];
 
@@ -175,6 +184,15 @@ void RenderingEngine::RenderFrame(float step)
         glEnableVertexAttribArray(1);
 
         glDrawElements(GL_TRIANGLES, pRenderer->m_elementsCount, GL_UNSIGNED_SHORT, nullptr);
+
+        if(m_meshRenderer[nRenderer]->name == "Grass")
+        {
+            glEnable   (GL_CULL_FACE);
+            glEnable   (GL_DEPTH_WRITEMASK);
+
+            glEnable   (GL_DEPTH_TEST);
+            glDisable  (GL_BLEND);
+        }
     }
 
     glEnable(GL_MULTISAMPLE);

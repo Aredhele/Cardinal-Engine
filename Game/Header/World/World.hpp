@@ -28,8 +28,8 @@
 #include "Runtime/Core/Maths/Noise/NYPerlin.hpp"
 #include "World/Chunk/Chunk.hpp"
 
-#define MAT_SIZE 8 //en nombre de chunks
-#define MAT_HEIGHT 2 //en nombre de chunks
+#define MAT_SIZE 16 //en nombre de chunks
+#define MAT_HEIGHT 16 //en nombre de chunks
 #define MAT_SIZE_CUBES (MAT_SIZE * WorldSettings::s_chunkSize)
 #define MAT_HEIGHT_CUBES (MAT_HEIGHT * WorldSettings::s_chunkSize)
 
@@ -40,6 +40,9 @@ class World
 public :
 
     Chunk *** m_chunks;
+    glm::vec3 position;
+    float elapsed = 0.0f;
+
     ByteCube * GetCube(int x, int y, int z)
     {
         if (x < 0)x = 0;
@@ -50,6 +53,31 @@ public :
         if (z >= MAT_HEIGHT * WorldSettings::s_chunkSize) z = (MAT_HEIGHT  * WorldSettings::s_chunkSize) - 1;
 
         return &(m_chunks[x /  WorldSettings::s_chunkSize][y /  WorldSettings::s_chunkSize][z /  WorldSettings::s_chunkSize].m_cubes[x % WorldSettings::s_chunkSize][y %  WorldSettings::s_chunkSize][z %  WorldSettings::s_chunkSize]);
+    }
+
+    void UpdateCameraPosition(glm::vec3 const& position, float dt)
+    {
+        elapsed += dt;
+
+        if(elapsed < 0.25f)
+        {
+            return;
+        }
+
+        std::cout << "Update" << std::endl;
+        elapsed = 0.0f;
+
+        this->position = position;
+        for(int xx = 0; xx < MAT_SIZE; ++xx)
+        {
+            for(int y = 0; y < MAT_SIZE; ++y)
+            {
+                for(int z = 0; z < MAT_HEIGHT; ++z)
+                {
+                  // m_chunks[xx][y][z].BatchChunk(position);
+                }
+            }
+        }
     }
 
     void GenerateWorld(cardinal::RenderingEngine & engine)
@@ -69,7 +97,7 @@ public :
 
 
 
-        float TweakA = 16.0f;
+        float TweakA = 1.0f;
         float TweakB = 10.0f;
         float TweakC = 300.0f;
 
@@ -118,8 +146,30 @@ public :
                     m_chunks[xx][y][z].Translate(glm::vec3(xx * 16 * ByteCube::s_cubeSize,
                                                             y * 16 * ByteCube::s_cubeSize,
                                                             z * 16 * ByteCube::s_cubeSize));
-                    m_chunks[xx][y][z].Initialize(z);
-                    m_chunks[xx][y][z].RegisterChunk(engine);
+                    m_chunks[xx][y][z].Initialize(z, position);
+                 //   m_chunks[xx][y][z].RegisterChunk(engine);
+                }
+            }
+        }
+
+        for(int xx = 0; xx < MAT_SIZE; ++xx)
+        {
+            for(int y = 0; y < MAT_SIZE; ++y)
+            {
+                for(int z = 0; z < MAT_HEIGHT; ++z)
+                {
+                    m_chunks[xx][y][z].RegisterChunkSolid(engine);
+                }
+            }
+        }
+
+        for(int xx = 0; xx < MAT_SIZE; ++xx)
+        {
+            for(int y = 0; y < MAT_SIZE; ++y)
+            {
+                for(int z = 0; z < MAT_HEIGHT; ++z)
+                {
+                  m_chunks[xx][y][z].RegisterChunkTransparent(engine);
                 }
             }
         }

@@ -36,10 +36,10 @@ Chunk::~Chunk() // NOLINT
     // TODO
 }
 
-void Chunk::Initialize(int zz)
+void Chunk::Initialize(int zz, glm::vec3 const& position)
 {
     Generate(zz);
-    BatchChunk();
+    BatchChunk(position);
 }
 
 void Chunk::Generate(int zz)
@@ -78,7 +78,7 @@ void Chunk::Generate(int zz)
                     if(m_cubes[x][y][maxZ + 1].GetType() == ByteCube::EType::Air)
                     {
                         int rgrass = rand() % 5;
-                        if(rgrass > 3)
+                        if(rgrass > 2)
                         {
                             m_cubes[x][y][maxZ + 1].SetType(ByteCube::EType::Grass1);
                         }
@@ -88,11 +88,13 @@ void Chunk::Generate(int zz)
 
         }
     }
+
+    m_terrainRenderer.Batch(m_cubes);
 }
 
-void Chunk::BatchChunk()
+void Chunk::BatchChunk(glm::vec3 const& position)
 {
-    m_terrainRenderer.Batch(m_cubes);
-    m_grassRenderer.Batch(m_cubes);
+    ///m_terrainRenderer.Batch(m_cubes);
+    m_grassRenderer.Batch(m_cubes, position);
 }
 

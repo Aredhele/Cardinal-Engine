@@ -15,37 +15,23 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       Grass.hpp
-/// \date       14/02/2018
+/// \file       Grass.inl
+/// \date       15/02/2018
 /// \project    Cardinal Engine
-/// \package    World/Detail
+/// \package    World/Chunk/Detail/Impl
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_GRASS_HPP__
-#define CARDINAL_ENGINE_GRASS_HPP__
-
-#include "Glm/glm/glm.hpp"
-
-/// \class Grass
-/// \brief Stores grass information
-class Grass
+/// \brief Returns the center position of the triangles
+inline glm::vec3 Grass::GetCenter()
 {
-public:
+    return glm::vec3(
+            (vertex[0].x + vertex[1].x + vertex[2].x) / 3.0f,
+            (vertex[0].y + vertex[1].y + vertex[2].y) / 3.0f,
+            (vertex[0].z + vertex[1].z + vertex[2].z) / 3.0f);
+}
 
-    /// \brief Stores grass vertices
-    static const float s_vertices[36];
-
-    /// \brief Returns the center position of the triangles
-    inline glm::vec3 GetCenter();
-
-    /// \brief Comparison method for std::sort
-    inline bool operator< (const Grass& right) const;
-
-    glm::vec2 uv[3];
-    glm::vec3 vertex[3];
-    float     squareDistance;
-};
-
-#include "World/Detail/Impl/Grass.inl"
-
-#endif // !CARDINAL_ENGINE_GRASS_HPP__
+/// \brief Comparison method for std::sort
+inline bool Grass::operator<(const Grass& right) const
+{
+   return squareDistance > right.squareDistance;
+}

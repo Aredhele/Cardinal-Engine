@@ -58,14 +58,29 @@ void MeshRenderer::Initialize(
         std::vector<glm::vec2>      const& uvs)
 {
     // TODO Assertions
-
+    double startTime = glfwGetTime();
     // Instrumentation
    // Logger::LogInfo("Begin mesh renderer initialization ...");
 
-    double startTime = glfwGetTime();
 
-    // Generating vao
-    glGenVertexArrays(1, &m_vao);
+
+    if(m_vao == 0)
+    {
+        // Generating vao
+        glGenVertexArrays(1, &m_vao);
+    }
+
+    if(m_indexesObject != 0)
+    {
+        glDeleteBuffers(1, &m_indexesObject);
+        glDeleteBuffers(1, &m_verticesObject);
+        glDeleteBuffers(1, &m_uvsObject);
+
+        m_indexesObject  = 0;
+        m_verticesObject = 0;
+        m_uvsObject      = 0;
+    }
+
     glBindVertexArray(m_vao);
 
     glGenBuffers(1, &m_indexesObject);

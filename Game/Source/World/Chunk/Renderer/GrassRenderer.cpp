@@ -27,15 +27,11 @@
 #include "World/Chunk/Renderer/GrassRenderer.hpp"
 #include "Runtime/Rendering/Optimization/VBOIndexer.hpp"
 
-bool VectorCompare (glm::vec3 const& lhs, glm::vec3 const& rhs)
-{
-    return (lhs.z < rhs.z);
-}
-
 /// \brief Static batching for grass cubes
 /// \param pCubes The cubes of the chunk
-void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize])
+void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize], glm::vec3 const& position)
 {
+    m_renderer.name = "Grass";
     auto batchingBegin = std::chrono::steady_clock::now();
 
     // Resizing the vector to ensure that the current size
@@ -44,7 +40,6 @@ void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSetti
     WorldBuffers::s_chunkUVsBuffer.resize   (WorldSettings::s_chunkVertexCount);
     WorldBuffers::s_grassBuffer.resize      (WorldSettings::s_chunkBlockCount * 2);
 
-    size_t vertexIndex   = 0;
     size_t triangleIndex = 0;
     float half           = ByteCube::s_cubeSize / 2.0f;
 
@@ -62,7 +57,6 @@ void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSetti
                 }
 
                 // Face by face batching
-                unsigned size = WorldSettings::s_chunkSize;
                 for(unsigned nFace = 0; nFace < 2; ++nFace)
                 {
                     // Offset of the current cube
@@ -76,62 +70,82 @@ void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSetti
                     float UVx =  UVManager::UV[cube.GetType() >> 1][nFace * 2 + 0] * WorldSettings::s_textureStep;
                     float UVy =  UVManager::UV[cube.GetType() >> 1][nFace * 2 + 1] * WorldSettings::s_textureStep;
 
-                    WorldBuffers::s_grassBuffer[triangleIndex].uv[0].x = UVx;
-                    WorldBuffers::s_grassBuffer[triangleIndex].uv[0].x = UVy;
+                    WorldBuffers::s_grassBuffer[triangleIndex].uv[0].x     = UVx;
+                    WorldBuffers::s_grassBuffer[triangleIndex].uv[0].y     = UVy;
+                    WorldBuffers::s_grassBuffer[triangleIndex].vertex[0].x = Grass::s_vertices[faceIndex +  0] * half + offset.x;
+                    WorldBuffers::s_grassBuffer[triangleIndex].vertex[0].y = Grass::s_vertices[faceIndex +  1] * half + offset.y;
+                    WorldBuffers::s_grassBuffer[triangleIndex].vertex[0].z = Grass::s_vertices[faceIndex +  2] * half + offset.z;
 
-                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].x = UVx;
-                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].y = UVy;
-                    WorldBuffers::s_chunkVertexBuffer[vertexIndex].x = Grass::s_vertices[faceIndex +  0] * half + offset.x;
-                    WorldBuffers::s_chunkVertexBuffer[vertexIndex].y = Grass::s_vertices[faceIndex +  1] * half + offset.y;
-                    WorldBuffers::s_chunkVertexBuffer[vertexIndex].z = Grass::s_vertices[faceIndex +  2] * half + offset.z;
+                    WorldBuffers::s_grassBuffer[triangleIndex].uv[1].x     = UVx + WorldSettings::s_textureStep;
+                    WorldBuffers::s_grassBuffer[triangleIndex].uv[1].y     = UVy;
+                    WorldBuffers::s_grassBuffer[triangleIndex].vertex[1].x = Grass::s_vertices[faceIndex +  3] * half + offset.x;
+                    WorldBuffers::s_grassBuffer[triangleIndex].vertex[1].y = Grass::s_vertices[faceIndex +  4] * half + offset.y;
+                    WorldBuffers::s_grassBuffer[triangleIndex].vertex[1].z = Grass::s_vertices[faceIndex +  5] * half + offset.z;
 
-                    vertexIndex += 1;
-                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].x = UVx + WorldSettings::s_textureStep;
-                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].y = UVy;
-                    WorldBuffers::s_chunkVertexBuffer[vertexIndex].x = Grass::s_vertices[faceIndex +  3] * half + offset.x;
-                    WorldBuffers::s_chunkVertexBuffer[vertexIndex].y = Grass::s_vertices[faceIndex +  4] * half + offset.y;
-                    WorldBuffers::s_chunkVertexBuffer[vertexIndex].z = Grass::s_vertices[faceIndex +  5] * half + offset.z;
+                    WorldBuffers::s_grassBuffer[triangleIndex].uv[2].x     = UVx + WorldSettings::s_textureStep;
+                    WorldBuffers::s_grassBuffer[triangleIndex].uv[2].y     = UVy + WorldSettings::s_textureStep;
+                    WorldBuffers::s_grassBuffer[triangleIndex].vertex[2].x = Grass::s_vertices[faceIndex +  6] * half + offset.x;
+                    WorldBuffers::s_grassBuffer[triangleIndex].vertex[2].y = Grass::s_vertices[faceIndex +  7] * half + offset.y;
+                    WorldBuffers::s_grassBuffer[triangleIndex].vertex[2].z = Grass::s_vertices[faceIndex +  8] * half + offset.z;
 
-                    vertexIndex += 1;
-                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].x = UVx + WorldSettings::s_textureStep;
-                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].y = UVy + WorldSettings::s_textureStep;
-                    WorldBuffers::s_chunkVertexBuffer[vertexIndex].x = Grass::s_vertices[faceIndex +  6] * half + offset.x;
-                    WorldBuffers::s_chunkVertexBuffer[vertexIndex].y = Grass::s_vertices[faceIndex +  7] * half + offset.y;
-                    WorldBuffers::s_chunkVertexBuffer[vertexIndex].z = Grass::s_vertices[faceIndex +  8] * half + offset.z;
+                    triangleIndex++;
+                    WorldBuffers::s_grassBuffer[triangleIndex].uv[0].x     = UVx + WorldSettings::s_textureStep;
+                    WorldBuffers::s_grassBuffer[triangleIndex].uv[0].y     = UVy + WorldSettings::s_textureStep;
+                    WorldBuffers::s_grassBuffer[triangleIndex].vertex[0].x = Grass::s_vertices[faceIndex +  9] * half + offset.x;
+                    WorldBuffers::s_grassBuffer[triangleIndex].vertex[0].y = Grass::s_vertices[faceIndex + 10] * half + offset.y;
+                    WorldBuffers::s_grassBuffer[triangleIndex].vertex[0].z = Grass::s_vertices[faceIndex + 11] * half + offset.z;
 
-                    vertexIndex += 1;
-                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].x = UVx + WorldSettings::s_textureStep;
-                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].y = UVy + WorldSettings::s_textureStep;
-                    WorldBuffers::s_chunkVertexBuffer[vertexIndex].x = Grass::s_vertices[faceIndex +  9] * half + offset.x;
-                    WorldBuffers::s_chunkVertexBuffer[vertexIndex].y = Grass::s_vertices[faceIndex + 10] * half + offset.y;
-                    WorldBuffers::s_chunkVertexBuffer[vertexIndex].z = Grass::s_vertices[faceIndex + 11] * half + offset.z;
+                    WorldBuffers::s_grassBuffer[triangleIndex].uv[1].x     = UVx;
+                    WorldBuffers::s_grassBuffer[triangleIndex].uv[1].y     = UVy + WorldSettings::s_textureStep;
+                    WorldBuffers::s_grassBuffer[triangleIndex].vertex[1].x = Grass::s_vertices[faceIndex + 12] * half + offset.x;
+                    WorldBuffers::s_grassBuffer[triangleIndex].vertex[1].y = Grass::s_vertices[faceIndex + 13] * half + offset.y;
+                    WorldBuffers::s_grassBuffer[triangleIndex].vertex[1].z = Grass::s_vertices[faceIndex + 14] * half + offset.z;
 
-                    vertexIndex += 1;
-                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].x = UVx;
-                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].y = UVy + WorldSettings::s_textureStep;
-                    WorldBuffers::s_chunkVertexBuffer[vertexIndex].x = Grass::s_vertices[faceIndex + 12] * half + offset.x;
-                    WorldBuffers::s_chunkVertexBuffer[vertexIndex].y = Grass::s_vertices[faceIndex + 13] * half + offset.y;
-                    WorldBuffers::s_chunkVertexBuffer[vertexIndex].z = Grass::s_vertices[faceIndex + 14] * half + offset.z;
+                    WorldBuffers::s_grassBuffer[triangleIndex].uv[2].x     = UVx;
+                    WorldBuffers::s_grassBuffer[triangleIndex].uv[2].y     = UVy;
+                    WorldBuffers::s_grassBuffer[triangleIndex].vertex[2].x = Grass::s_vertices[faceIndex + 15] * half + offset.x;
+                    WorldBuffers::s_grassBuffer[triangleIndex].vertex[2].y = Grass::s_vertices[faceIndex + 16] * half + offset.y;
+                    WorldBuffers::s_grassBuffer[triangleIndex].vertex[2].z = Grass::s_vertices[faceIndex + 17] * half + offset.z;
 
-                    vertexIndex += 1;
-                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].x = UVx;
-                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].y = UVy;
-                    WorldBuffers::s_chunkVertexBuffer[vertexIndex].x = Grass::s_vertices[faceIndex + 15] * half + offset.x;
-                    WorldBuffers::s_chunkVertexBuffer[vertexIndex].y = Grass::s_vertices[faceIndex + 16] * half + offset.y;
-                    WorldBuffers::s_chunkVertexBuffer[vertexIndex].z = Grass::s_vertices[faceIndex + 17] * half + offset.z;
-
-                    vertexIndex += 1;
+                    triangleIndex++;
                 }
             }
         }
     }
 
-    // TODO
-    // We have to sort to avoid transparency depth glitch
-    // std::sort(WorldBuffers::s_chunkVertexBuffer.begin(), WorldBuffers::s_chunkVertexBuffer.end(), VectorCompare);
+    // Resize triangles
+    WorldBuffers::s_grassBuffer.resize(triangleIndex);
+
+    /*// We have to sort to avoid transparency depth glitch
+    // Compute camera-triangle distance for all grass object
+    for(size_t nTriangle = 0; nTriangle < triangleIndex; ++nTriangle)
+    {
+        glm::vec3 direction = (WorldBuffers::s_grassBuffer[nTriangle].GetCenter() + m_model) - position;
+        WorldBuffers::s_grassBuffer[nTriangle].squareDistance =
+                        direction.x * direction.x +
+                        direction.y * direction.y +
+                        direction.z * direction.z;
+    }
+
+    // Sorting
+    std::sort(WorldBuffers::s_grassBuffer.begin(), WorldBuffers::s_grassBuffer.end());*/
+
+    // Flatten grass object into buffers
+    size_t vertexIndex   = 0;
+    for(size_t nTriangle = 0; nTriangle < triangleIndex; ++nTriangle)
+    {
+       // std::cout << "Distance : " << WorldBuffers::s_grassBuffer[nTriangle].squareDistance << std::endl;
+        WorldBuffers::s_chunkUVsBuffer[vertexIndex + 0]    = WorldBuffers::s_grassBuffer[nTriangle].uv[0];
+        WorldBuffers::s_chunkUVsBuffer[vertexIndex + 1]    = WorldBuffers::s_grassBuffer[nTriangle].uv[1];
+        WorldBuffers::s_chunkUVsBuffer[vertexIndex + 2]    = WorldBuffers::s_grassBuffer[nTriangle].uv[2];
+        WorldBuffers::s_chunkVertexBuffer[vertexIndex + 0] = WorldBuffers::s_grassBuffer[nTriangle].vertex[0];
+        WorldBuffers::s_chunkVertexBuffer[vertexIndex + 1] = WorldBuffers::s_grassBuffer[nTriangle].vertex[1];
+        WorldBuffers::s_chunkVertexBuffer[vertexIndex + 2] = WorldBuffers::s_grassBuffer[nTriangle].vertex[2];
+        vertexIndex += 3;
+    }
 
     WorldBuffers::s_chunkVertexBuffer.resize(vertexIndex);
-    WorldBuffers::s_chunkUVsBuffer.resize (vertexIndex);
+    WorldBuffers::s_chunkUVsBuffer.resize   (vertexIndex);
 
     // Indexing
     cardinal::VBOIndexer::Index(
@@ -147,7 +161,7 @@ void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSetti
             WorldBuffers::s_chunkIndexedUVsBuffer);
 
     auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - batchingBegin);
-    std::cout << "Chunk batched in " << elapsedMs.count() << " ms" << std::endl;
+    // std::cout << "Chunk batched in " << elapsedMs.count() << " ms" << std::endl;
 
     WorldBuffers::s_chunkUVsBuffer.clear();
     WorldBuffers::s_chunkVertexBuffer.clear();

@@ -42,14 +42,20 @@ public:
     ~Chunk();
 
     /// \brief Initializes a debug chunk
-    void Initialize(int zz);
+    void Initialize(int zz,  glm::vec3 const& position);
     void Generate(int zz);
 
     /// TODO : Removes
     /// \brief Returns the mesh renderer
-    void RegisterChunk(cardinal::RenderingEngine & engine)
+    void RegisterChunkSolid(cardinal::RenderingEngine & engine)
     {
         engine.Register(m_terrainRenderer.GetMeshRenderer());
+    }
+
+    /// TODO : Removes
+    /// \brief Returns the mesh renderer
+    void RegisterChunkTransparent(cardinal::RenderingEngine & engine)
+    {
         engine.Register(m_grassRenderer.GetMeshRenderer());
     }
 
@@ -63,10 +69,10 @@ public:
     ByteCube m_cubes[WorldSettings::s_chunkSize]
                     [WorldSettings::s_chunkSize]
                     [WorldSettings::s_chunkSize];
-private:
+//private:
 
     /// \brief Builds the chunk vao
-    void BatchChunk();
+    void BatchChunk( glm::vec3 const& position);
 
 private:
 

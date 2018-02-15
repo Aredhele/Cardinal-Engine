@@ -58,7 +58,7 @@ int main()
   //  cube.SetType(ByteCube::EType::Dirt);
     cube.SetType(ByteCube::EType::Grass);
     std::cout << "TYPE : " << (unsigned)cube.GetType() << std::endl;
-
+    world.UpdateCameraPosition(camera.GetPosition(), 0.0f);
     do {
         // Fixed delta time
         currentTime = glfwGetTime();
@@ -67,6 +67,7 @@ int main()
         HandleInput(*window, camera,
                     static_cast<float>(currentTime - dLastTime));
         dLastTime = currentTime;
+        world.UpdateCameraPosition(camera.GetPosition(), 0.0006);
 
         if (currentTime - lastTime >= 1.0f) {
             currentFPS = std::to_string(fpsCounter) + " FPS";
