@@ -28,8 +28,8 @@
 #include "Runtime/Core/Maths/Noise/NYPerlin.hpp"
 #include "World/Chunk/Chunk.hpp"
 #include "Runtime/Rendering/Debug/Debug.hpp"
-#define MAT_SIZE 4 //en nombre de chunks
-#define MAT_HEIGHT 3 //en nombre de chunks
+#define MAT_SIZE 6 //en nombre de chunks
+#define MAT_HEIGHT 1 //en nombre de chunks
 #define MAT_SIZE_CUBES (MAT_SIZE * WorldSettings::s_chunkSize)
 #define MAT_HEIGHT_CUBES (MAT_HEIGHT * WorldSettings::s_chunkSize)
 

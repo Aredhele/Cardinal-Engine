@@ -21,6 +21,7 @@
 /// \package    World/Chunk/Renderer
 /// \author     Vincent STEHLY--CALISTO
 
+#include <Header/Runtime/Rendering/Shader/Built-in/UnlitTextureShader.hpp>
 #include "World/WorldBuffers.hpp"
 #include "World/WorldSettings.hpp"
 #include "World/Cube/UVManager.hpp"
@@ -142,6 +143,8 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
             WorldBuffers::s_chunkIndexesBuffer,
             WorldBuffers::s_chunkIndexedVertexBuffer,
             WorldBuffers::s_chunkIndexedUVsBuffer);
+
+    m_renderer.SetShader(new cardinal::UnlitTextureShader()); // TODO
 
     auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - batchingBegin);
     std::cout << "Chunk batched in " << elapsedMs.count() << " ms" << std::endl;

@@ -23,15 +23,16 @@
 
 #include <algorithm>
 
+
 #include "World/Cube/UVManager.hpp"
 #include "World/Chunk/Renderer/GrassRenderer.hpp"
 #include "Runtime/Rendering/Optimization/VBOIndexer.hpp"
+#include "Runtime/Rendering/Shader/Built-in/UnlitTransparentShader.hpp"
 
 /// \brief Static batching for grass cubes
 /// \param pCubes The cubes of the chunk
 void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize], glm::vec3 const& position)
 {
-    m_renderer.name = "Grass";
     auto batchingBegin = std::chrono::steady_clock::now();
 
     // Resizing the vector to ensure that the current size
@@ -116,7 +117,7 @@ void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSetti
     // Resize triangles
     WorldBuffers::s_grassBuffer.resize(triangleIndex);
 
-    /*// We have to sort to avoid transparency depth glitch
+    // We have to sort to avoid transparency depth glitch
     // Compute camera-triangle distance for all grass object
     for(size_t nTriangle = 0; nTriangle < triangleIndex; ++nTriangle)
     {
@@ -128,7 +129,7 @@ void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSetti
     }
 
     // Sorting
-    std::sort(WorldBuffers::s_grassBuffer.begin(), WorldBuffers::s_grassBuffer.end());*/
+    std::sort(WorldBuffers::s_grassBuffer.begin(), WorldBuffers::s_grassBuffer.end());
 
     // Flatten grass object into buffers
     size_t vertexIndex   = 0;
@@ -160,8 +161,11 @@ void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSetti
             WorldBuffers::s_chunkIndexedVertexBuffer,
             WorldBuffers::s_chunkIndexedUVsBuffer);
 
+
+    m_renderer.SetShader(new cardinal::UnlitTransparentShader()); // TODO fix memory leak
+
     auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - batchingBegin);
-    // std::cout << "Chunk batched in " << elapsedMs.count() << " ms" << std::endl;
+    // std::cout << "Grass Chunk batched in " << elapsedMs.count() << " ms" << std::endl;
 
     WorldBuffers::s_chunkUVsBuffer.clear();
     WorldBuffers::s_chunkVertexBuffer.clear();

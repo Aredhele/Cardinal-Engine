@@ -22,15 +22,19 @@
 /// \author     Vincent STEHLY--CALISTO
 
 
+#include <chrono>
+#include <iostream>
+
 #include "Glew/include/GL/glew.h"
+
 #include "Runtime/Core/Debug/Logger.hpp"
 #include "Runtime/Rendering/RenderingEngine.hpp"
+#include "Runtime/Rendering/Debug/DebugManager.hpp"
+#include "Runtime/Rendering/Shader/ShaderManager.hpp"
+#include "Runtime/Rendering/Shader/ShaderCompiler.hpp"
 #include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
 #include "Runtime/Rendering/Texture/TextureLoader.hpp"
 #include "Runtime/Rendering/Texture/TextureManager.hpp"
-#include "Runtime/Rendering/Shader/ShaderManager.hpp"
-#include "Runtime/Rendering/Shader/ShaderCompiler.hpp"
-#include "Runtime/Rendering/Debug/DebugManager.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -62,16 +66,20 @@ bool RenderingEngine::Initialize(int width, int height, const char * szTitle, fl
     ShaderManager::Initialize();
 
     // Loads Textures
-    TextureLoader::LoadTexture("Block", "Resources/Textures/BlockAtlas.bmp"); //< TODO : Remove
+    TextureLoader::LoadTexture("Block", "Resources/Textures/BlockAtlas.bmp");
 
     // Loads shaders
-    ShaderManager::Register("Default", ShaderCompiler::LoadShaders(
+    ShaderManager::Register("UnlitTexture", ShaderCompiler::LoadShaders(
             "Resources/Shaders/Unlit/UnlitTransparentVertexShader.glsl",
-            "Resources/Shaders/Unlit/UnlitTransparentFragmentShader.glsl")); //< TODO : Remove
+            "Resources/Shaders/Unlit/UnlitTransparentFragmentShader.glsl"));
 
     ShaderManager::Register("UnlitColor", ShaderCompiler::LoadShaders(
             "Resources/Shaders/Unlit/UnlitColorVertexShader.glsl",
-            "Resources/Shaders/Unlit/UnlitColorFragmentShader.glsl")); //< TODO : Remove
+            "Resources/Shaders/Unlit/UnlitColorFragmentShader.glsl"));
+
+    ShaderManager::Register("UnlitTransparent", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/Unlit/UnlitTransparentVertexShader.glsl",
+            "Resources/Shaders/Unlit/UnlitTransparentFragmentShader.glsl"));
 
     // Debug
     DebugManager::Initialize();
@@ -82,14 +90,15 @@ bool RenderingEngine::Initialize(int width, int height, const char * szTitle, fl
     glEnable   (GL_CULL_FACE);
     glCullFace (GL_BACK);
     glEnable   (GL_DEPTH_TEST);
-    glEnable    (GL_BLEND);
+
+    glEnable   (GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // TODO : Makes clear color configurable
     glClearColor(0.0f, 0.709f, 0.866f, 1.0f);
 
     // TODO : Removes magic values
-    m_projectionMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 10000.0f);
+   m_projectionMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 10000.0f);
 
     m_frameDelta   = 1.0 / fps;
     m_frameTime    = 0.0;
@@ -143,7 +152,7 @@ void RenderingEngine::Render(float step)
     // Computes the total frame time
     m_frameTime = glfwGetTime() - beginFrame;
 
-    // We render a new frame, inc. the counter
+    // We rendered a new frame, inc. the counter
     m_frameCount++;
     m_fpsCounter++;
 }
@@ -156,57 +165,29 @@ void RenderingEngine::RenderFrame(float step)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Gets the projection matrix
-    glm::mat4 Projection = m_projectionMatrix;
-
-    // Gets the view matrix
-    glm::mat4 View = m_pCamera->GetViewMatrix();
-
-    // Creates Projection View
+    glm::mat4 Projection  = m_projectionMatrix;
+    glm::mat4 View        = m_pCamera->GetViewMatrix();
     glm::mat4 ProjectView = Projection * View;
-
-    glDisable(GL_MULTISAMPLE);
 
     // Draw
     size_t rendererCount = m_meshRenderer.size();
     for(int nRenderer = 0; nRenderer < rendererCount; ++nRenderer)
     {
-        if(m_meshRenderer[nRenderer]->name == "Grass")
-        {
-            glDisable   (GL_CULL_FACE);
-            glDisable   (GL_DEPTH_WRITEMASK);
-
-            glEnable    (GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        }
-
         // Buffers the renderer
         MeshRenderer * pRenderer = m_meshRenderer[nRenderer];
+        IShader      * pShader   = pRenderer->m_pShader;
 
-        // Create MVP matrix and setup shaders
-        glm::mat4 MVP = ProjectView * pRenderer->m_model;
-
-        // TODO : ShaderManager
-        glUseProgram(pRenderer->m_shaderID);
-        glUniformMatrix4fv(pRenderer->m_matrixID, 1, GL_FALSE, &MVP[0][0]);
+        pShader->Begin(ProjectView * pRenderer->m_model);
 
         // Render it
         glBindVertexArray(pRenderer->m_vao);
-        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(0); // TODO : Remove ?
         glEnableVertexAttribArray(1);
 
         glDrawElements(GL_TRIANGLES, pRenderer->m_elementsCount, GL_UNSIGNED_SHORT, nullptr);
 
-        if(m_meshRenderer[nRenderer]->name == "Grass")
-        {
-            glEnable   (GL_CULL_FACE);
-            glEnable   (GL_DEPTH_WRITEMASK);
-
-            glEnable   (GL_DEPTH_TEST);
-            glDisable  (GL_BLEND);
-        }
+        pShader->End();
     }
-
-    glEnable(GL_MULTISAMPLE);
 
     // Cleanup
     glDisableVertexAttribArray(0);

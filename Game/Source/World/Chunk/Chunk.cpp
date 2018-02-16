@@ -92,9 +92,10 @@ void Chunk::Generate(int zz)
             {
                 m_cubes[x][y][maxZ].SetType(ByteCube::EType::Grass);
 
-                bool grass = false;
+
                 if(maxZ + 1 < WorldSettings::s_chunkSize)
                 {
+                    bool grass = false;
                     if(m_cubes[x][y][maxZ + 1].GetType() == ByteCube::EType::Air)
                     {
                         int rgrass = rand() % 20;
@@ -193,12 +194,13 @@ void Chunk::Generate(int zz)
         }
     }
 
-    m_terrainRenderer.Batch(m_cubes);
+   // m_terrainRenderer.Batch(m_cubes);
+   // m_grassRenderer.Batch(m_cubes, glm::vec3(1.0f));
 }
 
 void Chunk::BatchChunk(glm::vec3 const& position)
 {
-    ///m_terrainRenderer.Batch(m_cubes);
+    m_terrainRenderer.Batch(m_cubes);
     m_grassRenderer.Batch(m_cubes, position);
 }
 

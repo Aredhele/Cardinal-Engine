@@ -23,21 +23,24 @@
 
 #include "Glew/include/GL/glew.h"
 
-#include "Runtime/Core/Assertion/Assert.hh"
+#include "Runtime/Rendering/Shader/ShaderManager.hpp"
 #include "Runtime/Rendering/Shader/Built-in/UnlitColorShader.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
+/// \brief Constructor
+UnlitColorShader::UnlitColorShader()
+{
+    m_shaderID = ShaderManager::GetShaderID("UnlitColor");
+    m_matrixID = glGetUniformLocation(m_shaderID, "MVP");
+}
+
 /// \brief Sets up the pipeline for the shader
 /// \param MVP The Projection-View-Model matrix to pass to the shader
 void UnlitColorShader::Begin(const glm::mat4 &MVP)
 {
-    // Pre-condition
-    ASSERT_NE(m_shaderID, 0);
-    ASSERT_NE(m_matrixID, 0);
-
     glUseProgram      (m_shaderID);
     glUniformMatrix4fv(m_matrixID, 1, GL_FALSE, &MVP[0][0]);
 }

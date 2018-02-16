@@ -47,7 +47,7 @@ public:
 protected:
 
     uint m_shaderID = 0; ///< The shader to use
-    uint m_matrixID = 0; ///< The MVP matrix ID
+     int m_matrixID = 0; ///< The MVP matrix ID
 };
 
 } // !namespace 

@@ -58,11 +58,9 @@ void MeshRenderer::Initialize(
         std::vector<glm::vec2>      const& uvs)
 {
     // TODO Assertions
-    double startTime = glfwGetTime();
+    // double startTime = glfwGetTime();
     // Instrumentation
-   // Logger::LogInfo("Begin mesh renderer initialization ...");
-
-
+    // Logger::LogInfo("Begin mesh renderer initialization ...");
 
     if(m_vao == 0)
     {
@@ -102,28 +100,21 @@ void MeshRenderer::Initialize(
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
 
     m_elementsCount = static_cast<GLsizei>(indexes.size());
-
-    // Loading shaders
-    // TODO : Remove
-    m_shaderID = ShaderManager::GetShaderID("Default");
-
-    m_matrixID = glGetUniformLocation(m_shaderID, "MVP");
-
     m_texture = TextureManager::GetTextureID("Blocks");
 
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glBindVertexArray(0);
 
-    double elapsed = glfwGetTime() - startTime;
- //   Logger::LogInfo("Mesh renderer initialization completed in %lf seconds", elapsed);
+    // double elapsed = glfwGetTime() - startTime;
+    // Logger::LogInfo("Mesh renderer initialization completed in %lf seconds", elapsed);
 }
 
-void MeshRenderer::Setup()
+/// \brief Sets the renderer shader
+/// \param pShader The pointer on the shader
+void MeshRenderer::SetShader(IShader * pShader)
 {
-   // glEnable(GL_TEXTURE_2D);
-   // glActiveTexture( GL_TEXTURE0 );
-   // glBindTexture(GL_TEXTURE_2D, m_texture);
+    m_pShader = pShader;
 }
 
 } // !namespace

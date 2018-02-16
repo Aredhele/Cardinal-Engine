@@ -82,7 +82,7 @@ DebugManager::~DebugManager()
 
     if(s_pInstance->m_vertexCount + 2 >= 5000)
     {
-        Logger::LogWaring("Too many debug lines, ignoring current line");
+        // Too many debug lines, ignoring current line
         return;
     }
 
@@ -149,7 +149,6 @@ DebugManager::~DebugManager()
     // Computes MVP matrix
     glm::mat4 MVP = PV * glm::mat4(1.0f);
 
-    // Updates buffers
     glBindBuffer   (GL_ARRAY_BUFFER, s_pInstance->m_vbo);
     glBufferSubData(GL_ARRAY_BUFFER, 0, s_pInstance->m_vertexCount * sizeof(glm::vec3), s_pInstance->m_vertices);
 

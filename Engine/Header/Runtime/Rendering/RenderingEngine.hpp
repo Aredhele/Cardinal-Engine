@@ -25,6 +25,7 @@
 #define CARDINAL_ENGINE_RENDERING_ENGINE_HPP__
 
 #include <vector>
+#include <Header/Runtime/Rendering/Shader/IShader.hpp>
 #include "Runtime/Rendering/Context/Window.hpp"
 #include "Runtime/Rendering/Camera/Camera.hpp"
 

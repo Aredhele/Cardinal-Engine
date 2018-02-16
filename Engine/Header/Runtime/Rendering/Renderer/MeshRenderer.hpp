@@ -27,6 +27,8 @@
 #include <vector>
 #include "Glm/glm/glm.hpp"
 #include "Glm/glm/ext.hpp"
+
+#include "Runtime/Rendering/Shader/IShader.hpp"
 #include "Runtime/Platform/Configuration/Configuration.hh"
 
 /// \namespace cardinal
@@ -59,24 +61,24 @@ public :
         m_model = glm::translate(m_model, Translation);
     }
 
-    void Setup();
-    std::string name;
+    /// \brief Sets the renderer shader
+    /// \param pShader The pointer on the shader
+    void SetShader(IShader * pShader);
+
 private:
 
     friend class RenderingEngine;
 
-    uint    m_vao;
-    uint    m_texture;
-    uint    m_indexesObject;
-    uint    m_verticesObject;
-    uint    m_uvsObject;
-    uint    m_shaderID;
-    int     m_matrixID;
-    int     m_elementsCount;
-    glm::mat4 m_model;
+    uint      m_vao;
+    uint      m_texture;
+    uint      m_indexesObject;
+    uint      m_verticesObject;
+    uint      m_uvsObject;
+    IShader * m_pShader;
+    int       m_matrixID;
+    int       m_elementsCount;
 
-    // TODO : IShader ID
-    // TODO : Replace vco for uvs
+    glm::mat4 m_model;
 };
 
 } // !namespace

@@ -36,6 +36,9 @@ class UnlitColorShader : public IShader
 {
 public:
 
+    /// \brief Constructor
+    UnlitColorShader();
+
     /// \brief Sets up the pipeline for the shader
     /// \param MVP The Projection-View-Model matrix to pass to the shader
     void Begin(glm::mat4 const& MVP) final;
