@@ -23,14 +23,15 @@ INCLUDE_DIRECTORIES(
 # Compile game with the engine
 ADD_EXECUTABLE(Game
         Main.cpp
-        World/Chunk/Chunk.cpp
-        World/Cube/UVManager.cpp
         World/Cube/ByteCube.cpp
+        World/Cube/UVManager.cpp
+        World/Chunk/Chunk.cpp
+        World/Chunk/Renderer/LeafRenderer.cpp
+        World/Chunk/Renderer/GrassRenderer.cpp
+        World/Chunk/Renderer/TerrainRenderer.cpp
         World/Detail/Grass.cpp
         World/WorldBuffers.cpp
-        World/Chunk/Renderer/TerrainRenderer.cpp
-        World/Chunk/Renderer/GrassRenderer.cpp
-        World/Chunk/Renderer/LeafRenderer.cpp)
+        Character/Character.cpp)
 
 # But tests depends on GTEST and GMOCK
 ADD_DEPENDENCIES(Game CardinalEngine)

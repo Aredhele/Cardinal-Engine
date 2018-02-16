@@ -1,199 +1,80 @@
+/// Copyright (C) 2018-2019, Cardinal Engine
+/// Vincent STEHLY--CALISTO, vincentstehly@hotmail.fr
+///
+/// This program is free software; you can redistribute it and/or modify
+/// it under the terms of the GNU General Public License as published by
+/// the Free Software Foundation; either version 2 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+/// GNU General Public License for more details.
+///
+/// You should have received a copy of the GNU General Public License along
+/// with this program; if not, write to the Free Software Foundation, Inc.,
+/// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+/// \file       Main.cpp
+/// \date       16/02/2018
+/// \project    Cardinal Engine
+/// \author     Vincent STEHLY--CALISTO
 
-#include "Glew/include/GL/glew.h"
+// Engine
 #include "Runtime/Rendering/RenderingEngine.hpp"
-#include "Runtime/Core/Debug/Logger.hpp"
-#include "Runtime/Rendering/Debug/DebugLine.hpp"
-#include <World/World.hpp>
-#include <iostream>
-#include <Header/Runtime/Core/Assertion/Assert.hh>
-#include <Header/Runtime/Rendering/Shader/ShaderManager.hpp>
-#include "World/Cube/ByteCube.hpp"
-#include "Runtime/Rendering/Debug/Debug.hpp"
 
-void HandleInput(cardinal::Window & window, cardinal::Camera & camera, float dt);
+// Game
+#include "World/World.hpp"
+#include "Character/Character.hpp"
 
-int main()
+// Entry point
+int main(int argc, char ** argv)
 {
     cardinal::RenderingEngine engine;
     cardinal::Camera camera;
 
-    if (!engine.Initialize(1600, 900, "Cardinal", 10000.0f, false)) {
+    if (!engine.Initialize(1600, 900, "Cardinal", 10000.0f, false))
+    {
+        cardinal::Logger::LogError("Cannot initialize the engine, aborting");
         return -1;
     }
 
-    cardinal::Window *window = engine.GetWindow();
+    cardinal::Window * window = engine.GetWindow();
     engine.SetCamera(&camera);
 
-    int fpsCounter = 0;
-    std::string currentFPS = "0 FPS";
+    // Creates the character
+    Character character; // NOLINT
+    character.AttachCamera(&camera);
+
+
     double currentTime = glfwGetTime();
     double lastTime    = currentTime;
-    double dLastTime   = currentTime;
-
-    /*glm::vec3 color = glm::vec3(0.5f, 0.5f, 0.5f);
-    glm::vec3 start = glm::vec3(-9.5, 0.0f, -9.5f);
-
-    std::vector<cardinal::DebugLine *> grid;
-    for (int i = 0; i < 20; ++i) {
-        cardinal::DebugLine *pLine = new cardinal::DebugLine(
-                glm::vec3(-9.5 + 1.0f * i, 0.0f, -9.5f),
-                glm::vec3(0.0f, 0.0f, 19.0f), color);
-        grid.push_back(pLine);
-    }
-
-    for (int j = 0; j < 20; ++j) {
-        cardinal::DebugLine *pLine = new cardinal::DebugLine(
-                glm::vec3(-9.5f, 0.0f, -9.5f + 1.0f * j),
-                glm::vec3(19.0f, 0.0f, 0.0f), color);
-        grid.push_back(pLine);
-    }*/
-
-
-    //Chunk chunk;
-    //hunk.Initialize();
-   // engine.Register(chunk.GetMeshRenderer());
 
     World world;
-   world.GenerateWorld(engine);
+    world.GenerateWorld(engine);
 
-    ByteCube cube;
-  //  cube.SetType(ByteCube::EType::Dirt);
-    cube.SetType(ByteCube::EType::Grass);
-    std::cout << "TYPE : " << (unsigned)cube.GetType() << std::endl;
-    world.UpdateCameraPosition(camera.GetPosition(), 0.0f);
-
-
-
-
-    do {
-        // Fixed delta time
+    // Game loop
+    do
+    {
         currentTime = glfwGetTime();
+        float dt = static_cast<float>(currentTime - lastTime); // NOLINT
 
-        // camera.LookAt(glm::vec3(0.0f));
-        HandleInput(*window, camera,
-                    static_cast<float>(currentTime - dLastTime));
-        dLastTime = currentTime;
+        lastTime = currentTime;
+
+        // TODO : Remove
         world.UpdateCameraPosition(camera.GetPosition(), 0.0006);
 
-        if (currentTime - lastTime >= 1.0f) {
-            currentFPS = std::to_string(fpsCounter) + " FPS";
-            cardinal::Logger::LogInfo(currentFPS.c_str());
+        // Update character
+        character.Update(window, dt);
 
-            fpsCounter = 0;
-            lastTime = currentTime;
-        }
-
+        // Debug only
         cardinal::debug::DrawLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1000.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         cardinal::debug::DrawLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1000.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         cardinal::debug::DrawLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1000.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
-
         glfwPollEvents();
         engine.Render(0.0);
 
-        fpsCounter++;
     } while (glfwGetKey(window->GetContext(), GLFW_KEY_ESCAPE) != GLFW_PRESS &&
              glfwWindowShouldClose(window->GetContext()) == 0);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-double lastMouseX = 0.0;
-double lastMouseY = 0.0;
-
-float speed = 50.0f;
-float run = 30.0f;
-float mouseSensitivity = 0.002f;
-
-
-
-
-void HandleInput(cardinal::Window & window, cardinal::Camera & camera, float dt)
-{
-    double mouseX = 0.0;
-    double mouseY = 0.0;
-    glfwGetCursorPos(window.GetContext(), &mouseX, &mouseY);
-
-    double deltaX = mouseX - lastMouseX;
-    double deltaY = mouseY - lastMouseY;
-
-    camera.Rotate  (static_cast<float>(-deltaX * mouseSensitivity));
-    camera.RotateUp(static_cast<float>(-deltaY * mouseSensitivity));
-    bool bAlt = false;
-    if(glfwGetKey(window.GetContext(), GLFW_KEY_LEFT_ALT))
-    {
-        bAlt = true;
-    }
-
-    glm::vec2 mousePos    (mouseX, mouseY);
-    glm::vec2 windowSize  (1024.0f, 768.0f);
-    glm::vec2 windowCenter(windowSize.x /2, windowSize.y / 2);
-
-    float maxMousePosRadius = glm::min(windowSize.x, windowSize.y) / 3.0f;
-
-    float x = glm::distance(mousePos, windowCenter); // TODO
-
-    if (glm::distance(mousePos, windowCenter) > maxMousePosRadius)
-    {
-        if(!bAlt)
-            glfwSetCursorPos(window.GetContext(), 1024/2, 768/2);
-
-        lastMouseX = windowCenter.x;
-        lastMouseY = windowCenter.y;
-    }
-    else
-    {
-        lastMouseX = mousePos.x;
-        lastMouseY = mousePos.y;
-    }
-
-
-
-    float speedCoeff = 1.0f;
-    if(glfwGetKey(window.GetContext(), GLFW_KEY_LEFT_SHIFT))
-    {
-        speedCoeff = 2.0f;
-    }
-
-    // camera.LookAt(glm::vec3(0.0f));
-    if (glfwGetKey(window.GetContext(), GLFW_KEY_W) == GLFW_PRESS) camera.Translate( camera.GetDirection() * dt * speed * speedCoeff);
-    if (glfwGetKey(window.GetContext(), GLFW_KEY_S) == GLFW_PRESS) camera.Translate(-camera.GetDirection() * dt * speed * speedCoeff);
-    if (glfwGetKey(window.GetContext(), GLFW_KEY_D) == GLFW_PRESS) camera.Translate( camera.GetRight() * dt * speed * speedCoeff);
-    if (glfwGetKey(window.GetContext(), GLFW_KEY_A) == GLFW_PRESS) camera.Translate(-camera.GetRight() * dt * speed * speedCoeff);
 }

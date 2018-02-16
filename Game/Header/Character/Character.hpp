@@ -15,35 +15,49 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       DebugLine.cpp
-/// \date       10/02/2018
+/// \file       Character.hpp
+/// \date       16/02/2018
 /// \project    Cardinal Engine
-/// \package    Core/Rendering/Debug
+/// \package    Character
 /// \author     Vincent STEHLY--CALISTO
 
-#include "Glm/glm/ext.hpp"
-#include "Runtime/Rendering/Debug/DebugLine.hpp"
-#include "Runtime/Rendering/Debug/DebugManager.hpp"
+#ifndef CARDINAL_ENGINE_CHARACTER_HPP__
+#define CARDINAL_ENGINE_CHARACTER_HPP__
 
-/// \namespace cardinal
+/// Forward declaration
 namespace cardinal
 {
-
-/// \namespace debug
-namespace debug
-{
-
-/// \brief Draw a line in the world
-/// \param start The start point of the line
-/// \param end The end point of the line
-/// \param color The color of the line
-void DrawLine(glm::vec3 const& start, glm::vec3 const& end, glm::vec3 const& color)
-{
-#ifdef CARDINAL_DEBUG
-    DebugManager::AddLine(start, end, color);
-#endif
+    class Window;
+    class Camera;
 }
 
-} // !namespace
+#include "Glm/glm/glm.hpp"
 
-} // !namespace
+/// \class Character
+/// \brief 
+class Character
+{
+public:
+
+    /// \brief Updates the character
+    /// \param pWindow The context
+    /// \param dt The elapsed time
+    void Update(cardinal::Window * pWindow, float dt);
+
+    /// \brief Attaches a camera to the character
+    /// \param pCamera A pointer on the camera to attach
+    void AttachCamera(cardinal::Camera * pCamera);
+
+private:
+
+    cardinal::Camera * m_pCamera;
+
+    // Controls
+    glm::tvec3<double> m_lastMouse;
+
+    float m_speed           = 50.0f;
+    float m_speedMultiplier = 2.0f;
+    float m_sensitivity     = 0.002f;
+};
+
+#endif // !CARDINAL_ENGINE_CHARACTER_HPP__
