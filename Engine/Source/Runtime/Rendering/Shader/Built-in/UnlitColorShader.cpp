@@ -15,8 +15,40 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       ColorShader.hpp
+/// \file       UnlitColorShader.cpp
 /// \date       16/02/2018
 /// \project    Cardinal Engine
-/// \package
+/// \package    Runtime/Rendering/Shader/Built-in
 /// \author     Vincent STEHLY--CALISTO
+
+#include "Glew/include/GL/glew.h"
+
+#include "Runtime/Core/Assertion/Assert.hh"
+#include "Runtime/Rendering/Shader/Built-in/UnlitColorShader.hpp"
+
+/// \namespace cardinal
+namespace cardinal
+{
+
+/// \brief Sets up the pipeline for the shader
+/// \param MVP The Projection-View-Model matrix to pass to the shader
+void UnlitColorShader::Begin(const glm::mat4 &MVP)
+{
+    // Pre-condition
+    ASSERT_NE(m_shaderID, 0);
+    ASSERT_NE(m_matrixID, 0);
+
+    glUseProgram      (m_shaderID);
+    glUniformMatrix4fv(m_matrixID, 1, GL_FALSE, &MVP[0][0]);
+}
+
+/// \brief Restore the pipeline state
+void UnlitColorShader::End()
+{
+    // None
+}
+
+} // !namespace
+
+
+
