@@ -33,15 +33,20 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Texture/TextureLoader.cpp
         Rendering/Texture/TextureManager.cpp
         Rendering/Texture/TextureImporter.cpp
-        Rendering/Shader/ShaderManager.cpp)
+        Rendering/Shader/ShaderManager.cpp
+        Rendering/Shader/Built-in/UnlitColorShader.cpp
+        Rendering/Shader/Built-in/UnlitTextureShader.cpp
+        Rendering/Shader/Built-in/UnlitTransparentShader.cpp)
 
 # But tests depends on GTEST and GMOCK
-ADD_DEPENDENCIES(CardinalEngine glfw glew)
+ADD_DEPENDENCIES(CardinalEngine glfw glew ResourcesCopy)
 
 # Linking ...
 TARGET_LINK_LIBRARIES(CardinalEngine ${COMPILER_DEPENDENCIES} glfw glew ${PLATFORM_DEPENDENCIES})
 
+ADD_CUSTOM_TARGET(ResourcesCopy)
+
 # Copy all resources on engine build
-ADD_CUSTOM_COMMAND(TARGET CardinalEngine PRE_BUILD
+ADD_CUSTOM_COMMAND(TARGET ResourcesCopy PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CARDINAL_ENGINE_DIR}/Resources ${CARDINAL_BIN_OUTPUT}/Resources
         COMMENT "[INFO] Copying shared files ...")

@@ -15,35 +15,43 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       Unlit_ColorShader.hpp
+/// \file       UnlitColorShader.cpp
 /// \date       16/02/2018
 /// \project    Cardinal Engine
-/// \package    Runtime/Shader/Built-in
+/// \package    Runtime/Rendering/Shader/Built-in
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_UNLIT_COLOR_SHADER_HPP__
-#define CARDINAL_ENGINE_UNLIT_COLOR_SHADER_HPP__
+#include "Glew/include/GL/glew.h"
 
-#include "Runtime/Rendering/Shader/IShader.hpp"
+#include "Runtime/Core/Assertion/Assert.hh"
+#include "Runtime/Rendering/Shader/Built-in/UnlitTransparentShader.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \class UnlitColorShader
-/// \brief Color only shader
-class UnlitColorShader : public IShader
+/// \brief Sets up the pipeline for the shader
+/// \param MVP The Projection-View-Model matrix to pass to the shader
+void UnlitTransparentShader::Begin(const glm::mat4 &MVP)
 {
-public:
+    // Pre-condition
+    ASSERT_NE(m_shaderID, 0);
+    ASSERT_NE(m_matrixID, 0);
 
-    /// \brief Sets up the pipeline for the shader
-    /// \param MVP The Projection-View-Model matrix to pass to the shader
-    void Begin(glm::mat4 const& MVP) final;
+    glUseProgram      (m_shaderID);
+    glUniformMatrix4fv(m_matrixID, 1, GL_FALSE, &MVP[0][0]);
 
-    /// \brief Restore the pipeline state
-    void End() final;
-};
+    // TODO : Bind texture
+    // TODO
+}
+
+/// \brief Restore the pipeline state
+void UnlitTransparentShader::End()
+{
+    // TODO
+}
 
 } // !namespace
 
-#endif // !CARDINAL_ENGINE_UNLIT_COLOR_SHADER_HPP__
+
+

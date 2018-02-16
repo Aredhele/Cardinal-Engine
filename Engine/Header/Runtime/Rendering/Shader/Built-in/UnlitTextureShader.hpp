@@ -15,14 +15,14 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       Unlit_ColorShader.hpp
+/// \file       UnlitTextureShader.hpp
 /// \date       16/02/2018
 /// \project    Cardinal Engine
-/// \package    Runtime/Shader/Built-in
+/// \package    Runtime/Rendering/Shader/Built-in
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_UNLIT_COLOR_SHADER_HPP__
-#define CARDINAL_ENGINE_UNLIT_COLOR_SHADER_HPP__
+#ifndef CARDINAL_ENGINE_UNLIT_TEXTURE_SHADER_HPP__
+#define CARDINAL_ENGINE_UNLIT_TEXTURE_SHADER_HPP__
 
 #include "Runtime/Rendering/Shader/IShader.hpp"
 
@@ -30,9 +30,9 @@
 namespace cardinal
 {
 
-/// \class UnlitColorShader
-/// \brief Color only shader
-class UnlitColorShader : public IShader
+/// \class UnlitTextureShader
+/// \brief Texture only shader
+class UnlitTextureShader : public IShader
 {
 public:
 
@@ -46,4 +46,4 @@ public:
 
 } // !namespace
 
-#endif // !CARDINAL_ENGINE_UNLIT_COLOR_SHADER_HPP__
+#endif // !CARDINAL_ENGINE_UNLIT_TEXTURE_SHADER_HPP__

@@ -64,7 +64,9 @@ bool RenderingEngine::Initialize(int width, int height, const char * szTitle, fl
     TextureLoader::LoadTexture("Block", "Resources/Textures/BlockAtlas.bmp"); //< TODO : Remove
 
     // Loads shaders
-    ShaderManager::Register("Default", ShaderCompiler::LoadShaders("Resources/Shaders/vsbase.glsl", "Resources/Shaders/fsbase.glsl")); //< TODO : Remove
+    ShaderManager::Register("Default", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/Unlit/UnlitTransparentVertexShader.glsl",
+            "Resources/Shaders/Unlit/UnlitTransparentFragmentShader.glsl")); //< TODO : Remove
 
     // Configures OpenGL pipeline
     glDepthFunc(GL_LESS);
