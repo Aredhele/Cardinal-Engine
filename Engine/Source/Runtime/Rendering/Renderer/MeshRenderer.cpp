@@ -22,15 +22,9 @@
 /// \author     Vincent STEHLY--CALISTO
 
 #include "Glew/include/GL/glew.h"
-#include "Glfw/glfw3.h"
 
-#include "Runtime/Rendering/Texture/TextureManager.hpp"
-#include "Runtime/Rendering/Shader/ShaderManager.hpp"
-#include "Runtime/Rendering/Texture/TextureLoader.hpp"
 #include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
-#include "Runtime/Rendering/Optimization/VBOIndexer.hpp"
-
-
+#include "Runtime/Rendering/Texture/TextureManager.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -39,11 +33,18 @@ namespace cardinal
 /// \brief Default constructor
 MeshRenderer::MeshRenderer()
 {
-    // TODO
+    m_vao            = 0;
+    m_texture        = 0;
+    m_indexesObject  = 0;
+    m_verticesObject = 0;
+    m_uvsObject      = 0;
+    m_matrixID       = 0;
+    m_elementsCount  = 0;
+    m_pShader        = nullptr;
 }
 
 /// \brief Destructor
-MeshRenderer::~MeshRenderer()
+MeshRenderer::~MeshRenderer() // NOLINT
 {
     // TODO
 }
@@ -57,28 +58,8 @@ void MeshRenderer::Initialize(
         std::vector<glm::vec3>      const& vertices,
         std::vector<glm::vec2>      const& uvs)
 {
-    // TODO Assertions
-    // double startTime = glfwGetTime();
-    // Instrumentation
-    // Logger::LogInfo("Begin mesh renderer initialization ...");
 
-    if(m_vao == 0)
-    {
-        // Generating vao
-        glGenVertexArrays(1, &m_vao);
-    }
-
-    if(m_indexesObject != 0)
-    {
-        glDeleteBuffers(1, &m_indexesObject);
-        glDeleteBuffers(1, &m_verticesObject);
-        glDeleteBuffers(1, &m_uvsObject);
-
-        m_indexesObject  = 0;
-        m_verticesObject = 0;
-        m_uvsObject      = 0;
-    }
-
+    glGenVertexArrays(1, &m_vao);
     glBindVertexArray(m_vao);
 
     glGenBuffers(1, &m_indexesObject);
@@ -88,26 +69,18 @@ void MeshRenderer::Initialize(
     glGenBuffers(1, &m_verticesObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_verticesObject);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
 
     glGenBuffers(1, &m_uvsObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_uvsObject);
     glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
+
+    glEnableVertexAttribArray(0);
+    glBindVertexArray(0);
 
     m_elementsCount = static_cast<GLsizei>(indexes.size());
     m_texture = TextureManager::GetTextureID("Blocks");
-
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-    glBindVertexArray(0);
-
-    // double elapsed = glfwGetTime() - startTime;
-    // Logger::LogInfo("Mesh renderer initialization completed in %lf seconds", elapsed);
 }
 
 /// \brief Sets the renderer shader
@@ -115,6 +88,13 @@ void MeshRenderer::Initialize(
 void MeshRenderer::SetShader(IShader * pShader)
 {
     m_pShader = pShader;
+}
+
+/// \brief Translates the model
+/// \param Translation The translation vector
+void MeshRenderer::Translate(glm::vec3 const& Translation)
+{
+    m_model = glm::translate(m_model, Translation);
 }
 
 } // !namespace

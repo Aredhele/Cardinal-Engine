@@ -56,10 +56,9 @@ public :
             std::vector<glm::vec3>      const& vertices,
             std::vector<glm::vec2>      const& uvs);
 
-    void Translate(glm::vec3 const& Translation)
-    {
-        m_model = glm::translate(m_model, Translation);
-    }
+    /// \brief Translates the model
+    /// \param Translation The translation vector
+    void Translate(glm::vec3 const& Translation);
 
     /// \brief Sets the renderer shader
     /// \param pShader The pointer on the shader
