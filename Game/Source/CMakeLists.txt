@@ -29,7 +29,8 @@ ADD_EXECUTABLE(Game
         World/Detail/Grass.cpp
         World/WorldBuffers.cpp
         World/Chunk/Renderer/TerrainRenderer.cpp
-        World/Chunk/Renderer/GrassRenderer.cpp)
+        World/Chunk/Renderer/GrassRenderer.cpp
+        World/Chunk/Renderer/LeafRenderer.cpp)
 
 # But tests depends on GTEST and GMOCK
 ADD_DEPENDENCIES(Game CardinalEngine)

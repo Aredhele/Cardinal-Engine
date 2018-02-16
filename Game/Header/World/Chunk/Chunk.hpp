@@ -45,6 +45,10 @@ public:
     void Initialize(int zz,  glm::vec3 const& position);
     void Generate(int zz);
 
+
+    /// TMP
+    bool IsZ7Free(int x, int y, int z);
+
     /// TODO : Removes
     /// \brief Returns the mesh renderer
     void RegisterChunkSolid(cardinal::RenderingEngine & engine)

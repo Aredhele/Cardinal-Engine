@@ -42,6 +42,25 @@ void Chunk::Initialize(int zz, glm::vec3 const& position)
     BatchChunk(position);
 }
 
+bool Chunk::IsZ7Free(int x, int y, int z)
+{
+    if(z + 7 >= WorldSettings::s_chunkSize)
+    {
+        return false;
+    }
+
+    if(m_cubes[x][y][z + 1].GetType() == ByteCube::EType::Air &&
+       m_cubes[x][y][z + 2].GetType() == ByteCube::EType::Air &&
+       m_cubes[x][y][z + 3].GetType() == ByteCube::EType::Air &&
+       m_cubes[x][y][z + 4].GetType() == ByteCube::EType::Air &&
+       m_cubes[x][y][z + 5].GetType() == ByteCube::EType::Air &&
+       m_cubes[x][y][z + 6].GetType() == ByteCube::EType::Air &&
+       m_cubes[x][y][z + 7].GetType() == ByteCube::EType::Air)
+    {
+        return true;
+    }
+}
+
 void Chunk::Generate(int zz)
 {
     for(unsigned x = 0; x < WorldSettings::s_chunkSize; ++x) // NOLINT
@@ -73,14 +92,99 @@ void Chunk::Generate(int zz)
             {
                 m_cubes[x][y][maxZ].SetType(ByteCube::EType::Grass);
 
+                bool grass = false;
                 if(maxZ + 1 < WorldSettings::s_chunkSize)
                 {
                     if(m_cubes[x][y][maxZ + 1].GetType() == ByteCube::EType::Air)
                     {
-                        int rgrass = rand() % 5;
-                        if(rgrass > 2)
+                        int rgrass = rand() % 20;
+                        if(rgrass >= 15)
                         {
+                            grass = true;
                             m_cubes[x][y][maxZ + 1].SetType(ByteCube::EType::Grass1);
+                        }
+                    }
+
+                    if(!grass)
+                    {
+                        if(IsZ7Free(x, y, maxZ))
+                        {
+                            int rgrass = rand() % 200;
+                            if(rgrass >= 180)
+                            {
+                                m_cubes[x][y][maxZ + 1].SetType(ByteCube::EType::Wood1);
+                                m_cubes[x][y][maxZ + 2].SetType(ByteCube::EType::Wood1);
+                                m_cubes[x][y][maxZ + 3].SetType(ByteCube::EType::Wood1);
+                                m_cubes[x][y][maxZ + 4].SetType(ByteCube::EType::Wood1);
+                                m_cubes[x][y][maxZ + 5].SetType(ByteCube::EType::Wood1);
+
+                                m_cubes[x][y][maxZ + 6].SetType(ByteCube::EType::Leaf1);
+                                m_cubes[x][y][maxZ + 7].SetType(ByteCube::EType::Leaf1);
+
+
+
+
+                                if(x - 1 < WorldSettings::s_chunkSize)
+                                {
+                                    m_cubes[x - 1][y][maxZ + 5].SetType(ByteCube::EType::Leaf1);
+                                    m_cubes[x - 1][y][maxZ + 6].SetType(ByteCube::EType::Leaf1);
+                                    m_cubes[x - 1][y][maxZ + 7].SetType(ByteCube::EType::Leaf1);
+                                }
+
+                                if(x - 2 < WorldSettings::s_chunkSize)
+                                {
+                                    m_cubes[x - 2][y][maxZ + 5].SetType(ByteCube::EType::Leaf1);
+                                    m_cubes[x - 2][y][maxZ + 6].SetType(ByteCube::EType::Leaf1);
+                                    m_cubes[x - 2][y][maxZ + 7].SetType(ByteCube::EType::Leaf1);
+                                }
+
+                                if(y - 1 < WorldSettings::s_chunkSize)
+                                {
+                                    m_cubes[x][y - 1][maxZ + 5].SetType(ByteCube::EType::Leaf1);
+                                    m_cubes[x][y - 1][maxZ + 6].SetType(ByteCube::EType::Leaf1);
+                                    m_cubes[x][y - 1][maxZ + 7].SetType(ByteCube::EType::Leaf1);
+                                }
+
+                                if(y - 2 < WorldSettings::s_chunkSize)
+                                {
+                                    m_cubes[x][y - 2][maxZ + 5].SetType(ByteCube::EType::Leaf1);
+                                    m_cubes[x][y - 2][maxZ + 6].SetType(ByteCube::EType::Leaf1);
+                                    m_cubes[x][y - 2][maxZ + 7].SetType(ByteCube::EType::Leaf1);
+                                }
+
+                                if(x + 1 < WorldSettings::s_chunkSize)
+                                {
+                                    m_cubes[x + 1][y][maxZ + 5].SetType(ByteCube::EType::Leaf1);
+                                    m_cubes[x + 1][y][maxZ + 6].SetType(ByteCube::EType::Leaf1);
+                                    m_cubes[x + 1][y][maxZ + 7].SetType(ByteCube::EType::Leaf1);
+                                }
+
+                                if(x + 2 < WorldSettings::s_chunkSize)
+                                {
+                                    m_cubes[x + 2][y][maxZ + 5].SetType(ByteCube::EType::Leaf1);
+                                    m_cubes[x + 2][y][maxZ + 6].SetType(ByteCube::EType::Leaf1);
+                                    m_cubes[x + 2][y][maxZ + 7].SetType(ByteCube::EType::Leaf1);
+                                }
+
+                                if(y + 1 < WorldSettings::s_chunkSize)
+                                {
+                                    m_cubes[x][y + 1][maxZ + 5].SetType(ByteCube::EType::Leaf1);
+                                    m_cubes[x][y + 1][maxZ + 6].SetType(ByteCube::EType::Leaf1);
+                                    m_cubes[x][y + 1][maxZ + 7].SetType(ByteCube::EType::Leaf1);
+                                }
+
+                                if(y + 2 < WorldSettings::s_chunkSize)
+                                {
+                                    m_cubes[x][y + 2][maxZ + 5].SetType(ByteCube::EType::Leaf1);
+                                    m_cubes[x][y + 2][maxZ + 6].SetType(ByteCube::EType::Leaf1);
+                                    m_cubes[x][y + 2][maxZ + 7].SetType(ByteCube::EType::Leaf1);
+                                }
+
+
+
+                            }
+
+
                         }
                     }
                 }

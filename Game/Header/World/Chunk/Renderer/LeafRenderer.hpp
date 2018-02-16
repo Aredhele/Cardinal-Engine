@@ -15,25 +15,30 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       UVManager.cpp
+/// \file       GrassRenderer.hpp
 /// \date       14/02/2018
 /// \project    Cardinal Engine
-/// \package    World/Cube
+/// \package    World/Chunk/Renderer
 /// \author     Vincent STEHLY--CALISTO
 
-#include "World/Cube/UVManager.hpp"
+#ifndef CARDINAL_ENGINE_LEAF_RENDERER_HPP__
+#define CARDINAL_ENGINE_LEAF_RENDERER_HPP__
 
-/// \brief Face order
-///        Left, Front, Right, Back, Top, Bottom
-/* static */ unsigned char UVManager::UV[9][12] =
+#include <chrono>
+#include <iostream>
+
+#include "World/WorldBuffers.hpp"
+#include "World/WorldSettings.hpp"
+#include "World/Detail/Grass.hpp"
+#include "World/Cube/ByteCube.hpp"
+#include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
+
+/// \class LeafRenderer
+/// \brief Renders all leaves blocks in the chunks
+class LeafRenderer
 {
-        { 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0}, ///< Air
-        { 2, 15,  2, 15,  2, 15,  2, 15,  2, 15,  2, 15}, ///< Dirt
-        { 3, 15,  3, 15,  3, 15,  3, 15,  0, 15,  2, 15}, ///< Grass
-        { 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0}, ///< Water
-        { 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0}, ///< Lava
-        { 8, 11,  8, 11,  8, 11,  8, 11,  8, 11,  8, 11}, ///< Rock
-        {13, 10, 13, 10,  0,  0,  0,  0,  0,  0,  0,  0}, ///< Grass detail 1
-        { 4, 14,  4, 14,  4, 14,  4, 14,  5, 14,  5, 14}, ///< Wood texture 1
-        { 4, 12,  4, 12,  4, 12,  4, 12,  4, 12,  4, 12}  ///< Leaf texture 1
+public:
+
 };
+
+#endif // !CARDINAL_ENGINE_LEAF_RENDERER_HPP__

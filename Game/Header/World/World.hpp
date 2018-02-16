@@ -28,8 +28,8 @@
 #include "Runtime/Core/Maths/Noise/NYPerlin.hpp"
 #include "World/Chunk/Chunk.hpp"
 
-#define MAT_SIZE 16 //en nombre de chunks
-#define MAT_HEIGHT 16 //en nombre de chunks
+#define MAT_SIZE 8 //en nombre de chunks
+#define MAT_HEIGHT 2 //en nombre de chunks
 #define MAT_SIZE_CUBES (MAT_SIZE * WorldSettings::s_chunkSize)
 #define MAT_HEIGHT_CUBES (MAT_HEIGHT * WorldSettings::s_chunkSize)
 
@@ -97,9 +97,9 @@ public :
 
 
 
-        float TweakA = 1.0f;
-        float TweakB = 10.0f;
-        float TweakC = 300.0f;
+        float TweakA = 16.0f;
+        float TweakB = 50.0f;
+        float TweakC = 10.0f;
 
 
         NYPerlin perlin;
