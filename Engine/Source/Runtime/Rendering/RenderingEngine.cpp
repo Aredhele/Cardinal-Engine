@@ -30,6 +30,7 @@
 #include "Runtime/Rendering/Texture/TextureManager.hpp"
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
 #include "Runtime/Rendering/Shader/ShaderCompiler.hpp"
+#include "Runtime/Rendering/Debug/DebugManager.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -67,6 +68,9 @@ bool RenderingEngine::Initialize(int width, int height, const char * szTitle, fl
     ShaderManager::Register("Default", ShaderCompiler::LoadShaders(
             "Resources/Shaders/Unlit/UnlitTransparentVertexShader.glsl",
             "Resources/Shaders/Unlit/UnlitTransparentFragmentShader.glsl")); //< TODO : Remove
+
+    // Debug
+    DebugManager::Initialize();
 
     // Configures OpenGL pipeline
     glDepthFunc(GL_LESS);

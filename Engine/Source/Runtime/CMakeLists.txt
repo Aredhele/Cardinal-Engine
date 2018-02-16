@@ -24,9 +24,10 @@ ADD_LIBRARY(CardinalEngine STATIC
         Core/Maths/Noise/PerlinNoise.cpp
         Rendering/Context/Window.cpp
         Rendering/Debug/DebugCube.cpp
+        Rendering/Debug/DebugLine.cpp
+        Rendering/Debug/DebugManager.cpp
         Rendering/Shader/ShaderCompiler.cpp
         Rendering/Camera/Camera.cpp
-        Rendering/Debug/DebugLine.cpp
         Rendering/Optimization/VBOIndexer.cpp
         Rendering/RenderingEngine.cpp
         Rendering/Renderer/MeshRenderer.cpp

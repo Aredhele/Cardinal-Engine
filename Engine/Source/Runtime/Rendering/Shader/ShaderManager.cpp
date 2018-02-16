@@ -44,7 +44,7 @@ ShaderManager::ShaderManager()
     if(ShaderManager::s_pInstance == nullptr)
     {
         ShaderManager::s_pInstance = new ShaderManager();
-        Logger::LogInfo("IShader manager successfully initialized");
+        Logger::LogInfo("Shader manager successfully initialized");
     }
     else
     {
@@ -61,7 +61,7 @@ ShaderManager::ShaderManager()
         delete ShaderManager::s_pInstance;
         ShaderManager::s_pInstance = nullptr;
 
-        Logger::LogInfo("IShader manager successfully destroyed");
+        Logger::LogInfo("Shader manager successfully destroyed");
     }
     else
     {
@@ -101,12 +101,18 @@ ShaderManager::ShaderManager()
 /// \return The shader ID
 /* static */ uint cardinal::ShaderManager::GetShaderID(std::string const& shaderKey)
 {
+    ASSERT_NOT_NULL(ShaderManager::s_pInstance);
+
     uint id = 0;
     auto it = ShaderManager::s_pInstance->m_textureIDs.find(shaderKey);
 
     if(it != ShaderManager::s_pInstance->m_textureIDs.end())
     {
         id = it->second;
+    }
+    else
+    {
+        Logger::LogWaring("Unable to find the shader %s", shaderKey.c_str());
     }
 
     return id;
