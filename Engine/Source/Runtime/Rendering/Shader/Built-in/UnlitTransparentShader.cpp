@@ -45,14 +45,13 @@ void UnlitTransparentShader::Begin(const glm::mat4 &MVP)
     glUseProgram      (m_shaderID);
     glUniformMatrix4fv(m_matrixID, 1, GL_FALSE, &MVP[0][0]);
 
-    // TODO : Bind texture
-    // TODO
+    glDisable   (GL_CULL_FACE);
 }
 
 /// \brief Restore the pipeline state
 void UnlitTransparentShader::End()
 {
-    // TODO
+    glEnable   (GL_CULL_FACE);
 }
 
 } // !namespace
