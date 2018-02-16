@@ -63,7 +63,7 @@ uint ShaderCompiler::LoadShaders(
         return 0;
     }
 
-    // Read the Fragment Shader code from the file
+    // Read the Fragment IShader code from the file
     std::ifstream FragmentShaderStream(csFragmentShader, std::ios::in);
     if(FragmentShaderStream.is_open())
     {
@@ -83,13 +83,13 @@ uint ShaderCompiler::LoadShaders(
     GLint Result = GL_FALSE;
     int InfoLogLength;
 
-    // Compile Vertex Shader
+    // Compile Vertex IShader
     Logger::LogInfo("Compiling shader : %s", czVertexShader);
     char const * VertexSourcePointer = VertexShaderCode.c_str();
     glShaderSource (VertexShaderID, 1, &VertexSourcePointer , nullptr);
     glCompileShader(VertexShaderID);
 
-    // Check Vertex Shader
+    // Check Vertex IShader
     glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
     glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
 
@@ -100,13 +100,13 @@ uint ShaderCompiler::LoadShaders(
         Logger::LogError("%s", &VertexShaderErrorMessage[0]);
     }
 
-    // Compile Fragment Shader
+    // Compile Fragment IShader
     Logger::LogInfo("Compiling shader : %s", csFragmentShader);
     char const * FragmentSourcePointer = FragmentShaderCode.c_str();
     glShaderSource (FragmentShaderID, 1, &FragmentSourcePointer , nullptr);
     glCompileShader(FragmentShaderID);
 
-    // Check Fragment Shader
+    // Check Fragment IShader
     glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
     glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
     if ( InfoLogLength > 0 )

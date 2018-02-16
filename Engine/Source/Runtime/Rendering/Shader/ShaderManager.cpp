@@ -44,7 +44,7 @@ ShaderManager::ShaderManager()
     if(ShaderManager::s_pInstance == nullptr)
     {
         ShaderManager::s_pInstance = new ShaderManager();
-        Logger::LogInfo("Shader manager successfully initialized");
+        Logger::LogInfo("IShader manager successfully initialized");
     }
     else
     {
@@ -61,7 +61,7 @@ ShaderManager::ShaderManager()
         delete ShaderManager::s_pInstance;
         ShaderManager::s_pInstance = nullptr;
 
-        Logger::LogInfo("Shader manager successfully destroyed");
+        Logger::LogInfo("IShader manager successfully destroyed");
     }
     else
     {

@@ -75,7 +75,7 @@ private:
     int     m_elementsCount;
     glm::mat4 m_model;
 
-    // TODO : Shader ID
+    // TODO : IShader ID
     // TODO : Replace vco for uvs
 };
 

@@ -57,7 +57,7 @@ bool RenderingEngine::Initialize(int width, int height, const char * szTitle, fl
     TextureManager::Initialize();
     TextureLoader::Initialize();
 
-    // Shader initializes
+    // IShader initializes
     ShaderManager::Initialize();
 
     // Loads Textures
