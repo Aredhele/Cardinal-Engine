@@ -69,6 +69,10 @@ bool RenderingEngine::Initialize(int width, int height, const char * szTitle, fl
             "Resources/Shaders/Unlit/UnlitTransparentVertexShader.glsl",
             "Resources/Shaders/Unlit/UnlitTransparentFragmentShader.glsl")); //< TODO : Remove
 
+    ShaderManager::Register("UnlitColor", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/Unlit/UnlitColorVertexShader.glsl",
+            "Resources/Shaders/Unlit/UnlitColorFragmentShader.glsl")); //< TODO : Remove
+
     // Debug
     DebugManager::Initialize();
 
@@ -148,7 +152,8 @@ void RenderingEngine::Render(float step)
 /// \param step The normalized progression in the frame
 void RenderingEngine::RenderFrame(float step)
 {
-    // TODO
+    // Clears buffer
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Gets the projection matrix
     glm::mat4 Projection = m_projectionMatrix;
@@ -207,6 +212,14 @@ void RenderingEngine::RenderFrame(float step)
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glBindVertexArray(0);
+
+//#ifdef CARDINAL_DEBUG
+   DebugManager::Draw(ProjectView);
+//#endif
+
+//#ifdef CARDINAL_DEBUG
+    DebugManager::Clear();
+//#endif
 
     //  Display
     glfwSwapBuffers(m_window.GetContext());

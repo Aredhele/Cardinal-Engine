@@ -21,6 +21,7 @@
 /// \package    Runtime/Rendering/Debug
 /// \author     Vincent STEHLY--CALISTO
 
+#include <iostream>
 #include "Glew/include/GL/glew.h"
 #include "Runtime/Core/Assertion/Assert.hh"
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
@@ -36,42 +37,31 @@ namespace cardinal
 /// \brief Constructor, allocates buffers
 DebugManager::DebugManager()
 {
-    m_vao      = 0;
-    m_vbo      = 0;
-    m_cbo      = 0;
-    m_matrixID = 0;
-    m_shaderID = 0;
+    m_vao         = 0;
+    m_vbo         = 0;
+    m_cbo         = 0;
+    m_matrixID    = 0;
+    m_shaderID    = 0;
+    m_vertexCount = 0;
 
     // Getting color shader
-    m_shaderID = ShaderManager::GetShaderID("Default");
+    m_shaderID = ShaderManager::GetShaderID("UnlitColor");
     m_matrixID = glGetUniformLocation(m_shaderID, "MVP");
-
-    GLenum error = glGetError();
-    ASSERT_NE(error, GL_INVALID_VALUE);
-    ASSERT_NE(error, GL_INVALID_OPERATION);
 
     glGenVertexArrays(1, &m_vao);
     glBindVertexArray(m_vao);
 
-    glGenBuffers(1, &m_vbo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vbo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 5000 * sizeof(glm::vec3) ,&m_vertices[0], GL_DYNAMIC_DRAW);
+    glGenBuffers          (1, &m_vbo);
+    glBindBuffer          (GL_ARRAY_BUFFER, m_vbo);
+    glBufferData          (GL_ARRAY_BUFFER, 5000 * sizeof(glm::vec3), &m_vertices[0], GL_DYNAMIC_DRAW);
+    glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
 
-    glGenBuffers(1, &m_cbo);
-    glBindBuffer(GL_ARRAY_BUFFER, m_cbo);
-    glBufferData(GL_ARRAY_BUFFER, 5000 * sizeof(glm::vec3), &m_colors[0], GL_DYNAMIC_DRAW);
-
-    error = glGetError();
-    ASSERT_NE(error, GL_INVALID_VALUE);
+    glGenBuffers          (1, &m_cbo);
+    glBindBuffer          (GL_ARRAY_BUFFER, m_cbo);
+    glBufferData          (GL_ARRAY_BUFFER, 5000 * sizeof(glm::vec3), &m_colors[0], GL_DYNAMIC_DRAW);
+    glVertexAttribPointer (1, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer    (0, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
-
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer    (1, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
-
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
     glBindVertexArray(0);
 }
 
@@ -149,9 +139,9 @@ DebugManager::~DebugManager()
 /// \brief Updates buffers and setup the shader
 /* static */ void DebugManager::Draw(glm::mat4 const &PV)
 {
-    ASSERT_NOT_NULL(DebugManager::s_pInstance);
+    ASSERT_NOT_NULL(s_pInstance);
 
-    if(DebugManager::s_pInstance->m_vertexCount == 0)
+    if(s_pInstance->m_vertexCount == 0)
     {
         // There's nothing to draw
         return;
@@ -161,29 +151,25 @@ DebugManager::~DebugManager()
     glm::mat4 MVP = PV * glm::mat4(1.0f);
 
     // Updates buffers
-    glBindBuffer   (GL_ARRAY_BUFFER,  DebugManager::s_pInstance->m_vbo);
-    glBufferSubData(GL_ARRAY_BUFFER, 0,
-                     DebugManager::s_pInstance->m_vertexCount * sizeof(glm::vec3),
-                    &DebugManager::s_pInstance->m_vertices[0]);
+    glBindBuffer   (GL_ARRAY_BUFFER, s_pInstance->m_vbo);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, s_pInstance->m_vertexCount * sizeof(glm::vec3), s_pInstance->m_vertices);
 
-    // Updates buffers
-    glBindBuffer   (GL_ARRAY_BUFFER,  DebugManager::s_pInstance->m_cbo);
-    glBufferSubData(GL_ARRAY_BUFFER, 0,
-                     DebugManager::s_pInstance->m_vertexCount * sizeof(glm::vec3),
-                    &DebugManager::s_pInstance->m_colors[0]);
+    glBindBuffer   (GL_ARRAY_BUFFER, s_pInstance->m_cbo);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, s_pInstance->m_vertexCount * sizeof(glm::vec3), s_pInstance->m_colors);
 
-    glEnable(GL_MULTISAMPLE);
+    glEnable (GL_MULTISAMPLE);
+    glDisable(GL_BLEND);
 
     // Sets up shader
-    glUseProgram      (DebugManager::s_pInstance->m_shaderID);
-    glUniformMatrix4fv(DebugManager::s_pInstance->m_matrixID, 1, GL_FALSE, &MVP[0][0]);
+    glUseProgram      (s_pInstance->m_shaderID);
+    glUniformMatrix4fv(s_pInstance->m_matrixID, 1, GL_FALSE, &MVP[0][0]);
 
     // Draws all lines
     glBindVertexArray(DebugManager::s_pInstance->m_vao);
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
 
-    glDrawArrays(GL_LINES, 0, DebugManager::s_pInstance->m_vertexCount);
+    glDrawArrays(GL_LINES, 0, s_pInstance->m_vertexCount);
 
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(0);

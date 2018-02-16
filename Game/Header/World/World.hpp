@@ -28,8 +28,8 @@
 #include "Runtime/Core/Maths/Noise/NYPerlin.hpp"
 #include "World/Chunk/Chunk.hpp"
 
-#define MAT_SIZE 8 //en nombre de chunks
-#define MAT_HEIGHT 2 //en nombre de chunks
+#define MAT_SIZE 2 //en nombre de chunks
+#define MAT_HEIGHT 1 //en nombre de chunks
 #define MAT_SIZE_CUBES (MAT_SIZE * WorldSettings::s_chunkSize)
 #define MAT_HEIGHT_CUBES (MAT_HEIGHT * WorldSettings::s_chunkSize)
 
@@ -64,7 +64,6 @@ public :
             return;
         }
 
-        std::cout << "Update" << std::endl;
         elapsed = 0.0f;
 
         this->position = position;

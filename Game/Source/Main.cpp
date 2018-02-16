@@ -6,7 +6,10 @@
 #include "Runtime/Rendering/Debug/DebugLine.hpp"
 #include <World/World.hpp>
 #include <iostream>
+#include <Header/Runtime/Core/Assertion/Assert.hh>
+#include <Header/Runtime/Rendering/Shader/ShaderManager.hpp>
 #include "World/Cube/ByteCube.hpp"
+#include "Runtime/Rendering/Debug/Debug.hpp"
 
 void HandleInput(cardinal::Window & window, cardinal::Camera & camera, float dt);
 
@@ -59,6 +62,10 @@ int main()
     cube.SetType(ByteCube::EType::Grass);
     std::cout << "TYPE : " << (unsigned)cube.GetType() << std::endl;
     world.UpdateCameraPosition(camera.GetPosition(), 0.0f);
+
+
+
+
     do {
         // Fixed delta time
         currentTime = glfwGetTime();
@@ -77,15 +84,14 @@ int main()
             lastTime = currentTime;
         }
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        cardinal::debug::DrawLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1000.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        cardinal::debug::DrawLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1000.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        cardinal::debug::DrawLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1000.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
-        //for (cardinal::DebugLine *pLine : grid) {
-       //     pLine->Render(engine.GetProjectionMatrix(), camera.GetViewMatrix());
-       // }
 
-        //engine.Render(0.0f);
         glfwPollEvents();
         engine.Render(0.0);
+
         fpsCounter++;
     } while (glfwGetKey(window->GetContext(), GLFW_KEY_ESCAPE) != GLFW_PRESS &&
              glfwWindowShouldClose(window->GetContext()) == 0);

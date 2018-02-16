@@ -126,7 +126,7 @@ void assert_is_lower_than(const T & lhs,
 
 }  // namespace cardinal
 
-#ifdef CARDINAL_DEBUG
+#if defined CARDINAL_DEBUG || defined CARDINAL_RELEASE
 
 #   define ASSERT_TRUE(EXPR) \
         cardinal::impl::assert_true(EXPR, #EXPR, "None", \

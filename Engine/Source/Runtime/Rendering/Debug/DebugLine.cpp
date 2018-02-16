@@ -15,92 +15,33 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       DebugCube.cpp
+/// \file       DebugLine.cpp
 /// \date       10/02/2018
 /// \project    Cardinal Engine
-/// \package    Core/Debug
+/// \package    Core/Rendering/Debug
 /// \author     Vincent STEHLY--CALISTO
 
 #include "Glm/glm/ext.hpp"
 #include "Runtime/Rendering/Debug/DebugLine.hpp"
-#include "Runtime/Rendering/Shader/ShaderCompiler.hpp"
+#include "Runtime/Rendering/Debug/DebugManager.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \brief  Constructor
-DebugLine::DebugLine(glm::vec3 const& pos, glm::vec3 const& dir, glm::vec3 const& color)
+/// \namespace debug
+namespace debug
 {
-    position  = pos;
-    direction = dir;
-    model = glm::mat4(1.0f);
 
-    float vertex_buffer[6] =
-    {
-            position.x, position.y, position.z,
-            position.x + direction.x,
-            position.y + direction.y,
-            position.z + direction.z
-    };
-
-    float color_buffer[6] =
-    {
-        color.x, color.y, color.z,
-        color.x, color.y, color.z
-    };
-
-    m_vbo = 0;
-    m_cbo = 0;
-    m_vao = 0;
-    m_shader = 0;
-
-    glGenVertexArrays(1, &m_vao);
-    glBindVertexArray(m_vao);
-
-    glGenBuffers(1, &m_vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_buffer), vertex_buffer, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
-
-    glGenBuffers(1, &m_cbo);
-    glBindBuffer(GL_ARRAY_BUFFER, m_cbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(color_buffer), color_buffer, GL_STATIC_DRAW);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
-
-    m_shader   = cardinal::ShaderCompiler::LoadShaders("Resources/Shaders/vsbase.glsl", "Resources/Shaders/fsbase.glsl");
-    m_matrixID = glGetUniformLocation(m_shader, "MVP");
-
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
+/// \brief Draw a line in the world
+/// \param start The start point of the line
+/// \param end The end point of the line
+/// \param color The color of the line
+void DrawLine(glm::vec3 const& start, glm::vec3 const& end, glm::vec3 const& color)
+{
+    DebugManager::AddLine(start, end, color);
 }
 
-/// \brief  Destructor
-DebugLine::~DebugLine()
-{
-    glDeleteBuffers(1, &m_vbo);
-    glDeleteBuffers(1, &m_cbo);
-    glDeleteProgram(m_shader);
-    glDeleteVertexArrays(1, &m_vao);
-}
-
-/// \brief  Renders the cube
-void DebugLine::Render(glm::mat4 const& P, glm::mat4 const& V)
-{
-    glm::mat4 MVP = P * V * model;
-
-    glUseProgram(m_shader);
-    glUniformMatrix4fv(m_matrixID, 1, GL_FALSE, &MVP[0][0]);
-
-    glBindVertexArray(m_vao);
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-
-    glDrawArrays(GL_LINES, 0, 2);
-
-    glDisableVertexAttribArray(1);
-    glDisableVertexAttribArray(0);
-    glBindVertexArray(0);
-}
+} // !namespace
 
 } // !namespace
