@@ -24,10 +24,12 @@
 
 #include <chrono>
 #include <iostream>
+#include <Header/Runtime/Core/Assertion/Assert.hh>
 
 #include "Glew/include/GL/glew.h"
 
 #include "Runtime/Core/Debug/Logger.hpp"
+#include "Runtime/Rendering/Shader/IShader.hpp"
 #include "Runtime/Rendering/RenderingEngine.hpp"
 #include "Runtime/Rendering/Debug/DebugManager.hpp"
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
@@ -39,6 +41,8 @@
 /// \namespace cardinal
 namespace cardinal
 {
+
+/* static */ RenderingEngine * RenderingEngine::s_pInstance = nullptr;
 
 /// Initializes the rendering engine from parameters
 /// \param width The width of the window
@@ -85,14 +89,12 @@ bool RenderingEngine::Initialize(int width, int height, const char * szTitle, fl
     DebugManager::Initialize();
 
     // Configures OpenGL pipeline
+    glEnable   (GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-    glFrontFace(GL_CW);
+
     glEnable   (GL_CULL_FACE);
     glCullFace (GL_BACK);
-    glEnable   (GL_DEPTH_TEST);
-
-    glEnable   (GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glFrontFace(GL_CW);
 
     // TODO : Makes clear color configurable
     glClearColor(0.0f, 0.709f, 0.866f, 1.0f);
@@ -109,6 +111,7 @@ bool RenderingEngine::Initialize(int width, int height, const char * szTitle, fl
     m_frameCount   = 0;
     m_currentFps   = 0;
     m_fpsCounter   = 0;
+    s_pInstance    = this;
 
     Logger::LogInfo("Rendering engine successfully initialized in %3.4lf s.", glfwGetTime());
 }
@@ -181,7 +184,7 @@ void RenderingEngine::RenderFrame(float step)
 
         // Render it
         glBindVertexArray(pRenderer->m_vao);
-        glEnableVertexAttribArray(0); // TODO : Remove ?
+        glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
 
         glDrawElements(GL_TRIANGLES, pRenderer->m_elementsCount, GL_UNSIGNED_SHORT, nullptr);
@@ -231,10 +234,43 @@ glm::mat4 const &RenderingEngine::GetProjectionMatrix()
     return m_projectionMatrix;
 }
 
-/// \brief TMP
-void RenderingEngine::Register(class MeshRenderer *pRenderer)
+/// \brief Allocates and return a pointer on a renderer
+///        Registers the renderer into the engine
+/* static */ MeshRenderer * RenderingEngine::AllocateRenderer()
 {
-    m_meshRenderer.push_back(pRenderer);
+    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
+
+    MeshRenderer * pRenderer = new MeshRenderer(); // NOLINT
+    RenderingEngine::s_pInstance->m_meshRenderer.push_back(pRenderer);
+
+    return pRenderer;
+}
+
+/// \brief Deallocates a renderer
+///        Unregisters the renderer
+/* static */ void RenderingEngine::ReleaseRenderer(MeshRenderer *& pRenderer)
+{
+    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
+
+    int index = -1;
+    size_t count = RenderingEngine::s_pInstance->m_meshRenderer.size();
+    for(size_t nRenderer = 0; nRenderer < count; ++nRenderer)
+    {
+        if(RenderingEngine::s_pInstance->m_meshRenderer[nRenderer] == pRenderer)
+        {
+            index = static_cast<int>(nRenderer);
+            break;
+        }
+    }
+
+    if(index != -1)
+    {
+        RenderingEngine::s_pInstance->m_meshRenderer.erase(
+                RenderingEngine::s_pInstance->m_meshRenderer.begin() + index);
+    }
+
+    delete pRenderer;
+    pRenderer = nullptr;
 }
 
 } // !namespace

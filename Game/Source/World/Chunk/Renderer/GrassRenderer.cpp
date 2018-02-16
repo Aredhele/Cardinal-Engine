@@ -22,12 +22,21 @@
 /// \author     Vincent STEHLY--CALISTO
 
 #include <algorithm>
+#include <Header/Runtime/Rendering/RenderingEngine.hpp>
 
 
 #include "World/Cube/UVManager.hpp"
 #include "World/Chunk/Renderer/GrassRenderer.hpp"
 #include "Runtime/Rendering/Optimization/VBOIndexer.hpp"
 #include "Runtime/Rendering/Shader/Built-in/UnlitTransparentShader.hpp"
+
+GrassRenderer::GrassRenderer()
+{
+    if(m_renderer == nullptr)
+    {
+        m_renderer = cardinal::RenderingEngine::AllocateRenderer();
+    }
+}
 
 /// \brief Static batching for grass cubes
 /// \param pCubes The cubes of the chunk
@@ -156,13 +165,13 @@ void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSetti
             WorldBuffers::s_chunkIndexedVertexBuffer,
             WorldBuffers::s_chunkIndexedUVsBuffer);
 
-    m_renderer.Initialize(
+    m_renderer->Initialize(
             WorldBuffers::s_chunkIndexesBuffer,
             WorldBuffers::s_chunkIndexedVertexBuffer,
             WorldBuffers::s_chunkIndexedUVsBuffer);
 
 
-    m_renderer.SetShader(new cardinal::UnlitTransparentShader()); // TODO fix memory leak
+    m_renderer->SetShader(new cardinal::UnlitTransparentShader()); // TODO fix memory leak
 
     auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - batchingBegin);
     // std::cout << "Grass Chunk batched in " << elapsedMs.count() << " ms" << std::endl;
@@ -174,15 +183,10 @@ void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSetti
     WorldBuffers::s_chunkIndexedVertexBuffer.clear();
 }
 
-/// \brief Returns the mesh renderer
-cardinal::MeshRenderer * GrassRenderer::GetMeshRenderer()
-{
-    return &m_renderer;
-}
 
 /// \brief Translate the chunk grass renderer
 void GrassRenderer::Translate(glm::vec3 const &translation)
 {
     m_model += translation;
-    m_renderer.Translate(translation);
+    m_renderer->Translate(translation);
 }

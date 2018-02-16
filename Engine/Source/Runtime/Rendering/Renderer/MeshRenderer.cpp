@@ -58,7 +58,6 @@ void MeshRenderer::Initialize(
         std::vector<glm::vec3>      const& vertices,
         std::vector<glm::vec2>      const& uvs)
 {
-
     glGenVertexArrays(1, &m_vao);
     glBindVertexArray(m_vao);
 

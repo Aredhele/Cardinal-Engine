@@ -25,7 +25,6 @@
 #define CARDINAL_ENGINE_RENDERING_ENGINE_HPP__
 
 #include <vector>
-#include <Header/Runtime/Rendering/Shader/IShader.hpp>
 #include "Runtime/Rendering/Context/Window.hpp"
 #include "Runtime/Rendering/Camera/Camera.hpp"
 
@@ -63,14 +62,25 @@ public:
     /// TMP
     glm::mat4 const& GetProjectionMatrix();
 
-    // TMP
-    void Register(class MeshRenderer * pRenderer);
+public:
+
+    /// \brief Allocates and return a pointer on a renderer
+    ///        Registers the renderer into the engine
+    static class MeshRenderer * AllocateRenderer();
+
+    /// \brief Deallocates a renderer
+    ///        Unregisters the renderer
+    static void ReleaseRenderer(class MeshRenderer *& pRenderer);
 
 private:
 
     /// \brief Frame rendering implementation
     /// \param step The normalized progression in the frame
     void RenderFrame(float step);
+
+private:
+
+    static RenderingEngine * s_pInstance;
 
 private:
 

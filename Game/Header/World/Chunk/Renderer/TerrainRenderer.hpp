@@ -38,20 +38,19 @@ class TerrainRenderer
 {
 public:
 
+    TerrainRenderer();
+
     /// \brief Static batching for terrain cubes
     /// \param pCubes The cubes of the chunk
     void Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize]);
-
-    /// \brief Returns the mesh renderer
-    cardinal::MeshRenderer * GetMeshRenderer();
 
     /// \brief Translate the chunk terrain renderer
     void Translate(glm::vec3 const& translation);
 
 private:
 
-    glm::vec3              m_model;
-    cardinal::MeshRenderer m_renderer;
+    glm::vec3                m_model;
+    cardinal::MeshRenderer * m_renderer = nullptr;
 };
 
 #endif // !CARDINAL_ENGINE_TERRAIN_RENDERER_HPP__

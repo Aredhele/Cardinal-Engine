@@ -53,14 +53,14 @@ public:
     /// \brief Returns the mesh renderer
     void RegisterChunkSolid(cardinal::RenderingEngine & engine)
     {
-        engine.Register(m_terrainRenderer.GetMeshRenderer());
+        // engine.Register(m_terrainRenderer.GetMeshRenderer());
     }
 
     /// TODO : Removes
     /// \brief Returns the mesh renderer
     void RegisterChunkTransparent(cardinal::RenderingEngine & engine)
     {
-        engine.Register(m_grassRenderer.GetMeshRenderer());
+        // engine.Register(m_grassRenderer.GetMeshRenderer());
     }
 
     void Translate(glm::vec3 const& t)
