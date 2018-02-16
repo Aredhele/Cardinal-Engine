@@ -23,7 +23,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Core/Debug/Logger.cpp
         Core/Maths/Noise/PerlinNoise.cpp
         Rendering/Context/Window.cpp
-        Rendering/Debug/DebugCube.cpp
+        Rendering/Debug/DebugBox.cpp
         Rendering/Debug/DebugLine.cpp
         Rendering/Debug/DebugManager.cpp
         Rendering/Shader/ShaderCompiler.cpp

@@ -24,6 +24,7 @@
 #ifndef CARDINAL_ENGINE_DEBUG_HPP__
 #define CARDINAL_ENGINE_DEBUG_HPP__
 
+#include "Runtime/Rendering/Debug/DebugBox.hpp"
 #include "Runtime/Rendering/Debug/DebugLine.hpp"
 
 #endif // !CARDINAL_ENGINE_DEBUG_HPP__

@@ -213,13 +213,13 @@ void RenderingEngine::RenderFrame(float step)
     glDisableVertexAttribArray(1);
     glBindVertexArray(0);
 
-//#ifdef CARDINAL_DEBUG
+#ifdef CARDINAL_DEBUG
    DebugManager::Draw(ProjectView);
-//#endif
+#endif
 
-//#ifdef CARDINAL_DEBUG
+#ifdef CARDINAL_DEBUG
     DebugManager::Clear();
-//#endif
+#endif
 
     //  Display
     glfwSwapBuffers(m_window.GetContext());

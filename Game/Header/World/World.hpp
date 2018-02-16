@@ -27,9 +27,9 @@
 #include "Runtime/Rendering/RenderingEngine.hpp"
 #include "Runtime/Core/Maths/Noise/NYPerlin.hpp"
 #include "World/Chunk/Chunk.hpp"
-
-#define MAT_SIZE 2 //en nombre de chunks
-#define MAT_HEIGHT 1 //en nombre de chunks
+#include "Runtime/Rendering/Debug/Debug.hpp"
+#define MAT_SIZE 4 //en nombre de chunks
+#define MAT_HEIGHT 3 //en nombre de chunks
 #define MAT_SIZE_CUBES (MAT_SIZE * WorldSettings::s_chunkSize)
 #define MAT_HEIGHT_CUBES (MAT_HEIGHT * WorldSettings::s_chunkSize)
 
@@ -57,14 +57,14 @@ public :
 
     void UpdateCameraPosition(glm::vec3 const& position, float dt)
     {
-        elapsed += dt;
+       /* elapsed += dt;
 
         if(elapsed < 0.25f)
         {
             return;
         }
 
-        elapsed = 0.0f;
+        elapsed = 0.0f;*/
 
         this->position = position;
         for(int xx = 0; xx < MAT_SIZE; ++xx)
@@ -74,6 +74,13 @@ public :
                 for(int z = 0; z < MAT_HEIGHT; ++z)
                 {
                   // m_chunks[xx][y][z].BatchChunk(position);
+                    cardinal::debug::DrawBox(glm::vec3(
+                            (xx * WorldSettings::s_chunkSize * ByteCube::s_cubeSize) + (8.0f * ByteCube::s_cubeSize) - ByteCube::s_cubeSize / 2.0f,
+                            ( y * WorldSettings::s_chunkSize * ByteCube::s_cubeSize) + (8.0f * ByteCube::s_cubeSize) - ByteCube::s_cubeSize / 2.0f,
+                            ( z * WorldSettings::s_chunkSize * ByteCube::s_cubeSize) + (8.0f * ByteCube::s_cubeSize) - ByteCube::s_cubeSize / 2.0f),
+                         16.0f * ByteCube::s_cubeSize,
+                         16.0f * ByteCube::s_cubeSize, glm::vec3(1.0f, 0.5f, 0.7f));
+
                 }
             }
         }

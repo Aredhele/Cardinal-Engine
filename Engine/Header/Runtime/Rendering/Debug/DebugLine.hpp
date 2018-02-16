@@ -32,11 +32,12 @@ namespace cardinal
 
 namespace debug
 {
-    /// \brief Draw a line in the world
-    /// \param start The start point of the line
-    /// \param end The end point of the line
-    /// \param color The color of the line
-    void DrawLine(glm::vec3 const& start, glm::vec3 const& end, glm::vec3 const& color);
+
+/// \brief Draw a line in the world
+/// \param start The start point of the line
+/// \param end The end point of the line
+/// \param color The color of the line
+void DrawLine(glm::vec3 const& start, glm::vec3 const& end, glm::vec3 const& color);
 
 }  // !namespace
 

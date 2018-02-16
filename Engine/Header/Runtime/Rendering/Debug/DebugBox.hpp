@@ -15,56 +15,32 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       DebugCube.hpp
-/// \date       10/02/2018
+/// \file       DebugBox.hpp
+/// \date       16/02/2018
 /// \project    Cardinal Engine
-/// \package    Core/Debug
+/// \package    Core/Rendering/Debug
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_DEBUG_CUBE_HPP__
-#define CARDINAL_ENGINE_DEBUG_CUBE_HPP__
+#ifndef CARDINAL_ENGINE_DEBUG_BOX_HPP__
+#define CARDINAL_ENGINE_DEBUG_BOX_HPP__
 
 #include "Glm/glm/glm.hpp"
-#include "Glew/include/GL/glew.h"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \class DebugCube
-/// \brief Simple 3D cube for debug purpose
-class DebugCube
+namespace debug
 {
-public :
 
-    glm::vec3 position;
-    glm::mat4 model;
+/// \brief Draw a box in the world
+/// \param center The center of the box
+/// \param width The width of the box
+/// \param color The height of the box
+void DrawBox(glm::vec3 const& center, float width, float height, glm::vec3 const& color);
 
-    static const float s_vertex_buffer[108];
-    static const float s_color_buffer [108];
-
-public:
-
-    /// \brief  Constructor
-    DebugCube();
-
-    /// \brief  Destructor
-    ~DebugCube();
-
-    void Translate(glm::vec3 const& translation);
-
-    /// \brief  Renders the cube
-    void Render(glm::mat4 const& P, glm::mat4 const& V);
-
-private:
-
-    GLuint m_vbo;
-    GLuint m_cbo;
-    GLuint m_vao;
-    GLuint m_shader;
-    GLint  m_matrixID;
-};
+}  // !namespace
 
 } // !namespace
 
-#endif // !CARDINAL_ENGINE_DEBUG_CUBE_HPP__
+#endif // !CARDINAL_ENGINE_DEBUG_BOX_HPP__

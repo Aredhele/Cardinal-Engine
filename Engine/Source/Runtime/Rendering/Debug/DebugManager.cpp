@@ -21,7 +21,6 @@
 /// \package    Runtime/Rendering/Debug
 /// \author     Vincent STEHLY--CALISTO
 
-#include <iostream>
 #include "Glew/include/GL/glew.h"
 #include "Runtime/Core/Assertion/Assert.hh"
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
