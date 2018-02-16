@@ -40,3 +40,8 @@ ADD_DEPENDENCIES(CardinalEngine glfw glew)
 
 # Linking ...
 TARGET_LINK_LIBRARIES(CardinalEngine ${COMPILER_DEPENDENCIES} glfw glew ${PLATFORM_DEPENDENCIES})
+
+# Copy all resources on engine build
+ADD_CUSTOM_COMMAND(TARGET CardinalEngine PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CARDINAL_ENGINE_DIR}/Resources ${CARDINAL_BIN_OUTPUT}/Resources
+        COMMENT "[INFO] Copying shared files ...")
