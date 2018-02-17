@@ -26,14 +26,18 @@
 
 #include "Runtime/Rendering/RenderingEngine.hpp"
 
-#include "World/Chunk/Renderer/GrassRenderer.hpp"
-#include "World/Chunk/Renderer/TerrainRenderer.hpp"
-
 /// \class Chunk
-/// \brief Represents a world chunk of cube
+/// \brief Represents a chunk in the world
 class Chunk
 {
 public:
+
+    /// \brief Represents the state of the chunk
+    enum EChunkState
+    {
+        Generated,
+        Generating
+    };
 
     /// \brief Constructor
     Chunk();
@@ -41,47 +45,15 @@ public:
     /// \brief Destructor
     ~Chunk();
 
-    /// \brief Initializes a debug chunk
-    void Initialize(int zz,  glm::vec3 const& position);
-    void Generate(int zz);
-
-
-    /// TMP
-    bool IsZ7Free(int x, int y, int z);
-
-    /// TODO : Removes
-    /// \brief Returns the mesh renderer
-    void RegisterChunkSolid(cardinal::RenderingEngine & engine)
-    {
-        // engine.Register(m_terrainRenderer.GetMeshRenderer());
-    }
-
-    /// TODO : Removes
-    /// \brief Returns the mesh renderer
-    void RegisterChunkTransparent(cardinal::RenderingEngine & engine)
-    {
-        // engine.Register(m_grassRenderer.GetMeshRenderer());
-    }
-
-    void Translate(glm::vec3 const& t)
-    {
-        m_terrainRenderer.Translate(t);
-        m_grassRenderer.Translate(t);
-    }
-
-    /// \brief The cubes in the chunks
-    ByteCube m_cubes[WorldSettings::s_chunkSize]
-                    [WorldSettings::s_chunkSize]
-                    [WorldSettings::s_chunkSize];
-//private:
-
-    /// \brief Builds the chunk vao
-    void BatchChunk( glm::vec3 const& position);
+    /// \brief Initializes the chunk at the given world
+    ///        chunk coordinates
+    void Initialize(int chunkIndexX, int chunkIndexY, int chunkIndexZ);
 
 private:
 
-    GrassRenderer   m_grassRenderer;
-    TerrainRenderer m_terrainRenderer;
+    int m_chunkIndexX;
+    int m_chunkIndexY;
+    int m_chunkIndexZ;
 };
 
 #endif // !CARDINAL_ENGINE_CHUNK_HPP__

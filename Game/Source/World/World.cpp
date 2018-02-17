@@ -27,6 +27,24 @@
 World::World()
 {
     m_chunks = nullptr;
+
+    m_worldText       = cardinal::RenderingEngine::AllocateTextRenderer();
+    m_cubeText        = cardinal::RenderingEngine::AllocateTextRenderer();
+    m_chunkText       = cardinal::RenderingEngine::AllocateTextRenderer();
+    m_playerCubeText  = cardinal::RenderingEngine::AllocateTextRenderer();
+    m_playerChunkText = cardinal::RenderingEngine::AllocateTextRenderer();
+
+    m_worldText->Initialize();
+    m_cubeText->Initialize();
+    m_chunkText->Initialize();
+    m_playerCubeText->Initialize();
+    m_playerChunkText->Initialize();
+
+    m_worldText->SetText("World info",          730, 580, 14, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    m_cubeText->SetText ("Cubes count  : 0",    680, 560, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    m_chunkText->SetText("Chunks count : 0",    680, 545, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    m_playerChunkText->SetText("Cube : 0 0 0",  680, 530, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    m_playerCubeText->SetText ("Chunk : 0 0 0", 680, 515, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
 /// \brief Destructor
@@ -56,6 +74,19 @@ void World::Update(const glm::vec3 &position, float dt)
             }
         }
     }
+
+    // Updating debug text
+    // Computing player position
+    std::string _cube  = "Cube : " + std::to_string((int)position.x / ByteCube::s_cubeSize) + " " +
+                                     std::to_string((int)position.y / ByteCube::s_cubeSize) + " " +
+                                     std::to_string((int)position.z / ByteCube::s_cubeSize);
+
+    std::string _chunk  = "Chunk : " + std::to_string((int)position.x / ByteCube::s_cubeSize / 16) + " " +
+                                       std::to_string((int)position.y / ByteCube::s_cubeSize / 16) + " " +
+                                       std::to_string((int)position.z / ByteCube::s_cubeSize / 16);
+
+    m_playerChunkText->SetText(_cube.c_str(),  680, 530, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    m_playerCubeText->SetText (_chunk.c_str(), 680, 515, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
 /// \brief Creates the initial world
@@ -73,6 +104,11 @@ void World::Initialize()
         for(int j = 0; j < World::s_matSize; ++j)
         {
             m_chunks[i][j] = new Chunk[World::s_matHeight];
+
+            for(int k = 0; k < World::s_matHeight; ++k)
+            {
+                m_chunks[i][j][k].Initialize(i, j, k);
+            }
         }
     }
 
@@ -80,4 +116,11 @@ void World::Initialize()
                               World::s_matSize *
                               World::s_matSize *
                               World::s_matHeight);
+
+    // Settings debug text
+    std::string _cubes  = "Cubes count  : " + std::to_string(World::s_matSize * World::s_matSize * World::s_matHeight * WorldSettings::s_chunkBlockCount);
+    std::string _chunks = "Chunks count : " + std::to_string(World::s_matSize * World::s_matSize * World::s_matHeight);
+
+    m_cubeText->SetText (_cubes.c_str(),  680, 560, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    m_chunkText->SetText(_chunks.c_str(), 680, 545, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 }

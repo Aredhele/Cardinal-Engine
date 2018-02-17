@@ -91,7 +91,7 @@ void Character::Update(cardinal::Window * pWindow, float dt)
                                       std::to_string(m_pCamera->GetPosition().y) + " / " +
                                       std::to_string(m_pCamera->GetPosition().z);
 
-    std::string _dir = "Dir XYZ  : " + std::to_string(m_pCamera->GetDirection().x) + " / " +
+    std::string _dir = "Dir  XYZ : " + std::to_string(m_pCamera->GetDirection().x) + " / " +
                                        std::to_string(m_pCamera->GetDirection().y) + " / " +
                                        std::to_string(m_pCamera->GetDirection().z);
 

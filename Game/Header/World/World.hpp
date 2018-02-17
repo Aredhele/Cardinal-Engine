@@ -24,13 +24,16 @@
 #ifndef CARDINAL_ENGINE_WORLD_HPP__
 #define CARDINAL_ENGINE_WORLD_HPP__
 
-#include "Runtime/Rendering/RenderingEngine.hpp"
-#include "Runtime/Core/Maths/Noise/NYPerlin.hpp"
-#include "World/Chunk/Chunk.hpp"
+// Engine
+#include <Header/Runtime/Rendering/Renderer/TextRenderer.hpp>
+#include "Runtime/Core/Assertion/Assert.hh"
 #include "Runtime/Rendering/Debug/Debug.hpp"
 
-// Engine
-#include "Runtime/Core/Assertion/Assert.hh"
+// World
+#include "World/Chunk/Chunk.hpp"
+#include "World/WorldBuffers.hpp"
+#include "World/WorldSettings.hpp"
+#include "World/Cube/ByteCube.hpp"
 
 /// \class World
 /// \brief Main class, manages world generation
@@ -38,8 +41,8 @@ class World
 {
 public:
 
-    static const uint s_matSize   = 6;
-    static const uint s_matHeight = 1;
+    static const uint s_matSize   = 5;
+    static const uint s_matHeight = 3;
     static const uint s_matSizeCubes   = s_matSize   * WorldSettings::s_chunkSize;
     static const uint s_matHeightCubes = s_matHeight * WorldSettings::s_chunkSize;
 
@@ -60,116 +63,21 @@ public:
 
     /// \brief Updates the world from the character position
     /// \param position The position of the character
-    /// \param dt The elasped time
+    /// \param dt The elapsed time
     void Update(glm::vec3 const& position, float dt);
 
     /// \brief Creates the initial world
     void Initialize();
 
-
-
-   /* void GenerateWorld(cardinal::RenderingEngine & engine)
-    {
-        WorldBuffers::Initialize();
-
-        // Allocating chunk
-        m_chunks = new Chunk **[MAT_SIZE];
-        for(int i = 0; i < MAT_SIZE; ++i)
-        {
-            m_chunks[i] =  new Chunk *[MAT_SIZE];
-            for(int j = 0; j < MAT_SIZE; ++j)
-            {
-                m_chunks[i][j] = new Chunk[MAT_HEIGHT];
-            }
-        }
-
-
-
-        float TweakA = 16.0f;
-        float TweakB = 50.0f;
-        float TweakC = 10.0f;
-
-
-        NYPerlin perlin;
-       // float TweakA = 16.0f;
-       // float TweakB = 100.0f;
-       // float TweakC = 300.0f;
-
-        // 2D terrain
-        auto batchingBegin = std::chrono::steady_clock::now();
-        for(int x = 0; x < MAT_SIZE_CUBES; ++x)
-        {
-            for(int y = 0; y < MAT_SIZE_CUBES; ++y)
-            {
-                for(int z = 0; z < MAT_HEIGHT_CUBES; ++z)
-                {
-                    ByteCube * cube = GetCube(x, y, z);
-
-                    float modif = 0.04;
-                    float sample = perlin.sample(modif*x, modif*y, modif*z);
-
-
-                    sample /= pow((float)z / (float)16, TweakA) / TweakB + TweakC;
-
-                   // glTranslated(x*Cube::s_CubeSize, y*Cube::s_CubeSize, z*Cube::s_CubeSize);
-                    if (sample < 0.5f)
-                    {
-                        cube->SetType(ByteCube::EType::Air);
-                        cube->Enable();
-                    }
-                    else
-                    {
-                        cube->SetType(ByteCube::EType::Dirt);
-                        cube->Enable();
-                    }
-                }
-            }
-        }
-
-        auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - batchingBegin);
-        std::cout << "Terrain generated in " << elapsedMs.count() << " ms" << std::endl;
-
-        for(int xx = 0; xx < MAT_SIZE; ++xx)
-        {
-            for(int y = 0; y < MAT_SIZE; ++y)
-            {
-                for(int z = 0; z < MAT_HEIGHT; ++z)
-                {
-                    m_chunks[xx][y][z].Translate(glm::vec3(xx * 16 * ByteCube::s_cubeSize,
-                                                            y * 16 * ByteCube::s_cubeSize,
-                                                            z * 16 * ByteCube::s_cubeSize));
-                    m_chunks[xx][y][z].Initialize(z, position);
-                 //   m_chunks[xx][y][z].RegisterChunk(engine);
-                }
-            }
-        }
-
-        for(int xx = 0; xx < MAT_SIZE; ++xx)
-        {
-            for(int y = 0; y < MAT_SIZE; ++y)
-            {
-                for(int z = 0; z < MAT_HEIGHT; ++z)
-                {
-                    m_chunks[xx][y][z].RegisterChunkSolid(engine);
-                }
-            }
-        }
-
-        for(int xx = 0; xx < MAT_SIZE; ++xx)
-        {
-            for(int y = 0; y < MAT_SIZE; ++y)
-            {
-                for(int z = 0; z < MAT_HEIGHT; ++z)
-                {
-                  m_chunks[xx][y][z].RegisterChunkTransparent(engine);
-                }
-            }
-        }
-    }*/
-
 private:
 
     Chunk *** m_chunks;
+
+    cardinal::TextRenderer * m_worldText;
+    cardinal::TextRenderer * m_cubeText;
+    cardinal::TextRenderer * m_chunkText;
+    cardinal::TextRenderer * m_playerCubeText;
+    cardinal::TextRenderer * m_playerChunkText;
 };
 
 #include "World/Impl/World.inl"
