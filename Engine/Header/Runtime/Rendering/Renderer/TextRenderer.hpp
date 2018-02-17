@@ -55,7 +55,8 @@ public :
     /// \param x The x coordinate (screen space)
     /// \param y The y coordinate (screen space)
     /// \param size The size of the text
-    void SetText(const char * szText, int x, int y, int size);
+    /// \param color The color of the text
+    void SetText(const char * szText, int x, int y, int size, glm::vec4 const& color);
 
     /// \brief Sets the renderer shader
     /// \param pShader The pointer on the shader

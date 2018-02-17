@@ -35,8 +35,8 @@ Character::Character()
     m_pPositionText->Initialize();
     m_pDirectionText->Initialize();
 
-    m_pPositionText->SetText( "Pos XYZ : 0.0f / 0.0f / 0.0f", 5, 500, 12);
-    m_pDirectionText->SetText("Dir XYZ : 0.0f / 0.0f / 0.0f", 5, 485, 12);
+    m_pPositionText->SetText( "Pos XYZ : 0.0f / 0.0f / 0.0f", 5, 500, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    m_pDirectionText->SetText("Dir XYZ : 0.0f / 0.0f / 0.0f", 5, 485, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
 /// \brief Updates the character
@@ -95,8 +95,8 @@ void Character::Update(cardinal::Window * pWindow, float dt)
                                        std::to_string(m_pCamera->GetDirection().y) + " / " +
                                        std::to_string(m_pCamera->GetDirection().z);
 
-    m_pPositionText->SetText( _pos.c_str(), 5, 500, 12);
-    m_pDirectionText->SetText(_dir.c_str(), 5, 485, 12);
+    m_pPositionText->SetText( _pos.c_str(), 5, 500, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    m_pDirectionText->SetText(_dir.c_str(), 5, 485, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
 /// \brief Attaches a camera to the character

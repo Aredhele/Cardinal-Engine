@@ -15,44 +15,23 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       Shader.hpp
-/// \date       16/02/2018
+/// \file       IShader.cpp
+/// \date       17/02/2018
 /// \project    Cardinal Engine
-/// \package    Runtime/Shader
+/// \package    Runtime/Rendering/Shader
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_I_SHADER_HPP__
-#define CARDINAL_ENGINE_I_SHADER_HPP__
-
-#include "Glm/glm/glm.hpp"
-#include "Runtime/Platform/Configuration/Type.hh"
+#include "Glew/include/GL/glew.h"
+#include "Runtime/Rendering/Shader/IShader.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \class IShader
-/// \brief Base class for all built-in shaders
-class IShader
+/// \brief Sets 4 floats in the shader
+void IShader::SetFloat4(int uniform, float x, float y, float z, float w)
 {
-public:
+    glUniform4f(uniform, x, y, z, w);
+}
 
-    /// \brief Sets up the pipeline for the shader
-    /// \param MVP The Projection-View-Model matrix to pass to the shader
-    virtual void Begin(glm::mat4 const& MVP) = 0;
-
-    /// \brief Restore the pipeline state
-    virtual void End  () = 0;
-
-    /// \brief Sets 4 floats in the shader
-    void SetFloat4(int uniform, float x, float y, float z, float w);
-
-public:
-
-    uint m_shaderID = 0; ///< The shader to use
-     int m_matrixID = 0; ///< The MVP matrix ID
-};
-
-} // !namespace 
-
-#endif // !CARDINAL_ENGINE_I_SHADER_HPP__
+} // !namespace

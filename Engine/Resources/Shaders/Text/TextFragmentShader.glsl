@@ -7,6 +7,7 @@ in vec2 UV;
 out vec4 color;
 
 // Uniforms
+uniform vec4      textColor;
 uniform sampler2D textureSampler;
 
 void main()
@@ -17,4 +18,6 @@ void main()
 	{
 	    discard;
 	}
+
+	color = textColor;
 }

@@ -37,6 +37,7 @@ TextShader::TextShader()
     m_shaderID       = ShaderManager::GetShaderID("Text");
     m_texture        = m_texture = TextureManager::GetTextureID("SAORegular");
     m_textureSampler = glGetUniformLocation(m_shaderID, "textureSampler");
+    m_textColor      = glGetUniformLocation(m_shaderID, "textColor");
 }
 
 /// \brief Sets up the pipeline for the shader
@@ -47,16 +48,22 @@ void TextShader::Begin(const glm::mat4 &MVP)
     glActiveTexture   (GL_TEXTURE0);
     glBindTexture     (GL_TEXTURE_2D, m_texture);
     glUniform1i       (m_textureSampler, 0);
+    SetFloat4         (m_textColor, m_color.x, m_color.y, m_color.z, m_color.a);
 
     glDisable(GL_CULL_FACE);
-    // glEnable(GL_MULTISAMPLE);
 }
 
 /// \brief Restore the pipeline state
 void TextShader::End()
 {
     glEnable(GL_CULL_FACE);
-    // glDisable(GL_MULTISAMPLE);
+}
+
+/// \brief Sets the color of the text
+/// \param color The color
+void TextShader::SetColor(glm::vec4 const& color)
+{
+    m_color = color;
 }
 
 } // !namespace

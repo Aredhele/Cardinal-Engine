@@ -128,10 +128,10 @@ bool RenderingEngine::Initialize(int width, int height, const char * szTitle, fl
     m_pTotalFPS->Initialize();
     m_pFrameTime->Initialize();
 
-    m_pEngineName->SetText("Cardinal Engine v1.0", 5, 580, 14);
-    m_pCurrentFPS->SetText("FPS   : 0", 5, 560, 12);
-    m_pTotalFPS->SetText  ("Frame : 0", 5, 545, 12);
-    m_pFrameTime->SetText ("Time  : 0", 5, 530, 12);
+    m_pEngineName->SetText("Cardinal Engine v1.0", 5, 580, 14, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    m_pCurrentFPS->SetText("FPS   : 0", 5, 560, 12, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+    m_pTotalFPS->SetText  ("Frame : 0", 5, 545, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    m_pFrameTime->SetText ("Time  : 0", 5, 530, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
     Logger::LogInfo("Rendering engine successfully initialized in %3.4lf s.", glfwGetTime());
 }
@@ -158,7 +158,7 @@ void RenderingEngine::Render(float step)
         // Logger::LogInfo("%3.3lf FPS", m_currentFps);
 
         std::string _fps = "FPS   : " + std::to_string(m_currentFps);
-        m_pCurrentFPS->SetText(_fps.c_str(), 5, 560, 12);
+        m_pCurrentFPS->SetText(_fps.c_str(), 5, 560, 12, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
     }
 
     if(m_frameLag < m_frameDelta)
@@ -184,8 +184,8 @@ void RenderingEngine::Render(float step)
 
     std::string _frame = "Frame : " + std::to_string(m_frameCount);
     std::string _time  = "Time  : " + std::to_string(m_frameTime) + " s";
-    m_pTotalFPS->SetText  (_frame.c_str(), 5, 545, 12);
-    m_pFrameTime->SetText (_time.c_str(),  5, 530, 12);
+    m_pTotalFPS->SetText  (_frame.c_str(), 5, 545, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    m_pFrameTime->SetText (_time.c_str(),  5, 530, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
 /// \brief Frame rendering implementation

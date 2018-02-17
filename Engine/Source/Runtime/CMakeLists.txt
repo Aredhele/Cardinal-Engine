@@ -26,7 +26,6 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Debug/DebugBox.cpp
         Rendering/Debug/DebugLine.cpp
         Rendering/Debug/DebugManager.cpp
-        Rendering/Shader/ShaderCompiler.cpp
         Rendering/Camera/Camera.cpp
         Rendering/Optimization/VBOIndexer.cpp
         Rendering/RenderingEngine.cpp
@@ -35,7 +34,9 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Texture/TextureLoader.cpp
         Rendering/Texture/TextureManager.cpp
         Rendering/Texture/TextureImporter.cpp
+        Rendering/Shader/IShader.cpp
         Rendering/Shader/ShaderManager.cpp
+        Rendering/Shader/ShaderCompiler.cpp
         Rendering/Shader/Built-in/TextShader.cpp
         Rendering/Shader/Built-in/UnlitColorShader.cpp
         Rendering/Shader/Built-in/UnlitTextureShader.cpp
