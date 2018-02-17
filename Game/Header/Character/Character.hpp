@@ -32,12 +32,16 @@ namespace cardinal
 }
 
 #include "Glm/glm/glm.hpp"
+#include "Runtime/Rendering/Renderer/TextRenderer.hpp"
 
 /// \class Character
 /// \brief 
 class Character
 {
 public:
+
+    /// \brief Constructor
+    Character();
 
     /// \brief Updates the character
     /// \param pWindow The context
@@ -58,6 +62,9 @@ private:
     float m_speed           = 50.0f;
     float m_speedMultiplier = 2.0f;
     float m_sensitivity     = 0.002f;
+
+    cardinal::TextRenderer * m_pPositionText;
+    cardinal::TextRenderer * m_pDirectionText;
 };
 
 #endif // !CARDINAL_ENGINE_CHARACTER_HPP__

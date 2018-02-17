@@ -24,6 +24,20 @@
 #include "Character/Character.hpp"
 #include "Runtime/Rendering/Camera/Camera.hpp"
 #include "Runtime/Rendering/Context/Window.hpp"
+#include "Runtime/Rendering/RenderingEngine.hpp"
+
+/// \brief Constructor
+Character::Character()
+{
+    m_pPositionText  = cardinal::RenderingEngine::AllocateTextRenderer();
+    m_pDirectionText = cardinal::RenderingEngine::AllocateTextRenderer();
+
+    m_pPositionText->Initialize();
+    m_pDirectionText->Initialize();
+
+    m_pPositionText->SetText( "Pos XYZ : 0.0f / 0.0f / 0.0f", 5, 500, 12);
+    m_pDirectionText->SetText("Dir XYZ : 0.0f / 0.0f / 0.0f", 5, 485, 12);
+}
 
 /// \brief Updates the character
 /// \param pWindow The context
@@ -72,6 +86,17 @@ void Character::Update(cardinal::Window * pWindow, float dt)
     if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_S) == GLFW_PRESS) m_pCamera->Translate(-m_pCamera->GetDirection() * dt * m_speed * m_speedMultiplier);
     if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_D) == GLFW_PRESS) m_pCamera->Translate( m_pCamera->GetRight() * dt * m_speed * m_speedMultiplier);
     if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_A) == GLFW_PRESS) m_pCamera->Translate(-m_pCamera->GetRight() * dt * m_speed * m_speedMultiplier);
+
+    std::string _pos = "Pos XYZ : " + std::to_string(m_pCamera->GetPosition().x) + " / " +
+                                      std::to_string(m_pCamera->GetPosition().y) + " / " +
+                                      std::to_string(m_pCamera->GetPosition().z);
+
+    std::string _dir = "Dir XYZ  : " + std::to_string(m_pCamera->GetDirection().x) + " / " +
+                                       std::to_string(m_pCamera->GetDirection().y) + " / " +
+                                       std::to_string(m_pCamera->GetDirection().z);
+
+    m_pPositionText->SetText( _pos.c_str(), 5, 500, 12);
+    m_pDirectionText->SetText(_dir.c_str(), 5, 485, 12);
 }
 
 /// \brief Attaches a camera to the character
