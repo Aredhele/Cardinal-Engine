@@ -37,6 +37,8 @@
 /// \brief Initializes all world buffers
 /* static */ void WorldBuffers::Initialize()
 {
+    cardinal::Logger::LogInfo("Initializing static buffers ...");
+
     s_chunkVertexBuffer = std::vector<glm::vec3>(WorldSettings::s_chunkVertexCount);
     s_chunkUVsBuffer    = std::vector<glm::vec2>(WorldSettings::s_chunkVertexCount);
 

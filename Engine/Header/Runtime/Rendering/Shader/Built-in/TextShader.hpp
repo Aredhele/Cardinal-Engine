@@ -15,41 +15,43 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       Shader.hpp
+/// \file       TextShader.hpp
 /// \date       16/02/2018
 /// \project    Cardinal Engine
-/// \package    Runtime/Shader
+/// \package    Runtime/Shader/Built-in
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_I_SHADER_HPP__
-#define CARDINAL_ENGINE_I_SHADER_HPP__
+#ifndef CARDINAL_ENGINE_TEXT_SHADER_HPP__
+#define CARDINAL_ENGINE_TEXT_SHADER_HPP__
 
-#include "Glm/glm/glm.hpp"
-#include "Runtime/Platform/Configuration/Type.hh"
+#include "Runtime/Rendering/Shader/IShader.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \class IShader
-/// \brief Base class for all built-in shaders
-class IShader
+/// \class TextShader
+/// \brief Text shader based on texture font
+class TextShader : public IShader
 {
 public:
 
+    /// \brief Constructor
+    TextShader();
+
     /// \brief Sets up the pipeline for the shader
     /// \param MVP The Projection-View-Model matrix to pass to the shader
-    virtual void Begin(glm::mat4 const& MVP) = 0;
+    void Begin(glm::mat4 const& MVP) final;
 
     /// \brief Restore the pipeline state
-    virtual void End  () = 0;
+    void End() final;
 
-public:
+private:
 
-    uint m_shaderID = 0; ///< The shader to use
-     int m_matrixID = 0; ///< The MVP matrix ID
+    uint m_texture;
+     int m_textureSampler;
 };
 
-} // !namespace 
+} // !namespace
 
-#endif // !CARDINAL_ENGINE_I_SHADER_HPP__
+#endif // !CARDINAL_ENGINE_TEXT_SHADER_HPP__

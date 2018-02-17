@@ -34,7 +34,7 @@ GrassRenderer::GrassRenderer()
 {
     if(m_renderer == nullptr)
     {
-        m_renderer = cardinal::RenderingEngine::AllocateRenderer();
+       // m_renderer = cardinal::RenderingEngine::AllocateRenderer();
     }
 }
 

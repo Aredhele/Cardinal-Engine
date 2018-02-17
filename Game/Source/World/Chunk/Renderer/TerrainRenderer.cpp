@@ -33,7 +33,7 @@ TerrainRenderer::TerrainRenderer()
 {
     if(m_renderer == nullptr)
     {
-        m_renderer = cardinal::RenderingEngine::AllocateRenderer();
+     //   m_renderer = cardinal::RenderingEngine::AllocateRenderer();
     }
 }
 
@@ -43,7 +43,7 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
 {
     if(m_renderer == nullptr)
     {
-        m_renderer = cardinal::RenderingEngine::AllocateRenderer();
+        m_renderer = cardinal::RenderingEngine::AllocateMeshRenderer();
     }
 
     auto batchingBegin = std::chrono::steady_clock::now();

@@ -36,7 +36,7 @@ class TextureImporter
 {
 public :
 
-    /// \brief Stores informations about a texture
+    /// \brief Stores information about a texture
     struct TextureProperty
     {
         uchar * pBuffer; ///< The data of the texture

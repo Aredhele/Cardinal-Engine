@@ -23,6 +23,7 @@ INCLUDE_DIRECTORIES(
 # Compile game with the engine
 ADD_EXECUTABLE(Game
         Main.cpp
+        World/World.cpp
         World/Cube/ByteCube.cpp
         World/Cube/UVManager.cpp
         World/Chunk/Chunk.cpp

@@ -22,6 +22,7 @@
 
 // Engine
 #include "Runtime/Rendering/RenderingEngine.hpp"
+#include "Runtime/Rendering/Renderer/TextRenderer.hpp"
 
 // Game
 #include "World/World.hpp"
@@ -46,12 +47,15 @@ int main(int argc, char ** argv)
     Character character; // NOLINT
     character.AttachCamera(&camera);
 
-
     double currentTime = glfwGetTime();
     double lastTime    = currentTime;
 
     World world;
-    world.GenerateWorld(engine);
+    world.Initialize();
+
+    cardinal::TextRenderer * pRenderer = cardinal::RenderingEngine::AllocateTextRenderer();
+    pRenderer->Initialize();
+    pRenderer->SetText("abcde ABCDE", 5, 560, 20);
 
     // Game loop
     do
@@ -61,11 +65,9 @@ int main(int argc, char ** argv)
 
         lastTime = currentTime;
 
-        // TODO : Remove
-        world.UpdateCameraPosition(camera.GetPosition(), 0.0006);
-
         // Update character
         character.Update(window, dt);
+        world.Update(camera.GetPosition(), dt);
 
         // Debug only
         cardinal::debug::DrawLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1000.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));

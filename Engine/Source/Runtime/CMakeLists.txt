@@ -30,11 +30,13 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Camera/Camera.cpp
         Rendering/Optimization/VBOIndexer.cpp
         Rendering/RenderingEngine.cpp
+        Rendering/Renderer/TextRenderer.cpp
         Rendering/Renderer/MeshRenderer.cpp
         Rendering/Texture/TextureLoader.cpp
         Rendering/Texture/TextureManager.cpp
         Rendering/Texture/TextureImporter.cpp
         Rendering/Shader/ShaderManager.cpp
+        Rendering/Shader/Built-in/TextShader.cpp
         Rendering/Shader/Built-in/UnlitColorShader.cpp
         Rendering/Shader/Built-in/UnlitTextureShader.cpp
         Rendering/Shader/Built-in/UnlitTransparentShader.cpp)

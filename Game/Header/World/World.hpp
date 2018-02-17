@@ -18,7 +18,7 @@
 /// \file       World.hpp
 /// \date       12/02/2018
 /// \project    Cardinal Engine
-/// \package    TODO
+/// \package    World
 /// \author     Vincent STEHLY--CALISTO
 
 #ifndef CARDINAL_ENGINE_WORLD_HPP__
@@ -28,65 +28,47 @@
 #include "Runtime/Core/Maths/Noise/NYPerlin.hpp"
 #include "World/Chunk/Chunk.hpp"
 #include "Runtime/Rendering/Debug/Debug.hpp"
-#define MAT_SIZE 6 //en nombre de chunks
-#define MAT_HEIGHT 1 //en nombre de chunks
-#define MAT_SIZE_CUBES (MAT_SIZE * WorldSettings::s_chunkSize)
-#define MAT_HEIGHT_CUBES (MAT_HEIGHT * WorldSettings::s_chunkSize)
 
-/// \class  World
-/// \brief
+// Engine
+#include "Runtime/Core/Assertion/Assert.hh"
+
+/// \class World
+/// \brief Main class, manages world generation
 class World
 {
-public :
+public:
 
-    Chunk *** m_chunks;
-    glm::vec3 position;
-    float elapsed = 0.0f;
+    static const uint s_matSize   = 6;
+    static const uint s_matHeight = 1;
+    static const uint s_matSizeCubes   = s_matSize   * WorldSettings::s_chunkSize;
+    static const uint s_matHeightCubes = s_matHeight * WorldSettings::s_chunkSize;
 
-    ByteCube * GetCube(int x, int y, int z)
-    {
-        if (x < 0)x = 0;
-        if (y < 0)y = 0;
-        if (z < 0)z = 0;
-        if (x >= MAT_SIZE   * WorldSettings::s_chunkSize)  x = (MAT_SIZE    * WorldSettings::s_chunkSize) - 1;
-        if (y >= MAT_SIZE   * WorldSettings::s_chunkSize)  y = (MAT_SIZE    * WorldSettings::s_chunkSize) - 1;
-        if (z >= MAT_HEIGHT * WorldSettings::s_chunkSize) z = (MAT_HEIGHT  * WorldSettings::s_chunkSize) - 1;
+public:
 
-        return &(m_chunks[x /  WorldSettings::s_chunkSize][y /  WorldSettings::s_chunkSize][z /  WorldSettings::s_chunkSize].m_cubes[x % WorldSettings::s_chunkSize][y %  WorldSettings::s_chunkSize][z %  WorldSettings::s_chunkSize]);
-    }
+    /// \brief Default constructor
+    World();
 
-    void UpdateCameraPosition(glm::vec3 const& position, float dt)
-    {
-       /* elapsed += dt;
+    /// \brief Destructor
+    ~World();
 
-        if(elapsed < 0.25f)
-        {
-            return;
-        }
+    /// \brief  Returns the cube at the given coordinates
+    /// \param  x The x coordinate
+    /// \param  y The y coordinate
+    /// \param  z The z coordinate
+    /// \return A pointer on the cube, could be nullptr
+    inline ByteCube * GetCube(int x, int y, int z);
 
-        elapsed = 0.0f;*/
+    /// \brief Updates the world from the character position
+    /// \param position The position of the character
+    /// \param dt The elasped time
+    void Update(glm::vec3 const& position, float dt);
 
-        this->position = position;
-        for(int xx = 0; xx < MAT_SIZE; ++xx)
-        {
-            for(int y = 0; y < MAT_SIZE; ++y)
-            {
-                for(int z = 0; z < MAT_HEIGHT; ++z)
-                {
-                  // m_chunks[xx][y][z].BatchChunk(position);
-                    cardinal::debug::DrawBox(glm::vec3(
-                            (xx * WorldSettings::s_chunkSize * ByteCube::s_cubeSize) + (8.0f * ByteCube::s_cubeSize) - ByteCube::s_cubeSize / 2.0f,
-                            ( y * WorldSettings::s_chunkSize * ByteCube::s_cubeSize) + (8.0f * ByteCube::s_cubeSize) - ByteCube::s_cubeSize / 2.0f,
-                            ( z * WorldSettings::s_chunkSize * ByteCube::s_cubeSize) + (8.0f * ByteCube::s_cubeSize) - ByteCube::s_cubeSize / 2.0f),
-                         16.0f * ByteCube::s_cubeSize,
-                         16.0f * ByteCube::s_cubeSize, glm::vec3(1.0f, 0.5f, 0.7f));
+    /// \brief Creates the initial world
+    void Initialize();
 
-                }
-            }
-        }
-    }
 
-    void GenerateWorld(cardinal::RenderingEngine & engine)
+
+   /* void GenerateWorld(cardinal::RenderingEngine & engine)
     {
         WorldBuffers::Initialize();
 
@@ -114,6 +96,7 @@ public :
        // float TweakC = 300.0f;
 
         // 2D terrain
+        auto batchingBegin = std::chrono::steady_clock::now();
         for(int x = 0; x < MAT_SIZE_CUBES; ++x)
         {
             for(int y = 0; y < MAT_SIZE_CUBES; ++y)
@@ -142,6 +125,9 @@ public :
                 }
             }
         }
+
+        auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - batchingBegin);
+        std::cout << "Terrain generated in " << elapsedMs.count() << " ms" << std::endl;
 
         for(int xx = 0; xx < MAT_SIZE; ++xx)
         {
@@ -179,8 +165,13 @@ public :
                 }
             }
         }
-    }
+    }*/
 
+private:
+
+    Chunk *** m_chunks;
 };
+
+#include "World/Impl/World.inl"
 
 #endif // !CARDINAL_ENGINE_WORLD_HPP__

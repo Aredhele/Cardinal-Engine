@@ -66,11 +66,19 @@ public:
 
     /// \brief Allocates and return a pointer on a renderer
     ///        Registers the renderer into the engine
-    static class MeshRenderer * AllocateRenderer();
+    static class MeshRenderer * AllocateMeshRenderer();
+
+    /// \brief Allocates and return a pointer on a renderer
+    ///        Registers the renderer into the engine
+    static class TextRenderer * AllocateTextRenderer();
 
     /// \brief Deallocates a renderer
     ///        Unregisters the renderer
-    static void ReleaseRenderer(class MeshRenderer *& pRenderer);
+    static void ReleaseMeshRenderer(class MeshRenderer *& pRenderer);
+
+    /// \brief Deallocates a renderer
+    ///        Unregisters the renderer
+    static void ReleaseTextRenderer(class TextRenderer *& pRenderer);
 
 private:
 
@@ -102,6 +110,7 @@ private:
     glm::mat4 m_projectionMatrix;
 
     std::vector<class MeshRenderer*> m_meshRenderer;
+    std::vector<class TextRenderer*> m_textRenderer;
 };
 
 } // !namespace

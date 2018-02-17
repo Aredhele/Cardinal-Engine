@@ -21,7 +21,6 @@
 /// \package    Runtime/Rendering/Texture
 /// \author     Vincent STEHLY--CALISTO
 
-
 #include "Glew/include/GL/glew.h"
 
 #include "Runtime/Core/Debug/Logger.hpp"
@@ -49,7 +48,7 @@ TextureLoader::TextureLoader()
     if(TextureLoader::s_pInstance == nullptr)
     {
         TextureLoader::s_pInstance = new TextureLoader();
-        TextureLoader::s_pInstance->m_pDataBuffer = new uchar[1024 * 2024];
+        TextureLoader::s_pInstance->m_pDataBuffer = new uchar[2048 * 2048];
 
         ASSERT_NOT_NULL(TextureLoader::s_pInstance->m_pDataBuffer);
         Logger::LogInfo("Texture loader successfully initialized");

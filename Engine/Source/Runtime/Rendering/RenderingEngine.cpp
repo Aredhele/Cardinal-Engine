@@ -21,7 +21,6 @@
 /// \package    Rendering
 /// \author     Vincent STEHLY--CALISTO
 
-
 #include <chrono>
 #include <iostream>
 #include <Header/Runtime/Core/Assertion/Assert.hh>
@@ -35,6 +34,7 @@
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
 #include "Runtime/Rendering/Shader/ShaderCompiler.hpp"
 #include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
+#include "Runtime/Rendering/Renderer/TextRenderer.hpp"
 #include "Runtime/Rendering/Texture/TextureLoader.hpp"
 #include "Runtime/Rendering/Texture/TextureManager.hpp"
 
@@ -70,7 +70,8 @@ bool RenderingEngine::Initialize(int width, int height, const char * szTitle, fl
     ShaderManager::Initialize();
 
     // Loads Textures
-    TextureLoader::LoadTexture("Block", "Resources/Textures/BlockAtlas.bmp");
+    TextureLoader::LoadTexture("SAORegular", "Resources/Textures/SAORegular.bmp");
+    TextureLoader::LoadTexture("Block",      "Resources/Textures/BlockAtlas.bmp");
 
     // Loads shaders
     ShaderManager::Register("UnlitTexture", ShaderCompiler::LoadShaders(
@@ -84,6 +85,10 @@ bool RenderingEngine::Initialize(int width, int height, const char * szTitle, fl
     ShaderManager::Register("UnlitTransparent", ShaderCompiler::LoadShaders(
             "Resources/Shaders/Unlit/UnlitTransparentVertexShader.glsl",
             "Resources/Shaders/Unlit/UnlitTransparentFragmentShader.glsl"));
+
+    ShaderManager::Register("Text", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/Text/TextVertexShader.glsl",
+            "Resources/Shaders/Text/TextFragmentShader.glsl"));
 
     // Debug
     DebugManager::Initialize();
@@ -172,7 +177,7 @@ void RenderingEngine::RenderFrame(float step)
     glm::mat4 View        = m_pCamera->GetViewMatrix();
     glm::mat4 ProjectView = Projection * View;
 
-    // Draw
+    // Draw meshes
     size_t rendererCount = m_meshRenderer.size();
     for(int nRenderer = 0; nRenderer < rendererCount; ++nRenderer)
     {
@@ -188,6 +193,26 @@ void RenderingEngine::RenderFrame(float step)
         glEnableVertexAttribArray(1);
 
         glDrawElements(GL_TRIANGLES, pRenderer->m_elementsCount, GL_UNSIGNED_SHORT, nullptr);
+
+        pShader->End();
+    }
+
+    // Draw Texts
+    rendererCount = m_textRenderer.size();
+    for(int nRenderer = 0; nRenderer < rendererCount; ++nRenderer)
+    {
+        // Buffers the renderer
+        TextRenderer * pRenderer = m_textRenderer[nRenderer];
+        IShader      * pShader   = pRenderer->m_pShader;
+
+        pShader->Begin(ProjectView * glm::mat4(1.0f));
+
+        // Render it
+        glBindVertexArray(pRenderer->m_vao);
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+
+        glDrawArrays(GL_TRIANGLES, 0, pRenderer->m_vertexCount);
 
         pShader->End();
     }
@@ -236,7 +261,7 @@ glm::mat4 const &RenderingEngine::GetProjectionMatrix()
 
 /// \brief Allocates and return a pointer on a renderer
 ///        Registers the renderer into the engine
-/* static */ MeshRenderer * RenderingEngine::AllocateRenderer()
+/* static */ MeshRenderer * RenderingEngine::AllocateMeshRenderer()
 {
     ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
 
@@ -248,7 +273,7 @@ glm::mat4 const &RenderingEngine::GetProjectionMatrix()
 
 /// \brief Deallocates a renderer
 ///        Unregisters the renderer
-/* static */ void RenderingEngine::ReleaseRenderer(MeshRenderer *& pRenderer)
+/* static */ void RenderingEngine::ReleaseMeshRenderer(MeshRenderer *& pRenderer)
 {
     ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
 
@@ -267,6 +292,45 @@ glm::mat4 const &RenderingEngine::GetProjectionMatrix()
     {
         RenderingEngine::s_pInstance->m_meshRenderer.erase(
                 RenderingEngine::s_pInstance->m_meshRenderer.begin() + index);
+    }
+
+    delete pRenderer;
+    pRenderer = nullptr;
+}
+
+/// \brief Allocates and return a pointer on a renderer
+///        Registers the renderer into the engine
+TextRenderer *RenderingEngine::AllocateTextRenderer()
+{
+    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
+
+    TextRenderer * pRenderer = new TextRenderer(); // NOLINT
+    RenderingEngine::s_pInstance->m_textRenderer.push_back(pRenderer);
+
+    return pRenderer;
+}
+
+/// \brief Deallocates a renderer
+///        Unregisters the renderer
+void RenderingEngine::ReleaseTextRenderer(TextRenderer *&pRenderer)
+{
+    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
+
+    int index = -1;
+    size_t count = RenderingEngine::s_pInstance->m_meshRenderer.size();
+    for(size_t nRenderer = 0; nRenderer < count; ++nRenderer)
+    {
+        if(RenderingEngine::s_pInstance->m_textRenderer[nRenderer] == pRenderer)
+        {
+            index = static_cast<int>(nRenderer);
+            break;
+        }
+    }
+
+    if(index != -1)
+    {
+        RenderingEngine::s_pInstance->m_textRenderer.erase(
+                RenderingEngine::s_pInstance->m_textRenderer.begin() + index);
     }
 
     delete pRenderer;
