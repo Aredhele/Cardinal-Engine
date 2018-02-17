@@ -49,12 +49,14 @@ void TextShader::Begin(const glm::mat4 &MVP)
     glUniform1i       (m_textureSampler, 0);
 
     glDisable(GL_CULL_FACE);
+    glEnable(GL_MULTISAMPLE);
 }
 
 /// \brief Restore the pipeline state
 void TextShader::End()
 {
     glEnable(GL_CULL_FACE);
+    glDisable(GL_MULTISAMPLE);
 }
 
 } // !namespace

@@ -90,6 +90,7 @@ void TextRenderer::SetText(const char * szText, int x, int y, int size)
     std::vector<glm::vec2> UVs;
     std::vector<glm::vec2> vertices;
 
+    float charShift = 0.0f;
     for (size_t i = 0; i < length; i++)
     {
         glm::vec2 vertex_up_left    = glm::vec2(x + i * size,        y + size);
@@ -99,11 +100,16 @@ void TextRenderer::SetText(const char * szText, int x, int y, int size)
 
         if(i != 0)
         {
-            vertex_up_left.x    -=  (size / 1.7f) * i;
-            vertex_up_right.x   -=  (size / 1.7f) * i;
-            vertex_down_right.x -=  (size / 1.7f) * i;
-            vertex_down_left.x  -=  (size / 1.7f) * i;
+            vertex_up_left.x    -=  (size / 1.7f) * i + charShift;
+            vertex_up_right.x   -=  (size / 1.7f) * i + charShift;
+            vertex_down_right.x -=  (size / 1.7f) * i + charShift;
+            vertex_down_left.x  -=  (size / 1.7f) * i + charShift;
         }
+
+        if     (szText[i] == 'i') charShift += (size / 5.0f);
+        else if(szText[i] == '.') charShift += (size / 5.0f);
+        else if(szText[i] == 'm') charShift -= (size / 8.0f);
+        else if(szText[i] == 'r') charShift += (size / 8.0f);
 
         vertices.push_back(vertex_up_left);
         vertices.push_back(vertex_down_left);
@@ -121,11 +127,6 @@ void TextRenderer::SetText(const char * szText, int x, int y, int size)
         glm::vec2 uv_up_right   = glm::vec2(uv_x + 1.0f / 16.0f,  uv_y);
         glm::vec2 uv_down_right = glm::vec2(uv_x + 1.0f / 16.0f, (uv_y + 1.0f / 16.0f));
         glm::vec2 uv_down_left  = glm::vec2(uv_x ,               (uv_y + 1.0f / 16.0f));
-
-        /*uv_up_left.x  -= 1.0f / 32.0f;
-        uv_up_right.x -=  1.0f / 32.0f;
-        uv_down_right.x -=  1.0f / 32.0f;
-        uv_down_left.x -=  1.0f / 32.0f;*/
 
         UVs.push_back(uv_up_left);
         UVs.push_back(uv_down_left);

@@ -53,10 +53,6 @@ int main(int argc, char ** argv)
     World world;
     world.Initialize();
 
-    cardinal::TextRenderer * pRenderer = cardinal::RenderingEngine::AllocateTextRenderer();
-    pRenderer->Initialize();
-    pRenderer->SetText("abcde ABCDE", 5, 560, 20);
-
     // Game loop
     do
     {

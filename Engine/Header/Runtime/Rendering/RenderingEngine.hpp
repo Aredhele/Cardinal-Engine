@@ -111,6 +111,11 @@ private:
 
     std::vector<class MeshRenderer*> m_meshRenderer;
     std::vector<class TextRenderer*> m_textRenderer;
+
+    class TextRenderer * m_pEngineName;
+    class TextRenderer * m_pCurrentFPS;
+    class TextRenderer * m_pTotalFPS;
+    class TextRenderer * m_pFrameTime;
 };
 
 } // !namespace
