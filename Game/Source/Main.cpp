@@ -63,7 +63,7 @@ int main(int argc, char ** argv)
 
         // Update character
         character.Update(window, dt);
-        world.Update(camera.GetPosition(), dt);
+        world.Update(character.GetPosition(), dt);
 
         // Debug only
         cardinal::debug::DrawLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1000.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));

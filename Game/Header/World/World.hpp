@@ -41,13 +41,6 @@ class World
 {
 public:
 
-    static const uint s_matSize   = 5;
-    static const uint s_matHeight = 3;
-    static const uint s_matSizeCubes   = s_matSize   * WorldSettings::s_chunkSize;
-    static const uint s_matHeightCubes = s_matHeight * WorldSettings::s_chunkSize;
-
-public:
-
     /// \brief Default constructor
     World();
 

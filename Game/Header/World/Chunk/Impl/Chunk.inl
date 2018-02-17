@@ -15,35 +15,20 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       Chunk.cpp
-/// \date       11/02/2018
+/// \file       Chunk.inl
+/// \date       17/02/2018
 /// \project    Cardinal Engine
-/// \package    World
+/// \package    World/Chunk/Impl
 /// \author     Vincent STEHLY--CALISTO
 
-#include "World/Chunk/Chunk.hpp"
-
-/// \brief Constructor
-Chunk::Chunk() // NOLINT
+// \brief Returns the chunk state
+inline Chunk::EChunkState Chunk::GetState() const
 {
-    m_chunkIndexX = 0;
-    m_chunkIndexY = 0;
-    m_chunkIndexZ = 0;
-
-    m_state = EChunkState::Generated;
+    m_state;
 }
 
-/// \brief Destructor
-Chunk::~Chunk() // NOLINT
+/// \brief Returns the chunk index
+glm::tvec3<int> Chunk::GetChunkIndex() const
 {
-    // TODO
-}
-
-/// \brief Initializes the chunk at the given world
-///        chunk coordinates
-void Chunk::Initialize(int chunkIndexX, int chunkIndexY, int chunkIndexZ)
-{
-    m_chunkIndexX = chunkIndexX;
-    m_chunkIndexY = chunkIndexY;
-    m_chunkIndexZ = chunkIndexZ;
+    return glm::tvec3<int>(m_chunkIndexX, m_chunkIndexY, m_chunkIndexZ);
 }

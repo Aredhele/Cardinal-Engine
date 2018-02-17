@@ -49,11 +49,20 @@ public:
     ///        chunk coordinates
     void Initialize(int chunkIndexX, int chunkIndexY, int chunkIndexZ);
 
+    /// \brief Returns the chunk state
+    inline EChunkState GetState() const;
+
+    /// \brief Returns the chunk index
+    inline glm::tvec3<int> GetChunkIndex() const;
+
 private:
 
-    int m_chunkIndexX;
-    int m_chunkIndexY;
-    int m_chunkIndexZ;
+    EChunkState m_state;
+    int         m_chunkIndexX;
+    int         m_chunkIndexY;
+    int         m_chunkIndexZ;
 };
+
+#include "World/Chunk/Impl/Chunk.inl"
 
 #endif // !CARDINAL_ENGINE_CHUNK_HPP__

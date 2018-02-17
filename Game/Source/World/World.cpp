@@ -64,27 +64,41 @@ void World::Update(const glm::vec3 &position, float dt)
     int posY = (int)position.y / ByteCube::s_cubeSize;
     int posZ = (int)position.z / ByteCube::s_cubeSize;
 
-    std::string _cube  = "Cube : "  + std::to_string(posX) + " " + std::to_string(posY) + " " + std::to_string(posZ);
-    std::string _chunk = "Chunk : " + std::to_string(posX / (int)WorldSettings::s_chunkSize) + " " +
-                                      std::to_string(posY / (int)WorldSettings::s_chunkSize) + " " +
-                                      std::to_string(posZ / (int)WorldSettings::s_chunkSize);
+    int chunkX = posX / (int)WorldSettings::s_chunkSize;
+    int chunkY = posY / (int)WorldSettings::s_chunkSize;
+    int chunkZ = posZ / (int)WorldSettings::s_chunkSize;
+
+    std::string _cube  = "Cube : "  + std::to_string(posX)   + " " + std::to_string(posY)   + " " + std::to_string(posZ);
+    std::string _chunk = "Chunk : " + std::to_string(chunkX) + " " + std::to_string(chunkY) + " " + std::to_string(chunkZ);
 
     m_playerChunkText->SetText(_cube.c_str(),  680, 530, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
     m_playerCubeText->SetText (_chunk.c_str(), 680, 515, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
     // Debug draw
-    for(uint x = 0; x < World::s_matSize; ++x)
+    for(uint x = 0; x < WorldSettings::s_matSize; ++x)
     {
-        for(uint y = 0; y < World::s_matSize; ++y)
+        for(uint y = 0; y < WorldSettings::s_matSize; ++y)
         {
-            for(uint z = 0; z < World::s_matHeight; ++z)
+            for(uint z = 0; z < WorldSettings::s_matHeight; ++z)
             {
+                glm::vec3 boxColor;
+                glm::tvec3<int> chunkIndex = m_chunks[x][y][z]->GetChunkIndex();
+
+                if(chunkIndex.x == chunkX && chunkIndex.y == chunkY && chunkIndex.z == chunkZ)
+                {
+                    boxColor = glm::vec3(1.0f, 0.0f, 0.0f);
+                }
+                else if(m_chunks[x][y][z]->GetState() == Chunk::EChunkState::Generated)
+                {
+                    boxColor = glm::vec3(0.0f, 1.0f, 0.0f);
+                }
+
                 cardinal::debug::DrawBox(glm::vec3(
                         (x * WorldSettings::s_chunkSize * ByteCube::s_cubeSize) + (8.0f * ByteCube::s_cubeSize) - ByteCube::s_cubeSize / 2.0f,
                         (y * WorldSettings::s_chunkSize * ByteCube::s_cubeSize) + (8.0f * ByteCube::s_cubeSize) - ByteCube::s_cubeSize / 2.0f,
                         (z * WorldSettings::s_chunkSize * ByteCube::s_cubeSize) + (8.0f * ByteCube::s_cubeSize) - ByteCube::s_cubeSize / 2.0f),
                                          WorldSettings::s_chunkSize * ByteCube::s_cubeSize,
-                                         WorldSettings::s_chunkSize * ByteCube::s_cubeSize, glm::vec3(1.0f, 0.5f, 0.7f));
+                                         WorldSettings::s_chunkSize * ByteCube::s_cubeSize, boxColor);
             }
         }
     }
@@ -98,15 +112,15 @@ void World::Initialize()
     cardinal::Logger::LogInfo("Allocating chunks ....");
 
     // Allocating memory for chunks
-    m_chunks = new Chunk ***[World::s_matSize];
-    for(int i = 0; i < World::s_matSize; ++i)
+    m_chunks = new Chunk ***[WorldSettings::s_matSize];
+    for(int i = 0; i < WorldSettings::s_matSize; ++i)
     {
-        m_chunks[i] =  new Chunk **[World::s_matSize];
-        for(int j = 0; j < World::s_matSize; ++j)
+        m_chunks[i] =  new Chunk **[WorldSettings::s_matSize];
+        for(int j = 0; j < WorldSettings::s_matSize; ++j)
         {
-            m_chunks[i][j] = new Chunk *[World::s_matHeight];
+            m_chunks[i][j] = new Chunk *[WorldSettings::s_matHeight];
 
-            for(int k = 0; k < World::s_matHeight; ++k)
+            for(int k = 0; k < WorldSettings::s_matHeight; ++k)
             {
                 m_chunks[i][j][k] = new Chunk();
                 m_chunks[i][j][k]->Initialize(i, j, k);
@@ -115,13 +129,13 @@ void World::Initialize()
     }
 
     cardinal::Logger::LogInfo("%d chunks allocated",
-                              World::s_matSize *
-                              World::s_matSize *
-                              World::s_matHeight);
+                              WorldSettings::s_matSize *
+                              WorldSettings::s_matSize *
+                              WorldSettings::s_matHeight);
 
     // Settings debug text
-    std::string _cubes  = "Cubes count  : " + std::to_string(World::s_matSize * World::s_matSize * World::s_matHeight * WorldSettings::s_chunkBlockCount);
-    std::string _chunks = "Chunks count : " + std::to_string(World::s_matSize * World::s_matSize * World::s_matHeight);
+    std::string _cubes  = "Cubes count  : " + std::to_string(WorldSettings::s_matSize * WorldSettings::s_matSize * WorldSettings::s_matHeight * WorldSettings::s_chunkBlockCount);
+    std::string _chunks = "Chunks count : " + std::to_string(WorldSettings::s_matSize * WorldSettings::s_matSize * WorldSettings::s_matHeight);
 
     m_cubeText->SetText (_cubes.c_str(),  680, 560, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
     m_chunkText->SetText(_chunks.c_str(), 680, 545, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));

@@ -89,16 +89,19 @@ void Character::Update(cardinal::Window * pWindow, float dt)
     if(glfwGetKey(pWindow->GetContext(), GLFW_KEY_LEFT_SHIFT)) m_speedMultiplier = 2.0f;
     else                                                       m_speedMultiplier = 1.0f;
 
+    // Camera debug controls
     if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_W) == GLFW_PRESS) m_pCamera->Translate( m_pCamera->GetDirection() * dt * m_speed * m_speedMultiplier);
     if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_S) == GLFW_PRESS) m_pCamera->Translate(-m_pCamera->GetDirection() * dt * m_speed * m_speedMultiplier);
     if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_D) == GLFW_PRESS) m_pCamera->Translate( m_pCamera->GetRight() * dt * m_speed * m_speedMultiplier);
     if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_A) == GLFW_PRESS) m_pCamera->Translate(-m_pCamera->GetRight() * dt * m_speed * m_speedMultiplier);
 
-    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_UP)     == GLFW_PRESS) Translate(glm::vec3( 1.0f,  0.0f, 0.0f) * dt * m_speed);
-    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_DOWN)   == GLFW_PRESS) Translate(glm::vec3(-1.0f,  0.0f, 0.0f) * dt * m_speed);
-    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_LEFT)   == GLFW_PRESS) Translate(glm::vec3( 0.0f, -1.0f, 0.0f) * dt * m_speed);
-    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_RIGHT)  == GLFW_PRESS) Translate(glm::vec3( 0.0f,  1.0f, 0.0f) * dt * m_speed);
-    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_SPACE)  == GLFW_PRESS) Translate(glm::vec3( 0.0f,  0.0f, 1.0f) * dt * m_speed);
+    // Avatar controls
+    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_UP)            == GLFW_PRESS) Translate(glm::vec3( 1.0f,  0.0f,  0.0f) * dt * m_speed);
+    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_DOWN)          == GLFW_PRESS) Translate(glm::vec3(-1.0f,  0.0f,  0.0f) * dt * m_speed);
+    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_LEFT)          == GLFW_PRESS) Translate(glm::vec3( 0.0f, -1.0f,  0.0f) * dt * m_speed);
+    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_RIGHT)         == GLFW_PRESS) Translate(glm::vec3( 0.0f,  1.0f,  0.0f) * dt * m_speed);
+    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_SPACE)         == GLFW_PRESS) Translate(glm::vec3( 0.0f,  0.0f,  1.0f) * dt * m_speed);
+    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_LEFT_CONTROL)  == GLFW_PRESS) Translate(glm::vec3( 0.0f,  0.0f, -1.0f) * dt * m_speed);
 
     std::string _pos = "Pos XYZ : " + std::to_string(m_pCamera->GetPosition().x) + " / " +
                                       std::to_string(m_pCamera->GetPosition().y) + " / " +
