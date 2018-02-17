@@ -71,7 +71,7 @@ public:
 
 private:
 
-    Chunk *** m_chunks;
+    Chunk **** m_chunks;
 
     cardinal::TextRenderer * m_worldText;
     cardinal::TextRenderer * m_cubeText;

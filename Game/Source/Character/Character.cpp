@@ -21,10 +21,15 @@
 /// \package    Character
 /// \author     Vincent STEHLY--CALISTO
 
+
+#include <World/Cube/ByteCube.hpp>
+#include <World/Cube/UVManager.hpp>
+#include <Header/Runtime/Rendering/Optimization/VBOIndexer.hpp>
 #include "Character/Character.hpp"
 #include "Runtime/Rendering/Camera/Camera.hpp"
 #include "Runtime/Rendering/Context/Window.hpp"
 #include "Runtime/Rendering/RenderingEngine.hpp"
+#include "Runtime/Rendering/Shader/Built-in/UnlitTextureShader.hpp"
 
 /// \brief Constructor
 Character::Character()
@@ -37,6 +42,8 @@ Character::Character()
 
     m_pPositionText->SetText( "Pos XYZ : 0.0f / 0.0f / 0.0f", 5, 500, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
     m_pDirectionText->SetText("Dir XYZ : 0.0f / 0.0f / 0.0f", 5, 485, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+
+    InitializeAvatar();
 }
 
 /// \brief Updates the character
@@ -87,6 +94,12 @@ void Character::Update(cardinal::Window * pWindow, float dt)
     if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_D) == GLFW_PRESS) m_pCamera->Translate( m_pCamera->GetRight() * dt * m_speed * m_speedMultiplier);
     if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_A) == GLFW_PRESS) m_pCamera->Translate(-m_pCamera->GetRight() * dt * m_speed * m_speedMultiplier);
 
+    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_UP)     == GLFW_PRESS) Translate(glm::vec3( 1.0f,  0.0f, 0.0f) * dt * m_speed);
+    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_DOWN)   == GLFW_PRESS) Translate(glm::vec3(-1.0f,  0.0f, 0.0f) * dt * m_speed);
+    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_LEFT)   == GLFW_PRESS) Translate(glm::vec3( 0.0f, -1.0f, 0.0f) * dt * m_speed);
+    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_RIGHT)  == GLFW_PRESS) Translate(glm::vec3( 0.0f,  1.0f, 0.0f) * dt * m_speed);
+    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_SPACE)  == GLFW_PRESS) Translate(glm::vec3( 0.0f,  0.0f, 1.0f) * dt * m_speed);
+
     std::string _pos = "Pos XYZ : " + std::to_string(m_pCamera->GetPosition().x) + " / " +
                                       std::to_string(m_pCamera->GetPosition().y) + " / " +
                                       std::to_string(m_pCamera->GetPosition().z);
@@ -95,7 +108,7 @@ void Character::Update(cardinal::Window * pWindow, float dt)
                                        std::to_string(m_pCamera->GetDirection().y) + " / " +
                                        std::to_string(m_pCamera->GetDirection().z);
 
-    m_pPositionText->SetText( _pos.c_str(), 5, 500, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    m_pPositionText->SetText ( _pos.c_str(), 5, 500, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
     m_pDirectionText->SetText(_dir.c_str(), 5, 485, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
@@ -104,4 +117,54 @@ void Character::Update(cardinal::Window * pWindow, float dt)
 void Character::AttachCamera(cardinal::Camera * pCamera)
 {
     m_pCamera = pCamera;
+}
+
+/// \brief Returns the position of the avatar
+glm::vec3 const &Character::GetPosition() const
+{
+    return m_position;
+}
+
+/// \brief Translate the avatar
+/// \param translation The translation vector
+void Character::Translate(const glm::vec3 &translation)
+{
+    m_position += translation;
+    m_meshRenderer->Translate(translation);
+}
+
+/// \brief Initializes the avatar mesh
+void Character::InitializeAvatar()
+{
+    m_meshRenderer = cardinal::RenderingEngine::AllocateMeshRenderer();
+    m_meshRenderer->SetShader(new cardinal::UnlitTextureShader());
+
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec2> uvs;
+
+    for(size_t nVertex = 0; nVertex < 36; ++nVertex)
+    {
+        vertices.emplace_back(
+            ByteCube::s_vertices[nVertex * 3 + 0] * 2.0f,
+            ByteCube::s_vertices[nVertex * 3 + 1] * 2.0f,
+            ByteCube::s_vertices[nVertex * 3 + 2] * 2.0f);
+
+        uvs.emplace_back(
+            UVManager::UV[0][nVertex / 6 + 0],
+            UVManager::UV[0][nVertex / 6 + 1]);
+    }
+
+    // Indexing
+    std::vector<unsigned short> indexes;
+    std::vector<glm::vec3>      indexedVertices;
+    std::vector<glm::vec2>      indexedUVs;
+
+    cardinal::VBOIndexer::Index(vertices, uvs, indexes, indexedVertices, indexedUVs);
+    m_meshRenderer->Initialize(indexes, indexedVertices, indexedUVs);
+
+    m_position.x = 165.0f;
+    m_position.y = 165.0f;
+    m_position.z =  96.0f;
+
+    m_meshRenderer->Translate(m_position);
 }

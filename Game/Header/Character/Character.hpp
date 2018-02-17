@@ -33,6 +33,7 @@ namespace cardinal
 
 #include "Glm/glm/glm.hpp"
 #include "Runtime/Rendering/Renderer/TextRenderer.hpp"
+#include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
 
 /// \class Character
 /// \brief 
@@ -52,17 +53,31 @@ public:
     /// \param pCamera A pointer on the camera to attach
     void AttachCamera(cardinal::Camera * pCamera);
 
+    /// \brief Returns the position of the avatar
+    glm::vec3 const& GetPosition() const;
+
+    /// \brief Translate the avatar
+    /// \param translation The translation vector
+    void Translate(glm::vec3 const& translation);
+
+private:
+
+    /// \brief Initializes the avatar mesh
+    void InitializeAvatar();
+
 private:
 
     cardinal::Camera * m_pCamera;
 
     // Controls
     glm::tvec3<double> m_lastMouse;
+    glm::vec3          m_position;
 
     float m_speed           = 50.0f;
     float m_speedMultiplier = 2.0f;
     float m_sensitivity     = 0.002f;
 
+    cardinal::MeshRenderer * m_meshRenderer;
     cardinal::TextRenderer * m_pPositionText;
     cardinal::TextRenderer * m_pDirectionText;
 };

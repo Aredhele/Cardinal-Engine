@@ -58,6 +58,20 @@ World::~World() // NOLINT
 /// \param dt The elasped time
 void World::Update(const glm::vec3 &position, float dt)
 {
+    // Updating debug text
+    // Computing player position
+    int posX = (int)position.x / ByteCube::s_cubeSize;
+    int posY = (int)position.y / ByteCube::s_cubeSize;
+    int posZ = (int)position.z / ByteCube::s_cubeSize;
+
+    std::string _cube  = "Cube : "  + std::to_string(posX) + " " + std::to_string(posY) + " " + std::to_string(posZ);
+    std::string _chunk = "Chunk : " + std::to_string(posX / (int)WorldSettings::s_chunkSize) + " " +
+                                      std::to_string(posY / (int)WorldSettings::s_chunkSize) + " " +
+                                      std::to_string(posZ / (int)WorldSettings::s_chunkSize);
+
+    m_playerChunkText->SetText(_cube.c_str(),  680, 530, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    m_playerCubeText->SetText (_chunk.c_str(), 680, 515, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+
     // Debug draw
     for(uint x = 0; x < World::s_matSize; ++x)
     {
@@ -69,24 +83,11 @@ void World::Update(const glm::vec3 &position, float dt)
                         (x * WorldSettings::s_chunkSize * ByteCube::s_cubeSize) + (8.0f * ByteCube::s_cubeSize) - ByteCube::s_cubeSize / 2.0f,
                         (y * WorldSettings::s_chunkSize * ByteCube::s_cubeSize) + (8.0f * ByteCube::s_cubeSize) - ByteCube::s_cubeSize / 2.0f,
                         (z * WorldSettings::s_chunkSize * ByteCube::s_cubeSize) + (8.0f * ByteCube::s_cubeSize) - ByteCube::s_cubeSize / 2.0f),
-                                         16.0f * ByteCube::s_cubeSize,
-                                         16.0f * ByteCube::s_cubeSize, glm::vec3(1.0f, 0.5f, 0.7f));
+                                         WorldSettings::s_chunkSize * ByteCube::s_cubeSize,
+                                         WorldSettings::s_chunkSize * ByteCube::s_cubeSize, glm::vec3(1.0f, 0.5f, 0.7f));
             }
         }
     }
-
-    // Updating debug text
-    // Computing player position
-    std::string _cube  = "Cube : " + std::to_string((int)position.x / ByteCube::s_cubeSize) + " " +
-                                     std::to_string((int)position.y / ByteCube::s_cubeSize) + " " +
-                                     std::to_string((int)position.z / ByteCube::s_cubeSize);
-
-    std::string _chunk  = "Chunk : " + std::to_string((int)position.x / ByteCube::s_cubeSize / 16) + " " +
-                                       std::to_string((int)position.y / ByteCube::s_cubeSize / 16) + " " +
-                                       std::to_string((int)position.z / ByteCube::s_cubeSize / 16);
-
-    m_playerChunkText->SetText(_cube.c_str(),  680, 530, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-    m_playerCubeText->SetText (_chunk.c_str(), 680, 515, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
 /// \brief Creates the initial world
@@ -97,17 +98,18 @@ void World::Initialize()
     cardinal::Logger::LogInfo("Allocating chunks ....");
 
     // Allocating memory for chunks
-    m_chunks = new Chunk **[World::s_matSize];
+    m_chunks = new Chunk ***[World::s_matSize];
     for(int i = 0; i < World::s_matSize; ++i)
     {
-        m_chunks[i] =  new Chunk *[World::s_matSize];
+        m_chunks[i] =  new Chunk **[World::s_matSize];
         for(int j = 0; j < World::s_matSize; ++j)
         {
-            m_chunks[i][j] = new Chunk[World::s_matHeight];
+            m_chunks[i][j] = new Chunk *[World::s_matHeight];
 
             for(int k = 0; k < World::s_matHeight; ++k)
             {
-                m_chunks[i][j][k].Initialize(i, j, k);
+                m_chunks[i][j][k] = new Chunk();
+                m_chunks[i][j][k]->Initialize(i, j, k);
             }
         }
     }
