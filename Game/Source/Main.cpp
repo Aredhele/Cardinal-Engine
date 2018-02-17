@@ -51,7 +51,7 @@ int main(int argc, char ** argv)
     double lastTime    = currentTime;
 
     World world;
-    world.Initialize();
+    world.Initialize(character.GetPosition());
 
     // Game loop
     do

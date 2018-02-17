@@ -60,11 +60,26 @@ public:
     void Update(glm::vec3 const& position, float dt);
 
     /// \brief Creates the initial world
-    void Initialize();
+    void Initialize(glm::vec3 const& position);
 
 private:
 
-    Chunk **** m_chunks;
+    /// \brief Checks if the player changed of chunks
+    /// \param delta The delta position (in chunks unit)
+    void CheckChunkDelta(glm::tvec3<int> const& delta);
+
+    // TODO : Factorize
+    void UpdateChunksXPositive();
+    void UpdateChunksXNegative();
+    void UpdateChunksYPositive();
+    void UpdateChunksYNegative();
+    void UpdateChunksZPositive();
+    void UpdateChunksZNegative();
+
+private:
+
+    Chunk ****      m_chunks;
+    glm::tvec3<int> m_lastPlayerPos;
 
     cardinal::TextRenderer * m_worldText;
     cardinal::TextRenderer * m_cubeText;
