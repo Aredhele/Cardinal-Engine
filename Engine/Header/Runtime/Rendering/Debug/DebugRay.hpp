@@ -15,17 +15,32 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       Debug.hpp
-/// \date       16/02/2018
+/// \file       DebugLine.hpp
+/// \date       10/02/2018
 /// \project    Cardinal Engine
-/// \package    Runtime/Rendering/Debug
+/// \package    Core/Rendering/Debug
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_DEBUG_HPP__
-#define CARDINAL_ENGINE_DEBUG_HPP__
+#ifndef CARDINAL_ENGINE_DEBUG_RAY_HPP__
+#define CARDINAL_ENGINE_DEBUG_RAY_HPP__
 
-#include "Runtime/Rendering/Debug/DebugBox.hpp"
-#include "Runtime/Rendering/Debug/DebugLine.hpp"
-#include "Runtime/Rendering/Debug/DebugRay.hpp"
+#include "Glm/glm/glm.hpp"
 
-#endif // !CARDINAL_ENGINE_DEBUG_HPP__
+/// \namespace cardinal
+namespace cardinal
+{
+
+namespace debug
+{
+
+/// \brief Draw a ray from start to start + dir
+/// \param start The start point of the ray
+/// \param dir   The direction of the ray
+/// \param color The color of the line
+void DrawRay(glm::vec3 const& start, glm::vec3 const& dir, glm::vec3 const& color);
+
+}  // !namespace
+
+} // !namespace
+
+#endif // !CARDINAL_ENGINE_DEBUG_RAY_HPP__

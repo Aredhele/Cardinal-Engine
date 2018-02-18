@@ -25,6 +25,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Context/Window.cpp
         Rendering/Debug/DebugBox.cpp
         Rendering/Debug/DebugLine.cpp
+        Rendering/Debug/DebugRay.cpp
         Rendering/Debug/DebugManager.cpp
         Rendering/Camera/Camera.cpp
         Rendering/Optimization/VBOIndexer.cpp
