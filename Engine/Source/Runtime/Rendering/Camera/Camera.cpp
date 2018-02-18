@@ -106,32 +106,32 @@ void Camera::RotateUp(float angle)
 }
 
 /// \brief Forces the camera to look at the target
-void Camera::LookAt(const glm::vec3 &target)
+void Camera::LookAt(const glm::vec3& target)
 {
     m_lookAt = target;
     UpdateVectors();
 }
 
 /// \brief Returns the position of the camera
-glm::vec3 const &Camera::GetPosition()
+glm::vec3 const& Camera::GetPosition() const
 {
     return m_position;
 }
 
 /// \brief Returns the direction of the camera
-glm::vec3 const &Camera::GetDirection()
+glm::vec3 const& Camera::GetDirection() const
 {
     return m_direction;
 }
 
 /// \brief Returns the right vector
-glm::vec3 const &Camera::GetRight()
+glm::vec3 const& Camera::GetRight() const
 {
     return m_right;
 }
 
 /// \brief Returns the view matrix
-glm::mat4 const &Camera::GetViewMatrix() const
+glm::mat4 const& Camera::GetViewMatrix() const
 {
     return m_viewMatrix;
 }

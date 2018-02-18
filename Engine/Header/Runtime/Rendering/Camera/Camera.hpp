@@ -64,13 +64,13 @@ public :
     void LookAt(glm::vec3 const & target);
 
     /// \brief Returns the position of the camera
-    glm::vec3 const& GetPosition();
+    glm::vec3 const& GetPosition() const;
 
     /// \brief Returns the direction of the camera
-    glm::vec3 const& GetDirection();
+    glm::vec3 const& GetDirection() const;
 
     /// \brief Returns the right vector
-    glm::vec3 const& GetRight();
+    glm::vec3 const& GetRight() const;
 
     /// \brief Returns the view matrix
     glm::mat4 const& GetViewMatrix() const;

@@ -21,6 +21,7 @@
 /// \author     Vincent STEHLY--CALISTO
 
 // Engine
+#include <Header/Runtime/Core/Memory/Allocator/StackAllocator.hpp>
 #include "Runtime/Rendering/RenderingEngine.hpp"
 #include "Runtime/Rendering/Renderer/TextRenderer.hpp"
 
@@ -39,6 +40,8 @@ int main(int argc, char ** argv)
         cardinal::Logger::LogError("Cannot initialize the engine, aborting");
         return -1;
     }
+
+    cardinal::StackAllocator s;
 
     cardinal::Window * window = engine.GetWindow();
     engine.SetCamera(&camera);
