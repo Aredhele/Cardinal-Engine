@@ -71,7 +71,14 @@ public:
         float angles[8];
         for (int i = 0; i < 8; i++)
         {
-            angles[i] = glm::dot(
+           /* int index   = (int)(sommets[i].x * _Width * _Width + sommets[i].y * _Width + sommets[i].z);
+            glm::vec3 a = pos - sommets[i];
+            glm::vec3 b = _Dirs[index];
+
+            angles[i] = a.x * b. x + a.y * b.y + a.z * b.z;*/
+
+
+          angles[i] = glm::dot(
                     pos - sommets[i],
                     _Dirs[ (int)(  sommets[i].x * _Width * _Width
                                  + sommets[i].y * _Width + sommets[i].z)]);
