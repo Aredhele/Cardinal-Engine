@@ -41,8 +41,6 @@ int main(int argc, char ** argv)
         return -1;
     }
 
-    cardinal::StackAllocator s;
-
     cardinal::Window * window = engine.GetWindow();
     engine.SetCamera(&camera);
 
