@@ -31,14 +31,12 @@ namespace cardinal
 {
 
 /// \brief Default constructor
-MeshRenderer::MeshRenderer()
+MeshRenderer::MeshRenderer() : IRenderer()
 {
-    m_vao            = 0;
     m_indexesObject  = 0;
     m_verticesObject = 0;
     m_uvsObject      = 0;
     m_elementsCount  = 0;
-    m_pShader        = nullptr;
 }
 
 /// \brief Destructor
@@ -103,14 +101,16 @@ void MeshRenderer::Update(
         std::vector<glm::vec3>      const& vertices,
         std::vector<glm::vec2>      const& uvs)
 {
-	if(indexes.size() == 0)
+	if(indexes.empty())
 	{
+        // Hot fix
 		return;
 	}
 
     if(m_elementsCount < indexes.size())
     {
-        // The buffer is too small, we need
+        // The buffer is too small, we need to
+        // recreates buffers
         Initialize(indexes, vertices, uvs);
         return;
     }
@@ -119,34 +119,6 @@ void MeshRenderer::Update(
 
     glBindBuffer   (GL_ELEMENT_ARRAY_BUFFER, m_indexesObject);
     glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indexes.size() * sizeof(unsigned short), &indexes[0]);
-
-
-    /*glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexesObject);
-    auto *data = (unsigned short *) glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
-    memcpy(data, &indexes[0], indexes.size() * sizeof(unsigned short));
-    glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
-
-    glBindBuffer   (GL_ARRAY_BUFFER, m_verticesObject);
-    auto *fdata = (float *) glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-    size_t count = vertices.size();
-    for(size_t i = 0; i < count; ++i)
-    {
-        fdata[i * 3 + 0] = vertices[i].x;
-        fdata[i * 3 + 1] = vertices[i].y;
-        fdata[i * 3 + 2] = vertices[i].z;
-    }
-    glUnmapBuffer(GL_ARRAY_BUFFER);
-
-
-    glBindBuffer   (GL_ARRAY_BUFFER, m_uvsObject);
-    auto *udata = (float *) glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-    count = uvs.size();
-    for(size_t i = 0; i < count; ++i)
-    {
-        udata[i * 2 + 0] = uvs[i].x;
-        udata[i * 2 + 1] = uvs[i].y;
-    }
-    glUnmapBuffer(GL_ARRAY_BUFFER);*/
 
     glBindBuffer   (GL_ARRAY_BUFFER, m_verticesObject);
     glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(glm::vec3), &vertices[0]);
@@ -179,6 +151,21 @@ void MeshRenderer::SetPosition(const glm::vec3 &position)
 {
     m_model = glm::mat4(1.0f);
     m_model = glm::translate(m_model, position);
+}
+
+/// \brief Base method implementation
+/// \param PV The projection view matrix
+void MeshRenderer::Draw(glm::mat4 const& PV)
+{
+    m_pShader->Begin(PV * m_model);
+
+    glBindVertexArray(m_vao);
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+
+    glDrawElements(GL_TRIANGLES, m_elementsCount, GL_UNSIGNED_SHORT, nullptr);
+
+    m_pShader->End();
 }
 
 } // !namespace

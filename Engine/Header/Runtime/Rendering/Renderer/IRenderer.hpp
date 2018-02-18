@@ -32,7 +32,7 @@ namespace cardinal
 {
 
 /// \class IRenderer
-/// \brief
+/// \brief Base class for all renderers
 class IRenderer
 {
 public:
@@ -41,7 +41,8 @@ public:
     IRenderer();
 
     /// \brief Called to render the object
-    virtual void Draw() = 0;
+    /// \param PV The projection view matrix
+    virtual void Draw(glm::mat4 const& PV) = 0;
 
 protected:
 

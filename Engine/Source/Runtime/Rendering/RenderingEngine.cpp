@@ -23,11 +23,12 @@
 
 #include <chrono>
 #include <iostream>
-#include <Header/Runtime/Core/Assertion/Assert.hh>
 
 #include "Glew/include/GL/glew.h"
 
 #include "Runtime/Core/Debug/Logger.hpp"
+#include "Runtime/Core/Assertion/Assert.hh"
+
 #include "Runtime/Rendering/Shader/IShader.hpp"
 #include "Runtime/Rendering/RenderingEngine.hpp"
 #include "Runtime/Rendering/Debug/DebugManager.hpp"
@@ -42,21 +43,22 @@
 namespace cardinal
 {
 
-/* static */ RenderingEngine * RenderingEngine::s_pInstance = nullptr;
+/* static */ RenderingEngine *RenderingEngine::s_pInstance = nullptr;
 
-/// Initializes the rendering engine from parameters
+/// \brief Initializes the rendering engine from parameters
 /// \param width The width of the window
 /// \param height The height of the window
 /// \param szTitle The title of the window
 /// \param fps The fps limit
 /// \param bInterpolate Should the engine interpolate frame ?
-bool RenderingEngine::Initialize(int width, int height, const char * szTitle, float fps, bool bInterpolate)
+bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
+                                 float fps, bool bInterpolate)
 {
     Logger::LogInfo("Initializing the Rendering Engine ...");
     Logger::LogInfo("Initializing OpenGL context ...");
     m_window.Initialize(width, height, szTitle);
 
-    if(m_window.GetContext() == nullptr)
+    if (m_window.GetContext() == nullptr)
     {
         Logger::LogError("Failed to initialize the rendering engine. Aborting.");
         return false;
@@ -149,26 +151,24 @@ void RenderingEngine::Render(float step)
     m_elapsedTime += elapsed;
     m_previousTime = m_currentTime;
 
-    if(m_elapsedTime >= 1.0f)
+    if (m_elapsedTime >= 1.0f)
     {
         m_currentFps  = m_fpsCounter / m_elapsedTime;
         m_elapsedTime = 0.0f;
-        m_fpsCounter  = 0;
-
-        // Logger::LogInfo("%3.3lf FPS", m_currentFps);
+        m_fpsCounter   = 0;
 
         std::string _fps = "FPS   : " + std::to_string(m_currentFps);
         m_pCurrentFPS->SetText(_fps.c_str(), 5, 560, 12, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
     }
 
-    if(m_frameLag < m_frameDelta)
+    if (m_frameLag < m_frameDelta)
     {
         return;
     }
 
     // Keeping the frame time overflow
     // for the next frame
-    m_frameLag    -= m_frameDelta;
+    m_frameLag -= m_frameDelta;
 
     // Starts instrumentation on frame
     double beginFrame = glfwGetTime();
@@ -184,60 +184,28 @@ void RenderingEngine::Render(float step)
 
     std::string _frame = "Frame : " + std::to_string(m_frameCount);
     std::string _time  = "Time  : " + std::to_string(m_frameTime) + " s";
-    m_pTotalFPS->SetText  (_frame.c_str(), 5, 545, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-    m_pFrameTime->SetText (_time.c_str(),  5, 530, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+
+    m_pTotalFPS->SetText(_frame.c_str(), 5, 545, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    m_pFrameTime->SetText(_time.c_str(), 5, 530, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
 /// \brief Frame rendering implementation
 /// \param step The normalized progression in the frame
 void RenderingEngine::RenderFrame(float step)
 {
-    // Clears buffer
+    // Clear
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Gets the projection matrix
-    glm::mat4 Projection  = m_projectionMatrix;
-    glm::mat4 View        = m_pCamera->GetViewMatrix();
-    glm::mat4 ProjectView = Projection * View;
+    glm::mat4 Projection     = m_projectionMatrix;
+    glm::mat4 View           = m_pCamera->GetViewMatrix();
+    glm::mat4 ProjectionView = Projection * View;
 
-    // Draw meshes
-    size_t rendererCount = m_meshRenderer.size();
-    for(int nRenderer = 0; nRenderer < rendererCount; ++nRenderer)
+    // Draw
+    size_t rendererCount = m_renderers.size();
+    for (int nRenderer = 0; nRenderer < rendererCount; ++nRenderer)
     {
-        // Buffers the renderer
-        MeshRenderer * pRenderer = m_meshRenderer[nRenderer];
-        IShader      * pShader   = pRenderer->m_pShader;
-
-        pShader->Begin(ProjectView * pRenderer->m_model);
-
-        // Render it
-        glBindVertexArray(pRenderer->m_vao);
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-
-        glDrawElements(GL_TRIANGLES, pRenderer->m_elementsCount, GL_UNSIGNED_SHORT, nullptr);
-
-        pShader->End();
-    }
-
-    // Draw Texts
-    rendererCount = m_textRenderer.size();
-    for(int nRenderer = 0; nRenderer < rendererCount; ++nRenderer)
-    {
-        // Buffers the renderer
-        TextRenderer * pRenderer = m_textRenderer[nRenderer];
-        IShader      * pShader   = pRenderer->m_pShader;
-
-        pShader->Begin(ProjectView * glm::mat4(1.0f));
-
-        // Render it
-        glBindVertexArray(pRenderer->m_vao);
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-
-        glDrawArrays(GL_TRIANGLES, 0, pRenderer->m_vertexCount);
-
-        pShader->End();
+        m_renderers[nRenderer]->Draw(ProjectionView);
     }
 
     // Cleanup
@@ -246,24 +214,24 @@ void RenderingEngine::RenderFrame(float step)
     glBindVertexArray(0);
 
 #ifdef CARDINAL_DEBUG
-   DebugManager::Draw(ProjectView);
+    DebugManager::Draw(ProjectionView);
 #endif
 
 #ifdef CARDINAL_DEBUG
     DebugManager::Clear();
 #endif
 
-    //  Display
+    // Display
     glfwSwapBuffers(m_window.GetContext());
 }
 
 /// \brief Sets the current camera
-void RenderingEngine::SetCamera(Camera * pCamera)
+void RenderingEngine::SetCamera(Camera *pCamera)
 {
     m_pCamera = pCamera;
 }
 
-/// \brief Shutdow the engine
+/// \brief Shutdown the engine
 void RenderingEngine::Shutdow()
 {
     // TODO
@@ -271,7 +239,7 @@ void RenderingEngine::Shutdow()
 }
 
 /// \brief Returns a pointer on the window
-Window * RenderingEngine::GetWindow()
+Window *RenderingEngine::GetWindow()
 {
     return &m_window;
 }
@@ -284,76 +252,50 @@ glm::mat4 const &RenderingEngine::GetProjectionMatrix()
 
 /// \brief Allocates and return a pointer on a renderer
 ///        Registers the renderer into the engine
-/* static */ MeshRenderer * RenderingEngine::AllocateMeshRenderer()
+/* static */ MeshRenderer *RenderingEngine::AllocateMeshRenderer()
 {
     ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
 
-    MeshRenderer * pRenderer = new MeshRenderer(); // NOLINT
-    RenderingEngine::s_pInstance->m_meshRenderer.push_back(pRenderer);
+    MeshRenderer *pRenderer = new MeshRenderer(); // NOLINT
+    RenderingEngine::s_pInstance->m_renderers.push_back((IRenderer *)pRenderer);
 
     return pRenderer;
-}
-
-/// \brief Deallocates a renderer
-///        Unregisters the renderer
-/* static */ void RenderingEngine::ReleaseMeshRenderer(MeshRenderer *& pRenderer)
-{
-    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
-
-    int index = -1;
-    size_t count = RenderingEngine::s_pInstance->m_meshRenderer.size();
-    for(size_t nRenderer = 0; nRenderer < count; ++nRenderer)
-    {
-        if(RenderingEngine::s_pInstance->m_meshRenderer[nRenderer] == pRenderer)
-        {
-            index = static_cast<int>(nRenderer);
-            break;
-        }
-    }
-
-    if(index != -1)
-    {
-        RenderingEngine::s_pInstance->m_meshRenderer.erase(
-                RenderingEngine::s_pInstance->m_meshRenderer.begin() + index);
-    }
-
-    delete pRenderer;
-    pRenderer = nullptr;
 }
 
 /// \brief Allocates and return a pointer on a renderer
 ///        Registers the renderer into the engine
-TextRenderer *RenderingEngine::AllocateTextRenderer()
+/*static */ TextRenderer * RenderingEngine::AllocateTextRenderer()
 {
     ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
 
-    TextRenderer * pRenderer = new TextRenderer(); // NOLINT
-    RenderingEngine::s_pInstance->m_textRenderer.push_back(pRenderer);
+    TextRenderer *pRenderer = new TextRenderer(); // NOLINT
+    RenderingEngine::s_pInstance->m_renderers.push_back((IRenderer *)pRenderer);
 
     return pRenderer;
 }
 
 /// \brief Deallocates a renderer
 ///        Unregisters the renderer
-void RenderingEngine::ReleaseTextRenderer(TextRenderer *&pRenderer)
+/// \param pRenderer The renderer to release
+/* static */ void RenderingEngine::ReleaseRenderer(class IRenderer *&pRenderer)
 {
     ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
 
     int index = -1;
-    size_t count = RenderingEngine::s_pInstance->m_meshRenderer.size();
-    for(size_t nRenderer = 0; nRenderer < count; ++nRenderer)
+    size_t count = RenderingEngine::s_pInstance->m_renderers.size();
+    for (size_t nRenderer = 0; nRenderer < count; ++nRenderer)
     {
-        if(RenderingEngine::s_pInstance->m_textRenderer[nRenderer] == pRenderer)
+        if (RenderingEngine::s_pInstance->m_renderers[nRenderer] == pRenderer)
         {
             index = static_cast<int>(nRenderer);
             break;
         }
     }
 
-    if(index != -1)
+    if (index != -1)
     {
-        RenderingEngine::s_pInstance->m_textRenderer.erase(
-                RenderingEngine::s_pInstance->m_textRenderer.begin() + index);
+        RenderingEngine::s_pInstance->m_renderers.erase(
+                RenderingEngine::s_pInstance->m_renderers.begin() + index);
     }
 
     delete pRenderer;

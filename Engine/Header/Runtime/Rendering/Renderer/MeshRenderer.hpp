@@ -28,7 +28,7 @@
 #include "Glm/glm/glm.hpp"
 #include "Glm/glm/ext.hpp"
 
-#include "Runtime/Rendering/Shader/IShader.hpp"
+#include "Runtime/Rendering/Renderer/IRenderer.hpp"
 #include "Runtime/Platform/Configuration/Configuration.hh"
 
 /// \namespace cardinal
@@ -37,7 +37,7 @@ namespace cardinal
 
 /// \class  MeshRenderer
 /// \brief  Renderer for 3D objects
-class MeshRenderer
+class MeshRenderer : public IRenderer
 {
 public :
 
@@ -75,15 +75,17 @@ public :
     /// \param pShader The pointer on the shader
     void SetShader(IShader * pShader);
 
+    /// \brief Base method implementation
+    /// \param PV The projection view matrix
+    void Draw(glm::mat4 const& PV) final;
+
 private:
 
     friend class RenderingEngine;
 
-    uint      m_vao;
     uint      m_indexesObject;
     uint      m_verticesObject;
     uint      m_uvsObject;
-    IShader * m_pShader;
     int       m_elementsCount;
 
     glm::mat4 m_model;

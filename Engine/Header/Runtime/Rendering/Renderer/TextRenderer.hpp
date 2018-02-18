@@ -28,7 +28,7 @@
 #include "Glm/glm/glm.hpp"
 #include "Glm/glm/ext.hpp"
 
-#include "Runtime/Rendering/Shader/IShader.hpp"
+#include "Runtime/Rendering/Renderer/IRenderer.hpp"
 #include "Runtime/Platform/Configuration/Configuration.hh"
 
 /// \namespace cardinal
@@ -37,7 +37,7 @@ namespace cardinal
 
 /// \class  TextRenderer
 /// \brief  Renderer for 2D text
-class TextRenderer
+class TextRenderer : public IRenderer
 {
 public :
 
@@ -62,16 +62,16 @@ public :
     /// \param pShader The pointer on the shader
     void SetShader(IShader * pShader);
 
+    /// \brief Base method implementation
+    /// \param PV The projection view matrix
+    void Draw(glm::mat4 const& PV) final;
+
 private:
 
     friend class RenderingEngine;
 
-    uint      m_vao;
-    uint      m_texture;
-    uint      m_vertexbject;
+    uint      m_vertexObject;
     uint      m_uvsObject;
-     int      m_textureSampler;
-    IShader * m_pShader;
     uint      m_vertexCount;
 };
 

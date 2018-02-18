@@ -33,14 +33,11 @@ namespace cardinal
 {
 
 /// \brief Default constructor
-TextRenderer::TextRenderer()
+TextRenderer::TextRenderer() : IRenderer()
 {
-    m_vao            = 0;
-    m_texture        = 0;
-    m_vertexbject    = 0;
+    m_vertexObject   = 0;
     m_uvsObject      = 0;
     m_vertexCount    = 0;
-    m_pShader        = nullptr;
 }
 
 /// \brief Destructor
@@ -61,7 +58,7 @@ void TextRenderer::Initialize()
     glGenVertexArrays(1, &m_vao);
     glBindVertexArray(m_vao);
 
-    glGenBuffers(1, &m_vertexbject);
+    glGenBuffers(1, &m_vertexObject);
     glGenBuffers(1, &m_uvsObject);
 
     glBindVertexArray(0);
@@ -141,7 +138,7 @@ void TextRenderer::SetText(const char * szText, int x, int y, int size, glm::vec
 
     glBindVertexArray(m_vao);
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_vertexbject);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vertexObject);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec2), &vertices[0], GL_STATIC_DRAW);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
@@ -153,6 +150,21 @@ void TextRenderer::SetText(const char * szText, int x, int y, int size, glm::vec
     glBindVertexArray(0);
 
     m_vertexCount = static_cast<uint>(vertices.size());
+}
+
+/// \brief Base method implementation
+/// \param PV The projection view matrix
+void TextRenderer::Draw(glm::mat4 const &PV)
+{
+    m_pShader->Begin(PV * glm::mat4(1.0f));
+
+    glBindVertexArray(m_vao);
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+
+    glDrawArrays(GL_TRIANGLES, 0, m_vertexCount);
+
+    m_pShader->End();
 }
 
 } // !namespace

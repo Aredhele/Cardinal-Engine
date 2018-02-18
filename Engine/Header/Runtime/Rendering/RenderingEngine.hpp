@@ -74,11 +74,8 @@ public:
 
     /// \brief Deallocates a renderer
     ///        Unregisters the renderer
-    static void ReleaseMeshRenderer(class MeshRenderer *& pRenderer);
-
-    /// \brief Deallocates a renderer
-    ///        Unregisters the renderer
-    static void ReleaseTextRenderer(class TextRenderer *& pRenderer);
+    /// \param pRenderer The renderer to release
+    static void ReleaseRenderer(class IRenderer *& pRenderer);
 
 private:
 
@@ -109,8 +106,7 @@ private:
     uint64_t  m_frameCount;
     glm::mat4 m_projectionMatrix;
 
-    std::vector<class MeshRenderer*> m_meshRenderer;
-    std::vector<class TextRenderer*> m_textRenderer;
+    std::vector<class IRenderer*> m_renderers;
 
     class TextRenderer * m_pEngineName;
     class TextRenderer * m_pCurrentFPS;
