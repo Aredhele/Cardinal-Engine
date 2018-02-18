@@ -39,28 +39,36 @@
 namespace cardinal
 {
 
+/// \brief Logs a user message on stdout
+/// \param szFormat The format of the message
+/// \param ... Variadic c-style arguments
+/* static */ void Logger::LogUser(const char *szFormat, ...)
+{
+    __VA_LOG(stdout, "[CARDINAL][USER] : ", szFormat);
+}
+
 /// \brief Logs an information message on stdout
 /// \param szFormat The format of the message
 /// \param ... Variadic c-style arguments
-/* static */ void Logger::LogInfo(const char * aFormat, ...)
+/* static */ void Logger::LogInfo(const char * szFormat, ...)
 {
-    __VA_LOG(stdout, "[CARDINAL][INFO] : ", aFormat);
+    __VA_LOG(stdout, "[CARDINAL][INFO] : ", szFormat);
 }
 
 /// \brief Logs a warning message on stdout
 /// \param szFormat The format of the message
 /// \param ... Variadic c-style arguments
-/* static */ void Logger::LogWaring(const char * aFormat, ...)
+/* static */ void Logger::LogWaring(const char * szFormat, ...)
 {
-    __VA_LOG(stdout, "[CARDINAL][WARN] : ", aFormat);
+    __VA_LOG(stdout, "[CARDINAL][WARN] : ", szFormat);
 }
 
 /// \brief Logs an error message on stderr
 /// \param szFormat The format of the message
 /// \param ... Variadic c-style arguments
-/* static */ void Logger::LogError(const char * aFormat, ...)
+/* static */ void Logger::LogError(const char * szFormat, ...)
 {
-    __VA_LOG(stderr, "[CARDINAL][ERRO] : ", aFormat);
+    __VA_LOG(stderr, "[CARDINAL][ERRO] : ", szFormat);
 }
 
 } // !namespace

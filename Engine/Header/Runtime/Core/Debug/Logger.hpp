@@ -35,6 +35,11 @@ class Logger
 {
 public:
 
+    /// \brief Logs a user message
+    /// \param szFormat The format of the message
+    /// \param ... Variadic c-style arguments
+    static void LogUser  (const char * szFormat, ...);
+
     /// \brief Logs an information message on stdout
     /// \param szFormat The format of the message
     /// \param ... Variadic c-style arguments
