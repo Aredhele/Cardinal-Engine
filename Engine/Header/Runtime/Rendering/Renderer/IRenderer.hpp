@@ -15,34 +15,40 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       WorldSettings.hpp
-/// \date       15/02/2018
+/// \file       IRenderer.hpp
+/// \date       18/02/2018
 /// \project    Cardinal Engine
-/// \package    World
+/// \package    Runtime/Rendering/Renderer
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_WORLD_SETTINGS_HPP__
-#define CARDINAL_ENGINE_WORLD_SETTINGS_HPP__
+#ifndef CARDINAL_ENGINE_I_RENDERER_HPP__
+#define CARDINAL_ENGINE_I_RENDERER_HPP__
 
+#include "Runtime/Rendering/Shader/IShader.hpp"
 #include "Runtime/Platform/Configuration/Type.hh"
 
-/// \class WorldSettings
-/// \brief Stores world global settings
-class WorldSettings
+/// \namespace cardinal
+namespace cardinal
+{
+
+/// \class IRenderer
+/// \brief
+class IRenderer
 {
 public:
 
-    static const uint s_chunkSize          = 16;
-    static const uint s_chunkBlockCount    = 16 * 16 * 16;
-    static const uint s_chunkUVsCount      = WorldSettings::s_chunkBlockCount * 24;
-    static const uint s_chunkVertexCount   = WorldSettings::s_chunkBlockCount * 36;
+    /// \brief Default constructor
+    IRenderer();
 
-    static const uint s_matSize   = 4;
-    static const uint s_matHeight = 2;
-    static const uint s_matSizeCubes   = s_matSize   * WorldSettings::s_chunkSize;
-    static const uint s_matHeightCubes = s_matHeight * WorldSettings::s_chunkSize;
+    /// \brief Called to render the object
+    virtual void Draw() = 0;
 
-    static constexpr const float s_textureStep = 1.0f / 16.0f;
+protected:
+
+    uint      m_vao;     ///< All renderers have at least one vao
+    IShader * m_pShader; ///< All renderers have at least one shader
 };
 
-#endif // !CARDINAL_ENGINE_WORLD_SETTINGS_HPP__
+} // !namespace
+
+#endif // !CARDINAL_ENGINE_I_RENDERER_HPP__

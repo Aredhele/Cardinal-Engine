@@ -29,6 +29,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Camera/Camera.cpp
         Rendering/Optimization/VBOIndexer.cpp
         Rendering/RenderingEngine.cpp
+        Rendering/Renderer/IRenderer.cpp
         Rendering/Renderer/TextRenderer.cpp
         Rendering/Renderer/MeshRenderer.cpp
         Rendering/Texture/TextureLoader.cpp

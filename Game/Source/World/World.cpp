@@ -242,9 +242,9 @@ void World::UpdateChunksXPositive()
             glm::tvec3<int> previousPosition =  m_chunks[WorldSettings::s_matSize - 1][y][z]->GetChunkIndex();
 
             m_chunks[WorldSettings::s_matSize - 1][y][z] = pointerBuffer.at(index++);
-            std::thread t1(&Chunk::Initialize, m_chunks[WorldSettings::s_matSize - 1][y][z], previousPosition.x + 1, previousPosition.y, previousPosition.z);
-            t1.detach();
-           //m_chunks[WorldSettings::s_matSize - 1][y][z]->Initialize(previousPosition.x + 1, previousPosition.y, previousPosition.z);
+            //std::thread t1(&Chunk::Initialize, m_chunks[WorldSettings::s_matSize - 1][y][z], previousPosition.x + 1, previousPosition.y, previousPosition.z);
+            //t1.detach();
+            m_chunks[WorldSettings::s_matSize - 1][y][z]->Initialize(previousPosition.x + 1, previousPosition.y, previousPosition.z);
         }
     }
 }

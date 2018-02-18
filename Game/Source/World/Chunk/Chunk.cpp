@@ -101,7 +101,7 @@ void Chunk::GenerateTerrain()
 
                 ByteCube * pCube = &m_cubes[x][y][z];
 
-                float modifier = 0.04;
+                float modifier = 0.08;
                 float sample   = Chunk::s_perlin.sample(modifier * worldX, modifier * worldY, modifier * worldZ);
                 sample        /= pow((float)worldZ / (float)WorldSettings::s_matHeightCubes, TweakA) / TweakB + TweakC;
 
