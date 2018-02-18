@@ -119,8 +119,9 @@ void World::Update(const glm::vec3 &position, float dt)
 /// \param position The initial player position
 void World::Initialize(glm::vec3 const& position)
 {
-    WorldBuffers::Initialize();
+    auto worldBegin = std::chrono::steady_clock::now();
 
+    WorldBuffers::Initialize();
     cardinal::Logger::LogInfo("Allocating chunks ....");
 
     // Allocating memory for chunks
@@ -159,6 +160,11 @@ void World::Initialize(glm::vec3 const& position)
     m_lastPlayerPos.x = chunkX;
     m_lastPlayerPos.y = chunkY;
     m_lastPlayerPos.z = chunkZ;
+
+    auto worldEnd = std::chrono::steady_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(worldEnd - worldBegin);
+
+    cardinal::Logger::LogInfo("World generated in %d ms", elapsed);
 }
 
 /// \brief Checks if the player changed of chunks
@@ -171,27 +177,27 @@ void World::CheckChunkDelta(glm::tvec3<int> const& delta)
         UpdateChunksXPositive();
     }
     // The player is now one chunk less on X
-    else if(delta.x == -1)
+    if(delta.x == -1)
     {
         UpdateChunksXNegative();
     }
     // The player is now one chunk further on Y
-    else if(delta.y == 1)
+    if(delta.y == 1)
     {
         UpdateChunksYPositive();
     }
     // The player is now one chunk less on Y
-    else if(delta.y == -1)
+    if(delta.y == -1)
     {
         UpdateChunksYNegative();
     }
     // The player is now one chunk further on Z
-    else if(delta.z == 1)
+    if(delta.z == 1)
     {
         UpdateChunksZPositive();
     }
     // The player is now one chunk less on Z
-    else if(delta.z == -1)
+    if(delta.z == -1)
     {
         UpdateChunksZNegative();
     }

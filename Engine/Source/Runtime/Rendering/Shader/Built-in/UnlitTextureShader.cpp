@@ -33,8 +33,18 @@ namespace cardinal
 /// \brief Constructor
 UnlitTextureShader::UnlitTextureShader()
 {
-    m_shaderID = ShaderManager::GetShaderID("UnlitTexture");
-    m_matrixID = glGetUniformLocation(m_shaderID, "MVP");
+    m_textureID      = 0;
+    m_textureSampler = 0;
+
+    m_shaderID       = ShaderManager::GetShaderID("UnlitTexture");
+    m_matrixID       = glGetUniformLocation(m_shaderID, "MVP");
+    m_textureSampler = glGetUniformLocation(m_shaderID, "textureSampler");
+}
+
+/// \brief Sets the texture of the shader
+void UnlitTextureShader::SetTexture(uint textureID)
+{
+    m_textureID = textureID;
 }
 
 /// \brief Sets up the pipeline for the shader
@@ -44,7 +54,9 @@ void UnlitTextureShader::Begin(const glm::mat4 &MVP)
     glUseProgram      (m_shaderID);
     glUniformMatrix4fv(m_matrixID, 1, GL_FALSE, &MVP[0][0]);
 
-    // TODO : Bind texture
+    glActiveTexture   (GL_TEXTURE0);
+    glBindTexture     (GL_TEXTURE_2D, m_textureID);
+    glUniform1i       (m_textureSampler, 0);
 }
 
 /// \brief Restore the pipeline state

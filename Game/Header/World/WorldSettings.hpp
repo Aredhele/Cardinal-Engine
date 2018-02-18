@@ -24,6 +24,8 @@
 #ifndef CARDINAL_ENGINE_WORLD_SETTINGS_HPP__
 #define CARDINAL_ENGINE_WORLD_SETTINGS_HPP__
 
+#include "Runtime/Platform/Configuration/Type.hh"
+
 /// \class WorldSettings
 /// \brief Stores world global settings
 class WorldSettings

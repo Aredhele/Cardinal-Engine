@@ -24,12 +24,23 @@
 #ifndef CARDINAL_ENGINE_CHUNK_HPP__
 #define CARDINAL_ENGINE_CHUNK_HPP__
 
+// Engine
 #include "Runtime/Rendering/RenderingEngine.hpp"
+#include "Runtime/Core/Maths/Noise/NYPerlin.hpp"
+
+// Game
+#include "World/Cube/ByteCube.hpp"
+#include "World/WorldSettings.hpp"
+#include "World/Chunk/Renderer/TerrainRenderer.hpp"
 
 /// \class Chunk
 /// \brief Represents a chunk in the world
 class Chunk
 {
+public:
+
+    static NYPerlin s_perlin;
+
 public:
 
     /// \brief Represents the state of the chunk
@@ -57,10 +68,23 @@ public:
 
 private:
 
+    void GenerateChunk();
+    void GenerateTerrain();
+    void Batch();
+
+private:
+
     EChunkState m_state;
     int         m_chunkIndexX;
     int         m_chunkIndexY;
     int         m_chunkIndexZ;
+
+    /// \brief The cubes in the chunks
+    ByteCube m_cubes[WorldSettings::s_chunkSize]
+                    [WorldSettings::s_chunkSize]
+                    [WorldSettings::s_chunkSize];
+
+    TerrainRenderer m_terrainRenderer;
 };
 
 #include "World/Chunk/Impl/Chunk.inl"

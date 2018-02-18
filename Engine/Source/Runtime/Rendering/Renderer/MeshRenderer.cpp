@@ -34,11 +34,9 @@ namespace cardinal
 MeshRenderer::MeshRenderer()
 {
     m_vao            = 0;
-    m_texture        = 0;
     m_indexesObject  = 0;
     m_verticesObject = 0;
     m_uvsObject      = 0;
-    m_matrixID       = 0;
     m_elementsCount  = 0;
     m_pShader        = nullptr;
 }
@@ -52,12 +50,27 @@ MeshRenderer::~MeshRenderer() // NOLINT
 /// \brief Initializes the mesh
 /// \param indexes The indexes of the mesh
 /// \param vertices The vertices of the mesh
-/// \param colors The colors of the mesh
+/// \param colors The uvs of the mesh
 void MeshRenderer::Initialize(
         std::vector<unsigned short> const& indexes,
         std::vector<glm::vec3>      const& vertices,
         std::vector<glm::vec2>      const& uvs)
 {
+    if(m_vao != 0)
+    {
+        glDeleteBuffers(1, &m_indexesObject);
+        glDeleteBuffers(1, &m_verticesObject);
+        glDeleteBuffers(1, &m_uvsObject);
+
+        glDeleteVertexArrays(1, &m_vao);
+
+        m_vao            = 0;
+        m_indexesObject  = 0;
+        m_verticesObject = 0;
+        m_uvsObject      = 0;
+        m_elementsCount  = 0;
+    }
+
     glGenVertexArrays(1, &m_vao);
     glBindVertexArray(m_vao);
 
@@ -79,7 +92,36 @@ void MeshRenderer::Initialize(
     glBindVertexArray(0);
 
     m_elementsCount = static_cast<GLsizei>(indexes.size());
-    m_texture = TextureManager::GetTextureID("Blocks");
+}
+
+/// \brief Updates the mesh
+/// \param indexes The indexes of the mesh
+/// \param vertices The vertices of the mesh
+/// \param uvs The uvs of the mesh
+void MeshRenderer::Update(
+        std::vector<unsigned short> const &indexes,
+        std::vector<glm::vec3>      const& vertices,
+        std::vector<glm::vec2>      const& uvs)
+{
+    if(m_elementsCount < indexes.size())
+    {
+        // The buffer is too small, we need
+        Initialize(indexes, vertices, uvs);
+        return;
+    }
+
+    glBindVertexArray(m_vao);
+
+    glBindBuffer   (GL_ELEMENT_ARRAY_BUFFER, m_indexesObject);
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indexes.size() * sizeof(unsigned short), &indexes[0]);
+
+    glBindBuffer   (GL_ARRAY_BUFFER, m_verticesObject);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(glm::vec3), &vertices[0]);
+
+    glBindBuffer   (GL_ARRAY_BUFFER, m_uvsObject);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, uvs.size() * sizeof(glm::vec2), &uvs[0]);
+
+    glBindVertexArray(0);
 }
 
 /// \brief Sets the renderer shader
@@ -94,6 +136,14 @@ void MeshRenderer::SetShader(IShader * pShader)
 void MeshRenderer::Translate(glm::vec3 const& Translation)
 {
     m_model = glm::translate(m_model, Translation);
+}
+
+/// \brief Sets the position of the mesh renderer
+/// \param position The new position
+void MeshRenderer::SetPosition(const glm::vec3 &position)
+{
+    m_model = glm::mat4(1.0f);
+    m_model = glm::translate(m_model, position);
 }
 
 } // !namespace

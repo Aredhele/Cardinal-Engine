@@ -50,11 +50,22 @@ public :
     /// \brief Initializes the mesh
     /// \param indexes The indexes of the mesh
     /// \param vertices The vertices of the mesh
-    /// \param uvs The colors of the mesh
-    void Initialize(
-            std::vector<unsigned short> const& indexes,
-            std::vector<glm::vec3>      const& vertices,
-            std::vector<glm::vec2>      const& uvs);
+    /// \param uvs The uvs of the mesh
+    void Initialize(std::vector<unsigned short> const& indexes,
+                    std::vector<glm::vec3>      const& vertices,
+                    std::vector<glm::vec2>      const& uvs);
+
+    /// \brief Updates the mesh
+    /// \param indexes The indexes of the mesh
+    /// \param vertices The vertices of the mesh
+    /// \param uvs The uvs of the mesh
+    void Update(std::vector<unsigned short> const& indexes,
+                std::vector<glm::vec3>      const& vertices,
+                std::vector<glm::vec2>      const& uvs);
+
+    /// \brief Sets the position of the mesh renderer
+    /// \param position The new position
+    void SetPosition(glm::vec3 const& position);
 
     /// \brief Translates the model
     /// \param Translation The translation vector
@@ -64,17 +75,17 @@ public :
     /// \param pShader The pointer on the shader
     void SetShader(IShader * pShader);
 
+    std::string debugName;
+
 private:
 
     friend class RenderingEngine;
 
     uint      m_vao;
-    uint      m_texture;
     uint      m_indexesObject;
     uint      m_verticesObject;
     uint      m_uvsObject;
     IShader * m_pShader;
-    int       m_matrixID;
     int       m_elementsCount;
 
     glm::mat4 m_model;

@@ -23,6 +23,7 @@
 
 #include <Header/Runtime/Rendering/Shader/Built-in/UnlitTextureShader.hpp>
 #include <Header/Runtime/Rendering/RenderingEngine.hpp>
+#include <Header/Runtime/Rendering/Texture/TextureManager.hpp>
 #include "World/WorldBuffers.hpp"
 #include "World/WorldSettings.hpp"
 #include "World/Cube/UVManager.hpp"
@@ -31,21 +32,16 @@
 
 TerrainRenderer::TerrainRenderer()
 {
-    if(m_renderer == nullptr)
-    {
-     //   m_renderer = cardinal::RenderingEngine::AllocateRenderer();
-    }
+    m_renderer = cardinal::RenderingEngine::AllocateMeshRenderer();
+    cardinal::UnlitTextureShader * pShader = new cardinal::UnlitTextureShader(); // NOLINT
+    pShader->SetTexture(cardinal::TextureManager::GetTextureID("Block"));
+    m_renderer->SetShader(pShader);
 }
 
 /// \brief Static batching for terrain cubes
 /// \param pCubes The cubes of the chunk
 void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize])
 {
-    if(m_renderer == nullptr)
-    {
-        m_renderer = cardinal::RenderingEngine::AllocateMeshRenderer();
-    }
-
     auto batchingBegin = std::chrono::steady_clock::now();
 
     // Resizing the vector to ensure that the current size
@@ -158,8 +154,6 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
             WorldBuffers::s_chunkIndexedVertexBuffer,
             WorldBuffers::s_chunkIndexedUVsBuffer);
 
-    m_renderer->SetShader(new cardinal::UnlitTextureShader()); // TODO
-
     auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - batchingBegin);
     std::cout << "Chunk batched in " << elapsedMs.count() << " ms" << std::endl;
 
@@ -171,8 +165,8 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
 }
 
 /// \brief Translate the chunk terrain renderer
-void TerrainRenderer::Translate(glm::vec3 const &translation)
+void TerrainRenderer::SetPosition(glm::vec3 const& position)
 {
-    m_model += translation;
-    m_renderer->Translate(translation);
+    m_model = position;
+    m_renderer->SetPosition(position);
 }

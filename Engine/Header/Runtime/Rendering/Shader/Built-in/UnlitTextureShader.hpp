@@ -25,7 +25,7 @@
 #define CARDINAL_ENGINE_UNLIT_TEXTURE_SHADER_HPP__
 
 #include "Runtime/Rendering/Shader/IShader.hpp"
-
+#include <string>
 /// \namespace cardinal
 namespace cardinal
 {
@@ -39,12 +39,22 @@ public:
     /// \brief Constructor
     UnlitTextureShader();
 
+    /// \brief Sets the texture of the shader
+    void SetTexture(uint textureID);
+
     /// \brief Sets up the pipeline for the shader
     /// \param MVP The Projection-View-Model matrix to pass to the shader
     void Begin(glm::mat4 const& MVP) final;
 
     /// \brief Restore the pipeline state
     void End() final;
+
+    std::string debugName;
+
+private:
+
+    uint m_textureID;
+    int  m_textureSampler;
 };
 
 } // !namespace

@@ -73,14 +73,14 @@ bool RenderingEngine::Initialize(int width, int height, const char * szTitle, fl
     TextureLoader::LoadTexture("SAORegular", "Resources/Textures/SAORegular.bmp");
     TextureLoader::LoadTexture("Block",      "Resources/Textures/BlockAtlas.bmp");
 
-    // Loads shaders
-    ShaderManager::Register("UnlitTexture", ShaderCompiler::LoadShaders(
-            "Resources/Shaders/Unlit/UnlitTransparentVertexShader.glsl",
-            "Resources/Shaders/Unlit/UnlitTransparentFragmentShader.glsl"));
-
     ShaderManager::Register("UnlitColor", ShaderCompiler::LoadShaders(
             "Resources/Shaders/Unlit/UnlitColorVertexShader.glsl",
             "Resources/Shaders/Unlit/UnlitColorFragmentShader.glsl"));
+
+    // Loads shaders
+    ShaderManager::Register("UnlitTexture", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/Unlit/UnlitTextureVertexShader.glsl",
+            "Resources/Shaders/Unlit/UnlitTextureFragmentShader.glsl"));
 
     ShaderManager::Register("UnlitTransparent", ShaderCompiler::LoadShaders(
             "Resources/Shaders/Unlit/UnlitTransparentVertexShader.glsl",

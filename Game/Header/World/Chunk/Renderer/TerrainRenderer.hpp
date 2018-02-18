@@ -27,10 +27,12 @@
 #include <chrono>
 #include <iostream>
 
+// Engine
+#include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
+
+// Game
 #include "World/WorldBuffers.hpp"
 #include "World/Cube/ByteCube.hpp"
-
-#include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
 
 /// \class TerrainRenderer
 /// \brief Renders all terrain blocks (not details, monsters etc.)
@@ -38,14 +40,15 @@ class TerrainRenderer
 {
 public:
 
+    /// \brief Constructor
     TerrainRenderer();
 
     /// \brief Static batching for terrain cubes
     /// \param pCubes The cubes of the chunk
     void Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize]);
 
-    /// \brief Translate the chunk terrain renderer
-    void Translate(glm::vec3 const& translation);
+    /// \brief Sets the world position
+    void SetPosition(glm::vec3 const& position);
 
 private:
 

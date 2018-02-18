@@ -25,6 +25,8 @@
 #include <World/Cube/ByteCube.hpp>
 #include <World/Cube/UVManager.hpp>
 #include <Header/Runtime/Rendering/Optimization/VBOIndexer.hpp>
+#include <Header/Runtime/Rendering/Texture/TextureManager.hpp>
+#include <World/WorldSettings.hpp>
 #include "Character/Character.hpp"
 #include "Runtime/Rendering/Camera/Camera.hpp"
 #include "Runtime/Rendering/Context/Window.hpp"
@@ -140,7 +142,11 @@ void Character::Translate(const glm::vec3 &translation)
 void Character::InitializeAvatar()
 {
     m_meshRenderer = cardinal::RenderingEngine::AllocateMeshRenderer();
-    m_meshRenderer->SetShader(new cardinal::UnlitTextureShader());
+    cardinal::UnlitTextureShader * pShader = new cardinal::UnlitTextureShader(); // NOLINT
+    pShader->SetTexture(cardinal::TextureManager::GetTextureID("Block"));
+    pShader->debugName = "Character";
+    m_meshRenderer->debugName = "Character";
+    m_meshRenderer->SetShader(pShader);
 
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec2> uvs;
@@ -151,10 +157,20 @@ void Character::InitializeAvatar()
             ByteCube::s_vertices[nVertex * 3 + 0] * 2.0f,
             ByteCube::s_vertices[nVertex * 3 + 1] * 2.0f,
             ByteCube::s_vertices[nVertex * 3 + 2] * 2.0f);
+    }
 
-        uvs.emplace_back(
-            UVManager::UV[0][nVertex / 6 + 0],
-            UVManager::UV[0][nVertex / 6 + 1]);
+    for(size_t nFace = 0; nFace < 6; ++nFace)
+    {
+        // Dirt cube
+        float UVx = UVManager::UV[0][nFace * 2 + 0] * WorldSettings::s_textureStep;
+        float UVy = UVManager::UV[0][nFace * 2 + 1] * WorldSettings::s_textureStep;
+
+        uvs.emplace_back(UVx, UVy);
+        uvs.emplace_back(UVx + WorldSettings::s_textureStep, UVy);
+        uvs.emplace_back(UVx + WorldSettings::s_textureStep, UVy + WorldSettings::s_textureStep);
+        uvs.emplace_back(UVx + WorldSettings::s_textureStep, UVy + WorldSettings::s_textureStep);
+        uvs.emplace_back(UVx, UVy + WorldSettings::s_textureStep);
+        uvs.emplace_back(UVx, UVy);
     }
 
     // Indexing

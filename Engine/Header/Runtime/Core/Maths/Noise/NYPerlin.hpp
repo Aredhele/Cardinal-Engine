@@ -10,7 +10,7 @@ public :
     glm::vec3 * _Dirs;
     int _Width;
     int _Size;
-
+    float resolution = 2.0f;
     NYPerlin()
     {
         _Width = 50;
@@ -89,7 +89,7 @@ public:
 
         float res = lerp(mid1, mid2, dx);
 
-        res = (res + 1) / 2.0f;
+        res = (res + 1) / resolution;
 
 
         return res;
