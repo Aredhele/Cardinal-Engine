@@ -25,6 +25,7 @@
 #define CARDINAL_ENGINE_CHUNK_HPP__
 
 // Engine
+#include <thread>
 #include "Runtime/Rendering/RenderingEngine.hpp"
 #include "Runtime/Core/Maths/Noise/NYPerlin.hpp"
 
@@ -73,6 +74,8 @@ private:
     void Batch();
 
 private:
+
+    double        m_debugTime;
 
     EChunkState m_state;
     int         m_chunkIndexX;

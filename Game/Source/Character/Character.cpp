@@ -144,8 +144,6 @@ void Character::InitializeAvatar()
     m_meshRenderer = cardinal::RenderingEngine::AllocateMeshRenderer();
     cardinal::UnlitTextureShader * pShader = new cardinal::UnlitTextureShader(); // NOLINT
     pShader->SetTexture(cardinal::TextureManager::GetTextureID("Block"));
-    pShader->debugName = "Character";
-    m_meshRenderer->debugName = "Character";
     m_meshRenderer->SetShader(pShader);
 
     std::vector<glm::vec3> vertices;

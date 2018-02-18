@@ -56,14 +56,12 @@ void UnlitTextureShader::Begin(const glm::mat4 &MVP)
 
     glActiveTexture   (GL_TEXTURE0);
     glBindTexture     (GL_TEXTURE_2D, m_textureID);
-    // glUniform1i       (m_textureSampler, 0);
-    // glEnable(GL_MULTISAMPLE);
 }
 
 /// \brief Restore the pipeline state
 void UnlitTextureShader::End()
 {
-   // glDisable(GL_MULTISAMPLE);
+    // None
 }
 
 } // !namespace

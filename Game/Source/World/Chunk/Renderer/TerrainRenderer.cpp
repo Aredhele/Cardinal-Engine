@@ -42,7 +42,8 @@ TerrainRenderer::TerrainRenderer()
 /// \param pCubes The cubes of the chunk
 void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize])
 {
-    auto batchingBegin = std::chrono::steady_clock::now();
+   // auto batchingBegin = std::chrono::steady_clock::now();
+  //  cardinal::Logger::LogInfo("\t\tBegin batch profiling");
 
     // Resizing the vector to ensure that the current size
     // is large enough to hold all vertices and UVs
@@ -141,6 +142,10 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
     WorldBuffers::s_chunkVertexBuffer.resize(vertexIndex);
     WorldBuffers::s_chunkUVsBuffer.resize (vertexIndex);
 
+   // auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - batchingBegin);
+  //  cardinal::Logger::LogInfo("\t\tBatching : %d", elapsedMs);
+  //  batchingBegin = std::chrono::steady_clock::now();
+
     // Indexing
     cardinal::VBOIndexer::Index(
             WorldBuffers::s_chunkVertexBuffer,
@@ -149,13 +154,13 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
             WorldBuffers::s_chunkIndexedVertexBuffer,
             WorldBuffers::s_chunkIndexedUVsBuffer);
 
-    m_renderer->Initialize(
+    m_renderer->Update(
             WorldBuffers::s_chunkIndexesBuffer,
             WorldBuffers::s_chunkIndexedVertexBuffer,
             WorldBuffers::s_chunkIndexedUVsBuffer);
 
-    auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - batchingBegin);
-    std::cout << "Chunk batched in " << elapsedMs.count() << " ms" << std::endl;
+   // elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - batchingBegin);
+   // cardinal::Logger::LogInfo("\t\tIndexing : %d", elapsedMs);
 
     WorldBuffers::s_chunkUVsBuffer.clear();
     WorldBuffers::s_chunkVertexBuffer.clear();

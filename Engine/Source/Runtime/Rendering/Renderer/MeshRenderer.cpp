@@ -62,30 +62,30 @@ void MeshRenderer::Initialize(
         glDeleteBuffers(1, &m_verticesObject);
         glDeleteBuffers(1, &m_uvsObject);
 
-        glDeleteVertexArrays(1, &m_vao);
-
-        m_vao            = 0;
         m_indexesObject  = 0;
         m_verticesObject = 0;
         m_uvsObject      = 0;
         m_elementsCount  = 0;
     }
+    else if(m_vao == 0)
+    {
+        glGenVertexArrays(1, &m_vao);
+    }
 
-    glGenVertexArrays(1, &m_vao);
     glBindVertexArray(m_vao);
 
     glGenBuffers(1, &m_indexesObject);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexesObject);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexes.size() * sizeof(unsigned short) ,&indexes[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexes.size() * sizeof(unsigned short) ,&indexes[0], GL_STREAM_DRAW);
 
     glGenBuffers(1, &m_verticesObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_verticesObject);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STREAM_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
 
     glGenBuffers(1, &m_uvsObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_uvsObject);
-    glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STREAM_DRAW);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
 
     glEnableVertexAttribArray(0);
@@ -103,6 +103,11 @@ void MeshRenderer::Update(
         std::vector<glm::vec3>      const& vertices,
         std::vector<glm::vec2>      const& uvs)
 {
+	if(indexes.size() == 0)
+	{
+		return;
+	}
+
     if(m_elementsCount < indexes.size())
     {
         // The buffer is too small, we need
@@ -115,11 +120,41 @@ void MeshRenderer::Update(
     glBindBuffer   (GL_ELEMENT_ARRAY_BUFFER, m_indexesObject);
     glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indexes.size() * sizeof(unsigned short), &indexes[0]);
 
+
+    /*glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexesObject);
+    auto *data = (unsigned short *) glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
+    memcpy(data, &indexes[0], indexes.size() * sizeof(unsigned short));
+    glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+
+    glBindBuffer   (GL_ARRAY_BUFFER, m_verticesObject);
+    auto *fdata = (float *) glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+    size_t count = vertices.size();
+    for(size_t i = 0; i < count; ++i)
+    {
+        fdata[i * 3 + 0] = vertices[i].x;
+        fdata[i * 3 + 1] = vertices[i].y;
+        fdata[i * 3 + 2] = vertices[i].z;
+    }
+    glUnmapBuffer(GL_ARRAY_BUFFER);
+
+
+    glBindBuffer   (GL_ARRAY_BUFFER, m_uvsObject);
+    auto *udata = (float *) glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+    count = uvs.size();
+    for(size_t i = 0; i < count; ++i)
+    {
+        udata[i * 2 + 0] = uvs[i].x;
+        udata[i * 2 + 1] = uvs[i].y;
+    }
+    glUnmapBuffer(GL_ARRAY_BUFFER);*/
+
     glBindBuffer   (GL_ARRAY_BUFFER, m_verticesObject);
     glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(glm::vec3), &vertices[0]);
 
     glBindBuffer   (GL_ARRAY_BUFFER, m_uvsObject);
     glBufferSubData(GL_ARRAY_BUFFER, 0, uvs.size() * sizeof(glm::vec2), &uvs[0]);
+
+    m_elementsCount = static_cast<GLsizei>(indexes.size());
 
     glBindVertexArray(0);
 }

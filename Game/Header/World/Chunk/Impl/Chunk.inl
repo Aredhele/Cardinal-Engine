@@ -24,7 +24,7 @@
 // \brief Returns the chunk state
 inline Chunk::EChunkState Chunk::GetState() const
 {
-    m_state;
+   return m_state;
 }
 
 /// \brief Returns the chunk index

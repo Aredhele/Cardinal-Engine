@@ -35,6 +35,7 @@ Chunk::Chunk() // NOLINT
     m_chunkIndexX = 0;
     m_chunkIndexY = 0;
     m_chunkIndexZ = 0;
+    m_debugTime   = 0;
 
     m_state = EChunkState::Generated;
 }
@@ -49,6 +50,9 @@ Chunk::~Chunk() // NOLINT
 ///        chunk coordinates
 void Chunk::Initialize(int chunkIndexX, int chunkIndexY, int chunkIndexZ)
 {
+   // m_debugTime = glfwGetTime();
+   // cardinal::Logger::LogInfo("Begin chunk profiling");
+
     m_chunkIndexX = chunkIndexX;
     m_chunkIndexY = chunkIndexY;
     m_chunkIndexZ = chunkIndexZ;
@@ -59,7 +63,16 @@ void Chunk::Initialize(int chunkIndexX, int chunkIndexY, int chunkIndexZ)
             chunkIndexZ * WorldSettings::s_chunkSize * ByteCube::s_cubeSize));
 
     GenerateChunk();
+
+  //  double current = glfwGetTime();
+  //  cardinal::Logger::LogInfo("\tChunk generation : %lf s", current - m_debugTime);
+  //  m_debugTime = current;
+
     Batch();
+
+  //  current = glfwGetTime();
+  //  cardinal::Logger::LogInfo("\tChunk batching : %lf s", current - m_debugTime);
+  //  cardinal::Logger::LogInfo("End chunk profiling");
 }
 
 // TODO
@@ -92,7 +105,7 @@ void Chunk::GenerateTerrain()
                 float sample   = Chunk::s_perlin.sample(modifier * worldX, modifier * worldY, modifier * worldZ);
                 sample        /= pow((float)worldZ / (float)WorldSettings::s_matHeightCubes, TweakA) / TweakB + TweakC;
 
-                if (sample < 0.9f)
+                if (sample < 0.5f)
                 {
                     pCube->SetType(ByteCube::EType::Air);
                     pCube->Enable();

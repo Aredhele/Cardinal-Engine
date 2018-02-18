@@ -37,7 +37,7 @@ public:
     static const uint s_chunkUVsCount      = WorldSettings::s_chunkBlockCount * 24;
     static const uint s_chunkVertexCount   = WorldSettings::s_chunkBlockCount * 36;
 
-    static const uint s_matSize   = 5;
+    static const uint s_matSize   = 8;
     static const uint s_matHeight = 3;
     static const uint s_matSizeCubes   = s_matSize   * WorldSettings::s_chunkSize;
     static const uint s_matHeightCubes = s_matHeight * WorldSettings::s_chunkSize;

@@ -75,8 +75,6 @@ public :
     /// \param pShader The pointer on the shader
     void SetShader(IShader * pShader);
 
-    std::string debugName;
-
 private:
 
     friend class RenderingEngine;
