@@ -249,7 +249,7 @@ void RenderingEngine::SetCamera(Camera *pCamera)
 }
 
 /// \brief Shutdown the engine
-void RenderingEngine::Shutdow()
+void RenderingEngine::Shutdown()
 {
     // TODO
     TextureManager::Shutdown();

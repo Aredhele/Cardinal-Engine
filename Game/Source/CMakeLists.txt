@@ -17,7 +17,7 @@
 
 # Adds all runtime header
 INCLUDE_DIRECTORIES(
-        ${CARDINAL_GAME_DIR}/Header
+        ${CARDINAL_GAME_DIR}/Header/
         ${CARDINAL_ENGINE_DIR}/Header/
         ${CARDINAL_THIRD_PARTY_DIR}/ImGUI/Header/
         ${CARDINAL_THIRD_PARTY_DIR}/Bullet3/src/)
@@ -48,3 +48,12 @@ ADD_DEPENDENCIES(PCG_test CardinalEngine BulletDynamics BulletCollision LinearMa
 
 # Linking ...
 TARGET_LINK_LIBRARIES(PCG_test ${COMPILER_DEPENDENCIES} CardinalEngine ImGUI BulletDynamics BulletCollision LinearMath)
+
+# Create an executable to test the physics simulation
+ADD_EXECUTABLE(Physics Physics.cpp)
+
+# But tests depends on GTEST and GMOCK
+ADD_DEPENDENCIES(Physics CardinalEngine BulletDynamics BulletCollision LinearMath)
+
+# Linking ...
+TARGET_LINK_LIBRARIES(Physics ${COMPILER_DEPENDENCIES} CardinalEngine ImGUI BulletDynamics BulletCollision LinearMath)

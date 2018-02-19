@@ -18,13 +18,15 @@
 # Adds all runtime header
 INCLUDE_DIRECTORIES(
         ${CARDINAL_ENGINE_DIR}/Header/
-        ${CARDINAL_THIRD_PARTY_DIR}/ImGUI/Header/)
+        ${CARDINAL_THIRD_PARTY_DIR}/ImGUI/Header/
+        ${CARDINAL_THIRD_PARTY_DIR}/Bullet3/src/)
 
 # Compile all tests
 ADD_LIBRARY(CardinalEngine STATIC
         Engine.cpp
         Core/Debug/Logger.cpp
         Core/Memory/Allocator/StackAllocator.cpp
+        Physics/PhysicsEngine.cpp
         Rendering/Context/Window.cpp
         Rendering/Debug/DebugBox.cpp
         Rendering/Debug/DebugLine.cpp
