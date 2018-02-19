@@ -23,10 +23,16 @@ INCLUDE_DIRECTORIES(
         ${CARDINAL_THIRD_PARTY_DIR}/Bullet3/src/)
 
 # Gets all source files
-FILE(GLOB_RECURSE GAME_SOURCES World/*.cpp  Character/*.cpp)
+FILE(GLOB_RECURSE GAME_SOURCES
+        World/*.cpp
+        Character/*.cpp)
+
+FILE(GLOB_RECURSE GAME_HEADERS
+        ${CARDINAL_GAME_DIR}/Header/World/*.hpp
+        ${CARDINAL_GAME_DIR}/Header/Character/*.hpp)
 
 # Compile game with the engine
-ADD_EXECUTABLE(Game Main.cpp ${GAME_SOURCES})
+ADD_EXECUTABLE(Game Main.cpp ${GAME_SOURCES} ${GAME_HEADERS})
 
 # But tests depends on GTEST and GMOCK
 ADD_DEPENDENCIES(Game CardinalEngine BulletDynamics BulletCollision LinearMath)
@@ -35,7 +41,7 @@ ADD_DEPENDENCIES(Game CardinalEngine BulletDynamics BulletCollision LinearMath)
 TARGET_LINK_LIBRARIES(Game ${COMPILER_DEPENDENCIES} CardinalEngine ImGUI BulletDynamics BulletCollision LinearMath)
 
 # Create an executable for PCG tests
-ADD_EXECUTABLE(PCG_test PCG_main.cpp ${GAME_SOURCES})
+ADD_EXECUTABLE(PCG_test PCG_main.cpp ${GAME_SOURCES} ${GAME_HEADERS})
 
 # But tests depends on GTEST and GMOCK
 ADD_DEPENDENCIES(PCG_test CardinalEngine BulletDynamics BulletCollision LinearMath)
