@@ -41,6 +41,8 @@ class World
 {
 public:
 
+    Chunk ****      m_chunks;
+
     /// \brief Default constructor
     World();
 
@@ -62,30 +64,15 @@ public:
     /// \brief Creates the initial world
     void Initialize();
 
-private:
-
-    /// \brief Checks if the player changed of chunks
-    /// \param delta The delta position (in chunks unit)
-    void CheckChunkDelta(glm::tvec3<int> const& delta);
-
-    // TODO : Factorize
-    void UpdateChunksXPositive();
-    void UpdateChunksXNegative();
-    void UpdateChunksYPositive();
-    void UpdateChunksYNegative();
-    void UpdateChunksZPositive();
-    void UpdateChunksZNegative();
+    /// \brief Batch all the chunks
+    /// \remark Should be called whenever a cube state of the world changes
+    void Batch();
 
 private:
-
-    Chunk ****      m_chunks;
-    glm::tvec3<int> m_lastPlayerPos;
 
     cardinal::TextRenderer * m_worldText;
     cardinal::TextRenderer * m_cubeText;
     cardinal::TextRenderer * m_chunkText;
-    cardinal::TextRenderer * m_playerCubeText;
-    cardinal::TextRenderer * m_playerChunkText;
 };
 
 #include "World/Impl/World.inl"

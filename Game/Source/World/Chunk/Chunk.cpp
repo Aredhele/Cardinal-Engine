@@ -46,9 +46,6 @@ Chunk::~Chunk() // NOLINT
 ///        chunk coordinates
 void Chunk::Initialize(int chunkIndexX, int chunkIndexY, int chunkIndexZ)
 {
-   // m_debugTime = glfwGetTime();
-   // cardinal::Logger::LogInfo("Begin chunk profiling");
-
     m_chunkIndexX = chunkIndexX;
     m_chunkIndexY = chunkIndexY;
     m_chunkIndexZ = chunkIndexZ;
@@ -57,63 +54,6 @@ void Chunk::Initialize(int chunkIndexX, int chunkIndexY, int chunkIndexZ)
             chunkIndexX * WorldSettings::s_chunkSize * ByteCube::s_cubeSize,
             chunkIndexY * WorldSettings::s_chunkSize * ByteCube::s_cubeSize,
             chunkIndexZ * WorldSettings::s_chunkSize * ByteCube::s_cubeSize));
-
-    //GenerateChunk();
-
-  //  double current = glfwGetTime();
-  //  cardinal::Logger::LogInfo("\tChunk generation : %lf s", current - m_debugTime);
-  //  m_debugTime = current;
-
-    Batch();
-
-  //  current = glfwGetTime();
-  //  cardinal::Logger::LogInfo("\tChunk batching : %lf s", current - m_debugTime);
-  //  cardinal::Logger::LogInfo("End chunk profiling");
-}
-
-// TODO
-void Chunk::GenerateChunk()
-{
-    GenerateTerrain();
-    // TODO
-}
-
-// TODO
-void Chunk::GenerateTerrain()
-{
-   /* float TweakA = 16.0f;
-    float TweakB = 10.0f;
-    float TweakC = 300.0f;
-
-    for(int x = 0; x < WorldSettings::s_chunkSize; ++x)
-    {
-        for(int y = 0; y < WorldSettings::s_chunkSize; ++y)
-        {
-            for(int z = 0; z < WorldSettings::s_chunkSize; ++z)
-            {
-                int worldX = x + m_chunkIndexX * (int)WorldSettings::s_chunkSize;
-                int worldY = y + m_chunkIndexY * (int)WorldSettings::s_chunkSize;
-                int worldZ = z + m_chunkIndexZ * (int)WorldSettings::s_chunkSize;
-
-                ByteCube * pCube = &m_cubes[x][y][z];
-
-                float modifier = 0.08;
-                float sample   = Chunk::s_perlin.sample(modifier * worldX, modifier * worldY, modifier * worldZ);
-                sample        /= pow((float)worldZ / (float)WorldSettings::s_matHeightCubes, TweakA) / TweakB + TweakC;
-
-                if (sample < 0.5f)
-                {
-                    pCube->SetType(ByteCube::EType::Air);
-                    pCube->Enable();
-                }
-                else
-                {
-                    pCube->SetType(ByteCube::EType::Dirt);
-                    pCube->Enable();
-                }
-            }
-        }
-    }*/
 }
 
 // TODO

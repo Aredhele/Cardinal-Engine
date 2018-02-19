@@ -8,6 +8,8 @@ World * BasicWorldGenerator::generateWorld()
     //Reset du monde
     mp_currentWorld->Initialize();
     generateHeights();
+    mp_currentWorld->Batch();
+    return mp_currentWorld;
 }
 
 void BasicWorldGenerator::generateHeights()
@@ -32,6 +34,7 @@ void BasicWorldGenerator::load_pile(int x, int y, int height)
 	for (int z = 0; z<height; z++)
 	{
 		ByteCube* cube = mp_currentWorld->GetCube(x, y, z);
+        cube->Enable();
 		if (z>0)
 			cube->SetType(ByteCube::EType::Dirt);
 		else
@@ -47,7 +50,8 @@ void BasicWorldGenerator::load_pile(int x, int y, int height)
 
 	for (int z = height; z<WorldSettings::s_matHeightCubes; z++)
 	{
-        ByteCube* cube = mp_currentWorld->GetCube(x, y, z);cube->Enable();
+        ByteCube* cube = mp_currentWorld->GetCube(x, y, z);
+        cube->Enable();
         cube->SetType(ByteCube::EType::Air);
 	}
 }

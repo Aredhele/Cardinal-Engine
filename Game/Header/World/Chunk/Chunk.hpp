@@ -67,10 +67,8 @@ public:
     /// \brief Returns the chunk index
     inline glm::tvec3<int> GetChunkIndex() const;
 
-private:
-
-    void GenerateChunk();
-    void GenerateTerrain();
+    /// \brief Batch the cubes do display them
+    /// \remark Should be called whenever a chunk cube state changes
     void Batch();
 
 private:
