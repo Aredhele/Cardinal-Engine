@@ -26,6 +26,7 @@
 
 #include <map>
 #include <vector>
+#include <cstring>
 
 #include "Glm/glm/glm.hpp"
 
@@ -43,10 +44,10 @@ public :
     // TODO : Update docs
     /// \brief Indexes vertices who shares same properties
     /// \param inVertices  The input vertices vector
-    /// \param inColors    The input colors vector
+    /// \param inUVs       The input uvs vector
     /// \param outIndexes  The output indexes vector
     /// \param outVertices The output vertices vector
-    /// \param outColors   The output colors vector
+    /// \param outUVs      The output uvs vector
     static void Index(
             std::vector<glm::vec3> const& inVertices,
             std::vector<glm::vec2> const& inUVs,
