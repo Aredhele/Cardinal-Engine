@@ -21,13 +21,9 @@
 /// \package    World
 /// \author     Vincent STEHLY--CALISTO
 
-// Engine
-#include "Runtime/Core/Maths/Noise/NYPerlin.hpp"
 
 // Game
 #include "World/Chunk/Chunk.hpp"
-
-/* static */ NYPerlin Chunk::s_perlin;
 
 /// \brief Constructor
 Chunk::Chunk() // NOLINT
@@ -62,7 +58,7 @@ void Chunk::Initialize(int chunkIndexX, int chunkIndexY, int chunkIndexZ)
             chunkIndexY * WorldSettings::s_chunkSize * ByteCube::s_cubeSize,
             chunkIndexZ * WorldSettings::s_chunkSize * ByteCube::s_cubeSize));
 
-    GenerateChunk();
+    //GenerateChunk();
 
   //  double current = glfwGetTime();
   //  cardinal::Logger::LogInfo("\tChunk generation : %lf s", current - m_debugTime);
@@ -85,7 +81,7 @@ void Chunk::GenerateChunk()
 // TODO
 void Chunk::GenerateTerrain()
 {
-    float TweakA = 16.0f;
+   /* float TweakA = 16.0f;
     float TweakB = 10.0f;
     float TweakC = 300.0f;
 
@@ -117,7 +113,7 @@ void Chunk::GenerateTerrain()
                 }
             }
         }
-    }
+    }*/
 }
 
 // TODO

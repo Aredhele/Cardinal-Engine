@@ -59,7 +59,7 @@ World::~World() // NOLINT
 /// \param dt The elasped time
 void World::Update(const glm::vec3 &position, float dt)
 {
-    // Updating debug text
+    /*// Updating debug text
     // Computing player position
     int posX = (int)position.x / ByteCube::s_cubeSize;
     int posY = (int)position.y / ByteCube::s_cubeSize;
@@ -112,12 +112,12 @@ void World::Update(const glm::vec3 &position, float dt)
     glm::tvec3<int> delta = currentPosition - m_lastPlayerPos;
     m_lastPlayerPos       = currentPosition;
 
-    CheckChunkDelta(delta);
+    CheckChunkDelta(delta);*/
 }
 
 /// \brief Creates the initial world
 /// \param position The initial player position
-void World::Initialize(glm::vec3 const& position)
+void World::Initialize()
 {
     auto worldBegin = std::chrono::steady_clock::now();
 
@@ -153,13 +153,13 @@ void World::Initialize(glm::vec3 const& position)
     m_cubeText->SetText (_cubes.c_str(),  680, 560, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
     m_chunkText->SetText(_chunks.c_str(), 680, 545, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
-    int chunkX = ((int)position.x / ByteCube::s_cubeSize) / (int)WorldSettings::s_chunkSize;
+    /*int chunkX = ((int)position.x / ByteCube::s_cubeSize) / (int)WorldSettings::s_chunkSize;
     int chunkY = ((int)position.y / ByteCube::s_cubeSize) / (int)WorldSettings::s_chunkSize;
     int chunkZ = ((int)position.z / ByteCube::s_cubeSize) / (int)WorldSettings::s_chunkSize;
 
     m_lastPlayerPos.x = chunkX;
     m_lastPlayerPos.y = chunkY;
-    m_lastPlayerPos.z = chunkZ;
+    m_lastPlayerPos.z = chunkZ;*/
 
     auto worldEnd = std::chrono::steady_clock::now();
     auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(worldEnd - worldBegin);

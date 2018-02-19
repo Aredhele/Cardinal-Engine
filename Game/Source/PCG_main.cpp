@@ -27,6 +27,7 @@
 // Game
 #include "World/World.hpp"
 #include "Character/Character.hpp"
+#include "World/Generator/BasicWorldGenerator.hpp"
 
 #include "ImGUI/imgui.h"
 #include "ImGUI/imgui_impl_glfw_gl3.h"
@@ -36,6 +37,8 @@
 // Entry point
 int main(int argc, char ** argv)
 {
+
+
 	btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
 	btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
 	btBroadphaseInterface* overlappingPairCache = new btDbvtBroadphase();
@@ -64,8 +67,9 @@ int main(int argc, char ** argv)
 	double currentTime = glfwGetTime();
 	double lastTime = currentTime;
 
-	World world;
-	world.Initialize(character.GetPosition());
+
+    BasicWorldGenerator bwg;
+	World* world = bwg.generateWorld();
 
 	bool show_another_window = false;
 	// Game loop
@@ -83,7 +87,6 @@ int main(int argc, char ** argv)
 
 		// Update character
 		character.Update(window, dt);
-		world.Update(character.GetPosition(), dt);
 
 		// Debug only
 		cardinal::debug::DrawLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1000.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));

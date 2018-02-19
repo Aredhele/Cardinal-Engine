@@ -24,7 +24,6 @@ INCLUDE_DIRECTORIES(
 ADD_LIBRARY(CardinalEngine STATIC
         Engine.cpp
         Core/Debug/Logger.cpp
-        Core/Maths/Noise/PerlinNoise.cpp
         Core/Memory/Allocator/StackAllocator.cpp
         Rendering/Context/Window.cpp
         Rendering/Debug/DebugBox.cpp

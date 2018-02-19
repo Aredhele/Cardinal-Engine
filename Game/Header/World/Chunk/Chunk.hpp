@@ -27,7 +27,6 @@
 // Engine
 #include <thread>
 #include "Runtime/Rendering/RenderingEngine.hpp"
-#include "Runtime/Core/Maths/Noise/NYPerlin.hpp"
 
 // Game
 #include "World/Cube/ByteCube.hpp"
@@ -40,16 +39,17 @@ class Chunk
 {
 public:
 
-    static NYPerlin s_perlin;
-
-public:
-
     /// \brief Represents the state of the chunk
     enum EChunkState
     {
         Generated,
         Generating
     };
+
+    /// \brief The cubes in the chunks
+    ByteCube m_cubes[WorldSettings::s_chunkSize]
+    [WorldSettings::s_chunkSize]
+    [WorldSettings::s_chunkSize];
 
     /// \brief Constructor
     Chunk();
@@ -82,10 +82,7 @@ private:
     int         m_chunkIndexY;
     int         m_chunkIndexZ;
 
-    /// \brief The cubes in the chunks
-    ByteCube m_cubes[WorldSettings::s_chunkSize]
-                    [WorldSettings::s_chunkSize]
-                    [WorldSettings::s_chunkSize];
+
 
     TerrainRenderer m_terrainRenderer;
 };
