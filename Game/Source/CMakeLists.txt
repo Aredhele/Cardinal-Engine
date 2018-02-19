@@ -41,3 +41,24 @@ ADD_DEPENDENCIES(Game CardinalEngine BulletDynamics BulletCollision LinearMath)
 
 # Linking ...
 TARGET_LINK_LIBRARIES(Game ${COMPILER_DEPENDENCIES} CardinalEngine ImGUI BulletDynamics BulletCollision LinearMath)
+
+# Create an executable for PCG tests
+ADD_EXECUTABLE(PCG_test
+	PCG_main.cpp
+    World/World.cpp
+    World/Cube/ByteCube.cpp
+    World/Cube/UVManager.cpp
+    World/Chunk/Chunk.cpp
+    World/Chunk/Renderer/LeafRenderer.cpp
+    World/Chunk/Renderer/GrassRenderer.cpp
+    World/Chunk/Renderer/TerrainRenderer.cpp
+    World/Detail/Grass.cpp
+    World/WorldBuffers.cpp
+	Character/Character.cpp
+)
+
+# But tests depends on GTEST and GMOCK
+ADD_DEPENDENCIES(PCG_test CardinalEngine BulletDynamics BulletCollision LinearMath)
+
+# Linking ...
+TARGET_LINK_LIBRARIES(PCG_test ${COMPILER_DEPENDENCIES} CardinalEngine ImGUI BulletDynamics BulletCollision LinearMath)
