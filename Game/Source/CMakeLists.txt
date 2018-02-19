@@ -22,19 +22,11 @@ INCLUDE_DIRECTORIES(
         ${CARDINAL_THIRD_PARTY_DIR}/ImGUI/Header/
         ${CARDINAL_THIRD_PARTY_DIR}/Bullet3/src/)
 
+# Gets all source files
+FILE(GLOB_RECURSE GAME_SOURCES World/*.cpp  Character/*.cpp)
+
 # Compile game with the engine
-ADD_EXECUTABLE(Game
-        Main.cpp
-        World/World.cpp
-        World/Cube/ByteCube.cpp
-        World/Cube/UVManager.cpp
-        World/Chunk/Chunk.cpp
-        World/Chunk/Renderer/LeafRenderer.cpp
-        World/Chunk/Renderer/GrassRenderer.cpp
-        World/Chunk/Renderer/TerrainRenderer.cpp
-        World/Detail/Grass.cpp
-        World/WorldBuffers.cpp
-        Character/Character.cpp)
+ADD_EXECUTABLE(Game Main.cpp ${GAME_SOURCES})
 
 # But tests depends on GTEST and GMOCK
 ADD_DEPENDENCIES(Game CardinalEngine BulletDynamics BulletCollision LinearMath)
@@ -43,19 +35,7 @@ ADD_DEPENDENCIES(Game CardinalEngine BulletDynamics BulletCollision LinearMath)
 TARGET_LINK_LIBRARIES(Game ${COMPILER_DEPENDENCIES} CardinalEngine ImGUI BulletDynamics BulletCollision LinearMath)
 
 # Create an executable for PCG tests
-ADD_EXECUTABLE(PCG_test
-	PCG_main.cpp
-    World/World.cpp
-    World/Cube/ByteCube.cpp
-    World/Cube/UVManager.cpp
-    World/Chunk/Chunk.cpp
-    World/Chunk/Renderer/LeafRenderer.cpp
-    World/Chunk/Renderer/GrassRenderer.cpp
-    World/Chunk/Renderer/TerrainRenderer.cpp
-    World/Detail/Grass.cpp
-    World/WorldBuffers.cpp
-	Character/Character.cpp
-)
+ADD_EXECUTABLE(PCG_test PCG_main.cpp ${GAME_SOURCES})
 
 # But tests depends on GTEST and GMOCK
 ADD_DEPENDENCIES(PCG_test CardinalEngine BulletDynamics BulletCollision LinearMath)
