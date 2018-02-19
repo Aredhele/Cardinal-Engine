@@ -38,7 +38,7 @@ class PhysicsEngine
 public:
 
     /// \brief TODO
-    void Initialize(glm::vec3 const& gravity);
+    bool Initialize(glm::vec3 const& gravity);
 
     /// \brief TODO
     void Shutdown();

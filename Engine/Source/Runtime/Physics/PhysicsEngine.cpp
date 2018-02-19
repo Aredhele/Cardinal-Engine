@@ -31,7 +31,7 @@ namespace cardinal
 {
 
 /// \brief TODO
-void PhysicsEngine::Initialize(glm::vec3 const& gravity)
+bool PhysicsEngine::Initialize(glm::vec3 const& gravity)
 {
     auto beginPhysicsInit = std::chrono::steady_clock::now();
     Logger::LogInfo("Initializing the physics engine ...");
@@ -51,9 +51,11 @@ void PhysicsEngine::Initialize(glm::vec3 const& gravity)
     m_pDynamicWorld->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
 
     auto endPhysicsInit = std::chrono::steady_clock::now();
-    auto elapsed        = std::chrono::duration_cast<std::chrono::seconds>(endPhysicsInit - beginPhysicsInit);
+    auto elapsed        = std::chrono::duration_cast<std::chrono::milliseconds>(endPhysicsInit - beginPhysicsInit);
     Logger::LogInfo("Bullet3 successfully initialized");
-    Logger::LogInfo("Physics engine initialized in %lf", elapsed);
+    Logger::LogInfo("Physics engine initialized in %d ms", elapsed);
+
+    return true;
 }
 
 /// \brief TODO
@@ -65,7 +67,8 @@ void PhysicsEngine::Shutdown()
 /// \brief TODO
 btRigidBody * PhysicsEngine::AllocateRigidbody()
 {
-    return nullptr;
+    //  TODO
+
 }
 
 /// \brief TODO

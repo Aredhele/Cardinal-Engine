@@ -21,56 +21,46 @@
 /// \author     Vincent STEHLY--CALISTO
 
 // Engine
+
+#include "Runtime/Core/Debug/Logger.hpp"
 #include "Runtime/Physics/PhysicsEngine.hpp"
+#include "Runtime/Rendering/Debug/Debug.hpp"
 #include "Runtime/Rendering/RenderingEngine.hpp"
 #include "Runtime/Rendering/Renderer/TextRenderer.hpp"
-
-// Game
-#include "World/World.hpp"
-#include "Character/Character.hpp"
+#include "World/Cube/ByteCube.hpp"
+#include "Character/PhysicsCharacter.hpp"
 
 #include "ImGUI/imgui.h"
 #include "ImGUI/imgui_impl_glfw_gl3.h"
 
-#include "btBulletDynamicsCommon.h"
-
 // Entry point
 int main(int argc, char ** argv)
 {
-   /* btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
-    btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
-    btBroadphaseInterface* overlappingPairCache = new btDbvtBroadphase();
-    btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
-    btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
-
-    dynamicsWorld->setGravity(btVector3(0, -10, 0));
-    dynamicsWorld->addRigidBody(nullptr);
-    btRigidBody body = new btRigidBody();
-
-    cardinal::RenderingEngine engine;
+    cardinal::RenderingEngine renderingEngine;
+    cardinal::PhysicsEngine   physicEngine; // NOLINT
     cardinal::Camera camera;
 
-    if (!engine.Initialize(1600, 900, "Cardinal", 10000.0f, false))
+    if (!renderingEngine.Initialize(1600, 900, "Cardinal", 10000.0f, false))
     {
-        cardinal::Logger::LogError("Cannot initialize the engine, aborting");
+        cardinal::Logger::LogError("Cannot initialize the rendering engine, aborting");
         return -1;
     }
 
-    cardinal::Window * window = engine.GetWindow();
-    engine.SetCamera(&camera);
+    if(!physicEngine.Initialize(glm::vec3(0.0f, -9.81, 0.0f)))
+    {
+        cardinal::Logger::LogError("Cannot initialize the physic engine, aborting");
+        return -1;
+    }
 
-    // Creates the character
-    Character character; // NOLINT
+    cardinal::Window * window = renderingEngine.GetWindow();
+    renderingEngine.SetCamera(&camera);
+
+    PhysicsCharacter character;
     character.AttachCamera(&camera);
 
     double currentTime = glfwGetTime();
     double lastTime    = currentTime;
 
-    World world;
-    world.Initialize(character.GetPosition());
-
-    bool show_another_window = false;
-    // Game loop
     do
     {
         glfwPollEvents();
@@ -82,24 +72,15 @@ int main(int argc, char ** argv)
         float dt = static_cast<float>(currentTime - lastTime); // NOLINT
 
         lastTime = currentTime;
-
-        // Update character
         character.Update(window, dt);
-        world.Update(character.GetPosition(), dt);
 
         // Debug only
         cardinal::debug::DrawLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1000.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         cardinal::debug::DrawLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1000.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         cardinal::debug::DrawLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1000.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
-        ImGui::Begin("Another Window", &show_another_window);
-        ImGui::Text("Hello from another window!");
-        if (ImGui::Button("Close Me"))
-            show_another_window = false;
-        ImGui::End();
-
-        engine.Render(0.0);
+        renderingEngine.Render(0.0);
 
     } while (glfwGetKey(window->GetContext(), GLFW_KEY_ESCAPE) != GLFW_PRESS &&
-             glfwWindowShouldClose(window->GetContext()) == 0);*/
+             glfwWindowShouldClose(window->GetContext()) == 0);
 }

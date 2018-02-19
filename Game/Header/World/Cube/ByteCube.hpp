@@ -81,6 +81,10 @@ public:
 private:
 
    unsigned char m_properties;
+
+#ifdef CARDINAL_DEBUG
+    EType m_debugType;
+#endif
 };
 
 #include "World/Cube/Impl/ByteCube.inl"

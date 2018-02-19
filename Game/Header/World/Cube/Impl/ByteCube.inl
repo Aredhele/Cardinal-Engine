@@ -25,6 +25,10 @@
 inline ByteCube::ByteCube()
 {
     m_properties  = EType::Air | 0x1;
+
+#ifdef CARDINAL_DEBUG
+    m_debugType = EType::Air;
+#endif
 }
 
 /// \brief Shows the cube
@@ -58,6 +62,10 @@ inline ByteCube::EType ByteCube::GetType() const
 inline  void ByteCube::SetType(ByteCube::EType type)
 {
     m_properties = (m_properties & s_typeMask) | type;
+
+#ifdef CARDINAL_DEBUG
+   m_debugType = type;
+#endif
 }
 
 /// \brief Tells if the block is solid or not

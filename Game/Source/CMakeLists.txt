@@ -50,7 +50,7 @@ ADD_DEPENDENCIES(PCG_test CardinalEngine BulletDynamics BulletCollision LinearMa
 TARGET_LINK_LIBRARIES(PCG_test ${COMPILER_DEPENDENCIES} CardinalEngine ImGUI BulletDynamics BulletCollision LinearMath)
 
 # Create an executable to test the physics simulation
-ADD_EXECUTABLE(Physics Physics.cpp)
+ADD_EXECUTABLE(Physics Physics.cpp ${GAME_SOURCES} ${GAME_HEADERS})
 
 # But tests depends on GTEST and GMOCK
 ADD_DEPENDENCIES(Physics CardinalEngine BulletDynamics BulletCollision LinearMath)
