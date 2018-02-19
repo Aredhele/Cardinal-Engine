@@ -61,6 +61,7 @@ void World::Initialize()
     cardinal::Logger::LogInfo("Allocating chunks ....");
 
     // Allocating memory for chunks
+
     m_chunks = new Chunk ***[WorldSettings::s_matSize];
     for(int i = 0; i < WorldSettings::s_matSize; ++i)
     {
@@ -73,6 +74,19 @@ void World::Initialize()
             {
                 m_chunks[i][j][k] = new Chunk();
                 m_chunks[i][j][k]->Initialize(i, j, k);
+            }
+        }
+    }
+
+    Chunk * neighbors[6];
+    for(int i = 0; i < WorldSettings::s_matSize; ++i)
+    {
+        for(int j = 0; j < WorldSettings::s_matSize; ++j)
+        {
+            for(int k = 0; k < WorldSettings::s_matHeight; ++k)
+            {
+                GetNeighbors(i, j, k, neighbors);
+                m_chunks[i][j][k]->SetNeighbors(neighbors);
             }
         }
     }
@@ -103,9 +117,18 @@ void World::Initialize()
     cardinal::Logger::LogInfo("World generated in %d ms", elapsed);
 }
 
+void World::GetNeighbors(int x, int y, int z, Chunk * neighbors[6])
+{
+    if(x - 1 >= 0                        ) { neighbors[0] = m_chunks[x - 1][y][z]; } else { neighbors[0] = nullptr; }
+    if(x + 1 < WorldSettings::s_matSize  ) { neighbors[1] = m_chunks[x + 1][y][z]; } else { neighbors[1] = nullptr; }
+    if(y - 1 >= 0                        ) { neighbors[2] = m_chunks[x][y - 1][z]; } else { neighbors[2] = nullptr; }
+    if(y + 1 < WorldSettings::s_matSize  ) { neighbors[3] = m_chunks[x][y + 1][z]; } else { neighbors[3] = nullptr; }
+    if(z - 1 >= 0                        ) { neighbors[4] = m_chunks[x][y][z - 1]; } else { neighbors[4] = nullptr; }
+    if(z + 1 < WorldSettings::s_matHeight) { neighbors[5] = m_chunks[x][y][z + 1]; } else { neighbors[5] = nullptr; }
+}
 
-
-void World::Batch() {
+void World::Batch()
+{
     for(int i = 0; i < WorldSettings::s_matSize; ++i)
     {
         for(int j = 0; j < WorldSettings::s_matSize; ++j)

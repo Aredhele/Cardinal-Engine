@@ -24,6 +24,7 @@
 #include <Header/Runtime/Rendering/Shader/Built-in/UnlitTextureShader.hpp>
 #include <Header/Runtime/Rendering/RenderingEngine.hpp>
 #include <Header/Runtime/Rendering/Texture/TextureManager.hpp>
+#include <World/Chunk/Chunk.hpp>
 #include "World/WorldBuffers.hpp"
 #include "World/WorldSettings.hpp"
 #include "World/Cube/UVManager.hpp"
@@ -40,7 +41,7 @@ TerrainRenderer::TerrainRenderer()
 
 /// \brief Static batching for terrain cubes
 /// \param pCubes The cubes of the chunk
-void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize])
+void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize], Chunk * neighbors[6])
 {
    // auto batchingBegin = std::chrono::steady_clock::now();
   //  cardinal::Logger::LogInfo("\t\tBegin batch profiling");
@@ -77,6 +78,17 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
                        (nFace == 1 && y != size - 1 && pCubes[x][y + 1][z].IsSolid()) ||
                        (nFace == 5 && z != 0        && pCubes[x][y][z - 1].IsSolid()) ||
                        (nFace == 4 && z != size - 1 && pCubes[x][y][z + 1].IsSolid()))
+                    {
+                        continue;
+                    }
+
+                    // Visibility inter-chunk
+                    if((nFace == 0 && (x ==        0) && neighbors[0] != nullptr && neighbors[0]->m_cubes[size - 1][y][z].IsSolid()) ||
+                       (nFace == 2 && (x == size - 1) && neighbors[1] != nullptr && neighbors[1]->m_cubes[0       ][y][z].IsSolid()) ||
+                       (nFace == 3 && (y ==        0) && neighbors[2] != nullptr && neighbors[2]->m_cubes[x][size - 1][z].IsSolid()) ||
+                       (nFace == 1 && (y == size - 1) && neighbors[3] != nullptr && neighbors[3]->m_cubes[x][0       ][z].IsSolid()) ||
+                       (nFace == 5 && (z ==        0) && neighbors[4] != nullptr && neighbors[4]->m_cubes[x][y][size - 1].IsSolid()) ||
+                       (nFace == 4 && (z == size - 1) && neighbors[5] != nullptr && neighbors[5]->m_cubes[x][y][       0].IsSolid()))
                     {
                         continue;
                     }

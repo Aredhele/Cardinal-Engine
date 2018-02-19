@@ -31,7 +31,9 @@ Chunk::Chunk() // NOLINT
     m_chunkIndexX = 0;
     m_chunkIndexY = 0;
     m_chunkIndexZ = 0;
-    m_debugTime   = 0;
+
+    for(uint i = 0; i < 6; ++i) // NOLINT
+        m_neighbors[i] = nullptr;
 
     m_state = EChunkState::Generated;
 }
@@ -56,8 +58,13 @@ void Chunk::Initialize(int chunkIndexX, int chunkIndexY, int chunkIndexZ)
             chunkIndexZ * WorldSettings::s_chunkSize * ByteCube::s_cubeSize));
 }
 
+void Chunk::SetNeighbors(Chunk * neighbors[6])
+{
+    memcpy(&m_neighbors[0], &neighbors[0], 6 * sizeof(Chunk *));
+}
+
 // TODO
 void Chunk::Batch()
 {
-    m_terrainRenderer.Batch(m_cubes);
+    m_terrainRenderer.Batch(m_cubes, m_neighbors);
 }

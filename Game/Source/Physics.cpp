@@ -22,6 +22,8 @@
 
 // Engine
 
+#include <iostream>
+#include <World/WorldSettings.hpp>
 #include "Runtime/Core/Debug/Logger.hpp"
 #include "Runtime/Physics/PhysicsEngine.hpp"
 #include "Runtime/Rendering/Debug/Debug.hpp"
@@ -79,6 +81,7 @@ int main(int argc, char ** argv)
         cardinal::debug::DrawLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1000.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         cardinal::debug::DrawLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1000.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
+        physicEngine.Update();
         renderingEngine.Render(0.0);
 
     } while (glfwGetKey(window->GetContext(), GLFW_KEY_ESCAPE) != GLFW_PRESS &&
