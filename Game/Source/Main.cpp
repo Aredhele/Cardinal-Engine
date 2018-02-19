@@ -36,15 +36,14 @@
 // Entry point
 int main(int argc, char ** argv)
 {
-    btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
+  /*  btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
     btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
     btBroadphaseInterface* overlappingPairCache = new btDbvtBroadphase();
     btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
     btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 
     dynamicsWorld->setGravity(btVector3(0, -10, 0));
-    dynamicsWorld->addRigidBody(nullptr);
-    btRigidBody body = new btRigidBody();
+    dynamicsWorld->addRigidBody(nullptr);*/
 
     cardinal::RenderingEngine engine;
     cardinal::Camera camera;
@@ -67,7 +66,7 @@ int main(int argc, char ** argv)
 
     World world;
     world.Initialize(character.GetPosition());
-
+   // world.GetCube(0, 0, 0);
     bool show_another_window = false;
     // Game loop
     do
