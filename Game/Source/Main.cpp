@@ -21,7 +21,6 @@
 /// \author     Vincent STEHLY--CALISTO
 
 // Engine
-#include <Header/Runtime/Core/Memory/Allocator/StackAllocator.hpp>
 #include "Runtime/Rendering/RenderingEngine.hpp"
 #include "Runtime/Rendering/Renderer/TextRenderer.hpp"
 
@@ -29,9 +28,23 @@
 #include "World/World.hpp"
 #include "Character/Character.hpp"
 
+#include "ImGUI/imgui.h"
+#include "ImGUI/imgui_impl_glfw_gl3.h"
+
+#include "btBulletDynamicsCommon.h"
+
 // Entry point
 int main(int argc, char ** argv)
 {
+    btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
+    btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
+    btBroadphaseInterface* overlappingPairCache = new btDbvtBroadphase();
+    btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
+    btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
+
+    dynamicsWorld->setGravity(btVector3(0, -10, 0));
+
+
     cardinal::RenderingEngine engine;
     cardinal::Camera camera;
 
@@ -54,9 +67,15 @@ int main(int argc, char ** argv)
     World world;
     world.Initialize(character.GetPosition());
 
+    bool show_another_window = false;
     // Game loop
     do
     {
+        glfwPollEvents();
+
+        // Triggering ImGUI
+        ImGui_ImplGlfwGL3_NewFrame();
+
         currentTime = glfwGetTime();
         float dt = static_cast<float>(currentTime - lastTime); // NOLINT
 
@@ -71,7 +90,12 @@ int main(int argc, char ** argv)
         cardinal::debug::DrawLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1000.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         cardinal::debug::DrawLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1000.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
-        glfwPollEvents();
+        ImGui::Begin("Another Window", &show_another_window);
+        ImGui::Text("Hello from another window!");
+        if (ImGui::Button("Close Me"))
+            show_another_window = false;
+        ImGui::End();
+
         engine.Render(0.0);
 
     } while (glfwGetKey(window->GetContext(), GLFW_KEY_ESCAPE) != GLFW_PRESS &&

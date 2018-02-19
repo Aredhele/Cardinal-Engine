@@ -39,6 +39,9 @@
 #include "Runtime/Rendering/Texture/TextureLoader.hpp"
 #include "Runtime/Rendering/Texture/TextureManager.hpp"
 
+#include "ImGUI/imgui.h"
+#include "ImGUI/imgui_impl_glfw_gl3.h"
+
 /// \namespace cardinal
 namespace cardinal
 {
@@ -135,6 +138,16 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     m_pTotalFPS->SetText  ("Frame : 0", 5, 545, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
     m_pFrameTime->SetText ("Time  : 0", 5, 530, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
+    // Initializes ImGUI
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGui_ImplGlfwGL3_Init(m_window.GetContext(), true);
+
+    // io.NavFlags |= ImGuiNavFlags_EnableKeyboard;  // Enable Keyboard Controls
+    // io.NavFlags |= ImGuiNavFlags_EnableGamepad;   // Enable Gamepad Controls
+
+    // Setup style
+    ImGui::StyleColorsDark();
     Logger::LogInfo("Rendering engine successfully initialized in %3.4lf s.", glfwGetTime());
 }
 
@@ -221,6 +234,10 @@ void RenderingEngine::RenderFrame(float step)
     DebugManager::Clear();
 #endif
 
+    // Draw ImGUI
+    ImGui::Render();
+    ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
+
     // Display
     glfwSwapBuffers(m_window.GetContext());
 }
@@ -236,6 +253,10 @@ void RenderingEngine::Shutdow()
 {
     // TODO
     TextureManager::Shutdown();
+
+    // Shutting down ImGUI
+    ImGui_ImplGlfwGL3_Shutdown();
+    ImGui::DestroyContext();
 }
 
 /// \brief Returns a pointer on the window

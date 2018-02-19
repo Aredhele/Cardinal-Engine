@@ -17,8 +17,10 @@
 
 # Adds all runtime header
 INCLUDE_DIRECTORIES(
+        ${CARDINAL_GAME_DIR}/Header
         ${CARDINAL_ENGINE_DIR}/Header/
-        ${CARDINAL_GAME_DIR}/Header)
+        ${CARDINAL_THIRD_PARTY_DIR}/ImGUI/Header/
+        ${CARDINAL_THIRD_PARTY_DIR}/Bullet3/src/)
 
 # Compile game with the engine
 ADD_EXECUTABLE(Game
@@ -35,7 +37,7 @@ ADD_EXECUTABLE(Game
         Character/Character.cpp)
 
 # But tests depends on GTEST and GMOCK
-ADD_DEPENDENCIES(Game CardinalEngine)
+ADD_DEPENDENCIES(Game CardinalEngine BulletDynamics BulletCollision LinearMath)
 
 # Linking ...
-TARGET_LINK_LIBRARIES(Game ${COMPILER_DEPENDENCIES} CardinalEngine)
+TARGET_LINK_LIBRARIES(Game ${COMPILER_DEPENDENCIES} CardinalEngine ImGUI BulletDynamics BulletCollision LinearMath)

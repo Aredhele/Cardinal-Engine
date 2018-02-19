@@ -16,7 +16,9 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 # Adds all runtime header
-INCLUDE_DIRECTORIES(${CARDINAL_ENGINE_DIR}/Header/)
+INCLUDE_DIRECTORIES(
+        ${CARDINAL_ENGINE_DIR}/Header/
+        ${CARDINAL_THIRD_PARTY_DIR}/ImGUI/Header/)
 
 # Compile all tests
 ADD_LIBRARY(CardinalEngine STATIC
@@ -47,10 +49,10 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Shader/Built-in/UnlitTransparentShader.cpp)
 
 # But tests depends on GTEST and GMOCK
-ADD_DEPENDENCIES(CardinalEngine glfw glew ResourcesCopy)
+ADD_DEPENDENCIES(CardinalEngine glfw glew ResourcesCopy ImGUI)
 
 # Linking ...
-TARGET_LINK_LIBRARIES(CardinalEngine ${COMPILER_DEPENDENCIES} glfw glew ${PLATFORM_DEPENDENCIES})
+TARGET_LINK_LIBRARIES(CardinalEngine ${COMPILER_DEPENDENCIES} glfw glew ImGUI ${PLATFORM_DEPENDENCIES})
 
 ADD_CUSTOM_TARGET(ResourcesCopy)
 
