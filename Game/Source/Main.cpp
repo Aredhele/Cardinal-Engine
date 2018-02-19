@@ -66,7 +66,7 @@ int main(int argc, char ** argv)
 
     World world;
     world.Initialize(character.GetPosition());
-   // world.GetCube(0, 0, 0);
+
     bool show_another_window = false;
     // Game loop
     do
