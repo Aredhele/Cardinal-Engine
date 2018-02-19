@@ -37,9 +37,9 @@ inline ByteCube * World::GetCube(int x, int y, int z)
     ASSERT_LT(z, WorldSettings::s_matHeightCubes);
 
     // Coordinates are conforms
-    // return &(m_chunks[x /  WorldSettings::s_chunkSize]
-    //                  [y /  WorldSettings::s_chunkSize]
-    //                  [z /  WorldSettings::s_chunkSize]->m_cubes[x % WorldSettings::s_chunkSize]
-    //                                                            [y % WorldSettings::s_chunkSize]
-    //                                                            [z % WorldSettings::s_chunkSize]);
+    return &(m_chunks[x /  WorldSettings::s_chunkSize]
+                      [y /  WorldSettings::s_chunkSize]
+                     [z /  WorldSettings::s_chunkSize]->m_cubes[x % WorldSettings::s_chunkSize]
+                                                                [y % WorldSettings::s_chunkSize]
+                                                                [z % WorldSettings::s_chunkSize]);
 }

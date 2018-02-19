@@ -21,6 +21,7 @@
 /// \author     Vincent STEHLY--CALISTO
 
 // Engine
+#include <World/Generator/BasicWorldGenerator.hpp>
 #include "Runtime/Rendering/RenderingEngine.hpp"
 #include "Runtime/Rendering/Renderer/TextRenderer.hpp"
 
@@ -36,14 +37,14 @@
 // Entry point
 int main(int argc, char ** argv)
 {
-  /*  btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
+    btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
     btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
     btBroadphaseInterface* overlappingPairCache = new btDbvtBroadphase();
     btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
     btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 
     dynamicsWorld->setGravity(btVector3(0, -10, 0));
-    dynamicsWorld->addRigidBody(nullptr);*/
+
 
     cardinal::RenderingEngine engine;
     cardinal::Camera camera;
@@ -64,8 +65,8 @@ int main(int argc, char ** argv)
     double currentTime = glfwGetTime();
     double lastTime    = currentTime;
 
-    World world;
-    world.Initialize(character.GetPosition());
+    BasicWorldGenerator bwg;
+    World* world = bwg.generateWorld();
 
     bool show_another_window = false;
     // Game loop
@@ -83,7 +84,6 @@ int main(int argc, char ** argv)
 
         // Update character
         character.Update(window, dt);
-        world.Update(character.GetPosition(), dt);
 
         // Debug only
         cardinal::debug::DrawLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1000.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));

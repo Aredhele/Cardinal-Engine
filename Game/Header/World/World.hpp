@@ -60,7 +60,7 @@ public:
     void Update(glm::vec3 const& position, float dt);
 
     /// \brief Creates the initial world
-    void Initialize(glm::vec3 const& position);
+    void Initialize();
 
 private:
 
