@@ -51,10 +51,10 @@ public:
 
     /// \brief Renders the frame
     /// \param step The normalized progression in the frame
-    void Render    (float step);
+    void Render(float step);
 
-    /// \brief Shutdow the engine
-    void Shutdow   ();
+    /// \brief Shutdown the engine
+    void Shutdown();
 
     /// \brief  Returns a pointer on the window
     Window * GetWindow();

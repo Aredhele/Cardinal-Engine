@@ -43,7 +43,8 @@ int main(int argc, char ** argv)
     btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 
     dynamicsWorld->setGravity(btVector3(0, -10, 0));
-
+    dynamicsWorld->addRigidBody(nullptr);
+    btRigidBody body = new btRigidBody();
 
     cardinal::RenderingEngine engine;
     cardinal::Camera camera;
