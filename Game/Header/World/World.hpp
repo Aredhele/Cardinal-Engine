@@ -42,6 +42,7 @@ class World
 public:
 
     Chunk ****      m_chunks;
+    int ** m_worldHeights; // Store the position of the highest cube on a given column
 
     /// \brief Default constructor
     World();

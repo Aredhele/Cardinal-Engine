@@ -47,6 +47,8 @@ World::World()
 World::~World() // NOLINT
 {
     // TODO : Delete chunks
+    delete[](m_chunks);
+    delete[](m_worldHeights);
 }
 
 
@@ -59,6 +61,14 @@ void World::Initialize()
 
     WorldBuffers::Initialize();
     cardinal::Logger::LogInfo("Allocating chunks ....");
+
+    m_worldHeights = new int*[WorldSettings::s_matSizeCubes];
+    for(int i = 0; i < WorldSettings::s_matSizeCubes; ++i) {
+        m_worldHeights[i] = new int[WorldSettings::s_matSizeCubes];
+        for (int j = 0; j < WorldSettings::s_matSizeCubes; ++j) {
+            m_worldHeights[i][j] = 0;
+        }
+    }
 
     // Allocating memory for chunks
     m_chunks = new Chunk ***[WorldSettings::s_matSize];
