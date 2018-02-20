@@ -74,16 +74,16 @@ void MeshRenderer::Initialize(
 
     glGenBuffers(1, &m_indexesObject);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexesObject);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexes.size() * sizeof(unsigned short) ,&indexes[0], GL_STREAM_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexes.size() * sizeof(unsigned short) ,&indexes[0], GL_STATIC_DRAW);
 
     glGenBuffers(1, &m_verticesObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_verticesObject);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STREAM_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
 
     glGenBuffers(1, &m_uvsObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_uvsObject);
-    glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STREAM_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
 
     glEnableVertexAttribArray(0);

@@ -48,7 +48,7 @@ TextureLoader::TextureLoader()
     if(TextureLoader::s_pInstance == nullptr)
     {
         TextureLoader::s_pInstance = new TextureLoader();
-        TextureLoader::s_pInstance->m_pDataBuffer = new uchar[2048 * 2048];
+        TextureLoader::s_pInstance->m_pDataBuffer = new uchar[8192 * 8192];
 
         ASSERT_NOT_NULL(TextureLoader::s_pInstance->m_pDataBuffer);
         Logger::LogInfo("Texture loader successfully initialized");
@@ -144,10 +144,10 @@ TextureLoader::TextureLoader()
 
     glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, property.width, property.height, 0, GL_BGR, GL_UNSIGNED_BYTE, property.pBuffer);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
     glGenerateMipmap(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.6f);
 
     ASSERT_NE(textureID, 0);
     return textureID;

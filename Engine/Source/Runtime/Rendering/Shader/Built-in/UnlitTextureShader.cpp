@@ -56,6 +56,8 @@ void UnlitTextureShader::Begin(const glm::mat4 &MVP)
 
     glActiveTexture   (GL_TEXTURE0);
     glBindTexture     (GL_TEXTURE_2D, m_textureID);
+
+    glDisable(GL_MULTISAMPLE);
 }
 
 /// \brief Restore the pipeline state
