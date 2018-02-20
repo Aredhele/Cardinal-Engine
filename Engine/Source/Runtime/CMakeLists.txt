@@ -44,6 +44,9 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Shader/IShader.cpp
         Rendering/Shader/ShaderManager.cpp
         Rendering/Shader/ShaderCompiler.cpp
+        Rendering/Shader/Built-in/Lit/LitColorShader.cpp
+        Rendering/Shader/Built-in/Lit/LitTextureShader.cpp
+        Rendering/Shader/Built-in/Lit/LitTransparentShader.cpp
         Rendering/Shader/Built-in/TextShader.cpp
         Rendering/Shader/Built-in/UnlitColorShader.cpp
         Rendering/Shader/Built-in/UnlitTextureShader.cpp

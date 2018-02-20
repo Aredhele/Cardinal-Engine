@@ -76,13 +76,16 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
 
     // Loads Textures
     TextureLoader::LoadTexture("SAORegular", "Resources/Textures/SAORegular.bmp");
-    TextureLoader::LoadTexture("Block",      "Resources/Textures/BlockAtlas.bmp");
+    TextureLoader::LoadTexture("Block",      "Resources/Textures/BlockAtlas_2048.bmp");
+
+    ShaderManager::Register("LitTexture", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/Lit/LitTextureVertexShader.glsl",
+            "Resources/Shaders/Lit/LitTextureFragmentShader.glsl"));
 
     ShaderManager::Register("UnlitColor", ShaderCompiler::LoadShaders(
             "Resources/Shaders/Unlit/UnlitColorVertexShader.glsl",
             "Resources/Shaders/Unlit/UnlitColorFragmentShader.glsl"));
 
-    // Loads shaders
     ShaderManager::Register("UnlitTexture", ShaderCompiler::LoadShaders(
             "Resources/Shaders/Unlit/UnlitTextureVertexShader.glsl",
             "Resources/Shaders/Unlit/UnlitTextureFragmentShader.glsl"));

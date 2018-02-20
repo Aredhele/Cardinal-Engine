@@ -48,8 +48,8 @@ public:
 
     /// \brief The cubes in the chunks
     ByteCube m_cubes[WorldSettings::s_chunkSize]
-    [WorldSettings::s_chunkSize]
-    [WorldSettings::s_chunkSize];
+                    [WorldSettings::s_chunkSize]
+                    [WorldSettings::s_chunkSize];
 
     /// \brief Constructor
     Chunk();
@@ -60,6 +60,8 @@ public:
     /// \brief Initializes the chunk at the given world
     ///        chunk coordinates
     void Initialize(int chunkIndexX, int chunkIndexY, int chunkIndexZ);
+
+    void SetNeighbors(Chunk * neighbors[6]);
 
     /// \brief Returns the chunk state
     inline EChunkState GetState() const;
@@ -73,15 +75,12 @@ public:
 
 private:
 
-    double        m_debugTime;
-
     EChunkState m_state;
     int         m_chunkIndexX;
     int         m_chunkIndexY;
     int         m_chunkIndexZ;
 
-
-
+    Chunk *         m_neighbors[6];
     TerrainRenderer m_terrainRenderer;
 };
 

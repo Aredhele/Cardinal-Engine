@@ -41,6 +41,9 @@ public:
     bool Initialize(glm::vec3 const& gravity);
 
     /// \brief TODO
+    void Update();
+
+    /// \brief TODO
     void Shutdown();
 
 public:

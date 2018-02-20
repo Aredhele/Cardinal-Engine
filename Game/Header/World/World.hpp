@@ -71,6 +71,10 @@ public:
 
 private:
 
+    void GetNeighbors(int x, int y, int z, Chunk * neighbors[6]);
+
+private:
+
     cardinal::TextRenderer * m_worldText;
     cardinal::TextRenderer * m_cubeText;
     cardinal::TextRenderer * m_chunkText;

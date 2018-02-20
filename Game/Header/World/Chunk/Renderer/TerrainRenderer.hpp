@@ -45,7 +45,7 @@ public:
 
     /// \brief Static batching for terrain cubes
     /// \param pCubes The cubes of the chunk
-    void Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize]);
+    void Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize], class Chunk * neighbors[6]);
 
     /// \brief Sets the world position
     void SetPosition(glm::vec3 const& position);

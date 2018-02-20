@@ -24,6 +24,7 @@
 #include <chrono>
 
 #include "Runtime/Core/Debug/Logger.hpp"
+#include "Runtime/Core/Assertion/Assert.hh"
 #include "Runtime/Physics/PhysicsEngine.hpp"
 
 /// \namespace cardinal
@@ -56,6 +57,13 @@ bool PhysicsEngine::Initialize(glm::vec3 const& gravity)
     Logger::LogInfo("Physics engine initialized in %d ms", elapsed);
 
     return true;
+}
+
+/// \brief TODO
+void PhysicsEngine::Update()
+{
+    ASSERT_NOT_NULL(m_pDynamicWorld);
+    m_pDynamicWorld->stepSimulation(1 / 60.0f, 1, 10);
 }
 
 /// \brief TODO
