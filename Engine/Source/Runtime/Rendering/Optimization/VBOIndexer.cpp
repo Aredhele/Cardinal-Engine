@@ -69,4 +69,42 @@ namespace cardinal
     }
 }
 
+/* static */ void VBOIndexer::Index(
+        const std::vector<glm::vec3> &inVertices,
+        const std::vector<glm::vec3> &inNormals,
+        const std::vector<glm::vec2> &inUVs,
+
+        std::vector<unsigned short> &outIndexes,
+        std::vector<glm::vec3> &outVertices,
+        std::vector<glm::vec3> &outNormals,
+        std::vector<glm::vec2> &outUVs)
+{
+    std::map<sPackedVertexBeta, unsigned short> output;
+
+    // For each input vertex
+    size_t inVerticesSize = inVertices.size();
+    for (size_t nVertex = 0; nVertex < inVerticesSize; ++nVertex)
+    {
+        unsigned short index;
+        sPackedVertexBeta pack = {inVertices[nVertex], inNormals[nVertex], inUVs[nVertex]};
+
+        bool bIsFound = GetSimilarVertexIndex(pack, output, index);
+
+        if (bIsFound)
+        {
+            outIndexes.push_back(index);
+        }
+        else
+        {
+            outVertices.push_back(inVertices[nVertex]);
+            outNormals.push_back(inNormals[nVertex]);
+            outUVs.push_back  (inUVs[nVertex]);
+
+            size_t newIndex = outVertices.size() - 1;
+            outIndexes.push_back(static_cast<unsigned short>(newIndex));
+            output[pack] = static_cast<unsigned short>(newIndex);
+        }
+    }
+}
+
 } // !namespace

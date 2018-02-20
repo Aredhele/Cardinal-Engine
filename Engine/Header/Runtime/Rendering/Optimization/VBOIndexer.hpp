@@ -55,6 +55,22 @@ public :
             std::vector<glm::vec3>      & outVertices,
             std::vector<glm::vec2>      & outUVs);
 
+    // TODO : Update docs
+    /// \brief Indexes vertices who shares same properties
+    /// \param inVertices  The input vertices vector
+    /// \param inUVs       The input uvs vector
+    /// \param outIndexes  The output indexes vector
+    /// \param outVertices The output vertices vector
+    /// \param outUVs      The output uvs vector
+    static void Index(
+            std::vector<glm::vec3> const& inVertices,
+            std::vector<glm::vec3> const& inNormals,
+            std::vector<glm::vec2> const& inUVs,
+            std::vector<unsigned short> & outIndexes,
+            std::vector<glm::vec3>      & outVertices,
+            std::vector<glm::vec3>      & outNormals,
+            std::vector<glm::vec2>      & outUVs);
+
 private:
 
     /// \struct sPackedVertex
@@ -70,6 +86,20 @@ private:
         };
     };
 
+    /// \struct sPackedVertexBeta
+    struct sPackedVertexBeta
+    {
+        glm::vec3 position;
+        glm::vec3 normals;
+        glm::vec2 uv;
+
+        /// \brief Compare helper method
+        bool operator<(const sPackedVertexBeta other) const
+        {
+            return memcmp((void*)this, (void*)&other, sizeof(sPackedVertexBeta)) > 0;
+        };
+    };
+
     /// \brief  Tells if there already is a similar vertex
     /// \param  pack The current pack to check
     /// \param  output The output map
@@ -77,6 +107,15 @@ private:
     /// \return True or false
     inline static bool GetSimilarVertexIndex(sPackedVertex const& pack,
             std::map<sPackedVertex,unsigned short> const& output,
+            unsigned short & result);
+
+    /// \brief  Tells if there already is a similar vertex
+    /// \param  pack The current pack to check
+    /// \param  output The output map
+    /// \param  result The result
+    /// \return True or false
+    inline static bool GetSimilarVertexIndex(sPackedVertexBeta const& pack,
+            std::map<sPackedVertexBeta,unsigned short> const& output,
             unsigned short & result);
 };
 
