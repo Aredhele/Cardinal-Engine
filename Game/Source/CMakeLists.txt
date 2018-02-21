@@ -32,7 +32,7 @@ FILE(GLOB_RECURSE GAME_HEADERS
         ${CARDINAL_GAME_DIR}/Header/Character/*.hpp)
 
 # Compile game with the engine
-ADD_EXECUTABLE(Game Main.cpp ${GAME_SOURCES} ${GAME_HEADERS} World/ChunkRegulator.cpp ../Header/World/ChunkRegulator.hpp)
+ADD_EXECUTABLE(Game Main.cpp ${GAME_SOURCES} ${GAME_HEADERS} World/ChunkRegulator.cpp World/Generator/Noise/FastNoise.cpp ../Header/World/ChunkRegulator.hpp ../Header/World/Generator/CellularAutomata.hpp)
 
 # But tests depends on GTEST and GMOCK
 ADD_DEPENDENCIES(Game CardinalEngine BulletDynamics BulletCollision LinearMath)
