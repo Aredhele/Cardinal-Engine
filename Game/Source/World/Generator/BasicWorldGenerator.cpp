@@ -2,6 +2,7 @@
 #include <random>
 #include <World/Generator/CellularAutomata.hpp>
 #include "World/Generator/Noise/FastNoise.h"
+#include <math.h>
 
 World * BasicWorldGenerator::generateWorld()
 {
@@ -185,6 +186,23 @@ void BasicWorldGenerator::generateFBNWorld() {
 }
 
 void BasicWorldGenerator::generateCaves() {
+    int iter = 50;
+    int x =100, y = 100, z = 100;
+    mp_currentWorld->GetCube(x, y, z)->SetType(ByteCube::EType::Dirt);
+    FastNoise noiseGenerator(rand());
+    noiseGenerator.SetNoiseType(FastNoise::PerlinFractal);
+    noiseGenerator.SetFractalOctaves(3);
+    for (int i = 0; i <j iter; ++i) {
+
+        double noise = noiseGenerator.GetNoise(x, y, z);
+        x -= cos (noise * 2.0 * M_PI);
+        y -= sin (noise * 2.0 * M_PI);
+        z -= cos (noise * 2.0 * M_PI);
+        mp_currentWorld->GetCube(x, y, z)->SetType(ByteCube::EType::Dirt);
+    }
+}
+
+void BasicWorldGenerator::generateCavesWithCA() {
     CellularAutomata ca;
     Cell *** cells = ca.generate3DWorld(WorldSettings::s_matHeightCubes,
                                         WorldSettings::s_matHeightCubes,

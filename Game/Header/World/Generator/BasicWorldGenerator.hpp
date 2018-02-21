@@ -14,6 +14,7 @@ private:
     void generate3DPerlinWorld();
     void generateFBNWorld();
     void generateHeights();
+    void generateCavesWithCA();
 
 
     void generateCaves();
