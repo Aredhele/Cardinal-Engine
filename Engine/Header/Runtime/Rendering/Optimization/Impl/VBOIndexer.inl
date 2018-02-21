@@ -46,4 +46,25 @@ namespace cardinal
     return false;
 }
 
+/// \brief  Tells if there already is a similar vertex
+/// \param  pack The current pack to check
+/// \param  output The output map
+/// \param  result The result
+/// \return True or false
+/* static */ inline bool VBOIndexer::GetSimilarVertexIndex(
+        const VBOIndexer::sPackedVertexBeta &pack,
+        const std::map<VBOIndexer::sPackedVertexBeta, unsigned short> &output,
+        unsigned short &result)
+{
+    std::map<sPackedVertexBeta, unsigned short>::const_iterator it = output.find(pack);
+
+    if (it != output.end())
+    {
+        result = it->second;
+        return true;
+    }
+
+    return false;
+}
+
 } // !namespace

@@ -42,7 +42,8 @@ public:
 
     /// \brief Called to render the object
     /// \param PV The projection view matrix
-    virtual void Draw(glm::mat4 const& PV) = 0;
+    /// TODO
+    virtual void Draw(glm::mat4 const& P, glm::mat4 const& V, glm::vec3 const& light) = 0;
 
 protected:
 

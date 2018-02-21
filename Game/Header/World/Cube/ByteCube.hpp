@@ -35,6 +35,7 @@ public:
     static const unsigned char s_stateMask = 0x1E; ///< 0001 1110
 
     static const float s_vertices[108];
+    static const float s_normals [108];
 
 public:
 

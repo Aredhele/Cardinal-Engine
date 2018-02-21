@@ -221,7 +221,7 @@ void RenderingEngine::RenderFrame(float step)
     size_t rendererCount = m_renderers.size();
     for (int nRenderer = 0; nRenderer < rendererCount; ++nRenderer)
     {
-        m_renderers[nRenderer]->Draw(ProjectionView);
+        m_renderers[nRenderer]->Draw(Projection, View, glm::vec3(100.0f, 100.0f, 100.0f));
     }
 
     // Cleanup
