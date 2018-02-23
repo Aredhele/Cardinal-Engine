@@ -12,17 +12,18 @@ out vec3 color;
 // Uniforms
 uniform sampler2D textureSampler;
 
+uniform vec3  lightPosition;
+uniform float lightIntensity;
+uniform float ambientIntensity;
+uniform vec3  lightColor;
+
 void main(void)
 {
-     float AmbientLevel         = 5.0f;
-     float LightPower           = 0.4f;
-     vec3  LightColor           = vec3(1.0f, 1.0f, 1.0f);
-     vec3  MaterialDiffuseColor = texture(textureSampler, uv).rgb;
-     vec3  MaterialAmbientColor = vec3(0.1f, 0.1f, 0.1f) * MaterialDiffuseColor;
+     vec3  diffuse = texture(textureSampler, uv).rgb;
 
      vec3 n = normalize(surface_normal);
      vec3 l = normalize(light_vector);
 
      float brightness = clamp(dot(n, l), 0.0f, 1.0f);
-     color = AmbientLevel * MaterialAmbientColor + (MaterialDiffuseColor * LightColor * LightPower * brightness);
+     color = ambientIntensity * diffuse + diffuse * lightColor * lightIntensity * brightness;
 }

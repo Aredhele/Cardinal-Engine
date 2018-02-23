@@ -23,6 +23,7 @@
 
 #include <chrono>
 #include <iostream>
+#include <Header/Runtime/Rendering/Lighting/Lights/DirectionalLight.hpp>
 
 #include "Glew/include/GL/glew.h"
 
@@ -36,6 +37,7 @@
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
 #include "Runtime/Rendering/Shader/ShaderCompiler.hpp"
 #include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
+#include "Runtime/Rendering/Lighting/LightManager.hpp"
 #include "Runtime/Rendering/Renderer/TextRenderer.hpp"
 #include "Runtime/Rendering/Texture/TextureLoader.hpp"
 #include "Runtime/Rendering/Texture/TextureManager.hpp"
@@ -74,6 +76,9 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
 
     // IShader initializes
     ShaderManager::Initialize();
+
+    // Lighting
+    LightManager::Initialize();
 
     // Loads Textures
     TextureLoader::LoadTexture("SAORegular", "Resources/Textures/SAORegular.bmp");
@@ -222,14 +227,21 @@ void RenderingEngine::RenderFrame(float step)
     glm::mat4 View           = m_pCamera->GetViewMatrix();
     glm::mat4 ProjectionView = Projection * View;
 
-    glm::vec3 LighPosition(128.0f, 128.0f, 150.0f);
-    debug::DrawLight(LighPosition, glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
+    DirectionalLight * pLight = LightManager::GetDirectional();
+
+    if(pLight != nullptr)
+    {
+        debug::DrawLight(pLight->GetPosition(), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
+    }
+
+    // Lighting
+    LightManager::OnRenderBegin();
 
     // Draw
     size_t rendererCount = m_renderers.size();
     for (int nRenderer = 0; nRenderer < rendererCount; ++nRenderer)
     {
-        m_renderers[nRenderer]->Draw(Projection, View, LighPosition);
+        m_renderers[nRenderer]->Draw(Projection, View, glm::vec3(0.0f, 0.0f, 0.0f));
     }
 
     // Cleanup
@@ -262,7 +274,8 @@ void RenderingEngine::SetCamera(Camera *pCamera)
 /// \brief Shutdown the engine
 void RenderingEngine::Shutdown()
 {
-    // TODO
+    LightManager::Shutdown();
+    ShaderManager::Shutdown();
     TextureManager::Shutdown();
 
     // Shutting down ImGUI

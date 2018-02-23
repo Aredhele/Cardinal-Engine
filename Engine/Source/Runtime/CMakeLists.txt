@@ -39,6 +39,8 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Renderer/IRenderer.cpp
         Rendering/Renderer/TextRenderer.cpp
         Rendering/Renderer/MeshRenderer.cpp
+        Rendering/Lighting/LightManager.cpp
+        Rendering/Lighting/Lights/DirectionalLight.cpp
         Rendering/Texture/TextureLoader.cpp
         Rendering/Texture/TextureManager.cpp
         Rendering/Texture/TextureImporter.cpp

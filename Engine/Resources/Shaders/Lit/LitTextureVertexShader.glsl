@@ -15,7 +15,7 @@ out vec3 surface_normal;
 uniform mat4 M;
 uniform mat4 V;
 uniform mat4 MVP;
-uniform vec3 LightPosition;
+uniform vec3 lightPosition;
 
 void main()
 {
@@ -24,7 +24,7 @@ void main()
 
     vec3 vertexPosition_cameraspace = (V * M * vec4(vertex_position, 1.0f)).xyz;
 
-    vec3 LightPosition_cameraspace = (V * vec4(LightPosition, 1.0f)).xyz;
+    vec3 LightPosition_cameraspace = (V * vec4(lightPosition, 1.0f)).xyz;
     light_vector = LightPosition_cameraspace + (vec3(0.0f, 0.0f, 0.0f) - vertexPosition_cameraspace);
 
     surface_normal = (V * M * vec4(vertex_normal, 0.0f)).xyz;

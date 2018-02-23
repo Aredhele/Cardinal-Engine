@@ -48,19 +48,20 @@ void DrawLight(glm::vec3 const& position, glm::vec3 const& color, float scale)
     glm::vec3 front(position.x, position.y + 1.0f * scale, position.z);
     glm::vec3 back (position.x, position.y - 1.0f * scale, position.z);
 
+    glm::vec3 arrowStart1(bot.x, bot.y, bot.z - 1.0f);
+    glm::vec3 arrowEnd1  (arrowStart1 + (glm::normalize(-position)) - 2.0f * scale);
 
-    glm::vec3 rayLeftStart(left.x - 1.0f,         left.y, left.z);
-    glm::vec3 rayLeftEnd  (left.x - 2.0f * scale, left.y, left.z);
+    glm::vec3 arrowStart2(bot.x - 1.0f, bot.y - 1.0f, bot.z - 1.0f);
+    glm::vec3 arrowEnd2  (arrowStart2 + glm::normalize(-position + glm::vec3(-1.0f, -1.0f, 0.0f)) - 2.0f * scale);
 
-    glm::vec3 rayRightStart(right.x + 1.0f,         right.y, right.z);
-    glm::vec3 rayRightEnd  (right.x + 2.0f * scale, right.y, right.z);
+    glm::vec3 arrowStart3(bot.x + 1.0f, bot.y + 1.0f, bot.z - 1.0f);
+    glm::vec3 arrowEnd3  (arrowStart3 + glm::normalize(-position + glm::vec3(1.0f, 1.0f, 0.0f)) - 2.0f * scale);
 
-    glm::vec3 rayFrontStart(front.x, front.y + 1.0f,         front.z);
-    glm::vec3 rayFrontEnd  (front.x, front.y + 2.0f * scale, front.z);
+    glm::vec3 arrowStart4(bot.x + 1.0f, bot.y - 1.0f, bot.z - 1.0f);
+    glm::vec3 arrowEnd4  (arrowStart4 + glm::normalize(-position + glm::vec3(1.0f, -1.0f, 0.0f)) - 2.0f * scale);
 
-    glm::vec3 rayBackStart(back.x, back.y - 1.0f,         back.z);
-    glm::vec3 rayBackEnd  (back.x, back.y - 2.0f * scale, back.z);
-
+    glm::vec3 arrowStart5(bot.x - 1.0f, bot.y + 1.0f, bot.z - 1.0f);
+    glm::vec3 arrowEnd5  (arrowStart5 + glm::normalize(-position + glm::vec3(-1.0f, 1.0f, 0.0f)) - 2.0f * scale);
 
     DebugManager::AddLine(top, left,  color);
     DebugManager::AddLine(top, right, color);
@@ -77,10 +78,11 @@ void DrawLight(glm::vec3 const& position, glm::vec3 const& color, float scale)
     DebugManager::AddLine(front, left,   color);
     DebugManager::AddLine(back,  left,   color);
 
-    DebugManager::AddLine(rayLeftStart,  rayLeftEnd,  color);
-    DebugManager::AddLine(rayRightStart, rayRightEnd, color);
-    DebugManager::AddLine(rayFrontStart, rayFrontEnd, color);
-    DebugManager::AddLine(rayBackStart,  rayBackEnd,  color);
+    DebugManager::AddLine(arrowStart1, arrowEnd1, color);
+    DebugManager::AddLine(arrowStart2, arrowEnd2, color);
+    DebugManager::AddLine(arrowStart3, arrowEnd3, color);
+    DebugManager::AddLine(arrowStart4, arrowEnd4, color);
+    DebugManager::AddLine(arrowStart5, arrowEnd5, color);
 #endif
 
 }

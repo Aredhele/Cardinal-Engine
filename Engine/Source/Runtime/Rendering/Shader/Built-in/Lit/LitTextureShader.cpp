@@ -32,12 +32,16 @@
 namespace cardinal
 {
 
+/* static */ int LitTextureShader::s_lightPosition    = -1;
+/* static */ int LitTextureShader::s_lightIntensity   = -1;
+/* static */ int LitTextureShader::s_ambientIntensity = -1;
+/* static */ int LitTextureShader::s_lightColor       = -1;
+
 /// \brief Constructor
 LitTextureShader::LitTextureShader()
 {
     m_viewID         = -1;
     m_modelID        = -1;
-    m_lightID        = -1;
     m_textureID      =  0;
     m_textureSampler = -1;
 
@@ -49,13 +53,20 @@ LitTextureShader::LitTextureShader()
     m_modelID        = glGetUniformLocation((GLuint)m_shaderID, "M");
     m_viewID         = glGetUniformLocation((GLuint)m_shaderID, "V");
     m_matrixID       = glGetUniformLocation((GLuint)m_shaderID, "MVP");
-    m_lightID        = glGetUniformLocation((GLuint)m_shaderID, "LightPosition");
     m_textureSampler = glGetUniformLocation((GLuint)m_shaderID, "textureSampler");
 
-    //ASSERT_NE(m_modelID,  -1);
-    //ASSERT_NE(m_viewID,   -1);
-    //ASSERT_NE(m_matrixID, -1);
-    //ASSERT_NE(m_lightID,  -1);
+    s_lightPosition    = glGetUniformLocation((GLuint)m_shaderID, "lightPosition");
+    s_lightIntensity   = glGetUniformLocation((GLuint)m_shaderID, "lightIntensity");
+    s_ambientIntensity = glGetUniformLocation((GLuint)m_shaderID, "ambientIntensity");
+    s_lightColor       = glGetUniformLocation((GLuint)m_shaderID, "lightColor");
+
+    ASSERT_NE(m_modelID,  -1);
+    ASSERT_NE(m_viewID,   -1);
+    ASSERT_NE(m_matrixID, -1);
+    ASSERT_NE(s_lightPosition,    -1);
+    ASSERT_NE(s_lightIntensity,   -1);
+    ASSERT_NE(s_ambientIntensity, -1);
+    ASSERT_NE(s_lightColor,       -1);
 }
 
 /// \brief Sets the texture of the shader
@@ -70,10 +81,9 @@ void LitTextureShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4
 {
     glUseProgram      ((GLuint)m_shaderID);
     glUniformMatrix4fv(m_projection,  1, GL_FALSE,   &P[0][0]);
-    glUniformMatrix4fv(m_modelID,  1, GL_FALSE,   &M[0][0]);
-    glUniformMatrix4fv(m_viewID,   1, GL_FALSE,   &V[0][0]);
-    glUniformMatrix4fv(m_matrixID, 1, GL_FALSE, &MVP[0][0]);
-    glUniform3f       (m_lightID,  light.x, light.y, light.z);
+    glUniformMatrix4fv(m_modelID,     1, GL_FALSE,   &M[0][0]);
+    glUniformMatrix4fv(m_viewID,      1, GL_FALSE,   &V[0][0]);
+    glUniformMatrix4fv(m_matrixID,    1, GL_FALSE, &MVP[0][0]);
 
     glActiveTexture (GL_TEXTURE0);
     glBindTexture   (GL_TEXTURE_2D, m_textureID);

@@ -51,10 +51,19 @@ public:
 
 private:
 
+    friend class LightManager;
+
+    static int s_lightPosition;
+    static int s_lightIntensity;
+    static int s_ambientIntensity;
+    static int s_lightColor;
+
+private:
+
+    // TODO : make uniforms static
     uint m_textureID;
     int  m_viewID;
     int  m_modelID;
-    int  m_lightID;
     int  m_projection;
     int  m_textureSampler;
 };

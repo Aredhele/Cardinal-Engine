@@ -111,6 +111,7 @@ private:
     uint64_t  m_frameCount;
     glm::mat4 m_projectionMatrix;
 
+    // Rendering objects
     std::vector<class IRenderer*> m_renderers;
 
     class TextRenderer * m_pEngineName;
