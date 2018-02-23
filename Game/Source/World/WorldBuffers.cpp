@@ -30,6 +30,8 @@
 /* static */ std::vector<ushort>     WorldBuffers::s_chunkIndexesBuffer;
 /* static */ std::vector<glm::vec2>  WorldBuffers::s_chunkIndexedUVsBuffer;
 /* static */ std::vector<glm::vec3>  WorldBuffers::s_chunkIndexedVertexBuffer;
+/* static */ std::vector<glm::vec3>  WorldBuffers::s_chunkNormalBuffer;
+/* static */ std::vector<glm::vec3>  WorldBuffers::s_chunkIndexedNormalBuffer;
 
 // Details
 /* static */ std::vector<Grass> WorldBuffers::s_grassBuffer;
@@ -45,6 +47,9 @@
     s_chunkIndexesBuffer.reserve       (WorldSettings::s_chunkVertexCount);
     s_chunkIndexedUVsBuffer.reserve    (WorldSettings::s_chunkUVsCount);
     s_chunkIndexedVertexBuffer.reserve (WorldSettings::s_chunkVertexCount);
+
+    s_chunkNormalBuffer.reserve(WorldSettings::s_chunkVertexCount);
+    s_chunkIndexedNormalBuffer.reserve(WorldSettings::s_chunkVertexCount);
 
     // Details
     WorldBuffers::s_grassBuffer.reserve(WorldSettings::s_chunkBlockCount * 2);

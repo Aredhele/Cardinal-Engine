@@ -15,39 +15,32 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       ShaderCompiler.hpp
-/// \date       10/02/2018
+/// \file       DebugGizmos.hpp
+/// \date       20/02/2018
 /// \project    Cardinal Engine
-/// \package    Rendering/Shader
+/// \package    Core/Rendering/Debug
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_SHADER_COMPILER_HPP__
-#define CARDINAL_ENGINE_SHADER_COMPILER_HPP__
+#ifndef CARDINAL_ENGINE_DEBUG_GIZMOS_HPP__
+#define CARDINAL_ENGINE_DEBUG_GIZMOS_HPP__
 
-#include "Runtime/Platform/Configuration/Configuration.hh"
+#include "Glm/glm/glm.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \class  ShaderCompiler
-/// \brief  Tool to compile shaders
-class ShaderCompiler
+namespace debug
 {
-public :
 
-    /// \brief Loads a shader from the given paths
-    /// \param czVertexShader The path to the vertex shader
-    /// \param csFragmentShader The path to the fragment shader
-    static int LoadShaders(const char * czVertexShader,const char * csFragmentShader);
+/// \brief Draw a light bulbe with lines
+/// \param position The start point of the line
+/// \param color The color of the gizmo
+/// \param scale The end point of the line
+void DrawLight(glm::vec3 const& position, glm::vec3 const& color, float scale);
 
-    // TODO
-    /// \brief Loads a shader from the given paths
-    /// \param czVertexShader The path to the vertex shader
-    /// \param csFragmentShader The path to the fragment shader
-    static int LoadShaders(const char * czVertexShader, const char * szGeometryShader, const char * csFragmentShader);
-};
+}  // !namespace
 
 } // !namespace
 
-#endif // !CARDINAL_ENGINE_SHADER_COMPILER_HPP__
+#endif // !CARDINAL_ENGINE_DEBUG_GIZMOS_HPP__

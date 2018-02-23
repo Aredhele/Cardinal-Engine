@@ -41,9 +41,11 @@ public:
     // Terrain
     static std::vector<glm::vec2> s_chunkUVsBuffer;
     static std::vector<glm::vec3> s_chunkVertexBuffer;
+    static std::vector<glm::vec3> s_chunkNormalBuffer;
     static std::vector<ushort>    s_chunkIndexesBuffer;
     static std::vector<glm::vec2> s_chunkIndexedUVsBuffer;
     static std::vector<glm::vec3> s_chunkIndexedVertexBuffer;
+    static std::vector<glm::vec3> s_chunkIndexedNormalBuffer;
 
     // Details
     static std::vector<Grass> s_grassBuffer;

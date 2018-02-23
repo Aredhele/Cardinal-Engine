@@ -27,5 +27,6 @@
 #include "Runtime/Rendering/Debug/DebugBox.hpp"
 #include "Runtime/Rendering/Debug/DebugLine.hpp"
 #include "Runtime/Rendering/Debug/DebugRay.hpp"
+#include "Runtime/Rendering/Debug/DebugGizmos.hpp"
 
 #endif // !CARDINAL_ENGINE_DEBUG_HPP__

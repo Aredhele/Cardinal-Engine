@@ -16,7 +16,7 @@
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 /// \file       MeshRenderer.hpp
-/// \date       11/02/2018
+/// \date       23/02/2018
 /// \project    Cardinal Engine
 /// \package    Rendering/Renderer
 /// \author     Vincent STEHLY--CALISTO
@@ -36,7 +36,7 @@ namespace cardinal
 {
 
 /// \class  MeshRenderer
-/// \brief  Renderer for 3D objects
+/// \brief  Renders 3D objects
 class MeshRenderer : public IRenderer
 {
 public :
@@ -49,31 +49,35 @@ public :
 
     /// \brief Initializes the mesh
     /// \param indexes The indexes of the mesh
+    /// \param normals The normals of the mesh
     /// \param vertices The vertices of the mesh
     /// \param uvs The uvs of the mesh
-    void Initialize(std::vector<unsigned short> const& indexes,
-                    std::vector<glm::vec3>      const& vertices,
-                    std::vector<glm::vec2>      const& uvs);
+    void Initialize(std::vector<unsigned short> const &indexes,
+                    std::vector<glm::vec3>      const &vertices,
+                    std::vector<glm::vec3>      const &normals,
+                    std::vector<glm::vec2>      const &uvs);
 
     /// \brief Updates the mesh
     /// \param indexes The indexes of the mesh
+    /// \param normals The normals of the mesh
     /// \param vertices The vertices of the mesh
     /// \param uvs The uvs of the mesh
-    void Update(std::vector<unsigned short> const& indexes,
-                std::vector<glm::vec3>      const& vertices,
-                std::vector<glm::vec2>      const& uvs);
+    void Update(std::vector<unsigned short> const &indexes,
+                std::vector<glm::vec3>      const &vertices,
+                std::vector<glm::vec3>      const &normals,
+                std::vector<glm::vec2>      const &uvs);
 
     /// \brief Sets the position of the mesh renderer
     /// \param position The new position
-    void SetPosition(glm::vec3 const& position);
+    void SetPosition(glm::vec3 const &position);
 
     /// \brief Translates the model
     /// \param Translation The translation vector
-    void Translate(glm::vec3 const& Translation);
+    void Translate(glm::vec3 const &Translation);
 
     /// \brief Sets the renderer shader
     /// \param pShader The pointer on the shader
-    void SetShader(IShader * pShader);
+    void SetShader(IShader *pShader);
 
     /// \brief Base method implementation
     /// \param PV The projection view matrix
@@ -83,14 +87,15 @@ private:
 
     friend class RenderingEngine;
 
-    uint      m_indexesObject;
-    uint      m_verticesObject;
-    uint      m_uvsObject;
-    int       m_elementsCount;
+    uint m_indexesObject;
+    uint m_verticesObject;
+    uint m_normalsObject;
+    uint m_uvsObject;
+    int  m_elementsCount;
 
     glm::mat4 m_model;
 };
 
-} // !namespace
+}  // !namespace
 
 #endif // !CARDINAL_ENGINE_MESH_RENDERER_HPP__

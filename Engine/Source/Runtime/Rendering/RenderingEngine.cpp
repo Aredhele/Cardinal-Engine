@@ -32,6 +32,7 @@
 #include "Runtime/Rendering/Shader/IShader.hpp"
 #include "Runtime/Rendering/RenderingEngine.hpp"
 #include "Runtime/Rendering/Debug/DebugManager.hpp"
+#include "Header/Runtime/Rendering/Debug/Debug.hpp"
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
 #include "Runtime/Rendering/Shader/ShaderCompiler.hpp"
 #include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
@@ -78,6 +79,11 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     TextureLoader::LoadTexture("SAORegular", "Resources/Textures/SAORegular.bmp");
     TextureLoader::LoadTexture("Block",      "Resources/Textures/BlockAtlas_2048.bmp");
 
+    ShaderManager::Register("LitTextureD", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/Lit/LitTextureVertexShader.glsl",
+            "Resources/Shaders/Lit/LitTextureGeometryShader.glsl",
+            "Resources/Shaders/Lit/LitTextureFragmentShader.glsl"));
+
     ShaderManager::Register("LitTexture", ShaderCompiler::LoadShaders(
             "Resources/Shaders/Lit/LitTextureVertexShader.glsl",
             "Resources/Shaders/Lit/LitTextureFragmentShader.glsl"));
@@ -104,10 +110,9 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     // Configures OpenGL pipeline
     glEnable   (GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-
     glEnable   (GL_CULL_FACE);
     glCullFace (GL_BACK);
-    glFrontFace(GL_CW);
+    glFrontFace(GL_CCW);
 
     // TODO : Makes clear color configurable
     glClearColor(0.0f, 0.709f, 0.866f, 1.0f);
@@ -217,11 +222,14 @@ void RenderingEngine::RenderFrame(float step)
     glm::mat4 View           = m_pCamera->GetViewMatrix();
     glm::mat4 ProjectionView = Projection * View;
 
+    glm::vec3 LighPosition(128.0f, 128.0f, 150.0f);
+    debug::DrawLight(LighPosition, glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
+
     // Draw
     size_t rendererCount = m_renderers.size();
     for (int nRenderer = 0; nRenderer < rendererCount; ++nRenderer)
     {
-        m_renderers[nRenderer]->Draw(Projection, View, glm::vec3(100.0f, 100.0f, 100.0f));
+        m_renderers[nRenderer]->Draw(Projection, View, LighPosition);
     }
 
     // Cleanup

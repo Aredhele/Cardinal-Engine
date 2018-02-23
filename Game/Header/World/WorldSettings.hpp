@@ -55,8 +55,8 @@ public:
 /* static */  const uint WorldSettings::s_chunkVertexCount = WorldSettings::s_chunkBlockCount * 36;
 
 /* static */  const uint WorldSettings::s_matSize        = 4;
-/* static */  const uint WorldSettings::s_matHeight      = 4;
-/* static */  const uint WorldSettings::s_matSizeCubes   = WorldSettings::s_matSize * WorldSettings::s_chunkSize;
+/* static */  const uint WorldSettings::s_matHeight      = 2;
+/* static */  const uint WorldSettings::s_matSizeCubes   = WorldSettings::s_matSize   * WorldSettings::s_chunkSize;
 /* static */  const uint WorldSettings::s_matHeightCubes = WorldSettings::s_matHeight * WorldSettings::s_chunkSize;
 
 /* static */  const float WorldSettings::s_textureStep = 1.0f / 16.0f;

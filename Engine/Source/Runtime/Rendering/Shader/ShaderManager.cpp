@@ -72,9 +72,9 @@ ShaderManager::ShaderManager()
 /// \brief Registers a shader in the manager from a key and a value
 /// \param shaderKey The key of the shader
 /// \param shaderID The value
-/* static */ void cardinal::ShaderManager::Register(std::string const& shaderKey, uint shaderID)
+/* static */ void cardinal::ShaderManager::Register(std::string const& shaderKey, int shaderID)
 {
-    ASSERT_NE      (shaderID, 0);
+    ASSERT_NE      (shaderID, -1);
     ASSERT_NE      (shaderKey, "");
     ASSERT_NOT_NULL(ShaderManager::s_pInstance);
 
@@ -99,11 +99,11 @@ ShaderManager::ShaderManager()
 /// \brief Returns the shader ID references by the given key
 /// \param shaderKey The key of the shader
 /// \return The shader ID
-/* static */ uint cardinal::ShaderManager::GetShaderID(std::string const& shaderKey)
+/* static */ int cardinal::ShaderManager::GetShaderID(std::string const& shaderKey)
 {
     ASSERT_NOT_NULL(ShaderManager::s_pInstance);
 
-    uint id = 0;
+    int id = -1;
     auto it = ShaderManager::s_pInstance->m_textureIDs.find(shaderKey);
 
     if(it != ShaderManager::s_pInstance->m_textureIDs.end())

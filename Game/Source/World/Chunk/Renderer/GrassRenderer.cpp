@@ -165,10 +165,10 @@ void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSetti
             WorldBuffers::s_chunkIndexedVertexBuffer,
             WorldBuffers::s_chunkIndexedUVsBuffer);
 
-    m_renderer->Initialize(
+    /*m_renderer->Initialize(
             WorldBuffers::s_chunkIndexesBuffer,
             WorldBuffers::s_chunkIndexedVertexBuffer,
-            WorldBuffers::s_chunkIndexedUVsBuffer);
+            WorldBuffers::s_chunkIndexedUVsBuffer);*/
 
 
     m_renderer->SetShader(new cardinal::UnlitTransparentShader()); // TODO fix memory leak
@@ -182,7 +182,6 @@ void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSetti
     WorldBuffers::s_chunkIndexedUVsBuffer.clear();
     WorldBuffers::s_chunkIndexedVertexBuffer.clear();
 }
-
 
 /// \brief Translate the chunk grass renderer
 void GrassRenderer::Translate(glm::vec3 const &translation)

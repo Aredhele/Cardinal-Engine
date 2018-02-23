@@ -147,6 +147,7 @@ void PhysicsCharacter::InitializeAvatar()
     m_meshRenderer->SetShader(pShader);
 
     std::vector<glm::vec3> vertices;
+    std::vector<glm::vec3> normals;
     std::vector<glm::vec2> uvs;
 
     for(size_t nVertex = 0; nVertex < 36; ++nVertex)
@@ -155,6 +156,11 @@ void PhysicsCharacter::InitializeAvatar()
                 ByteCube::s_vertices[nVertex * 3 + 0] * 2.0f,
                 ByteCube::s_vertices[nVertex * 3 + 1] * 2.0f,
                 ByteCube::s_vertices[nVertex * 3 + 2] * 2.0f);
+
+        normals.emplace_back(
+                ByteCube::s_normals[nVertex * 3 + 0],
+                ByteCube::s_normals[nVertex * 3 + 1],
+                ByteCube::s_normals[nVertex * 3 + 2]);
     }
 
     for(size_t nFace = 0; nFace < 6; ++nFace)
@@ -174,10 +180,11 @@ void PhysicsCharacter::InitializeAvatar()
     // Indexing
     std::vector<unsigned short> indexes;
     std::vector<glm::vec3>      indexedVertices;
+    std::vector<glm::vec3>      indexedNormals;
     std::vector<glm::vec2>      indexedUVs;
 
-    cardinal::VBOIndexer::Index(vertices, uvs, indexes, indexedVertices, indexedUVs);
-    m_meshRenderer->Initialize(indexes, indexedVertices, indexedUVs);
+    cardinal::VBOIndexer::Index(vertices, normals, uvs, indexes, indexedVertices, indexedNormals, indexedUVs);
+    m_meshRenderer->Initialize(indexes, indexedVertices, indexedNormals, indexedUVs);
 
     m_position.x = 165.0f;
     m_position.y = 165.0f;

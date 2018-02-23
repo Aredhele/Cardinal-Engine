@@ -156,7 +156,7 @@ void TextRenderer::SetText(const char * szText, int x, int y, int size, glm::vec
 /// \param PV The projection view matrix
 void TextRenderer::Draw(glm::mat4 const& P, glm::mat4 const& V, glm::vec3 const& light)
 {
-    m_pShader->Begin(P * V * glm::mat4(1.0f), V, glm::mat4(1.0f), light);
+    m_pShader->Begin(P * V * glm::mat4(1.0f), P, V, glm::mat4(1.0f), light);
 
     glBindVertexArray(m_vao);
     glEnableVertexAttribArray(0);

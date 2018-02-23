@@ -32,6 +32,11 @@
 namespace cardinal
 {
 
+namespace beta
+{
+    class BetaRenderer;
+}
+
 /// \class  RenderingEngine
 /// \brief  Main rendering class
 class RenderingEngine

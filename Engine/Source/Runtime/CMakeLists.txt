@@ -31,12 +31,12 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Debug/DebugBox.cpp
         Rendering/Debug/DebugLine.cpp
         Rendering/Debug/DebugRay.cpp
+        Rendering/Debug/DebugGizmos.cpp
         Rendering/Debug/DebugManager.cpp
         Rendering/Camera/Camera.cpp
         Rendering/Optimization/VBOIndexer.cpp
         Rendering/RenderingEngine.cpp
         Rendering/Renderer/IRenderer.cpp
-        Rendering/Renderer/BetaRenderer.cpp
         Rendering/Renderer/TextRenderer.cpp
         Rendering/Renderer/MeshRenderer.cpp
         Rendering/Texture/TextureLoader.cpp
