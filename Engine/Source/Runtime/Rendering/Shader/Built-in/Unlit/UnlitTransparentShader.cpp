@@ -24,46 +24,32 @@
 #include "Glew/include/GL/glew.h"
 
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
-#include "Runtime/Rendering/Shader/Built-in/UnlitTextureShader.hpp"
+#include "Runtime/Rendering/Shader/Built-in/Unlit/UnlitTransparentShader.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
 /// \brief Constructor
-UnlitTextureShader::UnlitTextureShader()
+UnlitTransparentShader::UnlitTransparentShader()
 {
-    m_textureID      = 0;
-    m_textureSampler = 0;
-
-    m_shaderID       = ShaderManager::GetShaderID("UnlitTexture");
-    m_matrixID       = glGetUniformLocation(m_shaderID, "MVP");
-    m_textureSampler = glGetUniformLocation(m_shaderID, "textureSampler");
-}
-
-/// \brief Sets the texture of the shader
-void UnlitTextureShader::SetTexture(uint textureID)
-{
-    m_textureID = textureID;
+    m_shaderID = ShaderManager::GetShaderID("UnlitTransparent");
+    m_matrixID = glGetUniformLocation(m_shaderID, "MVP");
 }
 
 /// \brief Sets up the pipeline for the shader
 /// \param MVP The Projection-View-Model matrix to pass to the shader
-void UnlitTextureShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light)
+void UnlitTransparentShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light)
 {
+    // Pre-condition
     glUseProgram      (m_shaderID);
     glUniformMatrix4fv(m_matrixID, 1, GL_FALSE, &MVP[0][0]);
-
-    glActiveTexture   (GL_TEXTURE0);
-    glBindTexture     (GL_TEXTURE_2D, m_textureID);
-
-    glDisable(GL_MULTISAMPLE);
 }
 
 /// \brief Restore the pipeline state
-void UnlitTextureShader::End()
+void UnlitTransparentShader::End()
 {
-    // None
+
 }
 
 } // !namespace

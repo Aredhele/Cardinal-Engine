@@ -31,7 +31,7 @@
 #include "Runtime/Rendering/Camera/Camera.hpp"
 #include "Runtime/Rendering/Context/Window.hpp"
 #include "Runtime/Rendering/RenderingEngine.hpp"
-#include "Runtime/Rendering/Shader/Built-in/UnlitTextureShader.hpp"
+#include "Runtime/Rendering/Shader/Built-in/Unlit/UnlitTextureShader.hpp"
 
 /// \brief Constructor
 Character::Character()

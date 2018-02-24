@@ -25,7 +25,7 @@
 
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
 #include "Runtime/Rendering/Texture/TextureManager.hpp"
-#include "Runtime/Rendering/Shader/Built-in/TextShader.hpp"
+#include "Runtime/Rendering/Shader/Built-in/Text/TextShader.hpp"
 
 /// \namespace cardinal
 namespace cardinal

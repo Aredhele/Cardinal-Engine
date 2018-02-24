@@ -28,7 +28,7 @@
 #include "World/Cube/UVManager.hpp"
 #include "World/Chunk/Renderer/GrassRenderer.hpp"
 #include "Runtime/Rendering/Optimization/VBOIndexer.hpp"
-#include "Runtime/Rendering/Shader/Built-in/UnlitTransparentShader.hpp"
+#include "Runtime/Rendering/Shader/Built-in/Unlit/UnlitTransparentShader.hpp"
 
 GrassRenderer::GrassRenderer()
 {

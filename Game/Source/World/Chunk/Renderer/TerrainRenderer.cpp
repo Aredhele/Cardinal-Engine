@@ -21,7 +21,7 @@
 /// \package    World/Chunk/Renderer
 /// \author     Vincent STEHLY--CALISTO
 
-#include <Header/Runtime/Rendering/Shader/Built-in/UnlitTextureShader.hpp>
+#include <Header/Runtime/Rendering/Shader/Built-in/Unlit/UnlitTextureShader.hpp>
 #include <Header/Runtime/Rendering/RenderingEngine.hpp>
 #include <Header/Runtime/Rendering/Texture/TextureManager.hpp>
 #include <World/Chunk/Chunk.hpp>

@@ -24,32 +24,31 @@
 #include "Glew/include/GL/glew.h"
 
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
-#include "Runtime/Rendering/Shader/Built-in/UnlitTransparentShader.hpp"
+#include "Runtime/Rendering/Shader/Built-in/Unlit/UnlitColorShader.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
 /// \brief Constructor
-UnlitTransparentShader::UnlitTransparentShader()
+UnlitColorShader::UnlitColorShader()
 {
-    m_shaderID = ShaderManager::GetShaderID("UnlitTransparent");
+    m_shaderID = ShaderManager::GetShaderID("UnlitColor");
     m_matrixID = glGetUniformLocation(m_shaderID, "MVP");
 }
 
 /// \brief Sets up the pipeline for the shader
 /// \param MVP The Projection-View-Model matrix to pass to the shader
-void UnlitTransparentShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light)
+void UnlitColorShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light)
 {
-    // Pre-condition
     glUseProgram      (m_shaderID);
     glUniformMatrix4fv(m_matrixID, 1, GL_FALSE, &MVP[0][0]);
 }
 
 /// \brief Restore the pipeline state
-void UnlitTransparentShader::End()
+void UnlitColorShader::End()
 {
-
+    // None
 }
 
 } // !namespace
