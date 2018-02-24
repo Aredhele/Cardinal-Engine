@@ -25,7 +25,7 @@
 
 /// \brief Face order
 ///        Left, Front, Right, Back, Top, Bottom
-/* static */ unsigned char UVManager::UV[15][12] =
+/* static */ unsigned char UVManager::UV[16][12] =
 {
         { 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0}, ///< Air
         { 2, 15,  2, 15,  2, 15,  2, 15,  2, 15,  2, 15}, ///< Dirt
@@ -42,6 +42,7 @@
         { 2, 12,  2, 12,  2, 12,  2, 12,  2, 12,  2, 12}, ///< Diamond
         { 1, 13,  1, 13,  1, 13,  1, 13,  1, 13,  1, 13}, ///< Emerald
         { 1, 13,  1, 13,  1, 13,  1, 13,  1, 13,  1, 13}, ///< Snow
+        { 1, 14,  1, 14,  1, 14,  1, 14,  1, 14,  1, 14}, ///< Bedrock
 };
 
 

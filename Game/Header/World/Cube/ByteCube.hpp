@@ -58,6 +58,7 @@ public:
         Diamond   = 0x0C << 1, ///< 0001 1000
         Emerald   = 0x0D << 1, ///< 0001 1010
         Snow      = 0x0E << 1, ///< 0001 1100
+        Bedrock   = 0x0F << 1, ///< 0001 1110
     };
 
     /// \brief Constructor
