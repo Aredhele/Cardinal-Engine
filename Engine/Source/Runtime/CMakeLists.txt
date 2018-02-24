@@ -54,7 +54,8 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Shader/Built-in/Text/TextShader.cpp
         Rendering/Shader/Built-in/Unlit/UnlitColorShader.cpp
         Rendering/Shader/Built-in/Unlit/UnlitTextureShader.cpp
-        Rendering/Shader/Built-in/Unlit/UnlitTransparentShader.cpp)
+        Rendering/Shader/Built-in/Unlit/UnlitTransparentShader.cpp
+        Rendering/Shader/Built-in/Standard/StandardShader.cpp)
 
 # But tests depends on GTEST and GMOCK
 ADD_DEPENDENCIES(CardinalEngine glfw glew ResourcesCopy ImGUI)
