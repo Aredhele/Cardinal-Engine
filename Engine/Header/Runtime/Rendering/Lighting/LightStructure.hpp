@@ -15,17 +15,30 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       Lighting.hpp
-/// \date       23/02/2018
+/// \file       LightStructure.hpp
+/// \date       24/02/2018
 /// \project    Cardinal Engine
 /// \package    Runtime/Rendering/Lighting
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_LIGHTING_HPP__
-#define CARDINAL_ENGINE_LIGHTING_HPP__
+#ifndef CARDINAL_ENGINE_LIGHT_STRUCTURE_HPP__
+#define CARDINAL_ENGINE_LIGHT_STRUCTURE_HPP__
 
-#include "Runtime/Rendering/Lighting/LightManager.hpp"
-#include "Runtime/Rendering/Lighting/Lights/PointLight.hpp
-#include "Runtime/Rendering/Lighting/Lights/DirectionalLight.hpp"
+#include "Glm/glm/vec3.hpp"
 
-#endif // !CARDINAL_ENGINE_LIGHTING_HPP__
+/// \namespace cardinal
+namespace cardinal
+{
+
+/// \brief  Contains point light data
+struct PointLightStructure
+{
+
+    float     range;
+    glm::vec3 color;
+    glm::vec3 position;
+};
+
+} // !namespace
+
+#endif // !CARDINAL_ENGINE_LIGHT_STRUCTURE_HPP__

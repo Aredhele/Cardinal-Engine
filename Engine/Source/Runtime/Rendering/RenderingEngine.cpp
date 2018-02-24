@@ -227,7 +227,7 @@ void RenderingEngine::RenderFrame(float step)
     glm::mat4 View           = m_pCamera->GetViewMatrix();
     glm::mat4 ProjectionView = Projection * View;
 
-    DirectionalLight * pLight = LightManager::GetDirectional();
+    DirectionalLight * pLight = LightManager::GetDirectionalLight();
 
     if(pLight != nullptr)
     {

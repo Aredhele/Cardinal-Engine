@@ -21,14 +21,18 @@
 /// \package    Runtime/Rendering/Lighting
 /// \author     Vincent STEHLY--CALISTO
 
-#include <Header/Runtime/Rendering/Shader/Built-in/Lit/LitTextureShader.hpp>
 #include "Glew/include/GL/glew.h"
 
 #include "Runtime/Core/Debug/Logger.hpp"
 #include "Runtime/Core/Assertion/Assert.hh"
+
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
+#include "Runtime/Rendering/Shader/Built-in/Lit/LitTextureShader.hpp"
+
 #include "Runtime/Rendering/Lighting/LightManager.hpp"
+#include "Runtime/Rendering/Lighting/Lights/PointLight.hpp"
 #include "Runtime/Rendering/Lighting/Lights/DirectionalLight.hpp"
+
 
 /// \namespace cardinal
 namespace cardinal
@@ -84,7 +88,7 @@ namespace cardinal
 
 /// \brief Returns the directional light
 /// \return A pointer on the active directional light
-/* static */ DirectionalLight * LightManager::GetDirectional()
+/* static */ DirectionalLight * LightManager::GetDirectionalLight()
 {
     ASSERT_NOT_NULL(s_pInstance);
     return s_pInstance->m_pDirectional;
@@ -116,6 +120,69 @@ namespace cardinal
     glUniform1f  (LitTextureShader::s_ambientIntensity, ambientIntensity);
     glUniform3f  (LitTextureShader::s_lightPosition,    position.x,     position.y,     position.z);
     glUniform3f  (LitTextureShader::s_lightColor,       lightColor.x,   lightColor.y,   lightColor.z);
+}
+
+/// \brief  Allocates and returns a pointer on the new point light
+/// \return A pointer on the point light
+/* static */ PointLight * LightManager::AllocatePointLight()
+{
+    ASSERT_NOT_NULL(s_pInstance);
+    s_pInstance->m_pointLights.push_back(new PointLight());
+
+    return s_pInstance->m_pointLights.back();
+}
+
+/// \brief Releases a point light
+/// \param pLight The pointer on the light to release
+/* static */ void LightManager::ReleasePointLight(PointLight *& pLight)
+{
+    ASSERT_NOT_NULL(s_pInstance);
+
+    int index = -1;
+    size_t count = LightManager::s_pInstance->m_pointLights.size();
+    for (size_t nLight = 0; nLight < count; ++nLight)
+    {
+        if (LightManager::s_pInstance->m_pointLights[nLight] == pLight)
+        {
+            index = static_cast<int>(nLight);
+            break;
+        }
+    }
+
+    if (index != -1)
+    {
+        LightManager::s_pInstance->m_pointLights.erase(
+                LightManager::s_pInstance->m_pointLights.begin() + index);
+    }
+
+    delete pLight;
+    pLight = nullptr;
+}
+
+/// \brief Searches the 4 nearest point lights from the given position
+/// \param A vector of point light structures
+/* static */
+std::vector<PointLightStructure> LightManager::GetNearestPointLights(glm::vec3 const& position)
+{
+    ASSERT_NOT_NULL(s_pInstance);
+    std::vector<PointLightStructure> lights;
+
+    int index = -1;
+    size_t count = LightManager::s_pInstance->m_pointLights.size();
+    for (size_t nLight = 0; nLight < count; ++nLight)
+    {
+        if(lights.size() != 4) // TODO Get only nearest and consider a max range
+        {
+            lights.emplace_back(PointLightStructure
+            {
+                s_pInstance->m_pointLights[nLight]->GetRange(),
+                s_pInstance->m_pointLights[nLight]->GetColor(),
+                s_pInstance->m_pointLights[nLight]->GetPosition(),
+            });
+        }
+    }
+
+    return lights;
 }
 
 } // !namespace
