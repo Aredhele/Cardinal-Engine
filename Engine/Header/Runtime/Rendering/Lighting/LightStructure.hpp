@@ -33,7 +33,6 @@ namespace cardinal
 /// \brief  Contains point light data
 struct PointLightStructure
 {
-
     float     range;
     glm::vec3 color;
     glm::vec3 position;

@@ -22,6 +22,8 @@
 
 // Engine
 #include <World/Generator/BasicWorldGenerator.hpp>
+#include <Header/Runtime/Rendering/Lighting/Lights/PointLight.hpp>
+#include <Header/Runtime/Rendering/Lighting/LightManager.hpp>
 #include "Runtime/Rendering/RenderingEngine.hpp"
 #include "Runtime/Rendering/Renderer/TextRenderer.hpp"
 
@@ -57,6 +59,10 @@ int main(int argc, char ** argv)
 
     cardinal::Window * window = engine.GetWindow();
     engine.SetCamera(&camera);
+
+    cardinal::PointLight * l1 = cardinal::LightManager::AllocatePointLight();
+    l1->SetPosition(glm::vec3(64.0f, 64.0f, 150.0f));
+    l1->SetRange(20);
 
     // Creates the character
     Character character; // NOLINT

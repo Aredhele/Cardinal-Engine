@@ -122,6 +122,14 @@ namespace cardinal
     glUniform3f  (LitTextureShader::s_lightColor,       lightColor.x,   lightColor.y,   lightColor.z);
 }
 
+/// \brief Returns all points lights
+/// \return A vector of point lights
+/* static */ std::vector<class PointLight *> const LightManager::GetPointLights()
+{
+    ASSERT_NOT_NULL(s_pInstance);
+    return s_pInstance->m_pointLights;
+}
+
 /// \brief  Allocates and returns a pointer on the new point light
 /// \return A pointer on the point light
 /* static */ PointLight * LightManager::AllocatePointLight()

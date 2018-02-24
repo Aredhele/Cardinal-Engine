@@ -73,6 +73,10 @@ private:
     ////       to updates uniforms in shader
     static void OnRenderBegin();
 
+    /// \brief Returns all points lights
+    /// \return A vector of point lights
+    static std::vector<class PointLight *> const GetPointLights();
+
 private:
 
     static LightManager * s_pInstance;

@@ -24,7 +24,7 @@
 #include <chrono>
 #include <iostream>
 #include <Header/Runtime/Rendering/Lighting/Lights/DirectionalLight.hpp>
-
+#include "Runtime/Rendering/Lighting/Lights/PointLight.hpp"
 #include "Glew/include/GL/glew.h"
 
 #include "Runtime/Core/Debug/Logger.hpp"
@@ -227,12 +227,19 @@ void RenderingEngine::RenderFrame(float step)
     glm::mat4 View           = m_pCamera->GetViewMatrix();
     glm::mat4 ProjectionView = Projection * View;
 
+    // Start debug draw
     DirectionalLight * pLight = LightManager::GetDirectionalLight();
-
     if(pLight != nullptr)
     {
-        debug::DrawLight(pLight->GetPosition(), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
+        debug::DrawDirectionalLight(pLight->GetPosition(), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
     }
+
+    std::vector<PointLight *> const& pLights = LightManager::GetPointLights();
+    for(const PointLight* pPointLight : pLights)
+    {
+        debug::DrawPointLight(pPointLight->GetPosition(), glm::vec3(1.0f), 32, pPointLight->GetRange(), 1.0f);
+    }
+    // End debug draw
 
     // Lighting
     LightManager::OnRenderBegin();

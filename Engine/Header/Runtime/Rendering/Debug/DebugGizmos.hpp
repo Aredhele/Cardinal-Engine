@@ -33,11 +33,19 @@ namespace cardinal
 namespace debug
 {
 
-/// \brief Draw a light bulbe with lines
+/// \brief Draw a directional light with lines
 /// \param position The start point of the line
 /// \param color The color of the gizmo
 /// \param scale The end point of the line
-void DrawLight(glm::vec3 const& position, glm::vec3 const& color, float scale);
+void DrawDirectionalLight(glm::vec3 const& position, glm::vec3 const& color, float scale);
+
+/// \brief Draw a point light with lines
+/// \param position The start point of the line
+/// \param color The color of the gizmo
+/// \param resolution The number of points per circle
+/// \param range The range of the light
+/// \param scale The end point of the line
+void DrawPointLight(glm::vec3 const& position, glm::vec3 const& color, int resolution, float range, float scale);
 
 }  // !namespace
 

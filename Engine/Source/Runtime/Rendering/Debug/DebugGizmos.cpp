@@ -21,6 +21,7 @@
 /// \package    Core/Rendering/Debug
 /// \author     Vincent STEHLY--CALISTO
 
+#include <vector>
 #include "Glm/glm/ext.hpp"
 #include "Runtime/Rendering/Debug/DebugGizmos.hpp"
 #include "Runtime/Rendering/Debug/DebugManager.hpp"
@@ -33,11 +34,11 @@ namespace cardinal
 namespace debug
 {
 
-/// \brief Draw a light bulbe with lines
+/// \brief Draw a directional light with lines
 /// \param position The start point of the line
 /// \param color The color of the gizmo
 /// \param scale The end point of the line
-void DrawLight(glm::vec3 const& position, glm::vec3 const& color, float scale)
+void DrawDirectionalLight(glm::vec3 const& position, glm::vec3 const& color, float scale)
 {
 #ifdef CARDINAL_DEBUG
 
@@ -84,7 +85,87 @@ void DrawLight(glm::vec3 const& position, glm::vec3 const& color, float scale)
     DebugManager::AddLine(arrowStart4, arrowEnd4, color);
     DebugManager::AddLine(arrowStart5, arrowEnd5, color);
 #endif
+}
 
+/// \brief Draw a point light with lines
+/// \param position The start point of the line
+/// \param color The color of the gizmo
+/// \param resolution The number of points per circle
+/// \param range The range of the light
+/// \param scale The end point of the line
+void DrawPointLight(glm::vec3 const& position, glm::vec3 const& color, int resolution, float range, float scale)
+{
+#ifdef CARDINAL_DEBUG
+
+    // Compute spherical coordinates
+    int pointCount = static_cast<int>(resolution * scale);
+    float alpha    = (360.0f * (glm::pi<float>() / 180.0f)) / pointCount;
+
+    std::vector<glm::vec3> pointsZ;
+    std::vector<glm::vec3> pointsY;
+    for (int nPoint = 0; nPoint < pointCount; ++nPoint)
+    {
+        float x1 = position.x + glm::cos(alpha * nPoint) * range;
+        float y1 = position.y + glm::sin(alpha * nPoint) * range;
+        float z1 = position.z;
+
+        float x2 = position.x;
+        float y2 = position.y + glm::sin(alpha * nPoint) * range;
+        float z2 = position.z + glm::cos(alpha * nPoint) * range;
+
+        pointsZ.emplace_back(x1, y1, z1);
+        pointsY.emplace_back(x2, y2, z2);
+
+        if(nPoint != 0)
+        {
+            DebugManager::AddLine(pointsZ[nPoint - 1], pointsZ[nPoint], color);
+            DebugManager::AddLine(pointsY[nPoint - 1], pointsY[nPoint], color);
+        }
+    }
+
+    // Adding last points
+    DebugManager::AddLine(pointsZ[0], pointsZ[pointsZ.size() - 1], color);
+    DebugManager::AddLine(pointsY[0], pointsY[pointsY.size() - 1], color);
+
+    // Adding light at the center
+    glm::vec3 top  (position.x, position.y, position.z + 2.0f * scale);
+    glm::vec3 bot  (position.x, position.y, position.z - 2.0f * scale);
+    glm::vec3 left (position.x - 1.0f * scale, position.y, position.z);
+    glm::vec3 right(position.x + 1.0f * scale, position.y, position.z);
+    glm::vec3 front(position.x, position.y + 1.0f * scale, position.z);
+    glm::vec3 back (position.x, position.y - 1.0f * scale, position.z);
+
+    glm::vec3 rayLeftStart (left.x - 1.0f,         left.y, left.z);
+    glm::vec3 rayLeftEnd   (left.x - 2.0f * scale, left.y, left.z);
+
+    glm::vec3 rayRightStart(right.x + 1.0f,         right.y, right.z);
+    glm::vec3 rayRightEnd  (right.x + 2.0f * scale, right.y, right.z);
+    glm::vec3 rayFrontStart(front.x, front.y + 1.0f,         front.z);
+    glm::vec3 rayFrontEnd  (front.x, front.y + 2.0f * scale, front.z);
+
+    glm::vec3 rayBackStart (back.x, back.y - 1.0f,         back.z);
+    glm::vec3 rayBackEnd   (back.x, back.y - 2.0f * scale, back.z);
+
+    DebugManager::AddLine(top, left,  color);
+    DebugManager::AddLine(top, right, color);
+    DebugManager::AddLine(top, front, color);
+    DebugManager::AddLine(top, back,  color);
+
+    DebugManager::AddLine(bot, left,  color);
+    DebugManager::AddLine(bot, right, color);
+    DebugManager::AddLine(bot, front, color);
+    DebugManager::AddLine(bot, back,  color);
+
+    DebugManager::AddLine(right,  back,  color);
+    DebugManager::AddLine(right, front,  color);
+    DebugManager::AddLine(front, left,   color);
+    DebugManager::AddLine(back,  left,   color);
+
+    DebugManager::AddLine(rayLeftStart,  rayLeftEnd,  color);
+    DebugManager::AddLine(rayRightStart, rayRightEnd, color);
+    DebugManager::AddLine(rayFrontStart, rayFrontEnd, color);
+    DebugManager::AddLine(rayBackStart,  rayBackEnd,  color);
+#endif
 }
 
 } // !namespace
