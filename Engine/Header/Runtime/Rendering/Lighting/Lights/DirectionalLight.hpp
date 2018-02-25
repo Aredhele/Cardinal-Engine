@@ -48,6 +48,10 @@ public:
     /// \param position The new position
     void SetPosition(glm::vec3 const& position);
 
+    /// \brief Sets the direction of the light
+    /// \param direction The new direction
+    void SetDirection(glm::vec3 const& direction);
+
     /// \brief Sets the light color
     /// \param color The  new color
     void SetLightColor(glm::vec3 const& color);
@@ -67,6 +71,10 @@ public:
     /// \brief Returns the position of the light
     /// \return The current position
     glm::vec3 const& GetPosition() const;
+
+    /// \brief Returns the direction of the light
+    /// \param The direction of the light
+    glm::vec3 const& GetDirection() const;
 
     /// \brief Returns the color of the light
     /// \return The color of the light
@@ -94,6 +102,7 @@ private:
     glm::vec3 m_lightColor;
     glm::vec3 m_ambientColor;
     glm::vec3 m_position;
+    glm::vec3 m_direction;
 };
 
 } // !namespace 

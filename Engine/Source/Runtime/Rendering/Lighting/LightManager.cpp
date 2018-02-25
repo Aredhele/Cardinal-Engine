@@ -28,11 +28,11 @@
 
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
 #include "Runtime/Rendering/Shader/Built-in/Lit/LitTextureShader.hpp"
+#include "Runtime/Rendering/Shader/Built-in/Standard/StandardShader.hpp"
 
 #include "Runtime/Rendering/Lighting/LightManager.hpp"
 #include "Runtime/Rendering/Lighting/Lights/PointLight.hpp"
 #include "Runtime/Rendering/Lighting/Lights/DirectionalLight.hpp"
-
 
 /// \namespace cardinal
 namespace cardinal
@@ -99,27 +99,31 @@ namespace cardinal
 {
     ASSERT_NOT_NULL(s_pInstance);
 
-    float lightIntensity   = 0.0f;
+    float lightIntensity   = 0.2f;
     float ambientIntensity = 0.2;
-    glm::vec3 position    (0.0f, 0.0f, 0.0f);
-    glm::vec3 lightColor  (1.0f, 1.0f, 1.0f);
+    glm::vec3 direction   (-0.5f, -0.5f, -0.5f);
+    glm::vec3 lightColor  (1.0f,   1.0f,  1.0f);
 
     // Updates uniforms
     if(s_pInstance->m_pDirectional != nullptr)
     {
         lightIntensity   = s_pInstance->m_pDirectional->GetLightIntensity();
         ambientIntensity = s_pInstance->m_pDirectional->GetAmbientIntensity();
-        position         = s_pInstance->m_pDirectional->GetPosition();
+        direction        = s_pInstance->m_pDirectional->GetDirection();
         lightColor       = s_pInstance->m_pDirectional->GetLightColor();
     }
 
-    uint shaderID = (uint)ShaderManager::GetShaderID("LitTexture");
-
-    glUseProgram (shaderID);
+    glUseProgram ((uint)ShaderManager::GetShaderID("LitTexture"));
     glUniform1f  (LitTextureShader::s_lightIntensity,   lightIntensity);
     glUniform1f  (LitTextureShader::s_ambientIntensity, ambientIntensity);
-    glUniform3f  (LitTextureShader::s_lightPosition,    position.x,     position.y,     position.z);
+    glUniform3f  (LitTextureShader::s_lightDirection,   direction.x,    direction.y,    direction.z);
     glUniform3f  (LitTextureShader::s_lightColor,       lightColor.x,   lightColor.y,   lightColor.z);
+
+    glUseProgram ((uint)ShaderManager::GetShaderID("Standard"));
+    glUniform1f  (StandardShader::s_lightIntensity,     lightIntensity);
+    glUniform1f  (StandardShader::s_ambientIntensity,   ambientIntensity);
+    glUniform3f  (StandardShader::s_lightDirection,     direction.x,    direction.y,    direction.z);
+    glUniform3f  (StandardShader::s_lightColor,         lightColor.x,   lightColor.y,   lightColor.z);
 }
 
 /// \brief Returns all points lights
@@ -184,6 +188,7 @@ std::vector<PointLightStructure> LightManager::GetNearestPointLights(glm::vec3 c
             lights.emplace_back(PointLightStructure
             {
                 s_pInstance->m_pointLights[nLight]->GetRange(),
+                s_pInstance->m_pointLights[nLight]->GetIntensity(),
                 s_pInstance->m_pointLights[nLight]->GetColor(),
                 s_pInstance->m_pointLights[nLight]->GetPosition(),
             });

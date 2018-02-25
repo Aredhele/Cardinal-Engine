@@ -39,7 +39,7 @@ UnlitColorShader::UnlitColorShader()
 
 /// \brief Sets up the pipeline for the shader
 /// \param MVP The Projection-View-Model matrix to pass to the shader
-void UnlitColorShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light)
+void UnlitColorShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights)
 {
     glUseProgram      (m_shaderID);
     glUniformMatrix4fv(m_matrixID, 1, GL_FALSE, &MVP[0][0]);

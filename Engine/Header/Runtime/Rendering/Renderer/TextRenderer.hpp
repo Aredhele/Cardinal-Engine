@@ -64,7 +64,7 @@ public :
 
     /// \brief Base method implementation
     /// \param PV The projection view matrix
-    void Draw(glm::mat4 const& P, glm::mat4 const& V, glm::vec3 const& light) final;
+    void Draw(glm::mat4 const& P, glm::mat4 const& V, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights) final;
 
 private:
 

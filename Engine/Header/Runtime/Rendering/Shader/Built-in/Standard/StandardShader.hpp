@@ -46,7 +46,7 @@ public:
 
     /// \brief Sets up the pipeline for the shader
     /// \param MVP The Projection-View-Model matrix to pass to the shader
-    void Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light) final;
+    void Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights) final;
 
     /// \brief Restore the pipeline state
     void End() final;
@@ -55,7 +55,7 @@ private:
 
     friend class LightManager;
 
-    static int s_lightPosition;
+    static int s_lightDirection;
     static int s_lightIntensity;
     static int s_ambientIntensity;
     static int s_lightColor;
@@ -69,6 +69,7 @@ private:
     int  m_viewID;
     int  m_modelID;
     int  m_projection;
+    int  m_lightCountID;
     int  m_textureSampler;
 };
 

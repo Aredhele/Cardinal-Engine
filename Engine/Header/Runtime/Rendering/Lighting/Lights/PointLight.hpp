@@ -40,6 +40,10 @@ public:
     /// \param range The new range
     void SetRange(float range);
 
+    /// \brief Sets the intensity of the light
+    /// \param intensity The new intensity
+    void SetIntensity(float intensity);
+
     /// \brief Sets the position of the light
     /// \param position The new position
     void SetPosition(glm::vec3 const& position);
@@ -51,6 +55,10 @@ public:
     /// \brief  Returns the range of the light
     /// \return The range of the light
     float GetRange() const;
+
+    /// \brief Return the intensity of the light
+    /// \return The intensity of the light
+    float GetIntensity() const;
 
     /// \brief  Returns the position of the light
     /// \return The position of the light
@@ -73,6 +81,7 @@ private:
 private:
 
     float     m_range;
+    float     m_intensity;
     glm::vec3 m_position;
     glm::vec3 m_color;
 };

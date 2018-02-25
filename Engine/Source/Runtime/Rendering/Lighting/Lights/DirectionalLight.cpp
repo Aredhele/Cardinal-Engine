@@ -31,7 +31,8 @@ namespace cardinal
 DirectionalLight::DirectionalLight()
 {
     // Basics settings
-    SetPosition(glm::vec3(16.0f, 16.0f, 16.0f));
+    SetPosition (glm::vec3(16.0f, 16.0f, 16.0f));
+    SetDirection(glm::vec3(-0.5f, -0.5f, -0.5f));
     SetLightIntensity  (0.8f);
     SetAmbientIntensity(0.3f);
     SetLightColor  (glm::vec3(1.0f, 1.0f, 1.0f));
@@ -57,6 +58,13 @@ void DirectionalLight::SetAmbientIntensity(float intensity)
 void DirectionalLight::SetPosition(glm::vec3 const &position)
 {
     m_position = position;
+}
+
+/// \brief Sets the direction of the light
+/// \param direction The new direction
+void DirectionalLight::SetDirection(glm::vec3 const& direction)
+{
+    m_direction = direction;
 }
 
 /// \brief Sets the light color
@@ -92,6 +100,13 @@ float DirectionalLight::GetAmbientIntensity() const
 glm::vec3 const &DirectionalLight::GetPosition() const
 {
     return m_position;
+}
+
+/// \brief Returns the direction of the light
+/// \param The direction of the light
+glm::vec3 const& DirectionalLight::GetDirection() const
+{
+    return m_direction;
 }
 
 /// \brief Returns the color of the light

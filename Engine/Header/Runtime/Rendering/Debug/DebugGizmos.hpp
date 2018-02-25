@@ -35,9 +35,10 @@ namespace debug
 
 /// \brief Draw a directional light with lines
 /// \param position The start point of the line
+/// \param direction The direction of the light
 /// \param color The color of the gizmo
 /// \param scale The end point of the line
-void DrawDirectionalLight(glm::vec3 const& position, glm::vec3 const& color, float scale);
+void DrawDirectionalLight(glm::vec3 const& position, glm::vec3 const& direction, glm::vec3 const& color, float scale);
 
 /// \brief Draw a point light with lines
 /// \param position The start point of the line

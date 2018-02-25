@@ -34,6 +34,7 @@ namespace cardinal
 struct PointLightStructure
 {
     float     range;
+    float     intensity;
     glm::vec3 color;
     glm::vec3 position;
 };

@@ -42,7 +42,7 @@ TextShader::TextShader()
 
 /// \brief Sets up the pipeline for the shader
 /// \param MVP The Projection-View-Model matrix to pass to the shader
-void TextShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light)
+void TextShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights)
 {
     glUseProgram      (m_shaderID);
     glActiveTexture   (GL_TEXTURE0);

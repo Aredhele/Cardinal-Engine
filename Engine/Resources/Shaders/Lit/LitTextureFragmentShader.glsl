@@ -12,7 +12,7 @@ out vec3 color;
 // Uniforms
 uniform sampler2D textureSampler;
 
-uniform vec3  lightPosition;
+uniform vec3  lightDirection;
 uniform float lightIntensity;
 uniform float ambientIntensity;
 uniform vec3  lightColor;

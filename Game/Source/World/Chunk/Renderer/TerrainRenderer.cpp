@@ -27,6 +27,7 @@
 #include <World/Chunk/Chunk.hpp>
 #include <Header/Runtime/Rendering/Shader/Built-in/Lit/LitTextureShader.hpp>
 #include <Header/Runtime/Rendering/Debug/Debug.hpp>
+#include <Header/Runtime/Rendering/Shader/Built-in/Standard/StandardShader.hpp>
 #include "World/Cube/UVManager.hpp"
 #include "Runtime/Rendering/Optimization/VBOIndexer.hpp"
 
@@ -34,7 +35,7 @@
 TerrainRenderer::TerrainRenderer()
 {
     m_renderer = cardinal::RenderingEngine::AllocateMeshRenderer();
-    cardinal::LitTextureShader * pShader = new cardinal::LitTextureShader(); // NOLINT
+    cardinal::StandardShader * pShader = new cardinal::StandardShader(); // NOLINT
     pShader->SetTexture(cardinal::TextureManager::GetTextureID("Block"));
     m_renderer->SetShader(pShader);
 }

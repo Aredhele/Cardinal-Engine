@@ -35,4 +35,10 @@ IRenderer::IRenderer()
     // None
 }
 
+/// \brief Returns the position of the renderer
+glm::vec3 const &IRenderer::GetPosition() const
+{
+    return m_position;
+}
+
 } // !namespace

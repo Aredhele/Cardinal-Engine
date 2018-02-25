@@ -170,9 +170,9 @@ void MeshRenderer::SetPosition(const glm::vec3 &position)
 
 /// \brief Base method implementation
 /// \param PV The projection view matrix
-void MeshRenderer::Draw(glm::mat4 const& P, glm::mat4 const& V, glm::vec3 const& light)
+void MeshRenderer::Draw(glm::mat4 const& P, glm::mat4 const& V, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights)
 {
-    m_pShader->Begin(P * V * m_model, P, V, m_model, light);
+    m_pShader->Begin(P * V * m_model, P, V, m_model, light, pointLights);
 
     glBindVertexArray(m_vao);
     glEnableVertexAttribArray(0);

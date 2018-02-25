@@ -36,12 +36,14 @@ namespace debug
 
 /// \brief Draw a directional light with lines
 /// \param position The start point of the line
+/// \param direction The direction of the light
 /// \param color The color of the gizmo
 /// \param scale The end point of the line
-void DrawDirectionalLight(glm::vec3 const& position, glm::vec3 const& color, float scale)
+void DrawDirectionalLight(glm::vec3 const& position, glm::vec3 const& direction, glm::vec3 const& color, float scale)
 {
 #ifdef CARDINAL_DEBUG
 
+    glm::vec3 dir = glm::normalize(direction) * 10.0f;
     glm::vec3 top  (position.x, position.y, position.z + 2.0f * scale);
     glm::vec3 bot  (position.x, position.y, position.z - 2.0f * scale);
     glm::vec3 left (position.x - 1.0f * scale, position.y, position.z);
@@ -50,19 +52,19 @@ void DrawDirectionalLight(glm::vec3 const& position, glm::vec3 const& color, flo
     glm::vec3 back (position.x, position.y - 1.0f * scale, position.z);
 
     glm::vec3 arrowStart1(bot.x, bot.y, bot.z - 1.0f);
-    glm::vec3 arrowEnd1  (arrowStart1 + (glm::normalize(-position)) - 2.0f * scale);
+    glm::vec3 arrowEnd1  (arrowStart1 + dir * glm::normalize(arrowStart1));
 
     glm::vec3 arrowStart2(bot.x - 1.0f, bot.y - 1.0f, bot.z - 1.0f);
-    glm::vec3 arrowEnd2  (arrowStart2 + glm::normalize(-position + glm::vec3(-1.0f, -1.0f, 0.0f)) - 2.0f * scale);
+    glm::vec3 arrowEnd2  (arrowStart2 + dir * glm::normalize(arrowStart2));
 
     glm::vec3 arrowStart3(bot.x + 1.0f, bot.y + 1.0f, bot.z - 1.0f);
-    glm::vec3 arrowEnd3  (arrowStart3 + glm::normalize(-position + glm::vec3(1.0f, 1.0f, 0.0f)) - 2.0f * scale);
+    glm::vec3 arrowEnd3  (arrowStart3 + dir * glm::normalize(arrowStart3));
 
     glm::vec3 arrowStart4(bot.x + 1.0f, bot.y - 1.0f, bot.z - 1.0f);
-    glm::vec3 arrowEnd4  (arrowStart4 + glm::normalize(-position + glm::vec3(1.0f, -1.0f, 0.0f)) - 2.0f * scale);
+    glm::vec3 arrowEnd4  (arrowStart4 + dir * glm::normalize(arrowStart4));
 
     glm::vec3 arrowStart5(bot.x - 1.0f, bot.y + 1.0f, bot.z - 1.0f);
-    glm::vec3 arrowEnd5  (arrowStart5 + glm::normalize(-position + glm::vec3(-1.0f, 1.0f, 0.0f)) - 2.0f * scale);
+    glm::vec3 arrowEnd5  (arrowStart5 + dir * glm::normalize(arrowStart5));
 
     DebugManager::AddLine(top, left,  color);
     DebugManager::AddLine(top, right, color);

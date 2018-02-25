@@ -30,9 +30,10 @@ namespace cardinal
 /// \brief Constructor
 PointLight::PointLight()
 {
-    m_range    = 10;
-    m_position = glm::vec3(0.0f);
-    m_color    = glm::vec3(1.0f);
+    m_range     = 10;
+    m_intensity = 1.0f;
+    m_position  = glm::vec3(0.0f);
+    m_color     = glm::vec3(1.0f);
 }
 
 /// \brief Destructor
@@ -46,6 +47,13 @@ PointLight::~PointLight()
 void PointLight::SetRange(float range)
 {
     m_range = range;
+}
+
+/// \brief Sets the intensity of the light
+/// \param intensity The new intensity
+void PointLight::SetIntensity(float intensity)
+{
+    m_intensity = intensity;
 }
 
 /// \brief Sets the position of the light
@@ -69,6 +77,12 @@ float PointLight::GetRange() const
     return m_range;
 }
 
+/// \brief Return the intensity of the light
+/// \return The intensity of the light
+float PointLight::GetIntensity() const
+{
+    return m_intensity;
+}
 
 /// \brief  Returns the position of the light
 /// \return The position of the light

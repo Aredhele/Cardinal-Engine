@@ -32,7 +32,7 @@
 namespace cardinal
 {
 
-/* static */ int LitTextureShader::s_lightPosition    = -1;
+/* static */ int LitTextureShader::s_lightDirection   = -1;
 /* static */ int LitTextureShader::s_lightIntensity   = -1;
 /* static */ int LitTextureShader::s_ambientIntensity = -1;
 /* static */ int LitTextureShader::s_lightColor       = -1;
@@ -55,18 +55,18 @@ LitTextureShader::LitTextureShader()
     m_matrixID       = glGetUniformLocation((GLuint)m_shaderID, "MVP");
     m_textureSampler = glGetUniformLocation((GLuint)m_shaderID, "textureSampler");
 
-    s_lightPosition    = glGetUniformLocation((GLuint)m_shaderID, "lightPosition");
+    s_lightDirection   = glGetUniformLocation((GLuint)m_shaderID, "lightDirection");
     s_lightIntensity   = glGetUniformLocation((GLuint)m_shaderID, "lightIntensity");
     s_ambientIntensity = glGetUniformLocation((GLuint)m_shaderID, "ambientIntensity");
     s_lightColor       = glGetUniformLocation((GLuint)m_shaderID, "lightColor");
 
-    ASSERT_NE(m_modelID,  -1);
+   /* ASSERT_NE(m_modelID,  -1);
     ASSERT_NE(m_viewID,   -1);
     ASSERT_NE(m_matrixID, -1);
-    ASSERT_NE(s_lightPosition,    -1);
+    ASSERT_NE(s_lightDirection,   -1);
     ASSERT_NE(s_lightIntensity,   -1);
     ASSERT_NE(s_ambientIntensity, -1);
-    ASSERT_NE(s_lightColor,       -1);
+    ASSERT_NE(s_lightColor,       -1);*/
 }
 
 /// \brief Sets the texture of the shader
@@ -77,7 +77,7 @@ void LitTextureShader::SetTexture(uint textureID)
 
 /// \brief Sets up the pipeline for the shader
 /// \param MVP The Projection-View-Model matrix to pass to the shader
-void LitTextureShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light)
+void LitTextureShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights)
 {
     glUseProgram      ((GLuint)m_shaderID);
     glUniformMatrix4fv(m_projection,  1, GL_FALSE,   &P[0][0]);

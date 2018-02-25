@@ -109,6 +109,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/Text/TextVertexShader.glsl",
             "Resources/Shaders/Text/TextFragmentShader.glsl"));
 
+    ShaderManager::Register("Standard", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/Standard/StandardVertexShader.glsl",
+            "Resources/Shaders/Standard/StandardFragmentShader.glsl"));
+
     // Debug
     DebugManager::Initialize();
 
@@ -118,6 +122,8 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     glEnable   (GL_CULL_FACE);
     glCullFace (GL_BACK);
     glFrontFace(GL_CCW);
+    // glDisable(GL_DITHER);
+    // glEnable(GL_DITHER);
 
     // TODO : Makes clear color configurable
     glClearColor(0.0f, 0.709f, 0.866f, 1.0f);
@@ -231,7 +237,7 @@ void RenderingEngine::RenderFrame(float step)
     DirectionalLight * pLight = LightManager::GetDirectionalLight();
     if(pLight != nullptr)
     {
-        debug::DrawDirectionalLight(pLight->GetPosition(), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
+        debug::DrawDirectionalLight(pLight->GetPosition(),pLight->GetDirection(), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
     }
 
     std::vector<PointLight *> const& pLights = LightManager::GetPointLights();
@@ -248,7 +254,7 @@ void RenderingEngine::RenderFrame(float step)
     size_t rendererCount = m_renderers.size();
     for (int nRenderer = 0; nRenderer < rendererCount; ++nRenderer)
     {
-        m_renderers[nRenderer]->Draw(Projection, View, glm::vec3(0.0f, 0.0f, 0.0f));
+        m_renderers[nRenderer]->Draw(Projection, View, glm::vec3(0.0f, 0.0f, 0.0f), LightManager::GetNearestPointLights(m_renderers[nRenderer]->GetPosition()));
     }
 
     // Cleanup

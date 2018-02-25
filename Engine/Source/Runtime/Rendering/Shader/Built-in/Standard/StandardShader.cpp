@@ -32,7 +32,7 @@
 namespace cardinal
 {
 
-/* static */ int StandardShader::s_lightPosition    = -1;
+/* static */ int StandardShader::s_lightDirection   = -1;
 /* static */ int StandardShader::s_lightIntensity   = -1;
 /* static */ int StandardShader::s_ambientIntensity = -1;
 /* static */ int StandardShader::s_lightColor       = -1;
@@ -44,6 +44,7 @@ StandardShader::StandardShader()
     m_modelID        = -1;
     m_textureID      =  0;
     m_textureSampler = -1;
+    m_lightCountID   = -1;
 
     m_shaderID       = ShaderManager::GetShaderID("Standard");
 
@@ -55,18 +56,23 @@ StandardShader::StandardShader()
     m_matrixID       = glGetUniformLocation((GLuint)m_shaderID, "MVP");
     m_textureSampler = glGetUniformLocation((GLuint)m_shaderID, "textureSampler");
 
-    s_lightPosition    = glGetUniformLocation((GLuint)m_shaderID, "lightPosition");
+    s_lightDirection   = glGetUniformLocation((GLuint)m_shaderID, "lightDirection");
     s_lightIntensity   = glGetUniformLocation((GLuint)m_shaderID, "lightIntensity");
     s_ambientIntensity = glGetUniformLocation((GLuint)m_shaderID, "ambientIntensity");
     s_lightColor       = glGetUniformLocation((GLuint)m_shaderID, "lightColor");
 
-    ASSERT_NE(m_modelID,  -1);
+    /*ASSERT_NE(m_modelID,  -1);
     ASSERT_NE(m_viewID,   -1);
     ASSERT_NE(m_matrixID, -1);
     ASSERT_NE(s_lightPosition,    -1);
     ASSERT_NE(s_lightIntensity,   -1);
     ASSERT_NE(s_ambientIntensity, -1);
-    ASSERT_NE(s_lightColor,       -1);
+    ASSERT_NE(s_lightColor,       -1);*/
+
+    // Lighting
+    m_lightCountID = glGetUniformLocation((GLuint)m_shaderID, "lightCount");
+
+   // ASSERT_NE(m_lightCountID, -1);
 }
 
 /// \brief Sets the texture of the shader
@@ -77,13 +83,36 @@ void StandardShader::SetTexture(uint textureID)
 
 /// \brief Sets up the pipeline for the shader
 /// \param MVP The Projection-View-Model matrix to pass to the shader
-void StandardShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light)
+void StandardShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights)
 {
     glUseProgram      ((GLuint)m_shaderID);
     glUniformMatrix4fv(m_projection,  1, GL_FALSE,   &P[0][0]);
     glUniformMatrix4fv(m_modelID,     1, GL_FALSE,   &M[0][0]);
     glUniformMatrix4fv(m_viewID,      1, GL_FALSE,   &V[0][0]);
     glUniformMatrix4fv(m_matrixID,    1, GL_FALSE, &MVP[0][0]);
+
+    // Lighting
+    glUniform1i(m_lightCountID, static_cast<GLint>(pointLights.size()));
+
+    // Setting uniforms
+    for(size_t nLight = 0; nLight < pointLights.size(); ++nLight)
+    {
+        std::string index = std::to_string(nLight);
+        std::string range      = "lights[" + index + "].range";
+        std::string intensity  = "lights[" + index + "].intensity";
+        std::string color      = "lights[" + index + "].color";
+        std::string position   = "lights[" + index + "].position";
+
+        int locRange     = glGetUniformLocation((GLuint)m_shaderID, range.c_str());
+        int locIntensity = glGetUniformLocation((GLuint)m_shaderID, intensity.c_str());
+        int locColor     = glGetUniformLocation((GLuint)m_shaderID, color.c_str());
+        int locPosition  = glGetUniformLocation((GLuint)m_shaderID, position.c_str());
+
+        glUniform1f(locRange,     pointLights[nLight].range);
+        glUniform1f(locIntensity, pointLights[nLight].intensity);
+        glUniform3f(locColor,     pointLights[nLight].color.x,    pointLights[nLight].color.y,    pointLights[nLight].color.z);
+        glUniform3f(locPosition,  pointLights[nLight].position.x, pointLights[nLight].position.y, pointLights[nLight].position.z);
+    }
 
     glActiveTexture (GL_TEXTURE0);
     glBindTexture   (GL_TEXTURE_2D, m_textureID);
