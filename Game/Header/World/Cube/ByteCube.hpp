@@ -32,7 +32,7 @@ public:
 
     static const int s_cubeSize = 4;
     static const unsigned char s_typeMask  = 0xE1; ///< 1111 0001
-    static const unsigned char s_stateMask = 0x1E; ///< 0001 1110
+    static const unsigned char s_stateMask = 0x3E; ///< 0011 1110
 
     static const float s_vertices[108];
     static const float s_normals [108];
@@ -59,6 +59,7 @@ public:
         Emerald   = 0x0D << 1, ///< 0001 1010
         Snow      = 0x0E << 1, ///< 0001 1100
         Bedrock   = 0x0F << 1, ///< 0001 1110
+        Sand      = 0x10 << 1, ///< 0010 0000
     };
 
     /// \brief Constructor
