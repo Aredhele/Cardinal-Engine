@@ -23,8 +23,6 @@
 
 #include <chrono>
 #include <iostream>
-#include <Header/Runtime/Rendering/Lighting/Lights/DirectionalLight.hpp>
-#include "Runtime/Rendering/Lighting/Lights/PointLight.hpp"
 #include "Glew/include/GL/glew.h"
 
 #include "Runtime/Core/Debug/Logger.hpp"
@@ -37,10 +35,13 @@
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
 #include "Runtime/Rendering/Shader/ShaderCompiler.hpp"
 #include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
-#include "Runtime/Rendering/Lighting/LightManager.hpp"
 #include "Runtime/Rendering/Renderer/TextRenderer.hpp"
 #include "Runtime/Rendering/Texture/TextureLoader.hpp"
 #include "Runtime/Rendering/Texture/TextureManager.hpp"
+
+#include "Runtime/Rendering/Lighting/LightManager.hpp"
+#include "Runtime/Rendering/Lighting/Lights/PointLight.hpp"
+#include "Runtime/Rendering/Lighting/Lights/DirectionalLight.hpp"
 
 #include "ImGUI/imgui.h"
 #include "ImGUI/imgui_impl_glfw_gl3.h"
@@ -237,7 +238,7 @@ void RenderingEngine::RenderFrame(float step)
     DirectionalLight * pLight = LightManager::GetDirectionalLight();
     if(pLight != nullptr)
     {
-        debug::DrawDirectionalLight(pLight->GetPosition(),pLight->GetDirection(), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
+        debug::DrawDirectionalLight(pLight->GetPosition(), pLight->GetDirection(), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
     }
 
     std::vector<PointLight *> const& pLights = LightManager::GetPointLights();
