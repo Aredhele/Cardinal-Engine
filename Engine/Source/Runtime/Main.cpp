@@ -15,52 +15,25 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       Engine.hpp
-/// \date       19/02/2018
+/// \file       Main.cpp
+/// \date       25/02/2018
 /// \project    Cardinal Engine
 /// \package    Runtime
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_ENGINE_HPP__
-#define CARDINAL_ENGINE_ENGINE_HPP__
+#include "Runtime/Engine.hpp"
 
-#include "Runtime/Core/Debug/Logger.hpp"
-#include "Runtime/Core/Plugin/PluginManager.hpp"
-#include "Runtime/Rendering/RenderingEngine.hpp"
-#include "Runtime/Platform/Configuration/Configuration.hh"
-
-/// \namespace cardinal
-namespace cardinal
+/// \brief Engine entry point
+int Cardinal_EntryPoint(int argc, char ** argv)
 {
+    cardinal::Engine cardinal_engine;
+    if(!cardinal_engine.Initialize())
+    {
+        return -1;
+    }
 
-/// \class Engine
-/// \brief TODO
-class Engine
-{
-public:
+    cardinal_engine.Start();
+    cardinal_engine.Release();
 
-    /// \brief Initializes Cardinal
-    bool Initialize();
-
-    /// \brief Starts the engine
-    void Start();
-
-    /// \brief Releases Cardinal
-    void Release();
-
-private:
-
-    /// \brief Main method of the engine
-    void GameLoop();
-
-private:
-
-    PluginManager   m_pluginManager;
-    RenderingEngine m_renderingEngine;
-
-    constexpr const double SECONDS_PER_UPDATE = 1.0 / 60.0;
-};
-
-} // !namespace
-
-#endif // !CARDINAL_ENGINE_ENGINE_HPP__
+    return 0;
+}

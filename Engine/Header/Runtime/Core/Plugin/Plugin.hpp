@@ -15,52 +15,41 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       Engine.hpp
-/// \date       19/02/2018
+/// \file       Plugin.hpp
+/// \date       25/02/2018
 /// \project    Cardinal Engine
-/// \package    Runtime
+/// \package    Runtime/Core/Plugin
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_ENGINE_HPP__
-#define CARDINAL_ENGINE_ENGINE_HPP__
-
-#include "Runtime/Core/Debug/Logger.hpp"
-#include "Runtime/Core/Plugin/PluginManager.hpp"
-#include "Runtime/Rendering/RenderingEngine.hpp"
-#include "Runtime/Platform/Configuration/Configuration.hh"
+#ifndef CARDINAL_ENGINE_PLUGIN_HPP__
+#define CARDINAL_ENGINE_PLUGIN_HPP__
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \class Engine
-/// \brief TODO
-class Engine
+/// \class Plugin
+/// \brief Interface for engine plugins
+class Plugin
 {
 public:
 
-    /// \brief Initializes Cardinal
-    bool Initialize();
+    /// \brief Called when the game begins
+    virtual void OnPlayStart() = 0;
 
-    /// \brief Starts the engine
-    void Start();
+    /// \brief Called when the game stops
+    virtual void OnPlayStop () = 0;
 
-    /// \brief Releases Cardinal
-    void Release();
+    /// \brief Called just before the engine update
+    virtual void OnPreUpdate() = 0;
 
-private:
-
-    /// \brief Main method of the engine
-    void GameLoop();
-
-private:
-
-    PluginManager   m_pluginManager;
-    RenderingEngine m_renderingEngine;
-
-    constexpr const double SECONDS_PER_UPDATE = 1.0 / 60.0;
+    /// \brief Called after the engine update
+    virtual void OnPostUpdate(float dt) = 0;
 };
 
 } // !namespace
 
-#endif // !CARDINAL_ENGINE_ENGINE_HPP__
+/// \brief Hook to register user plugin from the static libraries
+extern "C" void OnPluginRegistration();
+
+#endif // !CARDINAL_ENGINE_PLUGIN_HPP__

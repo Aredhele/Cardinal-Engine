@@ -21,8 +21,90 @@
 /// \package    Runtime
 /// \author     Vincent STEHLY--CALISTO
 
+#include "Runtime/Engine.hpp"
+
 /// \namespace cardinal
 namespace cardinal
 {
-    // TODO
+
+/// \brief Initializes Cardinal
+bool Engine::Initialize()
+{
+    Logger::LogInfo("Cardinal initialization");
+    m_pluginManager.Initialize();
+
+    Logger::LogInfo("Registering plugins ...");
+    OnPluginRegistration();
+    Logger::LogInfo("All plugins have been registered");
+
+    if (!m_renderingEngine.Initialize(1600, 900, "Cardinal", 10000.0f, false))
+    {
+        cardinal::Logger::LogError("Cannot initialize the engine, aborting");
+        return false;
+    }
+
+    Logger::LogInfo("Cardinal initialized");
+}
+
+/// \brief Starts the engine
+void Engine::Start()
+{
+    GameLoop();
+}
+
+/// \brief Releases Cardinal
+void Engine::Release()
+{
+    Logger::LogInfo("Releasing all engine resources ...");
+    Logger::LogInfo("Engine successfully released");
+}
+
+/// \brief Main method of the engine
+void Engine::GameLoop()
+{
+    // Getting GLFW context
+    GLFWwindow * pContext = m_renderingEngine.GetWindow()->GetContext();
+
+    // Initializing timers
+    double lag      = 0.0;
+    double previous = glfwGetTime();
+
+    // Game starts
+    m_pluginManager.OnPlayStart();
+
+    while (glfwGetKey(pContext, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(pContext) == 0)
+    {
+        double current = glfwGetTime();
+        double elapsed = current - previous;
+        previous       = current;
+
+        lag += elapsed;
+
+        // Processing events
+        glfwPollEvents();
+
+        // Fixed granularity
+        while(lag >= SECONDS_PER_UPDATE)
+        {
+            // Pre-update
+            m_pluginManager.OnPreUpdate();
+
+            // Engine update
+            // TODO
+
+            // Post-update
+            m_pluginManager.OnPostUpdate((float)SECONDS_PER_UPDATE);
+
+            // Retrieve elapsed time
+            lag -= SECONDS_PER_UPDATE;
+        }
+
+        // Rendering the frame
+        m_renderingEngine.Render((float)(lag / SECONDS_PER_UPDATE));
+    }
+
+    // Game stops
+    m_pluginManager.OnPlayStop();
+}
+
 } // !namespace
