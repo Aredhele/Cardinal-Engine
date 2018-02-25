@@ -60,6 +60,8 @@ public:
         Snow      = 0x0E << 1, ///< 0001 1100
         Bedrock   = 0x0F << 1, ///< 0001 1110
         Sand      = 0x10 << 1, ///< 0010 0000
+        Ice       = 0x11 << 1, ///< 0010 0010
+        WoodPlank = 0x12 << 1, ///< 0010 0100
     };
 
     /// \brief Constructor
