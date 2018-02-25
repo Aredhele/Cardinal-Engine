@@ -40,6 +40,11 @@ namespace debug
 void DrawLine(glm::vec3 const& start, glm::vec3 const& end, glm::vec3 const& color)
 {
 #ifdef CARDINAL_DEBUG
+    if(!DebugManager::IsGizmoEnabled(DebugManager::EGizmo::Line))
+    {
+        return;
+    }
+
     DebugManager::AddLine(start, end, color);
 #endif
 }

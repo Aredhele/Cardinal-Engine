@@ -22,6 +22,7 @@
 
 // Engine
 #include <World/Generator/BasicWorldGenerator.hpp>
+#include <Header/Runtime/Rendering/Debug/DebugManager.hpp>
 #include "Runtime/Rendering/RenderingEngine.hpp"
 #include "Runtime/Rendering/Renderer/TextRenderer.hpp"
 
@@ -83,11 +84,6 @@ int main(int argc, char ** argv)
 
         // Update character
         character.Update(window, dt);
-
-        // Debug only
-        cardinal::debug::DrawLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1000.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        cardinal::debug::DrawLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1000.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        cardinal::debug::DrawLine(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1000.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
         ImGui::Begin("Another Window", &show_another_window);
         ImGui::Text("Hello from another window!");

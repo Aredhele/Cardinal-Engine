@@ -40,6 +40,11 @@ namespace debug
 void DrawRay(glm::vec3 const& start, glm::vec3 const& dir, glm::vec3 const& color)
 {
 #ifdef CARDINAL_DEBUG
+    if(!DebugManager::IsGizmoEnabled(DebugManager::EGizmo::Ray))
+    {
+        return;
+    }
+
     DebugManager::AddLine(start, start + dir, color);
 #endif
 }

@@ -29,6 +29,7 @@
 #include "Glm/glm/glm.hpp"
 #include "Runtime/Core/Debug/Logger.hpp"
 #include "Runtime/Platform/Configuration/Type.hh"
+#include "Runtime/Rendering/Debug/DebugGrid.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -46,6 +47,7 @@ public:
     enum EGizmo
     {
         Box,
+        Ray,
         Line,
         Axis,
         Grid,
@@ -105,6 +107,7 @@ private:
     int       m_matrixID;
     uint      m_shaderID;
 
+    DebugGrid                        m_grid;
     std::unordered_map<EGizmo, bool> m_activeGizmos;
 
 private:

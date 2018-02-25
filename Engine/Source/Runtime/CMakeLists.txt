@@ -29,6 +29,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Physics/PhysicsEngine.cpp
         Rendering/Context/Window.cpp
         Rendering/Debug/DebugBox.cpp
+        Rendering/Debug/DebugGrid.cpp
         Rendering/Debug/DebugLine.cpp
         Rendering/Debug/DebugRay.cpp
         Rendering/Debug/DebugGizmos.cpp

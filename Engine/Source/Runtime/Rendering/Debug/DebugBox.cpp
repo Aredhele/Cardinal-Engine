@@ -39,6 +39,12 @@ namespace debug
 /// \param color The height of the box
 void DrawBox(glm::vec3 const& center, float width, float height, glm::vec3 const& color)
 {
+#ifdef CARDINAL_DEBUG
+    if(!DebugManager::IsGizmoEnabled(DebugManager::EGizmo::Box))
+    {
+        return;
+    }
+
     float halfWidth  = width  / 2.0f;
     float halfHeight = height / 2.0f;
 
@@ -65,6 +71,7 @@ void DrawBox(glm::vec3 const& center, float width, float height, glm::vec3 const
     DebugManager::AddLine(F, G, color);
     DebugManager::AddLine(G, H, color);
     DebugManager::AddLine(H, E, color);
+#endif
 }
 
 } // !namespace

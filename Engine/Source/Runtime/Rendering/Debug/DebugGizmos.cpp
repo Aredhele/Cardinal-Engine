@@ -42,6 +42,10 @@ namespace debug
 void DrawDirectionalLight(glm::vec3 const& position, glm::vec3 const& direction, glm::vec3 const& color, float scale)
 {
 #ifdef CARDINAL_DEBUG
+    if(!DebugManager::IsGizmoEnabled(DebugManager::EGizmo::DirectionalLight))
+    {
+        return;
+    }
 
     glm::vec3 dir = glm::normalize(direction) * 10.0f;
     glm::vec3 top  (position.x, position.y, position.z + 2.0f * scale);
@@ -98,6 +102,10 @@ void DrawDirectionalLight(glm::vec3 const& position, glm::vec3 const& direction,
 void DrawPointLight(glm::vec3 const& position, glm::vec3 const& color, int resolution, float range, float scale)
 {
 #ifdef CARDINAL_DEBUG
+    if(!DebugManager::IsGizmoEnabled(DebugManager::EGizmo::PointLight))
+    {
+        return;
+    }
 
     // Compute spherical coordinates
     int pointCount = static_cast<int>(resolution * scale);
