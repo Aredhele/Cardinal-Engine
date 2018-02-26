@@ -15,63 +15,45 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       PluginManager.hpp
-/// \date       25/02/2018 
+/// \file       PCG_Plugin.hpp
+/// \date       26/02/2018
 /// \project    Cardinal Engine
-/// \package    Runtime/Core/Plugin
+/// \package    Plugin
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_PLUGIN_MANAGER_HPP__
-#define CARDINAL_ENGINE_PLUGIN_MANAGER_HPP__
+#ifndef CARDINAL_ENGINE_GAME_PLUGIN_HPP__
+#define CARDINAL_ENGINE_GAME_PLUGIN_HPP__
 
-#include <vector>
+#include "Character/Character.hpp"
 #include "Runtime/Core/Plugin/GamePlugin.hpp"
 
-/// \namespace cardinal
-namespace cardinal
-{
-
-/// \class PluginManager
-/// \brief 
-class PluginManager
+/// \brief Plugin for procedural generation
+/// \class PCG_Plugin
+class PCG_Plugin : public cardinal::Plugin
 {
 public:
 
-    /// \brief Registers a plugin in the engine
-    /// \param pPlugin The plugin to register
-    static void RegisterPlugin  (Plugin * pPlugin);
+    static PCG_Plugin * s_pPlugin;
 
-    /// \brief Unregisters a plugin from the engine
-    /// \param pPlugin The plugin to unregister
-    static void UnregisterPlugin(Plugin * pPlugin);
-
-private:
-
-    friend class Engine;
-
-    /// \brief Initializes the plugin manager
-    void Initialize();
-
-    /// \brief Releases the plugin manager
-    void Release();
+public:
 
     /// \brief Called when the game begins
-    void OnPlayStart();
+    void OnPlayStart() final;
 
     /// \brief Called when the game stops
-    void OnPlayStop();
+    void OnPlayStop () final;
 
-    /// \brief Called before the engine update
-    void OnPreUpdate();
+    /// \brief Called just before the engine update
+    void OnPreUpdate() final;
 
     /// \brief Called after the engine update
     /// \param dt The elapsed time in seconds
-    void OnPostUpdate(float dt);
+    void OnPostUpdate(float dt) final;
 
-    std::vector<Plugin *>  m_plugins;
-    static PluginManager * s_pInstance;
+private:
+
+    Character m_character;
 };
-    
-} // !namespace 
 
-#endif // !CARDINAL_ENGINE_PLUGIN_MANAGER_HPP__
+#endif // !CARDINAL_ENGINE_GAME_PLUGIN_HPP__
+

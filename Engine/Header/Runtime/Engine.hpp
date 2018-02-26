@@ -24,7 +24,12 @@
 #ifndef CARDINAL_ENGINE_ENGINE_HPP__
 #define CARDINAL_ENGINE_ENGINE_HPP__
 
+// Third party
+#include "ImGUI/Header/ImGUI/imgui.h"
+#include "ImGUI/Header/ImGUI/imgui_impl_glfw_gl3.h"
+
 #include "Runtime/Core/Debug/Logger.hpp"
+#include "Runtime/Core/Assertion/Assert.hh"
 #include "Runtime/Core/Plugin/PluginManager.hpp"
 #include "Runtime/Rendering/RenderingEngine.hpp"
 #include "Runtime/Platform/Configuration/Configuration.hh"
@@ -58,7 +63,7 @@ private:
     PluginManager   m_pluginManager;
     RenderingEngine m_renderingEngine;
 
-    constexpr const double SECONDS_PER_UPDATE = 1.0 / 60.0;
+    static constexpr const double SECONDS_PER_UPDATE = 1.0 / 60.0;
 };
 
 } // !namespace
