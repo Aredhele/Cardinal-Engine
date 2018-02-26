@@ -16,42 +16,37 @@ class CameraManager
             Free,
         };
 
-        /// Constructor
+        /// \brief Constructor
         CameraManager(void);
 
-        /// Update
+        /// \brief Update
         void Update(cardinal::Window * p_Window, float dt);
 
-        /// Getters / Setters
-        // Camera
+        /// \brief Set the camera
         inline void SetCamera(cardinal::Camera* p_camera)
             {m_camera = p_camera;}
         
-        // Character
+        /// \brief Set the character
         inline void SetCharacter(const Character* p_character)
             {m_character = p_character;}
-        ///
+        
 
-        /// Destructor
+        /// \brief Destructor
         ~CameraManager(void);
     
     private:
-        /// Game camera
-        cardinal::Camera* m_camera = nullptr;
+        cardinal::Camera* m_camera = nullptr;   ///< The engine camera
+        const Character* m_character = nullptr; ///< The game character
+        EStates m_state;                        ///< Current mode (FPS|TPS|Free)
+        
+        glm::tvec3<double> m_lastMouse;         ///< Keeps mouse position in mind
+        glm::vec3 m_lastCharacterPosition;      ///< Keeps character position in mind
 
-        /// Character
-        const Character* m_character = nullptr;
-
-        /// State
-        EStates m_state;
-
-        /// Memory
-        glm::tvec3<double> m_lastMouse;
-
-        /// Paramaters
-        const float m_speed = 50.0f;
-        const float m_sensitivity = 0.002f;
-        const float m_tpsRange = 10.f;
+        const float m_speed = 50.0f;            ///< The camera speed
+        const float m_sensitivity = 0.002f;     ///< The mouse sensitivity
+        const float m_tpsRange = 10.f;          ///< The distance from character in TPS mode
+        
+        float m_speedCoefficient = 2.f;         ///< In Free mode, allows to move quickly
 };
 
 #endif // CAMERA_MANAGER_HPP
