@@ -254,9 +254,9 @@ void RenderingEngine::RenderFrame(float step)
     DebugManager::Draw(ProjectionView);
     DebugManager::Clear();
 
-    DisplayDebugWindow(step);
-#endif
 
+#endif
+    DisplayDebugWindow(step);
     m_currentTriangle = 0;
 
     // Draw ImGUI
@@ -403,6 +403,7 @@ void RenderingEngine::DisplayDebugWindow(float step)
 
         ImGui::Text("System : %2.2lf / %2.2lf Gio", availableRam,  totalRam);
         ImGui::Text("In use : %2.5lf Gio", inUseRam);
+        ImGui::Text("Plugin : %llu", m_pPluginManager->GetPluginCount());
 
         // FPS
         ImGui::Text("\nRendering");
