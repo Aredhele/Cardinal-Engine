@@ -47,3 +47,7 @@ cmake-build-release/
 # Own ignored files
 Lib/
 Bin/
+
+# Van
+.vscode
+build
