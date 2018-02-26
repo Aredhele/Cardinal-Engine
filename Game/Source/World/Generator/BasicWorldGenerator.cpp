@@ -10,8 +10,8 @@ World * BasicWorldGenerator::generateWorld()
     srand(6665);
     //Reset du monde
     mp_currentWorld->Initialize();
-    //generateHeights();
-    generateCaves();
+    generateHeights();
+    //generateCaves();
     mp_currentWorld->Batch();
     return mp_currentWorld;
 }
@@ -20,7 +20,7 @@ void BasicWorldGenerator::generateHeights()
 {
     FastNoise noiseGenerator(rand());
     noiseGenerator.SetNoiseType(FastNoise::SimplexFractal);
-    noiseGenerator.SetFractalOctaves(4);
+    noiseGenerator.SetFractalOctaves(1);
 	for (int x = 0; x<WorldSettings::s_matSizeCubes; x++)
 		for (int y = 0; y < WorldSettings::s_matSizeCubes; y++)
 		{
@@ -187,17 +187,33 @@ void BasicWorldGenerator::generateFBNWorld() {
 
 void BasicWorldGenerator::generateCaves() {
     int iter = 50;
-    int x =100, y = 100, z = 100;
+    int x =50  , y = 50, z = 52;
     mp_currentWorld->GetCube(x, y, z)->SetType(ByteCube::EType::Dirt);
-    FastNoise noiseGenerator(rand());
-    noiseGenerator.SetNoiseType(FastNoise::PerlinFractal);
-    noiseGenerator.SetFractalOctaves(3);
-    for (int i = 0; i <j iter; ++i) {
-
-        double noise = noiseGenerator.GetNoise(x, y, z);
-        x -= cos (noise * 2.0 * M_PI);
-        y -= sin (noise * 2.0 * M_PI);
-        z -= cos (noise * 2.0 * M_PI);
+    FastNoise noiseGeneratorX(rand());
+    noiseGeneratorX.SetNoiseType(FastNoise::PerlinFractal);
+    noiseGeneratorX.SetFractalOctaves(1);
+    FastNoise noiseGeneratorY(rand());
+    noiseGeneratorY.SetNoiseType(FastNoise::PerlinFractal);
+    noiseGeneratorY.SetFractalOctaves(1);
+    FastNoise noiseGeneratorZ(rand());
+    noiseGeneratorZ.SetNoiseType(FastNoise::PerlinFractal);
+    noiseGeneratorZ.SetFractalOctaves(1);
+    for (int i = 0; i < iter; ++i) {
+        double noiseX = noiseGeneratorX.GetNoise(x, y, z);
+        double noiseY = noiseGeneratorY.GetNoise(x, y, z);
+        double noiseZ = noiseGeneratorZ.GetNoise(x, y, z);
+        if (noiseX < -0.33)
+            x += 1;
+        else if (noiseX > 0.33)
+            x -= 1;
+        if (noiseY < -0.33)
+            y += 1;
+        else if (noiseY > 0.33)
+            y -= 1;
+        if (noiseZ < -0.66)
+            z += 1;
+        else if (noiseZ > 0)
+            z -= 1;
         mp_currentWorld->GetCube(x, y, z)->SetType(ByteCube::EType::Dirt);
     }
 }

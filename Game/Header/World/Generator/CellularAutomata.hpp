@@ -39,7 +39,7 @@ public:
             }
         }
 
-        int iter = 20;
+        int iter = 100;
         for (int i = 0; i < iter; i++) {
             for (int x = 0; x < sizeX; x++)
                 for (int y = 0; y < sizeY; y++)
