@@ -61,9 +61,6 @@ public:
     /// \brief Shutdown the engine
     void Shutdown();
 
-    /// \brief  Returns a pointer on the window
-    Window * GetWindow();
-
     /// TMP
     glm::mat4 const& GetProjectionMatrix();
 
@@ -81,6 +78,14 @@ public:
     ///        Unregisters the renderer
     /// \param pRenderer The renderer to release
     static void ReleaseRenderer(class IRenderer *& pRenderer);
+
+    /// \brief Returns the main camera
+    /// \return A pointer on the main camera
+    static Camera * GetMainCamera();
+
+    /// \brief  Returns a pointer on the window
+    /// \return A pointer on the window
+    static Window * GetWindow();
 
 private:
 

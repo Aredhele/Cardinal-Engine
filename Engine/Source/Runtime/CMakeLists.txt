@@ -23,9 +23,11 @@ INCLUDE_DIRECTORIES(
 
 # Compile all tests
 ADD_LIBRARY(CardinalEngine STATIC
+        Main.cpp
         Engine.cpp
         Core/Debug/Logger.cpp
         Core/Memory/Allocator/StackAllocator.cpp
+        Core/Plugin/PluginManager.cpp
         Physics/PhysicsEngine.cpp
         Rendering/Context/Window.cpp
         Rendering/Debug/DebugBox.cpp

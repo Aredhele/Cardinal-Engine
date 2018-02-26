@@ -123,8 +123,6 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     glEnable   (GL_CULL_FACE);
     glCullFace (GL_BACK);
     glFrontFace(GL_CCW);
-    // glDisable(GL_DITHER);
-    // glEnable(GL_DITHER);
 
     // TODO : Makes clear color configurable
     glClearColor(0.0f, 0.709f, 0.866f, 1.0f);
@@ -297,12 +295,6 @@ void RenderingEngine::Shutdown()
     ImGui::DestroyContext();
 }
 
-/// \brief Returns a pointer on the window
-Window *RenderingEngine::GetWindow()
-{
-    return &m_window;
-}
-
 /// \brief TMP
 glm::mat4 const &RenderingEngine::GetProjectionMatrix()
 {
@@ -359,6 +351,21 @@ glm::mat4 const &RenderingEngine::GetProjectionMatrix()
 
     delete pRenderer;
     pRenderer = nullptr;
+}
+
+/// \brief Returns the main camera
+/// \return A pointer on the main camera
+/* static */ Camera *RenderingEngine::GetMainCamera()
+{
+    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
+    return s_pInstance->m_pCamera;
+}
+
+/// \brief Returns a pointer on the window
+/* static */ Window *RenderingEngine::GetWindow()
+{
+    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
+    return &s_pInstance->m_window;
 }
 
 } // !namespace

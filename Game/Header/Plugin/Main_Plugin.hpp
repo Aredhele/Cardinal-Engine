@@ -15,14 +15,14 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       PCG_Plugin.hpp
+/// \file       Main_Plugin.hpp
 /// \date       26/02/2018
 /// \project    Cardinal Engine
 /// \package    Plugin
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_PCG_PLUGIN_HPP__
-#define CARDINAL_ENGINE_PCG_PLUGIN_HPP__
+#ifndef CARDINAL_ENGINE_MAIN_PLUGIN_HPP__
+#define CARDINAL_ENGINE_MAIN_PLUGIN_HPP__
 
 // Engine
 #include "Runtime/Engine.hpp"
@@ -32,17 +32,17 @@
 #include "Character/Character.hpp"
 
 /// \brief Plugin for procedural generation
-/// \class PCG_Plugin
-class PCG_Plugin : public cardinal::Plugin
+/// \class Main_Plugin
+class Main_Plugin : public cardinal::Plugin
 {
 public:
 
-    static PCG_Plugin * s_pPlugin;
+    static Main_Plugin * s_pPlugin;
 
 public:
 
     /// \brief Constructor
-    PCG_Plugin();
+    Main_Plugin();
 
     /// \brief Called when the game begins
     void OnPlayStart() final;
@@ -63,5 +63,5 @@ private:
     Character m_character;
 };
 
-#endif // !CARDINAL_ENGINE_PCG_PLUGIN_HPP__
+#endif // !CARDINAL_ENGINE_MAIN_PLUGIN_HPP__
 

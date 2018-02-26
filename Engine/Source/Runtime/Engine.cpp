@@ -33,15 +33,15 @@ bool Engine::Initialize()
     Logger::LogInfo("Cardinal initialization");
     m_pluginManager.Initialize();
 
-    Logger::LogInfo("Registering plugins ...");
-    OnPluginRegistration();
-    Logger::LogInfo("All plugins have been registered");
-
     if (!m_renderingEngine.Initialize(1600, 900, "Cardinal", 10000.0f, false))
     {
         cardinal::Logger::LogError("Cannot initialize the engine, aborting");
         return false;
     }
+
+    Logger::LogInfo("Registering plugins ...");
+    OnPluginRegistration();
+    Logger::LogInfo("All plugins have been registered");
 
     Logger::LogInfo("Cardinal initialized");
 }
@@ -65,6 +65,10 @@ void Engine::GameLoop()
     // Getting GLFW context
     GLFWwindow * pContext = m_renderingEngine.GetWindow()->GetContext();
 
+    // Creating the camera
+    cardinal::Camera camera;
+    m_renderingEngine.SetCamera(&camera);
+
     // Initializing timers
     double lag      = 0.0;
     double previous = glfwGetTime();
@@ -79,6 +83,9 @@ void Engine::GameLoop()
         previous       = current;
 
         lag += elapsed;
+
+        // Triggering ImGUI
+        ImGui_ImplGlfwGL3_NewFrame();
 
         // Processing events
         glfwPollEvents();

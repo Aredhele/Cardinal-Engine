@@ -32,6 +32,7 @@
 #include "Runtime/Core/Assertion/Assert.hh"
 #include "Runtime/Core/Plugin/PluginManager.hpp"
 #include "Runtime/Rendering/RenderingEngine.hpp"
+#include "Runtime/Rendering/Debug/DebugManager.hpp"
 #include "Runtime/Platform/Configuration/Configuration.hh"
 
 /// \namespace cardinal

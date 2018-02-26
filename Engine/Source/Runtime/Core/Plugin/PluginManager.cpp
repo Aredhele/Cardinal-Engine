@@ -29,6 +29,8 @@
 namespace cardinal
 {
 
+/* static */ PluginManager * PluginManager::s_pInstance = nullptr;
+
 /// \brief Initializes the plugin manager
 void PluginManager::Initialize()
 {

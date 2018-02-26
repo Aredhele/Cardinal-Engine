@@ -31,29 +31,22 @@ FILE(GLOB_RECURSE GAME_HEADERS
         ${CARDINAL_GAME_DIR}/Header/World/*.hpp
         ${CARDINAL_GAME_DIR}/Header/Character/*.hpp)
 
-# Compile game with the engine
-ADD_EXECUTABLE(Game Main.cpp ${GAME_SOURCES} ${GAME_HEADERS} World/ChunkRegulator.cpp World/Generator/Noise/FastNoise.cpp ../Header/World/ChunkRegulator.hpp ../Header/World/Generator/CellularAutomata.hpp)
+# Linking with the engine
+# Creating empty targets
+ADD_EXECUTABLE(Main_Plugin "")
+ADD_EXECUTABLE(PCG_Plugin  "")
 
-# But tests depends on GTEST and GMOCK
-ADD_DEPENDENCIES(Game CardinalEngine BulletDynamics BulletCollision LinearMath)
+# Creating a librariy for PCG and Main sources
+ADD_LIBRARY(PCGLib  STATIC Plugin/PCG_Plugin.cpp  ${GAME_SOURCES} ${GAME_HEADERS})
+ADD_LIBRARY(MainLib STATIC Plugin/Main_Plugin.cpp ${GAME_SOURCES} ${GAME_HEADERS})
 
-# Linking ...
-TARGET_LINK_LIBRARIES(Game ${COMPILER_DEPENDENCIES} CardinalEngine ImGUI BulletDynamics BulletCollision LinearMath)
+# Add dependencies
+ADD_DEPENDENCIES(PCGLib  CardinalEngine BulletDynamics BulletCollision LinearMath)
+ADD_DEPENDENCIES(MainLib CardinalEngine BulletDynamics BulletCollision LinearMath)
 
-# Create an executable for PCG tests
-ADD_EXECUTABLE(PCG_test PCG_main.cpp ${GAME_SOURCES} ${GAME_HEADERS})
+# Linking dependencies
+TARGET_LINK_LIBRARIES(PCGLib  CardinalEngine ${COMPILER_DEPENDENCIES} ImGUI BulletDynamics BulletCollision LinearMath)
+TARGET_LINK_LIBRARIES(MainLib CardinalEngine ${COMPILER_DEPENDENCIES} ImGUI BulletDynamics BulletCollision LinearMath)
 
-# But tests depends on GTEST and GMOCK
-ADD_DEPENDENCIES(PCG_test CardinalEngine BulletDynamics BulletCollision LinearMath)
-
-# Linking ...
-TARGET_LINK_LIBRARIES(PCG_test ${COMPILER_DEPENDENCIES} CardinalEngine ImGUI BulletDynamics BulletCollision LinearMath)
-
-# Create an executable to test the physics simulation
-ADD_EXECUTABLE(Physics Physics.cpp ${GAME_SOURCES} ${GAME_HEADERS})
-
-# But tests depends on GTEST and GMOCK
-ADD_DEPENDENCIES(Physics CardinalEngine BulletDynamics BulletCollision LinearMath)
-
-# Linking ...
-TARGET_LINK_LIBRARIES(Physics ${COMPILER_DEPENDENCIES} CardinalEngine ImGUI BulletDynamics BulletCollision LinearMath)
+TARGET_LINK_LIBRARIES(Main_Plugin CardinalEngine MainLib ${COMPILER_DEPENDENCIES} ImGUI BulletDynamics BulletCollision LinearMath)
+TARGET_LINK_LIBRARIES(PCG_Plugin  CardinalEngine PCGLib  ${COMPILER_DEPENDENCIES} ImGUI BulletDynamics BulletCollision LinearMath)

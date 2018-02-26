@@ -15,40 +15,41 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       PCG_Plugin.cpp
+/// \file       Main_Plugin.cpp
 /// \date       26/02/2018
 /// \project    Cardinal Engine
 /// \package    Plugin
 /// \author     Vincent STEHLY--CALISTO
 
-#include "Plugin/PCG_Plugin.hpp"
+#include "Plugin/Main_Plugin.hpp"
 #include "World/Generator/BasicWorldGenerator.hpp"
 
-/* static */ PCG_Plugin * PCG_Plugin::s_pPlugin = nullptr;
+/* static */ Main_Plugin * Main_Plugin::s_pPlugin = nullptr;
 
 /// \brief Hook to register user plugin from the static libraries
 void OnPluginRegistration()
 {
-    ASSERT_NULL(PCG_Plugin::s_pPlugin);
+    ASSERT_NULL(Main_Plugin::s_pPlugin);
 
-    // Creating a new pcg plugin instance
-    PCG_Plugin::s_pPlugin = new PCG_Plugin();
+    // Creating a new main plugin instance
+    Main_Plugin::s_pPlugin = new Main_Plugin();
 
     // Finally registering the plugin into the engine
-    cardinal::PluginManager::RegisterPlugin(PCG_Plugin::s_pPlugin);
+    cardinal::PluginManager::RegisterPlugin(Main_Plugin::s_pPlugin);
 }
 
 /// \brief Constructor
-PCG_Plugin::PCG_Plugin()
+Main_Plugin::Main_Plugin()
 {
     m_pWorld = nullptr;
 }
 
 /// \brief Called when the game begins
-void PCG_Plugin::OnPlayStart()
+void Main_Plugin::OnPlayStart()
 {
     // Configure engine here
-    // ...
+    cardinal::DebugManager::EnableGizmo(cardinal::DebugManager::EGizmo::Grid);
+    cardinal::DebugManager::EnableGizmo(cardinal::DebugManager::EGizmo::Axis);
 
     // Setting up the game
     BasicWorldGenerator bwg;
@@ -57,20 +58,20 @@ void PCG_Plugin::OnPlayStart()
 }
 
 /// \brief Called when the game stops
-void PCG_Plugin::OnPlayStop()
+void Main_Plugin::OnPlayStop()
 {
     // TODO
 }
 
 /// \brief Called just before the engine update
-void PCG_Plugin::OnPreUpdate()
+void Main_Plugin::OnPreUpdate()
 {
     // TODO
 }
 
 /// \brief Called after the engine update
 /// \param dt The elapsed time in seconds
-void PCG_Plugin::OnPostUpdate(float dt)
+void Main_Plugin::OnPostUpdate(float dt)
 {
     m_character.Update(cardinal::RenderingEngine::GetWindow(), dt);
 }
