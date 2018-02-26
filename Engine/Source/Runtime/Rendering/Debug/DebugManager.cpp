@@ -44,7 +44,7 @@ DebugManager::DebugManager()
     m_vertexCount = 0;
 
     // Getting color shader
-    m_shaderID = ShaderManager::GetShaderID("UnlitColor");
+    m_shaderID = static_cast<uint>(ShaderManager::GetShaderID("UnlitColor"));
     m_matrixID = glGetUniformLocation(m_shaderID, "MVP");
 
     glGenVertexArrays(1, &m_vao);
@@ -62,6 +62,18 @@ DebugManager::DebugManager()
 
     glEnableVertexAttribArray(0);
     glBindVertexArray(0);
+
+    // Filling map
+    m_activeGizmos.emplace(EGizmo::Box,  false);
+    m_activeGizmos.emplace(EGizmo::Ray,  false);
+    m_activeGizmos.emplace(EGizmo::Line, false);
+    m_activeGizmos.emplace(EGizmo::Axis, false);
+    m_activeGizmos.emplace(EGizmo::Grid, false);
+    m_activeGizmos.emplace(EGizmo::PointLight,       false);
+    m_activeGizmos.emplace(EGizmo::DirectionalLight, false);
+
+    // Initializes the grid
+    m_grid.Initialize(50, 400.0f, glm::vec3(0.4f, 0.4f, 0.4f));
 }
 
 /// \brief Desutrctor, free buffers
@@ -140,6 +152,13 @@ DebugManager::~DebugManager()
 {
     ASSERT_NOT_NULL(s_pInstance);
 
+    if(DebugManager::IsGizmoEnabled(EGizmo::Axis))
+    {
+        AddLine(glm::vec3(-2.0f, -2.0f, 0.0f), glm::vec3(1000.0f, -2.0f,    0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        AddLine(glm::vec3(-2.0f, -2.0f, 0.0f), glm::vec3(-2.0f, 1000.0f,    0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        AddLine(glm::vec3(-2.0f, -2.0f, 0.0f), glm::vec3(-2.0f,   -2.0f, 1000.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    }
+
     if(s_pInstance->m_vertexCount == 0)
     {
         // There's nothing to draw
@@ -174,6 +193,35 @@ DebugManager::~DebugManager()
     glBindVertexArray(0);
 
     glDisable(GL_MULTISAMPLE);
+
+    if(DebugManager::IsGizmoEnabled(EGizmo::Grid))
+    {
+        s_pInstance->m_grid.Draw(PV);
+    }
+}
+
+/// \brief Enables a gizmo
+/// \param type The gizmo to enable
+/* static */ void DebugManager::EnableGizmo(EGizmo type)
+{
+    ASSERT_NOT_NULL(DebugManager::s_pInstance);
+    s_pInstance->m_activeGizmos[type] = true;
+}
+
+/// \brief Disables a gizmo
+/// \param type The gizmo to disable
+/* static */void DebugManager::DisableGizmo(EGizmo type)
+{
+    ASSERT_NOT_NULL(DebugManager::s_pInstance);
+   s_pInstance->m_activeGizmos[type] = false;
+}
+
+/// \brief Tells if the given gizmo is enabled
+/// \return True or false
+/* static */ bool DebugManager::IsGizmoEnabled(EGizmo type)
+{
+    ASSERT_NOT_NULL(DebugManager::s_pInstance);
+   return s_pInstance->m_activeGizmos[type];
 }
 
 } // !namespace

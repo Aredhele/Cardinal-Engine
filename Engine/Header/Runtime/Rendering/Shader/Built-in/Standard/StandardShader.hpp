@@ -15,48 +15,64 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       UnlitTextureShader.hpp
-/// \date       16/02/2018
+/// \file       StandardShader.hpp
+/// \date       24/02/2018
 /// \project    Cardinal Engine
-/// \package    Runtime/Rendering/Shader/Built-in
+/// \package    Runtime/Rendering/Shaders/Built-in/Standard
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_UNLIT_TEXTURE_SHADER_HPP__
-#define CARDINAL_ENGINE_UNLIT_TEXTURE_SHADER_HPP__
+#ifndef CARDINAL_ENGINE_STANDARD_SHADER_HPP__
+#define CARDINAL_ENGINE_STANDARD_SHADER_HPP__
 
+#include <vector>
 #include "Runtime/Rendering/Shader/IShader.hpp"
-#include <string>
+#include "Runtime/Rendering/Lighting/LightStructure.hpp"
+
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \class UnlitTextureShader
-/// \brief Texture only shader
-class UnlitTextureShader : public IShader
+/// \class StandardShader
+/// \brief Standard shader of the engine
+class StandardShader : public IShader
 {
 public:
 
     /// \brief Constructor
-    UnlitTextureShader();
+    StandardShader();
 
     /// \brief Sets the texture of the shader
     void SetTexture(uint textureID);
 
     /// \brief Sets up the pipeline for the shader
     /// \param MVP The Projection-View-Model matrix to pass to the shader
-    void Begin(glm::mat4 const& MVP, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light) final;
+    void Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights) final;
 
     /// \brief Restore the pipeline state
     void End() final;
 
-    std::string debugName;
+private:
+
+    friend class LightManager;
+
+    static int s_lightDirection;
+    static int s_lightIntensity;
+    static int s_ambientIntensity;
+    static int s_lightColor;
 
 private:
 
+    // TODO : make uniforms static
     uint m_textureID;
+    std::vector<PointLightStructure> m_nearPointLights;
+
+    int  m_viewID;
+    int  m_modelID;
+    int  m_projection;
+    int  m_lightCountID;
     int  m_textureSampler;
 };
 
 } // !namespace
 
-#endif // !CARDINAL_ENGINE_UNLIT_TEXTURE_SHADER_HPP__
+#endif // !CARDINAL_ENGINE_STANDARD_SHADER_HPP__

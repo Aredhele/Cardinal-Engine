@@ -52,7 +52,7 @@ public:
     /// \brief Registers a shader in the manager from a key and a value
     /// \param shaderKey The key of the shader
     /// \param shaderID The value
-    static void Register(std::string const& shaderKey, uint shaderID);
+    static void Register(std::string const& shaderKey, int shaderID);
 
     /// \brief Unregisters a shader in the manager
     ///        Frees the shader in the video card memory
@@ -62,7 +62,7 @@ public:
     /// \brief Returns the shader ID references by the given key
     /// \param shaderKey The key of the shader
     /// \return The shader ID
-    static uint GetShaderID(std::string const& shaderKey);
+    static int GetShaderID(std::string const& shaderKey);
 
 private:
 
@@ -76,7 +76,7 @@ private:
     // TODO : Use IDs
     // TODO : Destructor
 
-    std::unordered_map<std::string, uint> m_textureIDs;
+    std::unordered_map<std::string, int> m_textureIDs;
 };
 
 } // !namespace

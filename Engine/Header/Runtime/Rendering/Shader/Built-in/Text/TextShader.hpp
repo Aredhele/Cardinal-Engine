@@ -15,14 +15,14 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       UnlitTransparentShader.hpp
+/// \file       TextShader.hpp
 /// \date       16/02/2018
 /// \project    Cardinal Engine
-/// \package    Runtime/Rendering/Shader/Built-in
+/// \package    Runtime/Shader/Built-in
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_UNLIT_TRANSPARENT_SHADER_HPP__
-#define CARDINAL_ENGINE_UNLIT_TRANSPARENT_SHADER_HPP__
+#ifndef CARDINAL_ENGINE_TEXT_SHADER_HPP__
+#define CARDINAL_ENGINE_TEXT_SHADER_HPP__
 
 #include "Runtime/Rendering/Shader/IShader.hpp"
 
@@ -30,23 +30,34 @@
 namespace cardinal
 {
 
-/// \class UnlitTransparentShader
-/// \brief Transparent texture only shader
-class UnlitTransparentShader : public IShader
+/// \class TextShader
+/// \brief Text shader based on texture font
+class TextShader : public IShader
 {
-public :
+public:
 
     /// \brief Constructor
-    UnlitTransparentShader();
+    TextShader();
+
+    /// \brief Sets the color of the text
+    /// \param color The color
+    void SetColor(glm::vec4 const& color);
 
     /// \brief Sets up the pipeline for the shader
     /// \param MVP The Projection-View-Model matrix to pass to the shader
-    void Begin(glm::mat4 const& MVP, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light) final;
+    void Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights) final;
 
     /// \brief Restore the pipeline state
     void End() final;
+
+private:
+
+    uint      m_texture;
+    int       m_textureSampler;
+    int       m_textColor;
+    glm::vec4 m_color;
 };
 
 } // !namespace
 
-#endif // !CARDINAL_ENGINE_UNLIT_TRANSPARENT_SHADER_HPP__
+#endif // !CARDINAL_ENGINE_TEXT_SHADER_HPP__

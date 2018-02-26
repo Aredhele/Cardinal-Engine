@@ -23,7 +23,6 @@
 
 #include <chrono>
 #include <iostream>
-
 #include "Glew/include/GL/glew.h"
 
 #include "Runtime/Core/Debug/Logger.hpp"
@@ -32,12 +31,17 @@
 #include "Runtime/Rendering/Shader/IShader.hpp"
 #include "Runtime/Rendering/RenderingEngine.hpp"
 #include "Runtime/Rendering/Debug/DebugManager.hpp"
+#include "Header/Runtime/Rendering/Debug/Debug.hpp"
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
 #include "Runtime/Rendering/Shader/ShaderCompiler.hpp"
 #include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
 #include "Runtime/Rendering/Renderer/TextRenderer.hpp"
 #include "Runtime/Rendering/Texture/TextureLoader.hpp"
 #include "Runtime/Rendering/Texture/TextureManager.hpp"
+
+#include "Runtime/Rendering/Lighting/LightManager.hpp"
+#include "Runtime/Rendering/Lighting/Lights/PointLight.hpp"
+#include "Runtime/Rendering/Lighting/Lights/DirectionalLight.hpp"
 
 #include "ImGUI/imgui.h"
 #include "ImGUI/imgui_impl_glfw_gl3.h"
@@ -74,9 +78,17 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     // IShader initializes
     ShaderManager::Initialize();
 
+    // Lighting
+    LightManager::Initialize();
+
     // Loads Textures
     TextureLoader::LoadTexture("SAORegular", "Resources/Textures/SAORegular.bmp");
     TextureLoader::LoadTexture("Block",      "Resources/Textures/BlockAtlas_2048.bmp");
+
+    ShaderManager::Register("LitTextureD", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/Lit/LitTextureVertexShader.glsl",
+            "Resources/Shaders/Lit/LitTextureGeometryShader.glsl",
+            "Resources/Shaders/Lit/LitTextureFragmentShader.glsl"));
 
     ShaderManager::Register("LitTexture", ShaderCompiler::LoadShaders(
             "Resources/Shaders/Lit/LitTextureVertexShader.glsl",
@@ -98,16 +110,19 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/Text/TextVertexShader.glsl",
             "Resources/Shaders/Text/TextFragmentShader.glsl"));
 
+    ShaderManager::Register("Standard", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/Standard/StandardVertexShader.glsl",
+            "Resources/Shaders/Standard/StandardFragmentShader.glsl"));
+
     // Debug
     DebugManager::Initialize();
 
     // Configures OpenGL pipeline
     glEnable   (GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-
     glEnable   (GL_CULL_FACE);
     glCullFace (GL_BACK);
-    glFrontFace(GL_CW);
+    glFrontFace(GL_CCW);
 
     // TODO : Makes clear color configurable
     glClearColor(0.0f, 0.709f, 0.866f, 1.0f);
@@ -217,11 +232,28 @@ void RenderingEngine::RenderFrame(float step)
     glm::mat4 View           = m_pCamera->GetViewMatrix();
     glm::mat4 ProjectionView = Projection * View;
 
+    // Start debug draw
+    DirectionalLight * pLight = LightManager::GetDirectionalLight();
+    if(pLight != nullptr)
+    {
+        debug::DrawDirectionalLight(pLight->GetPosition(), pLight->GetDirection(), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
+    }
+
+    std::vector<PointLight *> const& pLights = LightManager::GetPointLights();
+    for(const PointLight* pPointLight : pLights)
+    {
+        debug::DrawPointLight(pPointLight->GetPosition(), glm::vec3(1.0f), 32, pPointLight->GetRange(), 1.0f);
+    }
+    // End debug draw
+
+    // Lighting
+    LightManager::OnRenderBegin();
+
     // Draw
     size_t rendererCount = m_renderers.size();
     for (int nRenderer = 0; nRenderer < rendererCount; ++nRenderer)
     {
-        m_renderers[nRenderer]->Draw(Projection, View, glm::vec3(100.0f, 100.0f, 100.0f));
+        m_renderers[nRenderer]->Draw(Projection, View, glm::vec3(0.0f, 0.0f, 0.0f), LightManager::GetNearestPointLights(m_renderers[nRenderer]->GetPosition()));
     }
 
     // Cleanup
@@ -254,18 +286,13 @@ void RenderingEngine::SetCamera(Camera *pCamera)
 /// \brief Shutdown the engine
 void RenderingEngine::Shutdown()
 {
-    // TODO
+    LightManager::Shutdown();
+    ShaderManager::Shutdown();
     TextureManager::Shutdown();
 
     // Shutting down ImGUI
     ImGui_ImplGlfwGL3_Shutdown();
     ImGui::DestroyContext();
-}
-
-/// \brief Returns a pointer on the window
-Window *RenderingEngine::GetWindow()
-{
-    return &m_window;
 }
 
 /// \brief TMP
@@ -324,6 +351,21 @@ glm::mat4 const &RenderingEngine::GetProjectionMatrix()
 
     delete pRenderer;
     pRenderer = nullptr;
+}
+
+/// \brief Returns the main camera
+/// \return A pointer on the main camera
+/* static */ Camera *RenderingEngine::GetMainCamera()
+{
+    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
+    return s_pInstance->m_pCamera;
+}
+
+/// \brief Returns a pointer on the window
+/* static */ Window *RenderingEngine::GetWindow()
+{
+    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
+    return &s_pInstance->m_window;
 }
 
 } // !namespace

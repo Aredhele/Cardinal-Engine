@@ -1,14 +1,21 @@
 #pragma once
 
-#include "World/Generator/IWorldGenerator.hpp"
+#include <random>
+#include <World/World.hpp>
+#include "World/Generator/GenerationSettings.hpp"
 
-class BasicWorldGenerator : public IWorldGenerator
+class BasicWorldGenerator
 {
 public:
-    World* generateWorld() override;
-private:
-    World* mp_currentWorld;
+    BasicWorldGenerator();
+    World* generateWorld();
+    World* generateWorld(GenerationSettings settings);
+    int m_seed;
 
+private:
+    World* mp_currentWorld = nullptr;
+    GenerationSettings m_generationSettings;
+    std::default_random_engine m_randomGenerator;
 
 
     void generate3DPerlinWorld();

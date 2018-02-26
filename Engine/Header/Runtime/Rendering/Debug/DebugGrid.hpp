@@ -15,49 +15,47 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       TextShader.hpp
-/// \date       16/02/2018
+/// \file       DebugGrid.hpp
+/// \date       25/02/2018
 /// \project    Cardinal Engine
-/// \package    Runtime/Shader/Built-in
+/// \package    Runtime/Rendering/Debug
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_TEXT_SHADER_HPP__
-#define CARDINAL_ENGINE_TEXT_SHADER_HPP__
+#ifndef CARDINAL_ENGINE_DEBUG_GRID_HPP__
+#define CARDINAL_ENGINE_DEBUG_GRID_HPP__
 
-#include "Runtime/Rendering/Shader/IShader.hpp"
+#include "Runtime/Platform/Configuration/Configuration.hh"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \class TextShader
-/// \brief Text shader based on texture font
-class TextShader : public IShader
+/// \class DebugGrid
+/// \brief Displays the engine grid
+class DebugGrid
 {
 public:
 
-    /// \brief Constructor
-    TextShader();
+    /// \brief Initializes the grid from parameters
+    /// \param size The number of lines on X & Y
+    /// \param spacing The space between two cols & rows
+    /// \param color The colors of lines
+    void Initialize(int size, float spacing, glm::vec3 const& color);
 
-    /// \brief Sets the color of the text
-    /// \param color The color
-    void SetColor(glm::vec4 const& color);
-
-    /// \brief Sets up the pipeline for the shader
-    /// \param MVP The Projection-View-Model matrix to pass to the shader
-    void Begin(glm::mat4 const& MVP, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light) final;
-
-    /// \brief Restore the pipeline state
-    void End() final;
+    /// \brief Draws the grid
+    /// \param PV The projection view matrix
+    void Draw(glm::mat4 const& PV);
 
 private:
 
-    uint      m_texture;
-    int       m_textureSampler;
-    int       m_textColor;
-    glm::vec4 m_color;
+    uint      m_vertexCount;
+    uint      m_vao;
+    uint      m_vbo;
+    uint      m_cbo;
+    int       m_matrixID;
+    uint      m_shaderID;
 };
 
 } // !namespace
 
-#endif // !CARDINAL_ENGINE_TEXT_SHADER_HPP__
+#endif // !CARDINAL_ENGINE_DEBUG_GRID_HPP__

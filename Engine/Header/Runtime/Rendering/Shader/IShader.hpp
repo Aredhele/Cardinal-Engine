@@ -24,8 +24,10 @@
 #ifndef CARDINAL_ENGINE_I_SHADER_HPP__
 #define CARDINAL_ENGINE_I_SHADER_HPP__
 
+#include <vector>
 #include "Glm/glm/glm.hpp"
 #include "Runtime/Platform/Configuration/Type.hh"
+#include "Runtime/Rendering/Lighting/LightStructure.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -40,7 +42,7 @@ public:
     /// \brief Sets up the pipeline for the shader
     /// \param MVP The Projection-View-Model matrix to pass to the shader
     /// \param TODO
-    virtual void Begin(glm::mat4 const& MVP, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light) = 0;
+    virtual void Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights) = 0;
 
     /// \brief Restore the pipeline state
     virtual void End  () = 0;
@@ -50,7 +52,7 @@ public:
 
 public:
 
-    uint m_shaderID = 0; ///< The shader to use
+     int m_shaderID = 0; ///< The shader to use
      int m_matrixID = 0; ///< The MVP matrix ID
 };
 

@@ -15,38 +15,41 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       Unlit_ColorShader.hpp
-/// \date       16/02/2018
+/// \file       Plugin.hpp
+/// \date       25/02/2018
 /// \project    Cardinal Engine
-/// \package    Runtime/Shader/Built-in
+/// \package    Runtime/Core/Plugin
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_UNLIT_COLOR_SHADER_HPP__
-#define CARDINAL_ENGINE_UNLIT_COLOR_SHADER_HPP__
-
-#include "Runtime/Rendering/Shader/IShader.hpp"
+#ifndef CARDINAL_ENGINE_PLUGIN_HPP__
+#define CARDINAL_ENGINE_PLUGIN_HPP__
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \class UnlitColorShader
-/// \brief Color only shader
-class UnlitColorShader : public IShader
+/// \class Plugin
+/// \brief Interface for engine plugins
+class Plugin
 {
 public:
 
-    /// \brief Constructor
-    UnlitColorShader();
+    /// \brief Called when the game begins
+    virtual void OnPlayStart() = 0;
 
-    /// \brief Sets up the pipeline for the shader
-    /// \param MVP The Projection-View-Model matrix to pass to the shader
-    void Begin(glm::mat4 const& MVP, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light) final;
+    /// \brief Called when the game stops
+    virtual void OnPlayStop () = 0;
 
-    /// \brief Restore the pipeline state
-    void End() final;
+    /// \brief Called just before the engine update
+    virtual void OnPreUpdate() = 0;
+
+    /// \brief Called after the engine update
+    virtual void OnPostUpdate(float dt) = 0;
 };
 
 } // !namespace
 
-#endif // !CARDINAL_ENGINE_UNLIT_COLOR_SHADER_HPP__
+/// \brief Hook to register user plugin from the static libraries
+extern "C" void OnPluginRegistration();
+
+#endif // !CARDINAL_ENGINE_PLUGIN_HPP__

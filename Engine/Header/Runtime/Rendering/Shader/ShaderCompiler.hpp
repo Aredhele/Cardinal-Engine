@@ -39,7 +39,13 @@ public :
     /// \brief Loads a shader from the given paths
     /// \param czVertexShader The path to the vertex shader
     /// \param csFragmentShader The path to the fragment shader
-    static uint LoadShaders(const char * czVertexShader,const char * csFragmentShader);
+    static int LoadShaders(const char * czVertexShader,const char * csFragmentShader);
+
+    // TODO
+    /// \brief Loads a shader from the given paths
+    /// \param czVertexShader The path to the vertex shader
+    /// \param csFragmentShader The path to the fragment shader
+    static int LoadShaders(const char * czVertexShader, const char * szGeometryShader, const char * csFragmentShader);
 };
 
 } // !namespace

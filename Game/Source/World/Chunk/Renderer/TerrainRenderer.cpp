@@ -21,20 +21,21 @@
 /// \package    World/Chunk/Renderer
 /// \author     Vincent STEHLY--CALISTO
 
-#include <Header/Runtime/Rendering/Shader/Built-in/UnlitTextureShader.hpp>
+#include <Header/Runtime/Rendering/Shader/Built-in/Unlit/UnlitTextureShader.hpp>
 #include <Header/Runtime/Rendering/RenderingEngine.hpp>
 #include <Header/Runtime/Rendering/Texture/TextureManager.hpp>
 #include <World/Chunk/Chunk.hpp>
-#include "World/WorldBuffers.hpp"
-#include "World/WorldSettings.hpp"
+#include <Header/Runtime/Rendering/Shader/Built-in/Lit/LitTextureShader.hpp>
+#include <Header/Runtime/Rendering/Debug/Debug.hpp>
+#include <Header/Runtime/Rendering/Shader/Built-in/Standard/StandardShader.hpp>
 #include "World/Cube/UVManager.hpp"
-#include "World/Chunk/Renderer/TerrainRenderer.hpp"
 #include "Runtime/Rendering/Optimization/VBOIndexer.hpp"
 
+/// TODO
 TerrainRenderer::TerrainRenderer()
 {
     m_renderer = cardinal::RenderingEngine::AllocateMeshRenderer();
-    cardinal::UnlitTextureShader * pShader = new cardinal::UnlitTextureShader(); // NOLINT
+    cardinal::StandardShader * pShader = new cardinal::StandardShader(); // NOLINT
     pShader->SetTexture(cardinal::TextureManager::GetTextureID("Block"));
     m_renderer->SetShader(pShader);
 }
@@ -43,13 +44,11 @@ TerrainRenderer::TerrainRenderer()
 /// \param pCubes The cubes of the chunk
 void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize], Chunk * neighbors[6])
 {
-   // auto batchingBegin = std::chrono::steady_clock::now();
-  //  cardinal::Logger::LogInfo("\t\tBegin batch profiling");
-
     // Resizing the vector to ensure that the current size
     // is large enough to hold all vertices and UVs
-    WorldBuffers::s_chunkVertexBuffer.resize(WorldSettings::s_chunkVertexCount);
-    WorldBuffers::s_chunkUVsBuffer.resize   (WorldSettings::s_chunkVertexCount);
+    WorldBuffers::s_chunkVertexBuffer.resize   (WorldSettings::s_chunkVertexCount);
+    WorldBuffers::s_chunkNormalBuffer.resize   (WorldSettings::s_chunkVertexCount);
+    WorldBuffers::s_chunkUVsBuffer.resize      (WorldSettings::s_chunkVertexCount);
 
     size_t vertexIndex = 0;
     float half         = ByteCube::s_cubeSize / 2.0f;
@@ -104,47 +103,64 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
                     float UVx =  UVManager::UV[cube.GetType() >> 1][nFace * 2 + 0] * WorldSettings::s_textureStep;
                     float UVy =  UVManager::UV[cube.GetType() >> 1][nFace * 2 + 1] * WorldSettings::s_textureStep;
 
-                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].x = UVx;
+                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].x = UVx + WorldSettings::s_textureStep;
                     WorldBuffers::s_chunkUVsBuffer   [vertexIndex].y = UVy;
+                    WorldBuffers::s_chunkNormalBuffer[vertexIndex].x = ByteCube::s_normals [faceIndex + 0];
+                    WorldBuffers::s_chunkNormalBuffer[vertexIndex].y = ByteCube::s_normals [faceIndex + 1];
+                    WorldBuffers::s_chunkNormalBuffer[vertexIndex].z = ByteCube::s_normals [faceIndex + 2];
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].x = ByteCube::s_vertices[faceIndex +  0] * half + offset.x;
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].y = ByteCube::s_vertices[faceIndex +  1] * half + offset.y;
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].z = ByteCube::s_vertices[faceIndex +  2] * half + offset.z;
 
                     vertexIndex += 1;
                     WorldBuffers::s_chunkUVsBuffer   [vertexIndex].x = UVx + WorldSettings::s_textureStep;
-                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].y = UVy;
+                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].y = UVy + WorldSettings::s_textureStep;
+                    WorldBuffers::s_chunkNormalBuffer[vertexIndex].x = ByteCube::s_normals [faceIndex + 3];
+                    WorldBuffers::s_chunkNormalBuffer[vertexIndex].y = ByteCube::s_normals [faceIndex + 4];
+                    WorldBuffers::s_chunkNormalBuffer[vertexIndex].z = ByteCube::s_normals [faceIndex + 5];
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].x = ByteCube::s_vertices[faceIndex +  3] * half + offset.x;
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].y = ByteCube::s_vertices[faceIndex +  4] * half + offset.y;
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].z = ByteCube::s_vertices[faceIndex +  5] * half + offset.z;
-
                     vertexIndex += 1;
-                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].x = UVx + WorldSettings::s_textureStep;
-                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].y = UVy + WorldSettings::s_textureStep;
+                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].x = UVx;
+                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].y = UVy+ WorldSettings::s_textureStep;
+                    WorldBuffers::s_chunkNormalBuffer[vertexIndex].x = ByteCube::s_normals [faceIndex + 6];
+                    WorldBuffers::s_chunkNormalBuffer[vertexIndex].y = ByteCube::s_normals [faceIndex + 7];
+                    WorldBuffers::s_chunkNormalBuffer[vertexIndex].z = ByteCube::s_normals [faceIndex + 8];
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].x = ByteCube::s_vertices[faceIndex +  6] * half + offset.x;
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].y = ByteCube::s_vertices[faceIndex +  7] * half + offset.y;
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].z = ByteCube::s_vertices[faceIndex +  8] * half + offset.z;
 
                     vertexIndex += 1;
-                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].x = UVx + WorldSettings::s_textureStep;
+                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].x = UVx;
                     WorldBuffers::s_chunkUVsBuffer   [vertexIndex].y = UVy + WorldSettings::s_textureStep;
+                    WorldBuffers::s_chunkNormalBuffer[vertexIndex].x = ByteCube::s_normals [faceIndex +  9];
+                    WorldBuffers::s_chunkNormalBuffer[vertexIndex].y = ByteCube::s_normals [faceIndex + 10];
+                    WorldBuffers::s_chunkNormalBuffer[vertexIndex].z = ByteCube::s_normals [faceIndex + 11];
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].x = ByteCube::s_vertices[faceIndex +  9] * half + offset.x;
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].y = ByteCube::s_vertices[faceIndex + 10] * half + offset.y;
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].z = ByteCube::s_vertices[faceIndex + 11] * half + offset.z;
 
                     vertexIndex += 1;
                     WorldBuffers::s_chunkUVsBuffer   [vertexIndex].x = UVx;
-                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].y = UVy + WorldSettings::s_textureStep;
+                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].y = UVy;
+                    WorldBuffers::s_chunkNormalBuffer[vertexIndex].x = ByteCube::s_normals [faceIndex + 12];
+                    WorldBuffers::s_chunkNormalBuffer[vertexIndex].y = ByteCube::s_normals [faceIndex + 13];
+                    WorldBuffers::s_chunkNormalBuffer[vertexIndex].z = ByteCube::s_normals [faceIndex + 14];
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].x = ByteCube::s_vertices[faceIndex + 12] * half + offset.x;
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].y = ByteCube::s_vertices[faceIndex + 13] * half + offset.y;
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].z = ByteCube::s_vertices[faceIndex + 14] * half + offset.z;
 
                     vertexIndex += 1;
-                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].x = UVx;
+                    WorldBuffers::s_chunkUVsBuffer   [vertexIndex].x = UVx + WorldSettings::s_textureStep;
                     WorldBuffers::s_chunkUVsBuffer   [vertexIndex].y = UVy;
+                    WorldBuffers::s_chunkNormalBuffer[vertexIndex].x = ByteCube::s_normals [faceIndex + 15];
+                    WorldBuffers::s_chunkNormalBuffer[vertexIndex].y = ByteCube::s_normals [faceIndex + 16];
+                    WorldBuffers::s_chunkNormalBuffer[vertexIndex].z = ByteCube::s_normals [faceIndex + 17];
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].x = ByteCube::s_vertices[faceIndex + 15] * half + offset.x;
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].y = ByteCube::s_vertices[faceIndex + 16] * half + offset.y;
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].z = ByteCube::s_vertices[faceIndex + 17] * half + offset.z;
-
+                    cardinal::debug::DrawRay(WorldBuffers::s_chunkVertexBuffer[vertexIndex], WorldBuffers::s_chunkNormalBuffer[vertexIndex], glm::vec3(1.0f, 0.0f, 0.0f));
                     vertexIndex += 1;
                 }
             }
@@ -152,33 +168,31 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
     }
 
     WorldBuffers::s_chunkVertexBuffer.resize(vertexIndex);
-    WorldBuffers::s_chunkUVsBuffer.resize (vertexIndex);
+    WorldBuffers::s_chunkNormalBuffer.resize(vertexIndex);
+    WorldBuffers::s_chunkUVsBuffer.resize   (vertexIndex);
 
-   // auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - batchingBegin);
-  //  cardinal::Logger::LogInfo("\t\tBatching : %d", elapsedMs);
-  //  batchingBegin = std::chrono::steady_clock::now();
-
-    // Indexing
     cardinal::VBOIndexer::Index(
             WorldBuffers::s_chunkVertexBuffer,
+            WorldBuffers::s_chunkNormalBuffer,
             WorldBuffers::s_chunkUVsBuffer,
             WorldBuffers::s_chunkIndexesBuffer,
             WorldBuffers::s_chunkIndexedVertexBuffer,
+            WorldBuffers::s_chunkIndexedNormalBuffer,
             WorldBuffers::s_chunkIndexedUVsBuffer);
 
     m_renderer->Update(
             WorldBuffers::s_chunkIndexesBuffer,
             WorldBuffers::s_chunkIndexedVertexBuffer,
+            WorldBuffers::s_chunkIndexedNormalBuffer,
             WorldBuffers::s_chunkIndexedUVsBuffer);
 
-   // elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - batchingBegin);
-   // cardinal::Logger::LogInfo("\t\tIndexing : %d", elapsedMs);
-
     WorldBuffers::s_chunkUVsBuffer.clear();
+    WorldBuffers::s_chunkNormalBuffer.clear();
     WorldBuffers::s_chunkVertexBuffer.clear();
     WorldBuffers::s_chunkIndexesBuffer.clear();
     WorldBuffers::s_chunkIndexedUVsBuffer.clear();
     WorldBuffers::s_chunkIndexedVertexBuffer.clear();
+    WorldBuffers::s_chunkIndexedNormalBuffer.clear();
 }
 
 /// \brief Translate the chunk terrain renderer

@@ -15,7 +15,7 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       UnlitColorShader.cpp
+/// \file       TextShader.cpp
 /// \date       16/02/2018
 /// \project    Cardinal Engine
 /// \package    Runtime/Rendering/Shader/Built-in
@@ -24,34 +24,47 @@
 #include "Glew/include/GL/glew.h"
 
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
-#include "Runtime/Rendering/Shader/Built-in/UnlitColorShader.hpp"
+#include "Runtime/Rendering/Texture/TextureManager.hpp"
+#include "Runtime/Rendering/Shader/Built-in/Text/TextShader.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
 /// \brief Constructor
-UnlitColorShader::UnlitColorShader()
+TextShader::TextShader()
 {
-    m_shaderID = ShaderManager::GetShaderID("UnlitColor");
-    m_matrixID = glGetUniformLocation(m_shaderID, "MVP");
+    m_shaderID       = ShaderManager::GetShaderID("Text");
+    m_texture        = m_texture = TextureManager::GetTextureID("SAORegular");
+    m_textureSampler = glGetUniformLocation(m_shaderID, "textureSampler");
+    m_textColor      = glGetUniformLocation(m_shaderID, "textColor");
 }
 
 /// \brief Sets up the pipeline for the shader
 /// \param MVP The Projection-View-Model matrix to pass to the shader
-void UnlitColorShader::Begin(glm::mat4 const& MVP, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light)
+void TextShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights)
 {
     glUseProgram      (m_shaderID);
-    glUniformMatrix4fv(m_matrixID, 1, GL_FALSE, &MVP[0][0]);
+    glActiveTexture   (GL_TEXTURE0);
+    glBindTexture     (GL_TEXTURE_2D, m_texture);
+    glUniform1i       (m_textureSampler, 0);
+    SetFloat4         (m_textColor, m_color.x, m_color.y, m_color.z, m_color.a);
+
+    glDisable(GL_CULL_FACE);
 }
 
 /// \brief Restore the pipeline state
-void UnlitColorShader::End()
+void TextShader::End()
 {
-    // None
+    glEnable(GL_CULL_FACE);
+}
+
+/// \brief Sets the color of the text
+/// \param color The color
+void TextShader::SetColor(glm::vec4 const& color)
+{
+    m_color = color;
 }
 
 } // !namespace
-
-
 

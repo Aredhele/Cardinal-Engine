@@ -23,22 +23,28 @@ INCLUDE_DIRECTORIES(
 
 # Compile all tests
 ADD_LIBRARY(CardinalEngine STATIC
+        Main.cpp
         Engine.cpp
         Core/Debug/Logger.cpp
         Core/Memory/Allocator/StackAllocator.cpp
+        Core/Plugin/PluginManager.cpp
         Physics/PhysicsEngine.cpp
         Rendering/Context/Window.cpp
         Rendering/Debug/DebugBox.cpp
+        Rendering/Debug/DebugGrid.cpp
         Rendering/Debug/DebugLine.cpp
         Rendering/Debug/DebugRay.cpp
+        Rendering/Debug/DebugGizmos.cpp
         Rendering/Debug/DebugManager.cpp
         Rendering/Camera/Camera.cpp
         Rendering/Optimization/VBOIndexer.cpp
         Rendering/RenderingEngine.cpp
         Rendering/Renderer/IRenderer.cpp
-        Rendering/Renderer/BetaRenderer.cpp
         Rendering/Renderer/TextRenderer.cpp
         Rendering/Renderer/MeshRenderer.cpp
+        Rendering/Lighting/LightManager.cpp
+        Rendering/Lighting/Lights/PointLight.cpp
+        Rendering/Lighting/Lights/DirectionalLight.cpp
         Rendering/Texture/TextureLoader.cpp
         Rendering/Texture/TextureManager.cpp
         Rendering/Texture/TextureImporter.cpp
@@ -48,10 +54,11 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Shader/Built-in/Lit/LitColorShader.cpp
         Rendering/Shader/Built-in/Lit/LitTextureShader.cpp
         Rendering/Shader/Built-in/Lit/LitTransparentShader.cpp
-        Rendering/Shader/Built-in/TextShader.cpp
-        Rendering/Shader/Built-in/UnlitColorShader.cpp
-        Rendering/Shader/Built-in/UnlitTextureShader.cpp
-        Rendering/Shader/Built-in/UnlitTransparentShader.cpp)
+        Rendering/Shader/Built-in/Text/TextShader.cpp
+        Rendering/Shader/Built-in/Unlit/UnlitColorShader.cpp
+        Rendering/Shader/Built-in/Unlit/UnlitTextureShader.cpp
+        Rendering/Shader/Built-in/Unlit/UnlitTransparentShader.cpp
+        Rendering/Shader/Built-in/Standard/StandardShader.cpp)
 
 # But tests depends on GTEST and GMOCK
 ADD_DEPENDENCIES(CardinalEngine glfw glew ResourcesCopy ImGUI)

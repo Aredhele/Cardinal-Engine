@@ -52,8 +52,8 @@ public:
 
 private:
 
-    glm::vec3                m_model;
-    cardinal::MeshRenderer * m_renderer = nullptr;
+    glm::vec3                      m_model;
+    cardinal::MeshRenderer       * m_renderer = nullptr;
 };
 
 #endif // !CARDINAL_ENGINE_TERRAIN_RENDERER_HPP__

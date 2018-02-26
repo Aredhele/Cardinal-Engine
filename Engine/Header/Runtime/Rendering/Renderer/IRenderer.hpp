@@ -43,12 +43,16 @@ public:
     /// \brief Called to render the object
     /// \param PV The projection view matrix
     /// TODO
-    virtual void Draw(glm::mat4 const& P, glm::mat4 const& V, glm::vec3 const& light) = 0;
+    virtual void Draw(glm::mat4 const& P, glm::mat4 const& V, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights) = 0;
+
+    /// \brief Returns the position of the renderer
+    glm::vec3 const& GetPosition() const;
 
 protected:
 
-    uint      m_vao;     ///< All renderers have at least one vao
-    IShader * m_pShader; ///< All renderers have at least one shader
+    uint      m_vao;      ///< All renderers have at least one vao
+    IShader * m_pShader;  ///< All renderers have at least one shader
+    glm::vec3 m_position; ///< The position of the renderer;
 };
 
 } // !namespace

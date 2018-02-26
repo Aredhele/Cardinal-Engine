@@ -15,46 +15,48 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       UnlitColorShader.cpp
+/// \file       UnlitTextureShader.hpp
 /// \date       16/02/2018
 /// \project    Cardinal Engine
 /// \package    Runtime/Rendering/Shader/Built-in
 /// \author     Vincent STEHLY--CALISTO
 
-#include "Glew/include/GL/glew.h"
+#ifndef CARDINAL_ENGINE_UNLIT_TEXTURE_SHADER_HPP__
+#define CARDINAL_ENGINE_UNLIT_TEXTURE_SHADER_HPP__
 
-#include "Runtime/Rendering/Shader/ShaderManager.hpp"
-#include "Runtime/Rendering/Shader/Built-in/UnlitTransparentShader.hpp"
-
+#include "Runtime/Rendering/Shader/IShader.hpp"
+#include <string>
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \brief Constructor
-UnlitTransparentShader::UnlitTransparentShader()
+/// \class UnlitTextureShader
+/// \brief Texture only shader
+class UnlitTextureShader : public IShader
 {
-    m_shaderID = ShaderManager::GetShaderID("UnlitTransparent");
-    m_matrixID = glGetUniformLocation(m_shaderID, "MVP");
-}
+public:
 
-/// \brief Sets up the pipeline for the shader
-/// \param MVP The Projection-View-Model matrix to pass to the shader
-void UnlitTransparentShader::Begin(glm::mat4 const& MVP, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light)
-{
-    // Pre-condition
-    glUseProgram      (m_shaderID);
-    glUniformMatrix4fv(m_matrixID, 1, GL_FALSE, &MVP[0][0]);
+    /// \brief Constructor
+    UnlitTextureShader();
 
-    glDisable   (GL_CULL_FACE);
-}
+    /// \brief Sets the texture of the shader
+    void SetTexture(uint textureID);
 
-/// \brief Restore the pipeline state
-void UnlitTransparentShader::End()
-{
-    glEnable   (GL_CULL_FACE);
-}
+    /// \brief Sets up the pipeline for the shader
+    /// \param MVP The Projection-View-Model matrix to pass to the shader
+    void Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights) final;
+
+    /// \brief Restore the pipeline state
+    void End() final;
+
+    std::string debugName;
+
+private:
+
+    uint m_textureID;
+    int  m_textureSampler;
+};
 
 } // !namespace
 
-
-
+#endif // !CARDINAL_ENGINE_UNLIT_TEXTURE_SHADER_HPP__

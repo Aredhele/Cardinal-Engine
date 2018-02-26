@@ -6,4 +6,5 @@ class IWorldGenerator
 {
 public:
     virtual World* generateWorld() = 0;
+
 };
