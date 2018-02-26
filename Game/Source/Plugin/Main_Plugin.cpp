@@ -39,7 +39,8 @@ void OnPluginRegistration()
 }
 
 /// \brief Constructor
-Main_Plugin::Main_Plugin()
+Main_Plugin::Main_Plugin() :
+    m_cameraManager()
 {
     m_pWorld = nullptr;
 }
@@ -54,7 +55,9 @@ void Main_Plugin::OnPlayStart()
     // Setting up the game
     BasicWorldGenerator bwg;
     m_pWorld = bwg.generateWorld();
-    m_character.AttachCamera(cardinal::RenderingEngine::GetMainCamera());
+
+    // Camera management
+    m_cameraManager.SetCamera(cardinal::RenderingEngine::GetMainCamera());
 }
 
 /// \brief Called when the game stops
@@ -73,7 +76,11 @@ void Main_Plugin::OnPreUpdate()
 /// \param dt The elapsed time in seconds
 void Main_Plugin::OnPostUpdate(float dt)
 {
+    // Character update
     m_character.Update(cardinal::RenderingEngine::GetWindow(), dt);
+
+    // Camera manager update
+    m_cameraManager.Update(cardinal::RenderingEngine::GetWindow(), dt);
 }
 
 

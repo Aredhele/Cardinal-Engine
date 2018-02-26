@@ -30,6 +30,7 @@
 // Game
 #include "World/World.hpp"
 #include "Character/Character.hpp"
+#include "Rendering/CameraManager.hpp"
 
 /// \brief Plugin for procedural generation
 /// \class Main_Plugin
@@ -59,8 +60,9 @@ public:
 
 private:
 
-    World *   m_pWorld;
-    Character m_character;
+    World *         m_pWorld;
+    Character       m_character;
+    CameraManager   m_cameraManager;
 };
 
 #endif // !CARDINAL_ENGINE_MAIN_PLUGIN_HPP__

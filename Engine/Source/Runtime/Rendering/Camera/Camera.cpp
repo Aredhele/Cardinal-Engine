@@ -130,6 +130,12 @@ glm::vec3 const& Camera::GetRight() const
     return m_right;
 }
 
+/// \brief Returns the up vector
+glm::vec3 const& Camera::GetUp() const
+{
+    return m_up;
+}
+
 /// \brief Returns the view matrix
 glm::mat4 const& Camera::GetViewMatrix() const
 {

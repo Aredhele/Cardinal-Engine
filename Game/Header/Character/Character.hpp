@@ -49,10 +49,6 @@ public:
     /// \param dt The elapsed time
     void Update(cardinal::Window * pWindow, float dt);
 
-    /// \brief Attaches a camera to the character
-    /// \param pCamera A pointer on the camera to attach
-    void AttachCamera(cardinal::Camera * pCamera);
-
     /// \brief Returns the position of the avatar
     glm::vec3 const& GetPosition() const;
 
@@ -66,20 +62,14 @@ private:
     void InitializeAvatar();
 
 private:
-
-    cardinal::Camera * m_pCamera;
-
     // Controls
     glm::tvec3<double> m_lastMouse;
     glm::vec3          m_position;
 
     float m_speed           = 50.0f;
     float m_speedMultiplier = 2.0f;
-    float m_sensitivity     = 0.002f;
 
     cardinal::MeshRenderer * m_meshRenderer;
-    cardinal::TextRenderer * m_pPositionText;
-    cardinal::TextRenderer * m_pDirectionText;
 };
 
 #endif // !CARDINAL_ENGINE_CHARACTER_HPP__

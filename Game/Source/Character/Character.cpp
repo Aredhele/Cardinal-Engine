@@ -36,15 +36,6 @@
 /// \brief Constructor
 Character::Character()
 {
-    m_pPositionText  = cardinal::RenderingEngine::AllocateTextRenderer();
-    m_pDirectionText = cardinal::RenderingEngine::AllocateTextRenderer();
-
-    m_pPositionText->Initialize();
-    m_pDirectionText->Initialize();
-
-    m_pPositionText->SetText( "Pos XYZ : 0.0f / 0.0f / 0.0f", 5, 500, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-    m_pDirectionText->SetText("Dir XYZ : 0.0f / 0.0f / 0.0f", 5, 485, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-
     InitializeAvatar();
 }
 
@@ -53,75 +44,11 @@ Character::Character()
 /// \param dt The elapsed time
 void Character::Update(cardinal::Window * pWindow, float dt)
 {
-    glm::tvec3<double> mouse;
-    glm::tvec3<double> delta;
-    glfwGetCursorPos(pWindow->GetContext(), &mouse.x, &mouse.y);
-
-    delta = mouse - m_lastMouse;
-    m_pCamera->Rotate  (static_cast<float>(-delta.x * m_sensitivity));
-    m_pCamera->RotateUp(static_cast<float>(-delta.y * m_sensitivity));
-
-    bool bFreeMouse = false;
-    if(glfwGetKey(pWindow->GetContext(), GLFW_KEY_LEFT_ALT))
-    {
-        bFreeMouse = true;
-    }
-
-    glm::vec2 mousePos    (mouse.x, mouse.y);
-    glm::vec2 windowSize  (1600.0f, 900.0f);
-    glm::vec2 windowCenter(windowSize.x /2, windowSize.y / 2);
-
-    float maxMousePosRadius = glm::min(windowSize.x, windowSize.y) / 2.0f;
-    if (glm::distance(mousePos, windowCenter) > maxMousePosRadius)
-    {
-        if(!bFreeMouse)
-        {
-            glfwSetCursorPos(pWindow->GetContext(), windowCenter.x, windowCenter.y);
-            m_lastMouse.x = windowCenter.x;
-            m_lastMouse.y = windowCenter.y;
-        }
-    }
-    else
-    {
-        m_lastMouse.x = mousePos.x;
-        m_lastMouse.y = mousePos.y;
-    }
-
-
-    if(glfwGetKey(pWindow->GetContext(), GLFW_KEY_LEFT_SHIFT)) m_speedMultiplier = 2.0f;
-    else                                                       m_speedMultiplier = 1.0f;
-
     // Camera debug controls
-    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_W) == GLFW_PRESS) m_pCamera->Translate( m_pCamera->GetDirection() * dt * m_speed * m_speedMultiplier);
-    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_S) == GLFW_PRESS) m_pCamera->Translate(-m_pCamera->GetDirection() * dt * m_speed * m_speedMultiplier);
-    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_D) == GLFW_PRESS) m_pCamera->Translate( m_pCamera->GetRight() * dt * m_speed * m_speedMultiplier);
-    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_A) == GLFW_PRESS) m_pCamera->Translate(-m_pCamera->GetRight() * dt * m_speed * m_speedMultiplier);
-
-    // Avatar controls
-    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_UP)            == GLFW_PRESS) Translate(glm::vec3( 1.0f,  0.0f,  0.0f) * dt * m_speed);
-    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_DOWN)          == GLFW_PRESS) Translate(glm::vec3(-1.0f,  0.0f,  0.0f) * dt * m_speed);
-    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_LEFT)          == GLFW_PRESS) Translate(glm::vec3( 0.0f, -1.0f,  0.0f) * dt * m_speed);
-    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_RIGHT)         == GLFW_PRESS) Translate(glm::vec3( 0.0f,  1.0f,  0.0f) * dt * m_speed);
-    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_SPACE)         == GLFW_PRESS) Translate(glm::vec3( 0.0f,  0.0f,  1.0f) * dt * m_speed);
-    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_LEFT_CONTROL)  == GLFW_PRESS) Translate(glm::vec3( 0.0f,  0.0f, -1.0f) * dt * m_speed);
-
-    std::string _pos = "Pos XYZ : " + std::to_string(m_pCamera->GetPosition().x) + " / " +
-                                      std::to_string(m_pCamera->GetPosition().y) + " / " +
-                                      std::to_string(m_pCamera->GetPosition().z);
-
-    std::string _dir = "Dir  XYZ : " + std::to_string(m_pCamera->GetDirection().x) + " / " +
-                                       std::to_string(m_pCamera->GetDirection().y) + " / " +
-                                       std::to_string(m_pCamera->GetDirection().z);
-
-    m_pPositionText->SetText ( _pos.c_str(), 5, 500, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-    m_pDirectionText->SetText(_dir.c_str(), 5, 485, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-}
-
-/// \brief Attaches a camera to the character
-/// \param pCamera A pointer on the camera to attach
-void Character::AttachCamera(cardinal::Camera * pCamera)
-{
-    m_pCamera = pCamera;
+    // if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_W) == GLFW_PRESS) Translate( m_pCamera->GetDirection() * dt * m_speed * m_speedMultiplier);
+    // if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_S) == GLFW_PRESS) Translate(-m_pCamera->GetDirection() * dt * m_speed * m_speedMultiplier);
+    // if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_D) == GLFW_PRESS) Translate( m_pCamera->GetRight() * dt * m_speed * m_speedMultiplier);
+    // if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_A) == GLFW_PRESS) Translate(-m_pCamera->GetRight() * dt * m_speed * m_speedMultiplier);
 }
 
 /// \brief Returns the position of the avatar

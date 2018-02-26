@@ -72,6 +72,9 @@ public :
     /// \brief Returns the right vector
     glm::vec3 const& GetRight() const;
 
+    /// \brief Returns the up vector
+    glm::vec3 const& GetUp() const;
+
     /// \brief Returns the view matrix
     glm::mat4 const& GetViewMatrix() const;
 
