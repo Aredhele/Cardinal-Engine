@@ -25,16 +25,18 @@ INCLUDE_DIRECTORIES(
 # Gets all source files
 FILE(GLOB_RECURSE GAME_SOURCES
         World/*.cpp
-        Character/*.cpp)
+        Character/*.cpp
+        Rendering/*.cpp)
 
 FILE(GLOB_RECURSE GAME_HEADERS
         ${CARDINAL_GAME_DIR}/Header/World/*.hpp
-        ${CARDINAL_GAME_DIR}/Header/Character/*.hpp)
+        ${CARDINAL_GAME_DIR}/Header/Character/*.hpp
+        ${CARDINAL_GAME_DIR}/Header/Rendering/*.hpp)
 
 # Linking with the engine
 # Creating empty targets
-ADD_EXECUTABLE(Main_Plugin "")
-ADD_EXECUTABLE(PCG_Plugin  "")
+ADD_EXECUTABLE(Main_Plugin "Plugin/Main_Plugin.cpp")
+ADD_EXECUTABLE(PCG_Plugin  "Plugin/PCG_Plugin.cpp")
 
 # Creating a librariy for PCG and Main sources
 ADD_LIBRARY(PCGLib  STATIC Plugin/PCG_Plugin.cpp  ${GAME_SOURCES} ${GAME_HEADERS})
