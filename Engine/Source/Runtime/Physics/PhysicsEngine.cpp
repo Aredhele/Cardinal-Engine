@@ -76,7 +76,7 @@ void PhysicsEngine::Shutdown()
 btRigidBody * PhysicsEngine::AllocateRigidbody()
 {
     //  TODO
-
+    return nullptr;
 }
 
 /// \brief TODO
