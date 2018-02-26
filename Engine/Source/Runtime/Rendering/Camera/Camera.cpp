@@ -105,6 +105,24 @@ void Camera::RotateUp(float angle)
     UpdateVectors();
 }
 
+/// \brief Rotates right-left
+/// \param angle The angle to add
+void Camera::RotateAround(float angle)
+{
+    m_position = glm::rotate(m_position, angle, m_up);
+
+    UpdateVectors();
+}
+
+/// \brief Rotates up-down
+/// \param angle The angle to add
+void Camera::RotateUpAround(float angle)
+{
+    m_position = glm::rotate(m_position, angle, m_right);
+
+    UpdateVectors();
+}
+
 /// \brief Forces the camera to look at the target
 void Camera::LookAt(const glm::vec3& target)
 {

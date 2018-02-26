@@ -3,6 +3,7 @@
 
 #include "Runtime/Rendering/Camera/Camera.hpp"
 #include "Runtime/Rendering/Context/Window.hpp"
+#include "Character/Character.hpp"
 
 class CameraManager
 {
@@ -25,6 +26,10 @@ class CameraManager
         // Camera
         inline void SetCamera(cardinal::Camera* p_camera)
             {m_camera = p_camera;}
+        
+        // Character
+        inline void SetCharacter(const Character* p_character)
+            {m_character = p_character;}
         ///
 
         /// Destructor
@@ -34,6 +39,9 @@ class CameraManager
         /// Game camera
         cardinal::Camera* m_camera = nullptr;
 
+        /// Character
+        const Character* m_character = nullptr;
+
         /// State
         EStates m_state;
 
@@ -41,8 +49,9 @@ class CameraManager
         glm::tvec3<double> m_lastMouse;
 
         /// Paramaters
-        float m_speed = 50.0f;
-        float m_sensitivity = 0.002f;
+        const float m_speed = 50.0f;
+        const float m_sensitivity = 0.002f;
+        const float m_tpsRange = 10.f;
 };
 
 #endif // CAMERA_MANAGER_HPP

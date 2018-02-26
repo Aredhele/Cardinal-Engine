@@ -60,6 +60,14 @@ public :
     /// \param angle The angle to add
     void RotateUp(float angle);
 
+    /// \brief Rotates right-left
+    /// \param angle The angle to add
+    void RotateAround(float angle);
+
+    /// \brief Rotates up-down
+    /// \param angle The angle to add
+    void RotateUpAround(float angle);
+
     /// \brief Forces the camera to look at the target
     void LookAt(glm::vec3 const & target);
 

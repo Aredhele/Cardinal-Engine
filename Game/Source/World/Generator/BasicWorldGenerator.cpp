@@ -246,7 +246,7 @@ BasicWorldGenerator::BasicWorldGenerator()
 World* BasicWorldGenerator::generateWorld()
 {
     m_generationSettings = GenerationSettings();
-    generateWorld(m_generationSettings);
+    return generateWorld(m_generationSettings);
 }
 
 

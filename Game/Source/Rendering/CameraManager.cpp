@@ -12,6 +12,21 @@ CameraManager::CameraManager(void) :
 /// Update
 void CameraManager::Update(cardinal::Window * p_Window, float dt)
 {
+    // Change mode
+    if (glfwGetKey(p_Window->GetContext(), GLFW_KEY_F1) == true)
+    {
+        m_state = EStates::FPS;
+    }
+    if (glfwGetKey(p_Window->GetContext(), GLFW_KEY_F2) == true)
+    {
+        m_state = EStates::Free;
+    }
+    if (glfwGetKey(p_Window->GetContext(), GLFW_KEY_F3) == true)
+    {
+        m_state = EStates::TPS;
+    }
+    //
+
     glm::tvec3<double> mouse;
     glm::tvec3<double> delta;
     glfwGetCursorPos(p_Window->GetContext(), &mouse.x, &mouse.y);
@@ -69,7 +84,23 @@ void CameraManager::Update(cardinal::Window * p_Window, float dt)
             m_camera->Translate( (m_camera->GetDirection() * yDirection + m_camera->GetRight() * xDirection) * dt * m_speed );
         }break;
 
+        case EStates::FPS:
+        {
+            m_camera->SetPosition(m_character->GetPosition());
 
+            m_camera->Rotate(static_cast<float>(-delta.x * m_sensitivity));
+            m_camera->RotateUp(static_cast<float>(-delta.y * m_sensitivity));
+
+        }break;
+
+        case EStates::TPS:
+        {
+            m_camera->SetPosition(m_character->GetPosition() - m_camera->GetDirection() * m_tpsRange);
+
+            m_camera->RotateAround(static_cast<float>(-delta.x * m_sensitivity));
+            m_camera->RotateUpAround(static_cast<float>(-delta.y * m_sensitivity));
+
+        }break;
 
 
         default: break;
