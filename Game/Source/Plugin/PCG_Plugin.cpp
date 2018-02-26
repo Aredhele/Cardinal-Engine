@@ -39,7 +39,7 @@ void OnPluginRegistration()
 }
 
 /// \brief Constructor
-PCG_Plugin::PCG_Plugin()
+PCG_Plugin::PCG_Plugin() : m_gui()
 {
     m_pWorld = nullptr;
 }
@@ -65,6 +65,7 @@ void PCG_Plugin::OnPlayStop()
 /// \brief Called just before the engine update
 void PCG_Plugin::OnPreUpdate()
 {
+    //m_gui.drawGUI();
     // TODO
 }
 
@@ -73,6 +74,7 @@ void PCG_Plugin::OnPreUpdate()
 void PCG_Plugin::OnPostUpdate(float dt)
 {
     m_character.Update(cardinal::RenderingEngine::GetWindow(), dt);
+
 }
 
 

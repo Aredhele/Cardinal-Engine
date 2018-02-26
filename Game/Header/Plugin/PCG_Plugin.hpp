@@ -27,6 +27,9 @@
 // Engine
 #include "Runtime/Engine.hpp"
 
+
+#include "World/Generator/GUI/GeneratorGUI.hpp"
+
 // Game
 #include "World/World.hpp"
 #include "Character/Character.hpp"
@@ -58,7 +61,7 @@ public:
     void OnPostUpdate(float dt) final;
 
 private:
-
+    GeneratorGUI m_gui;
     World *   m_pWorld;
     Character m_character;
 };

@@ -3,28 +3,31 @@
 #include <World/Generator/CellularAutomata.hpp>
 #include "World/Generator/Noise/FastNoise.h"
 
-World * BasicWorldGenerator::generateWorld()
+World * BasicWorldGenerator::generateWorld(GenerationSettings settings)
 {
-    mp_currentWorld = new World();
-    srand(6665);
+    if (mp_currentWorld == nullptr)
+        mp_currentWorld = new World();
+    m_generationSettings = settings;
+    m_seed = m_generationSettings.seed;
+    m_randomGenerator = std::default_random_engine(m_seed);
     //Reset du monde
     mp_currentWorld->Initialize();
-    //generateHeights();
-    generateCaves();
+    generateHeights();
+    //generateCaves();
     mp_currentWorld->Batch();
     return mp_currentWorld;
 }
 
 void BasicWorldGenerator::generateHeights()
 {
-    FastNoise noiseGenerator(rand());
-    noiseGenerator.SetNoiseType(FastNoise::SimplexFractal);
-    noiseGenerator.SetFractalOctaves(4);
+    FastNoise noiseGenerator(m_seed);
+    noiseGenerator.SetNoiseType(m_generationSettings.noiseType);
+    noiseGenerator.SetFractalOctaves(m_generationSettings.octaves);
 	for (int x = 0; x<WorldSettings::s_matSizeCubes; x++)
 		for (int y = 0; y < WorldSettings::s_matSizeCubes; y++)
 		{
 			double noise = noiseGenerator.GetNoise(x, y);
-			buildStack(x, y, WorldSettings::s_matHeightCubes * noise);
+			buildStack(x, y, WorldSettings::s_matHeightCubes * abs(noise));
 		}
 }
 
@@ -76,7 +79,6 @@ void BasicWorldGenerator::generate_piles(int x1, int y1,
 	// Stop if there isn't a cube between corners
 	if ((x1 == x2 - 1 || x1 == x2) && (y1 == y4 - 1 || y1 == y4)) return;
 
-    std::default_random_engine generator(rand());
     int **& worldHeights = mp_currentWorld->m_worldHeights;
     double s = sqrt(WorldSettings::s_matHeightCubes);
 
@@ -84,29 +86,29 @@ void BasicWorldGenerator::generate_piles(int x1, int y1,
 	int x1x2 = (x1 + x2) / 2;
 	int y1y2 = (y1 + y2) / 2;
     std::normal_distribution<double> distribution((worldHeights[x1][y1] + worldHeights[x2][y2]) / 2, s);
-	int height12 = round(distribution(generator));
+	int height12 = round(distribution(m_randomGenerator));
 	buildStack(x1x2, y1y2, height12);
 	int x2x3 = (x2 + x3) / 2;
 	int y2y3 = (y2 + y3) / 2;
     distribution = std::normal_distribution<double>((worldHeights[x2][y2] + worldHeights[x3][y3]) / 2, s);
-	int height23 = round(distribution(generator));
+	int height23 = round(distribution(m_randomGenerator));
 	buildStack(x2x3, y2y3, height23);
 	int x3x4 = (x3 + x4) / 2;
 	int y3y4 = (y3 + y4) / 2;
     distribution = std::normal_distribution<double>((worldHeights[x3][y3] + worldHeights[x4][y4]) / 2 , s);
-	int height34 = round(distribution(generator));
+	int height34 = round(distribution(m_randomGenerator));
 	buildStack(x3x4, y3y4, height34);
 	int x4x1 = (x4 + x1) / 2;
 	int y4y1 = (y4 + y1) / 2;
     distribution = std::normal_distribution<double>((worldHeights[x4][y4] + worldHeights[x1][y1]) / 2, s);
-	int height41 = round(distribution(generator));
+	int height41 = round(distribution(m_randomGenerator));
 	buildStack(x4x1, y4y1, height41);
 
 	// Build the pile on the center of the bloc
 	int xcenter = (x4x1 + x2x3) / 2;
 	int ycenter = (y4y1 + y2y3) / 2;
     distribution = std::normal_distribution<double>((height41 + height23) / 2, s);
-	int heightCenter = round(distribution(generator));
+	int heightCenter = round(distribution(m_randomGenerator));
 	buildStack(xcenter, ycenter, heightCenter);
 
 	// Call recursively on the four new blocs created
@@ -153,7 +155,7 @@ void BasicWorldGenerator::smooth()
 }
 
 void BasicWorldGenerator::generate3DPerlinWorld() {
-    FastNoise noiseGenerator(rand());
+    FastNoise noiseGenerator(m_seed);
     noiseGenerator.SetNoiseType(FastNoise::PerlinFractal);
     noiseGenerator.SetFractalOctaves(4);
     for (int x = 0; x<WorldSettings::s_matSizeCubes; x++)
@@ -201,6 +203,17 @@ void BasicWorldGenerator::generateCaves() {
                     mp_currentWorld->GetCube(x, y, z)->SetType(ByteCube::EType::Grass);
                 }
             }
+}
+
+BasicWorldGenerator::BasicWorldGenerator()
+{
+
+}
+
+World* BasicWorldGenerator::generateWorld()
+{
+    m_generationSettings = GenerationSettings();
+    generateWorld(m_generationSettings);
 }
 
 
