@@ -63,9 +63,11 @@ public:
 
 private:
 
-    World *         m_pWorld;
-    Character       m_character;
-    CameraManager   m_cameraManager;
+    World *         m_pWorld;               ///< The game world
+    Character       m_character;            ///< The game character
+    CameraManager   m_cameraManager;        ///< The camera manager
+    
+    bool            m_debugWindow = false;  ///< True to enable debug window
 };
 
 #endif // !CARDINAL_ENGINE_MAIN_PLUGIN_HPP__

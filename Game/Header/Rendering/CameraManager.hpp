@@ -37,7 +37,10 @@ class CameraManager
     private:
         cardinal::Camera* m_camera = nullptr;   ///< The engine camera
         const Character* m_character = nullptr; ///< The game character
+        
         EStates m_state;                        ///< Current mode (FPS|TPS|Free)
+        bool m_isMouseFree = true;              ///< True to enable free mouse (and disable scrolling)
+
         
         glm::tvec3<double> m_lastMouse;         ///< Keeps mouse position in mind
         glm::vec3 m_lastCharacterPosition;      ///< Keeps character position in mind
@@ -47,6 +50,7 @@ class CameraManager
         const float m_tpsRange = 10.f;          ///< The distance from character in TPS mode
         
         float m_speedCoefficient = 2.f;         ///< In Free mode, allows to move quickly
+
 };
 
 #endif // CAMERA_MANAGER_HPP

@@ -87,7 +87,10 @@ void Main_Plugin::OnPostUpdate(float dt)
 /// \brief Called when it's time to render the GUI
 void Main_Plugin::OnGUI()
 {
-    if (glfwGetKey(cardinal::RenderingEngine::GetWindow()->GetContext(), GLFW_KEY_F11) != GLFW_PRESS)
+    if (glfwGetKey(cardinal::RenderingEngine::GetWindow()->GetContext(), GLFW_KEY_F11) == GLFW_PRESS)
+        m_debugWindow = !m_debugWindow;
+
+    if (m_debugWindow == false)
         return;
 
     // Game camera
@@ -97,8 +100,9 @@ void Main_Plugin::OnGUI()
     ImGui::SetNextWindowSize(ImVec2(300,150));
     ImGui::Begin("Camera Information");
 
-    ImGui::Text(("Position :\t" + std::to_string(pCamera->GetPosition().x) + "," + std::to_string(pCamera->GetPosition().y) + "," + std::to_string(pCamera->GetPosition().z)).c_str());
-    ImGui::Text(("Direction:\t" + std::to_string(pCamera->GetDirection().x) + "," + std::to_string(pCamera->GetDirection().y) + "," + std::to_string(pCamera->GetDirection().z)).c_str());
+    ImGui::Text(("Position :\t" + std::to_string((int)pCamera->GetPosition().x)     + "," + std::to_string((int)pCamera->GetPosition().y)   + "," + std::to_string((int)pCamera->GetPosition().z)   ).c_str() );
+    ImGui::Text(("Direction:\t" + std::to_string(pCamera->GetDirection().x)         + "," + std::to_string(pCamera->GetDirection().y)       + "," + std::to_string(pCamera->GetDirection().z)       ).c_str() );
+    ImGui::Text(("Character:\t" + std::to_string((int)m_character.GetPosition().x)  + "," + std::to_string((int)m_character.GetPosition().y)+ "," + std::to_string((int)m_character.GetPosition().z)).c_str() );
 
     ImGui::End();
 }

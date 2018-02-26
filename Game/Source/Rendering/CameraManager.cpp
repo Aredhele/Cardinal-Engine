@@ -16,7 +16,7 @@ void CameraManager::Update(cardinal::Window * p_Window, float dt)
     if (glfwGetKey(p_Window->GetContext(), GLFW_KEY_F1) == GLFW_PRESS)
     {
         m_state = EStates::FPS;
-        m_camera->LookAt(m_character->GetPosition() + m_camera->GetDirection());
+        m_camera->LookAt(m_character->GetPosition() + glm::vec3(1));
         m_camera->SetPosition(m_character->GetPosition());
     }
     if (glfwGetKey(p_Window->GetContext(), GLFW_KEY_F2) == GLFW_PRESS)
@@ -27,7 +27,7 @@ void CameraManager::Update(cardinal::Window * p_Window, float dt)
     {
         m_state = EStates::TPS;
         m_camera->LookAt(m_character->GetPosition());
-        m_camera->SetPosition(m_character->GetPosition() - m_tpsRange * m_camera->GetDirection());
+        m_camera->SetPosition(m_character->GetPosition() - m_tpsRange * glm::vec3(1));
 
     }
     //
@@ -45,18 +45,16 @@ void CameraManager::Update(cardinal::Window * p_Window, float dt)
     glm::vec2 windowCenter(windowSize.x / 2, windowSize.y / 2);
 
     // Block mouse
-    bool bFreeMouse = false;
-
-    if (glfwGetKey(p_Window->GetContext(), GLFW_KEY_LEFT_ALT) == GLFW_PRESS && m_state == EStates::Free)
+    if (glfwGetKey(p_Window->GetContext(), GLFW_KEY_LEFT_ALT) == GLFW_PRESS )
     {
-        bFreeMouse = true;
+        m_isMouseFree = !m_isMouseFree && m_state == EStates::Free;
     }
 
     float maxMousePosRadius = glm::min(windowSize.x, windowSize.y) / 2.0f;
 
     if (glm::distance(mousePos, windowCenter) > maxMousePosRadius)
     {
-        if (bFreeMouse == false)
+        if (m_isMouseFree == false)
         {
             // Re-center the mouse
             glfwSetCursorPos(p_Window->GetContext(), windowCenter.x, windowCenter.y);
@@ -83,18 +81,22 @@ void CameraManager::Update(cardinal::Window * p_Window, float dt)
                         && glfwGetKey(p_Window->GetContext(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS
                         ? 2.f : 1.f;
 
+    // Special case - no character given
+    if (m_character == nullptr)
+        m_state = EStates::Free;
+
     // Conditionnal move
     switch (m_state)
     {
         case EStates::Free:
         {
-            if (bFreeMouse == false)
+            if (m_isMouseFree == false)
             {
                 m_camera->Rotate    (static_cast<float>(-deltaMouse.x * m_sensitivity));
                 m_camera->RotateUp  (static_cast<float>(-deltaMouse.y * m_sensitivity));
-            }
 
-            m_camera->Translate( (m_camera->GetDirection() * yDirection + m_camera->GetRight() * xDirection) * dt * m_speed * m_speedCoefficient );
+                m_camera->Translate( (m_camera->GetDirection() * yDirection + m_camera->GetRight() * xDirection) * dt * m_speed * m_speedCoefficient );
+            }
         }break;
 
         case EStates::FPS:
