@@ -31,6 +31,7 @@ namespace cardinal
 IRenderer::IRenderer()
 : m_vao(0)
 , m_pShader(nullptr)
+, m_elementsCount(0)
 {
     // None
 }
@@ -39,6 +40,12 @@ IRenderer::IRenderer()
 glm::vec3 const &IRenderer::GetPosition() const
 {
     return m_position;
+}
+
+/// \brief Returns the count of element to be draw
+int IRenderer::GetElementCount() const
+{
+    return m_elementsCount;
 }
 
 } // !namespace

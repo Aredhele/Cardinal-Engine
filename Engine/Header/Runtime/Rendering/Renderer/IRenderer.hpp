@@ -48,11 +48,15 @@ public:
     /// \brief Returns the position of the renderer
     glm::vec3 const& GetPosition() const;
 
+    /// \brief Returns the count of element to be draw
+    int GetElementCount() const;
+
 protected:
 
-    uint      m_vao;      ///< All renderers have at least one vao
-    IShader * m_pShader;  ///< All renderers have at least one shader
-    glm::vec3 m_position; ///< The position of the renderer;
+    uint      m_vao;           ///< All renderers have at least one vao
+    IShader * m_pShader;       ///< All renderers have at least one shader
+    glm::vec3 m_position;      ///< The position of the renderer;
+    int       m_elementsCount; ///< The count of element to be draw
 };
 
 } // !namespace

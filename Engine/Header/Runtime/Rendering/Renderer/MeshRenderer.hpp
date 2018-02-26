@@ -91,7 +91,6 @@ private:
     uint m_verticesObject;
     uint m_normalsObject;
     uint m_uvsObject;
-    int  m_elementsCount;
 
     glm::mat4 m_model;
 };

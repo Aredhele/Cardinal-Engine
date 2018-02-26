@@ -23,6 +23,9 @@
 
 #include <chrono>
 #include <iostream>
+#include "windows.h"
+#include "psapi.h"
+
 #include "Glew/include/GL/glew.h"
 
 #include "Runtime/Core/Debug/Logger.hpp"
@@ -46,6 +49,7 @@
 
 #include "ImGUI/imgui.h"
 #include "ImGUI/imgui_impl_glfw_gl3.h"
+#include "ImGUI/imgui_internal.h"
 
 /// \namespace cardinal
 namespace cardinal
@@ -85,11 +89,6 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     // Loads Textures
     TextureLoader::LoadTexture("SAORegular", "Resources/Textures/SAORegular.bmp");
     TextureLoader::LoadTexture("Block",      "Resources/Textures/BlockAtlas_2048.bmp");
-
-    // ShaderManager::Register("LitTextureD", ShaderCompiler::LoadShaders(
-    //        "Resources/Shaders/Lit/LitTextureVertexShader.glsl",
-    //        "Resources/Shaders/Lit/LitTextureGeometryShader.glsl",
-    //        "Resources/Shaders/Lit/LitTextureFragmentShader.glsl"));
 
     ShaderManager::Register("LitTexture", ShaderCompiler::LoadShaders(
             "Resources/Shaders/Lit/LitTextureVertexShader.glsl",
@@ -141,21 +140,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     m_currentFps   = 0;
     m_fpsCounter   = 0;
     s_pInstance    = this;
-
-    m_pEngineName = AllocateTextRenderer();
-    m_pCurrentFPS = AllocateTextRenderer();
-    m_pTotalFPS   = AllocateTextRenderer();
-    m_pFrameTime  = AllocateTextRenderer();
-
-    m_pEngineName->Initialize();
-    m_pCurrentFPS->Initialize();
-    m_pTotalFPS->Initialize();
-    m_pFrameTime->Initialize();
-
-    m_pEngineName->SetText("Cardinal Engine v1.0", 5, 580, 14, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-    m_pCurrentFPS->SetText("FPS   : 0", 5, 560, 12, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
-    m_pTotalFPS->SetText  ("Frame : 0", 5, 545, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-    m_pFrameTime->SetText ("Time  : 0", 5, 530, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    m_debugWindow  = true;
+    m_triangleCounter = 0;
+    m_triangleSecond  = 0;
+    m_currentTriangle = 0;
 
     // Initializes ImGUI
     ImGui::CreateContext();
@@ -189,8 +177,8 @@ void RenderingEngine::Render(float step)
         m_elapsedTime = 0.0f;
         m_fpsCounter   = 0;
 
-        std::string _fps = "FPS   : " + std::to_string(m_currentFps);
-        m_pCurrentFPS->SetText(_fps.c_str(), 5, 560, 12, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+        m_triangleSecond  = m_triangleCounter;
+        m_triangleCounter = 0;
     }
 
     if (m_frameLag < m_frameDelta)
@@ -213,12 +201,6 @@ void RenderingEngine::Render(float step)
     // We rendered a new frame, inc. the counter
     m_frameCount++;
     m_fpsCounter++;
-
-    std::string _frame = "Frame : " + std::to_string(m_frameCount);
-    std::string _time  = "Time  : " + std::to_string(m_frameTime) + " s";
-
-    m_pTotalFPS->SetText(_frame.c_str(), 5, 545, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-    m_pFrameTime->SetText(_time.c_str(), 5, 530, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
 /// \brief Frame rendering implementation
@@ -258,6 +240,8 @@ void RenderingEngine::RenderFrame(float step)
     size_t rendererCount = m_renderers.size();
     for (int nRenderer = 0; nRenderer < rendererCount; ++nRenderer)
     {
+        m_triangleCounter += m_renderers[nRenderer]->GetElementCount();
+        m_currentTriangle += m_renderers[nRenderer]->GetElementCount();
         m_renderers[nRenderer]->Draw(Projection, View, glm::vec3(0.0f, 0.0f, 0.0f), LightManager::GetNearestPointLights(m_renderers[nRenderer]->GetPosition()));
     }
 
@@ -268,11 +252,12 @@ void RenderingEngine::RenderFrame(float step)
 
 #ifdef CARDINAL_DEBUG
     DebugManager::Draw(ProjectionView);
+    DebugManager::Clear();
+
+    DisplayDebugWindow(step);
 #endif
 
-#ifdef CARDINAL_DEBUG
-    DebugManager::Clear();
-#endif
+    m_currentTriangle = 0;
 
     // Draw ImGUI
     ImGui::Render();
@@ -379,6 +364,68 @@ glm::mat4 const &RenderingEngine::GetProjectionMatrix()
 {
     ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
     return &s_pInstance->m_window;
+}
+
+/// \brief Displays a window with debug information
+/// \param step The current step
+void RenderingEngine::DisplayDebugWindow(float step)
+{
+    if (m_debugWindow)
+    {
+        ImGui::Begin       ("Cardinal debug", &m_debugWindow);
+        ImGui::SetWindowPos("Cardinal debug", ImVec2(10.0f, 10.0f));
+
+        // Header
+        ImGuiContext & context = *ImGui::GetCurrentContext();
+
+        context.FontSize = 16;
+        ImGui::TextColored(ImVec4(0.0f, 0.9f, 0.0f, 1.0f), "Cardinal v0.2");
+        context.FontSize = 14;
+
+        ImGui::Text("\nPlatform");
+        ImGui::Text((char *)glGetString(GL_VERSION));
+        ImGui::Text((char *)glGetString(GL_SHADING_LANGUAGE_VERSION));
+        ImGui::Text((char *)glGetString(GL_RENDERER));
+
+        // Getting global memory info
+        MEMORYSTATUSEX status {};
+        status.dwLength = sizeof(MEMORYSTATUSEX);
+        GlobalMemoryStatusEx(&status);
+
+        // For current usage
+        PROCESS_MEMORY_COUNTERS pmc {};
+        GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
+
+        const float Gio = 1024.0f * 1024.0f * 1024.0f;
+        float totalRam     = ((float)status.ullTotalPhys) / Gio;
+        float availableRam = ((float)status.ullAvailPhys) / Gio;
+        float inUseRam     = ((float)pmc.WorkingSetSize)  / Gio;
+
+        ImGui::Text("System : %2.2lf / %2.2lf Gio", availableRam,  totalRam);
+        ImGui::Text("In use : %2.5lf Gio", inUseRam);
+
+        // FPS
+        ImGui::Text("\nRendering");
+        std::string sFPS = "FPS   : " + std::to_string(m_currentFps);
+        if(m_currentFps >= 60) ImGui::TextColored(ImVec4(0.0f, 0.9f, 0.0f, 1.0f), sFPS.c_str());
+        else                   ImGui::TextColored(ImVec4(0.9f, 0.0f, 0.0f, 1.0f), sFPS.c_str());
+
+        // Others
+        ImGui::Text("Frame : %llu", m_frameCount);
+        ImGui::Text("Time  : %lf",  m_frameTime);
+        ImGui::Text("Lerp  : %lf",  step);
+        ImGui::Text("Tri/f : %llu", m_currentTriangle);
+        ImGui::Text("Tri/s : %llu", m_triangleSecond);
+
+        // Camera
+        glm::vec3 const& position  = m_pCamera->GetPosition();
+        glm::vec3 const& direction = m_pCamera->GetDirection();
+        ImGui::Text("\nMain camera");
+        ImGui::Text("Pos xyz : %4.2lf %4.2lf %4.2lf", position.x,  position.y,  position.z);
+        ImGui::Text("Dir xyz : %4.2lf %4.2lf %4.2lf", direction.x, direction.y, direction.z);
+
+        ImGui::End();
+    }
 }
 
 } // !namespace
