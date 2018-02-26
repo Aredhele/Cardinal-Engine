@@ -45,6 +45,9 @@ public:
 
     /// \brief Called after the engine update
     virtual void OnPostUpdate(float dt) = 0;
+
+    /// \brief Called to render GUI
+    virtual void OnGUI() = 0;
 };
 
 } // !namespace

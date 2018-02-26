@@ -60,6 +60,9 @@ public:
     /// \param dt The elapsed time in seconds
     void OnPostUpdate(float dt) final;
 
+    /// \brief Called when it's time to render the GUI
+    void OnGUI() final;
+
 private:
     GeneratorGUI m_gui;
     World *   m_pWorld;

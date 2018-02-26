@@ -61,6 +61,10 @@ public:
     /// \brief Shutdown the engine
     void Shutdown();
 
+    /// \brief Sets the plugin manager
+    /// \param pManager The plugin manager pointer
+    void SetPluginManager(class PluginManager * pManager);
+
     /// TMP
     glm::mat4 const& GetProjectionMatrix();
 
@@ -101,6 +105,7 @@ private:
 
     Window   m_window;
     Camera * m_pCamera;
+    class PluginManager * m_pPluginManager;
 
     bool m_bInterpolate;
 

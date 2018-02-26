@@ -30,6 +30,7 @@
 
 #include "Runtime/Rendering/Shader/IShader.hpp"
 #include "Runtime/Rendering/RenderingEngine.hpp"
+#include "Runtime/Core/Plugin/PluginManager.hpp"
 #include "Runtime/Rendering/Debug/DebugManager.hpp"
 #include "Header/Runtime/Rendering/Debug/Debug.hpp"
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
@@ -85,10 +86,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     TextureLoader::LoadTexture("SAORegular", "Resources/Textures/SAORegular.bmp");
     TextureLoader::LoadTexture("Block",      "Resources/Textures/BlockAtlas_2048.bmp");
 
-    ShaderManager::Register("LitTextureD", ShaderCompiler::LoadShaders(
-            "Resources/Shaders/Lit/LitTextureVertexShader.glsl",
-            "Resources/Shaders/Lit/LitTextureGeometryShader.glsl",
-            "Resources/Shaders/Lit/LitTextureFragmentShader.glsl"));
+    // ShaderManager::Register("LitTextureD", ShaderCompiler::LoadShaders(
+    //        "Resources/Shaders/Lit/LitTextureVertexShader.glsl",
+    //        "Resources/Shaders/Lit/LitTextureGeometryShader.glsl",
+    //        "Resources/Shaders/Lit/LitTextureFragmentShader.glsl"));
 
     ShaderManager::Register("LitTexture", ShaderCompiler::LoadShaders(
             "Resources/Shaders/Lit/LitTextureVertexShader.glsl",
@@ -227,6 +228,10 @@ void RenderingEngine::RenderFrame(float step)
     // Clear
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // Triggering ImGUI
+    ImGui_ImplGlfwGL3_NewFrame();
+    m_pPluginManager->OnGUI();
+
     // Gets the projection matrix
     glm::mat4 Projection     = m_projectionMatrix;
     glm::mat4 View           = m_pCamera->GetViewMatrix();
@@ -281,6 +286,14 @@ void RenderingEngine::RenderFrame(float step)
 void RenderingEngine::SetCamera(Camera *pCamera)
 {
     m_pCamera = pCamera;
+}
+
+/// \brief Sets the plugin manager
+/// \param pManager The plugin manager pointer
+void RenderingEngine::SetPluginManager(PluginManager * pManager)
+{
+    ASSERT_NOT_NULL(pManager);
+    m_pPluginManager = pManager;
 }
 
 /// \brief Shutdown the engine

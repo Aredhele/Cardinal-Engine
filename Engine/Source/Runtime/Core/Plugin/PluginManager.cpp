@@ -104,6 +104,17 @@ void PluginManager::OnPostUpdate(float dt)
     }
 }
 
+/// \brief Called when it's time to render the GUI
+void PluginManager::OnGUI()
+{
+    size_t pluginCount = m_plugins.size();
+    for(size_t nPlugin = 0; nPlugin < pluginCount; ++nPlugin)
+    {
+        ASSERT_NOT_NULL(m_plugins[nPlugin]);
+        m_plugins[nPlugin]->OnGUI();
+    }
+}
+
 /// \brief Registers a plugin in the engine
 /// \param pPlugin The plugin to register
 /* static */ void PluginManager::RegisterPlugin(Plugin * pPlugin)
@@ -122,7 +133,7 @@ void PluginManager::OnPostUpdate(float dt)
     }
 
     s_pInstance->m_plugins.push_back(pPlugin);
-    Logger::LogInfo("Plugin 0x%x registered !", pPlugin);
+    Logger::LogInfo("Plugin 0x%x registered", pPlugin);
 }
 
 /// \brief Unregisters a plugin from the engine
