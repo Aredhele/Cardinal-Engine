@@ -25,7 +25,7 @@
 #define CARDINAL_ENGINE_LIGHTING_HPP__
 
 #include "Runtime/Rendering/Lighting/LightManager.hpp"
-#include "Runtime/Rendering/Lighting/Lights/PointLight.hpp
+#include "Runtime/Rendering/Lighting/Lights/PointLight.hpp"
 #include "Runtime/Rendering/Lighting/Lights/DirectionalLight.hpp"
 
 #endif // !CARDINAL_ENGINE_LIGHTING_HPP__

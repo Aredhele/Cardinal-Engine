@@ -21,6 +21,10 @@
 /// \package    Plugin
 /// \author     Vincent STEHLY--CALISTO
 
+// Engine
+#include "Runtime/Rendering/Lighting/Lighting.hh"
+
+// Game
 #include "Plugin/PCG_Plugin.hpp"
 #include "World/Generator/BasicWorldGenerator.hpp"
 
@@ -48,12 +52,18 @@ PCG_Plugin::PCG_Plugin() : m_gui()
 void PCG_Plugin::OnPlayStart()
 {
     // Configure engine here
-    // ...
+    cardinal::LightManager::CreateDirectionalLight();
+    cardinal::LightManager::GetDirectionalLight()->SetPosition(glm::vec3(64.0f, 64.0f, 140.0f));
+    cardinal::LightManager::GetDirectionalLight()->SetDirection(glm::vec3(-0.5f, -0.5f, -0.5f));
+
+    cardinal::DebugManager::EnableGizmo(cardinal::DebugManager::EGizmo::DirectionalLight);
 
     // Setting up the game
     BasicWorldGenerator bwg;
     m_pWorld = bwg.generateWorld();
-    m_character.AttachCamera(cardinal::RenderingEngine::GetMainCamera());
+
+    m_cameraManager.SetCamera(cardinal::RenderingEngine::GetMainCamera());
+    m_cameraManager.SetCharacter(&m_character);
 }
 
 /// \brief Called when the game stops
@@ -74,7 +84,7 @@ void PCG_Plugin::OnPreUpdate()
 void PCG_Plugin::OnPostUpdate(float dt)
 {
     m_character.Update(cardinal::RenderingEngine::GetWindow(), dt);
-
+    m_cameraManager.Update(cardinal::RenderingEngine::GetWindow(), dt);
 }
 
 /// \brief Called when it's time to render the GUI
@@ -82,5 +92,3 @@ void PCG_Plugin::OnGUI()
 {
     // TODO
 }
-
-

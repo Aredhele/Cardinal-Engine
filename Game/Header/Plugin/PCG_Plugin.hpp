@@ -27,12 +27,11 @@
 // Engine
 #include "Runtime/Engine.hpp"
 
-
-#include "World/Generator/GUI/GeneratorGUI.hpp"
-
 // Game
 #include "World/World.hpp"
 #include "Character/Character.hpp"
+#include "Rendering/CameraManager.hpp"
+#include "World/Generator/GUI/GeneratorGUI.hpp"
 
 /// \brief Plugin for procedural generation
 /// \class PCG_Plugin
@@ -64,9 +63,11 @@ public:
     void OnGUI() final;
 
 private:
-    GeneratorGUI m_gui;
-    World *   m_pWorld;
-    Character m_character;
+
+    GeneratorGUI  m_gui;
+    World *       m_pWorld;
+    Character     m_character;
+    CameraManager m_cameraManager;
 };
 
 #endif // !CARDINAL_ENGINE_PCG_PLUGIN_HPP__
