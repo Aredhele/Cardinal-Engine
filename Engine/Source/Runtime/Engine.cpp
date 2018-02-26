@@ -39,6 +39,8 @@ bool Engine::Initialize()
         return false;
     }
 
+    m_renderingEngine.SetPluginManager(&m_pluginManager);
+
     Logger::LogInfo("Registering plugins ...");
     OnPluginRegistration();
     Logger::LogInfo("All plugins have been registered");
@@ -83,9 +85,6 @@ void Engine::GameLoop()
         previous       = current;
 
         lag += elapsed;
-
-        // Triggering ImGUI
-        ImGui_ImplGlfwGL3_NewFrame();
 
         // Processing events
         glfwPollEvents();

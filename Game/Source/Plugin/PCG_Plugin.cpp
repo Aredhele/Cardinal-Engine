@@ -77,4 +77,10 @@ void PCG_Plugin::OnPostUpdate(float dt)
 
 }
 
+/// \brief Called when it's time to render the GUI
+void PCG_Plugin::OnGUI()
+{
+    // TODO
+}
+
 

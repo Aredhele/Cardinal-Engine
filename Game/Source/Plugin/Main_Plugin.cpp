@@ -84,4 +84,10 @@ void Main_Plugin::OnPostUpdate(float dt)
     m_cameraManager.Update(cardinal::RenderingEngine::GetWindow(), dt);
 }
 
+/// \brief Called when it's time to render the GUI
+void Main_Plugin::OnGUI()
+{
+    ImGui::Begin("Bonjour");
+    ImGui::End();
+}
 

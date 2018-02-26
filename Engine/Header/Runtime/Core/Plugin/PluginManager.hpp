@@ -48,6 +48,7 @@ public:
 private:
 
     friend class Engine;
+    friend class RenderingEngine;
 
     /// \brief Initializes the plugin manager
     void Initialize();
@@ -67,6 +68,9 @@ private:
     /// \brief Called after the engine update
     /// \param dt The elapsed time in seconds
     void OnPostUpdate(float dt);
+
+    /// \brief Called when it's time to render the GUI
+    void OnGUI();
 
     std::vector<Plugin *>  m_plugins;
     static PluginManager * s_pInstance;
