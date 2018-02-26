@@ -24,6 +24,8 @@
 // Engine
 #include "Runtime/Rendering/Lighting/Lighting.hh"
 
+#include "ImGUI/imgui.h"
+
 // Game
 #include "Plugin/PCG_Plugin.hpp"
 #include "World/Generator/BasicWorldGenerator.hpp"
@@ -90,5 +92,8 @@ void PCG_Plugin::OnPostUpdate(float dt)
 /// \brief Called when it's time to render the GUI
 void PCG_Plugin::OnGUI()
 {
+    bool a = true;
+    //ImGui::ShowDemoWindow(&a);
+    m_gui.drawGUI();
     // TODO
 }

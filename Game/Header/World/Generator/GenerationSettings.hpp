@@ -13,6 +13,7 @@ struct GenerationSettings
     // Fractal settings
     FastNoise::FractalType fractalType = FastNoise::FractalType::Billow;
     int octaves = 1;
+    float lacunarity = 1.0;
     float gain = 1; // persistence
 
     // Cellular settings

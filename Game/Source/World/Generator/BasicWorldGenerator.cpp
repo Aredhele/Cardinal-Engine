@@ -1,6 +1,7 @@
 #include "World/Generator/BasicWorldGenerator.hpp"
 #include <random>
 #include <World/Generator/CellularAutomata.hpp>
+#include "Glm/glm/glm.hpp"
 #include "World/Generator/Noise/FastNoise.h"
 
 World * BasicWorldGenerator::generateWorld(GenerationSettings settings)
