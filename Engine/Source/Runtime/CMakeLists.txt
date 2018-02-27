@@ -30,6 +30,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Core/Memory/Allocator/StackAllocator.cpp
         Core/Plugin/PluginManager.cpp
         Sound/SoundEngine.cpp
+        Sound/Buffer/SoundBufferManager.cpp
         Sound/Loader/AudioLoader.cpp
         Sound/Source/AudioSource.cpp
         Physics/PhysicsEngine.cpp

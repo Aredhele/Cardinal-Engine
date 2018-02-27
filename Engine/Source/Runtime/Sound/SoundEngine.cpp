@@ -21,9 +21,13 @@
 /// \package    Runtime/Sound
 /// \author     Vincent STEHLY--CALISTO
 
-#include "Runtime/Sound/SoundEngine.hpp"
+
 #include "Runtime/Core/Debug/Logger.hpp"
 #include "Runtime/Core/Assertion/Assert.hh"
+
+#include "Runtime/Sound/SoundEngine.hpp"
+#include "Runtime/Sound/Loader/AudioLoader.hpp"
+#include "Runtime/Sound/Buffer/SoundBufferManager.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -63,6 +67,8 @@ bool SoundEngine::Initialize()
         Logger::LogInfo("Creating sound context    : OK");
     }
 
+    SoundBufferManager::Initialize();
+
     alcMakeContextCurrent(m_pContext);
     Logger::LogInfo("Setting the sound context : OK");
 
@@ -73,6 +79,7 @@ bool SoundEngine::Initialize()
 /// \brief Shutdowns the sound engine
 void SoundEngine::Shutdown()
 {
+    SoundBufferManager::Shutdown();
     alcDestroyContext(m_pContext);
     alcCloseDevice(m_pDevice);
 }
@@ -83,7 +90,13 @@ void SoundEngine::Shutdown()
 /// \return True or false
 /* static */ bool SoundEngine::LoadAudio(const char * file, const char * audioID)
 {
-    return false;
+   /* ALuint bufferID;                        // The OpenAL sound buffer ID
+    ALuint sourceID;                        // The OpenAL sound source
+    ALenum format;                          // The sound data format
+    ALsizei freq;                           // The frequency of the sound data
+    ALsizei size;                           // Data size*/
+
+   // AudioLoader::LoadWave();
 }
 
 } // !namespace
