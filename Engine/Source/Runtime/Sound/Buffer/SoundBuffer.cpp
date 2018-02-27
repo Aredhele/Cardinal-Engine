@@ -27,6 +27,15 @@
 namespace cardinal
 {
 
+/// \brief Constructor
+SoundBuffer::SoundBuffer()
+{
+    m_bufferID  = 0;
+    m_format    = 0;
+    m_frequency = 0;
+    m_size      = 0;
+}
+
 /// \brief Initializes the buffer
 /// \param bufferID The OpenAL sound buffer ID
 /// \param format The sound data format

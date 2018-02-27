@@ -27,6 +27,8 @@
 #include <string>
 #include <unordered_map>
 
+#include "Runtime/Sound/Buffer/SoundBuffer.hpp"
+
 /// \namespace cardinal
 namespace cardinal
 {
@@ -39,18 +41,18 @@ public :
 
     /// \brief Registers a sound buffer in the manager from a key and a value
     /// \param bufferKey The key of the sound buffer
-    /// \param bufferID The value
-    static void Register(std::string const& bufferKey, int bufferID);
+    /// \param buffer The buffer to register
+    static void Register(std::string const& bufferKey, SoundBuffer const& buffer);
 
     /// \brief Unregisters a sound buffer in the manager
     ///        Frees the sound buffer in the memory
     /// \param bufferKey The buffer to unregister
     static void Unregister(std::string const& bufferKey);
 
-    /// \brief Returns the buffer ID references by the given key
+    /// \brief Returns the buffer references by the given key
     /// \param bufferKey The key of the buffer
-    /// \return The sound buffer ID
-    static int GetBufferID(std::string const& bufferKey);
+    /// \return The sound buffer
+    static SoundBuffer GetBuffer(std::string const& bufferKey);
 
 private:
 
@@ -71,7 +73,7 @@ private:
     /// \brief  Default constuctor
     SoundBufferManager();
 
-    std::unordered_map<std::string, int> m_bufferIDs;
+    std::unordered_map<std::string, SoundBuffer> m_bufferIDs;
 };
 
 } // !namespace

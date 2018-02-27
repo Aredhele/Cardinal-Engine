@@ -36,6 +36,9 @@ class SoundBuffer
 {
 public:
 
+    /// \brief Constructor
+    SoundBuffer();
+
     /// \brief Initializes the buffer
     /// \param bufferID The OpenAL sound buffer ID
     /// \param format The sound data format

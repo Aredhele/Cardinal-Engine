@@ -37,11 +37,11 @@ class SoundEngine
 {
 public:
 
-    /// \brief Loads an audio file into the engine
+    /// \brief Loads an audio buffer into the engine
     /// \param file The path of the file
-    /// \param fileID The id of the audio
+    /// \param fileID The id of the buffer
     /// \return True or false
-    static bool LoadAudio(const char * file, const char * audioID);
+    static bool CreateSoundBuffer(const char * file, const char * audioID);
 
 private:
 

@@ -84,19 +84,27 @@ void SoundEngine::Shutdown()
     alcCloseDevice(m_pDevice);
 }
 
-/// \brief Loads an audio file into the engine
+/// \brief Loads an audio buffer into the engine
 /// \param file The path of the file
-/// \param fileID The id of the audio
+/// \param fileID The id of the buffer
 /// \return True or false
-/* static */ bool SoundEngine::LoadAudio(const char * file, const char * audioID)
+/* static */ bool SoundEngine::CreateSoundBuffer(const char * file, const char * audioID)
 {
-   /* ALuint bufferID;                        // The OpenAL sound buffer ID
-    ALuint sourceID;                        // The OpenAL sound source
-    ALenum format;                          // The sound data format
-    ALsizei freq;                           // The frequency of the sound data
-    ALsizei size;                           // Data size*/
+    ALuint  bufferID   = 0;
+    ALenum  format     = 0;
+    ALsizei frequency  = 0;
+    ALsizei size       = 0;
 
-   // AudioLoader::LoadWave();
+    if(!AudioLoader::LoadWave(file, &bufferID, &size, &frequency, &format))
+    {
+        Logger::LogError("Unable to create the sound buffer, aborting.");
+        return false;
+    }
+
+    SoundBuffer soundBuffer;
+    soundBuffer.Initialize(bufferID, format, frequency, size);
+
+    SoundBufferManager::Register(audioID, soundBuffer);
 }
 
 } // !namespace

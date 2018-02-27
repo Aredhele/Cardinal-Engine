@@ -32,7 +32,7 @@ namespace cardinal
 /* static */ SoundBufferManager * SoundBufferManager::s_pInstance = nullptr;
 
 /// \brief Default constructor
-SoundBufferManager::SoundBufferManager()
+SoundBufferManager::SoundBufferManager() // NOLINT
 {
     // None
 }
@@ -71,14 +71,14 @@ SoundBufferManager::SoundBufferManager()
 
 /// \brief Registers a sound buffer in the manager from a key and a value
 /// \param bufferKey The key of the sound buffer
-/// \param bufferID The value
-/* static */ void SoundBufferManager::Register(std::string const& bufferKey, int bufferID)
+/// \param buffer The buffer to register
+/* static */ void SoundBufferManager::Register(std::string const& bufferKey, SoundBuffer const& buffer)
 {
-    ASSERT_NE      (bufferID, -1);
     ASSERT_NE      (bufferKey, "");
     ASSERT_NOT_NULL(SoundBufferManager::s_pInstance);
 
-    SoundBufferManager::s_pInstance->m_bufferIDs.emplace(bufferKey, bufferID);
+    SoundBufferManager::s_pInstance->m_bufferIDs.emplace(bufferKey, buffer);
+    Logger::LogInfo("Sound %s registered", bufferKey.c_str());
 }
 
 /// \brief Unregisters a sound buffer in the manager
@@ -98,24 +98,25 @@ SoundBufferManager::SoundBufferManager()
 
 /// \brief Returns the buffer ID references by the given key
 /// \param bufferKey The key of the buffer
-/// \return The sound buffer ID
-/* static */ int SoundBufferManager::GetBufferID(std::string const& bufferKey)
+/// \return The sound buffer
+/* static */  SoundBuffer SoundBufferManager::GetBuffer(std::string const& bufferKey)
 {
     ASSERT_NOT_NULL(SoundBufferManager::s_pInstance);
 
-    int id = -1;
+    SoundBuffer buffer;
     auto it = SoundBufferManager::s_pInstance->m_bufferIDs.find(bufferKey);
 
     if(it != SoundBufferManager::s_pInstance->m_bufferIDs.end())
     {
-        id = it->second;
+        buffer = it->second;
     }
     else
     {
-        Logger::LogWaring("Unable to find the sound buffer %s", bufferKey.c_str());
+        Logger::LogError("Unable to find the sound buffer %s", bufferKey.c_str());
+        // ASSERT_ALWAYS ?
     }
 
-    return id;
+    return buffer;
 }
 
 } // !namespace
