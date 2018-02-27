@@ -15,53 +15,37 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       SoundEngine.hpp
+/// \file       AudioLoader.hpp
 /// \date       27/02/2018
 /// \project    Cardinal Engine
-/// \package    Runtime/Sound
+/// \package    Runtime/Sound/Loader
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_SOUND_ENGINE_HPP__
-#define CARDINAL_ENGINE_SOUND_ENGINE_HPP__
+#ifndef CARDINAL_ENGINE_AUDIO_LOADER_HPP__
+#define CARDINAL_ENGINE_AUDIO_LOADER_HPP__
 
 #include "OpenAL/include/AL/al.h"
-#include "OpenAL/include/AL/alc.h"
 
 /// \namespace cardinal
 namespace cardinal
 {
-
-/// \class SoundEngine
-/// \brief The sound engine using OpenAL
-class SoundEngine
+    
+/// \class AudioLoader
+/// \brief Loads audio files
+class AudioLoader
 {
 public:
 
-    /// \brief Loads an audio file into the engine
-    /// \param file The path of the file
-    /// \param fileID The id of the audio
+    /// \brief Load PCM data of a wave file
+    /// \param szFile The file path
+    /// \param pBuffer The buffer pointer
+    /// \param size The size of the buffer
+    /// \param frequency The frequency of the sound
+    /// \param format The audio format
     /// \return True or false
-    static bool LoadAudio(const char * file, const char * audioID);
-
-private:
-
-    friend class Engine;
-
-    /// \brief Initializes the sound engine
-    /// \return True or false
-    bool Initialize();
-
-    /// \brief Shutdowns the sound engine
-    void Shutdown();
-
-private:
-
-    static SoundEngine * s_pInstance;
-
-    ALCdevice          * m_pDevice;
-    ALCcontext         * m_pContext;
+    static bool LoadWave(const char * szFile, ALuint * pBuffer, ALsizei * pSize, ALsizei * pFrequency, ALenum * pFormat);
 };
 
 } // !namespace
 
-#endif // !CARDINAL_ENGINE_SOUND_ENGINE_HPP__
+#endif // !CARDINAL_ENGINE_AUDIO_LOADER_HPP__

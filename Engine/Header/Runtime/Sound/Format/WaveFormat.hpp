@@ -15,53 +15,52 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       SoundEngine.hpp
+/// \file       WaveFormat.hpp
 /// \date       27/02/2018
 /// \project    Cardinal Engine
-/// \package    Runtime/Sound
+/// \package    Runtime/Sound/Format
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_SOUND_ENGINE_HPP__
-#define CARDINAL_ENGINE_SOUND_ENGINE_HPP__
-
-#include "OpenAL/include/AL/al.h"
-#include "OpenAL/include/AL/alc.h"
+#ifndef CARDINAL_ENGINE_WAVE_FORMAT_HPP__
+#define CARDINAL_ENGINE_WAVE_FORMAT_HPP__
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \class SoundEngine
-/// \brief The sound engine using OpenAL
-class SoundEngine
+/// \namespace wave
+namespace wave
 {
-public:
+    /// \struct Header
+    struct Header
+    {
+        char chunkID[4];
+        long chunkSize;
+        char format[4];
+    };
 
-    /// \brief Loads an audio file into the engine
-    /// \param file The path of the file
-    /// \param fileID The id of the audio
-    /// \return True or false
-    static bool LoadAudio(const char * file, const char * audioID);
+    /// \struct Format
+    struct Format
+    {
+        char  subChunkID[4];
+        long  subChunkSize;
+        short audioFormat;
+        short numChannels;
+        long  sampleRate;
+        long  byteRate;
+        short blockAlign;
+        short bitsPerSample;
+    };
 
-private:
-
-    friend class Engine;
-
-    /// \brief Initializes the sound engine
-    /// \return True or false
-    bool Initialize();
-
-    /// \brief Shutdowns the sound engine
-    void Shutdown();
-
-private:
-
-    static SoundEngine * s_pInstance;
-
-    ALCdevice          * m_pDevice;
-    ALCcontext         * m_pContext;
-};
+    /// \struct Data
+    struct Data
+    {
+        char subChunkID[4];
+        long subChunk2Size;
+    };
 
 } // !namespace
 
-#endif // !CARDINAL_ENGINE_SOUND_ENGINE_HPP__
+} // !namespace
+
+#endif // !CARDINAL_ENGINE_WAVE_FORMAT_HPP__

@@ -15,53 +15,27 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       SoundEngine.hpp
+/// \file       AudioSource.hpp
 /// \date       27/02/2018
 /// \project    Cardinal Engine
-/// \package    Runtime/Sound
+/// \package    Runtime/Sound/Source
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_SOUND_ENGINE_HPP__
-#define CARDINAL_ENGINE_SOUND_ENGINE_HPP__
-
-#include "OpenAL/include/AL/al.h"
-#include "OpenAL/include/AL/alc.h"
+#ifndef CARDINAL_ENGINE_AUDIO_SOURCE_HPP__
+#define CARDINAL_ENGINE_AUDIO_SOURCE_HPP__
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \class SoundEngine
-/// \brief The sound engine using OpenAL
-class SoundEngine
+/// \class AudioSource
+/// \brief 3D audio sources
+class AudioSource
 {
 public:
 
-    /// \brief Loads an audio file into the engine
-    /// \param file The path of the file
-    /// \param fileID The id of the audio
-    /// \return True or false
-    static bool LoadAudio(const char * file, const char * audioID);
-
-private:
-
-    friend class Engine;
-
-    /// \brief Initializes the sound engine
-    /// \return True or false
-    bool Initialize();
-
-    /// \brief Shutdowns the sound engine
-    void Shutdown();
-
-private:
-
-    static SoundEngine * s_pInstance;
-
-    ALCdevice          * m_pDevice;
-    ALCcontext         * m_pContext;
 };
 
 } // !namespace
 
-#endif // !CARDINAL_ENGINE_SOUND_ENGINE_HPP__
+#endif // !CARDINAL_ENGINE_AUDIO_SOURCE_HPP__

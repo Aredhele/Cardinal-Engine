@@ -77,4 +77,13 @@ void SoundEngine::Shutdown()
     alcCloseDevice(m_pDevice);
 }
 
+/// \brief Loads an audio file into the engine
+/// \param file The path of the file
+/// \param fileID The id of the audio
+/// \return True or false
+/* static */ bool SoundEngine::LoadAudio(const char * file, const char * audioID)
+{
+    return false;
+}
+
 } // !namespace
