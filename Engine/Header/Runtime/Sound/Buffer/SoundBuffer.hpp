@@ -20,3 +20,53 @@
 /// \project    Cardinal Engine
 /// \package    Runtime/Sound/Buffer
 /// \author     Vincent STEHLY--CALISTO
+
+#ifndef CARDINAL_ENGINE_SOUND_BUFFER_HPP__
+#define CARDINAL_ENGINE_SOUND_BUFFER_HPP__
+
+#include"OpenAL/include/AL/al.h"
+
+/// \namespace cardinal
+namespace cardinal
+{
+    
+/// \class SoundBuffer
+/// \brief Stores information on a sound buffer
+class SoundBuffer
+{
+public:
+
+    /// \brief Initializes the buffer
+    /// \param bufferID The OpenAL sound buffer ID
+    /// \param format The sound data format
+    /// \param frequency The frequency of the sound data
+    /// \param size Data size
+    void Initialize(ALuint bufferID, ALenum format, ALsizei frequency, ALsizei size);
+
+    /// \brief Returns the id of the OpenAL buffer
+    /// \return The OpenAL buffer ID
+    ALuint GetID() const;
+
+    /// \brief Returns the format of the audio
+    /// \return The audio format
+    ALenum GetFormat() const;
+
+    /// \brief Returns the frequency of the audio
+    /// \return The audio Frequency
+    ALsizei GetFrequency() const;
+
+    /// \brief Returns the size of the buffer
+    /// \return The buffer size
+    ALsizei GetSize() const;
+
+private:
+
+    ALuint  m_bufferID;  ///< The OpenAL sound buffer ID
+    ALenum  m_format;    ///< The sound data format
+    ALsizei m_frequency; ///< The frequency of the sound data
+    ALsizei m_size;      ///< Data size
+};
+
+} // !namespace 
+
+#endif // !CARDINAL_ENGINE_SOUND_BUFFER_HPP__
