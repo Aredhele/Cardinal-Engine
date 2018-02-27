@@ -41,6 +41,12 @@ bool Engine::Initialize()
 
     m_renderingEngine.SetPluginManager(&m_pluginManager);
 
+    if(!m_soundEngine.Initialize())
+    {
+        cardinal::Logger::LogError("Cannot initialize the engine, aborting");
+        return false;
+    }
+
     Logger::LogInfo("Registering plugins ...");
     OnPluginRegistration();
     Logger::LogInfo("All plugins have been registered");
@@ -58,6 +64,7 @@ void Engine::Start()
 void Engine::Release()
 {
     Logger::LogInfo("Releasing all engine resources ...");
+    m_soundEngine.Shutdown();
     Logger::LogInfo("Engine successfully released");
 }
 

@@ -19,7 +19,8 @@
 INCLUDE_DIRECTORIES(
         ${CARDINAL_ENGINE_DIR}/Header/
         ${CARDINAL_THIRD_PARTY_DIR}/ImGUI/Header/
-        ${CARDINAL_THIRD_PARTY_DIR}/Bullet3/src/)
+        ${CARDINAL_THIRD_PARTY_DIR}/Bullet3/src/
+        ${CARDINAL_THIRD_PARTY_DIR}/OpenAL/include/)
 
 # Compile all tests
 ADD_LIBRARY(CardinalEngine STATIC
@@ -28,6 +29,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Core/Debug/Logger.cpp
         Core/Memory/Allocator/StackAllocator.cpp
         Core/Plugin/PluginManager.cpp
+        Sound/SoundEngine.cpp
         Physics/PhysicsEngine.cpp
         Rendering/Context/Window.cpp
         Rendering/Debug/DebugBox.cpp

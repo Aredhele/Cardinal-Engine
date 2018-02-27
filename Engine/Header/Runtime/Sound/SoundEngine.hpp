@@ -24,9 +24,37 @@
 #ifndef CARDINAL_ENGINE_SOUND_ENGINE_HPP__
 #define CARDINAL_ENGINE_SOUND_ENGINE_HPP__
 
+#include "OpenAL/include/AL/al.h"
+#include "OpenAL/include/AL/alc.h"
+
 /// \namespace cardinal
 namespace cardinal
 {
+
+/// \class SoundEngine
+/// \brief The sound engine using OpenAL
+class SoundEngine
+{
+public:
+
+private:
+
+    friend class Engine;
+
+    /// \brief Initializes the sound engine
+    /// \return True or false
+    bool Initialize();
+
+    /// \brief Shutdowns the sound engine
+    void Shutdown();
+
+private:
+
+    static SoundEngine * s_pInstance;
+
+    ALCdevice          * m_pDevice;
+    ALCcontext         * m_pContext;
+};
 
 } // !namespace
 

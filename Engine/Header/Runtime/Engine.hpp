@@ -29,6 +29,7 @@
 #include "ImGUI/Header/ImGUI/imgui_impl_glfw_gl3.h"
 
 #include "Runtime/Core/Debug/Logger.hpp"
+#include "Runtime/Sound/SoundEngine.hpp"
 #include "Runtime/Core/Assertion/Assert.hh"
 #include "Runtime/Core/Plugin/PluginManager.hpp"
 #include "Runtime/Rendering/RenderingEngine.hpp"
@@ -61,6 +62,7 @@ private:
 
 private:
 
+    SoundEngine     m_soundEngine;
     PluginManager   m_pluginManager;
     RenderingEngine m_renderingEngine;
 
