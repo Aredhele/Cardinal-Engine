@@ -107,4 +107,23 @@ void SoundEngine::Shutdown()
     SoundBufferManager::Register(audioID, soundBuffer);
 }
 
+/// \brief Creates an audio listener in the engine
+/* static */ void SoundEngine::CreateAudioListener()
+{
+    ASSERT_NOT_NULL(s_pInstance);
+
+    if(s_pInstance->m_pAudioListener == nullptr)
+    {
+        s_pInstance->m_pAudioListener = new AudioListener();
+    }
+}
+
+/// \brief Returns the audio listener
+/// \return A pointer on the listener
+/* static */ AudioListener * SoundEngine::GetAudioListener()
+{
+    ASSERT_NOT_NULL(s_pInstance);
+    return s_pInstance->m_pAudioListener;
+}
+
 } // !namespace

@@ -24,8 +24,13 @@
 #ifndef CARDINAL_ENGINE_SOUND_ENGINE_HPP__
 #define CARDINAL_ENGINE_SOUND_ENGINE_HPP__
 
+#include <vector>
+
 #include "OpenAL/include/AL/al.h"
 #include "OpenAL/include/AL/alc.h"
+
+#include "Runtime/Sound/Source/AudioSource.hpp"
+#include "Runtime/Sound/Listener/AudioListener.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -43,6 +48,13 @@ public:
     /// \return True or false
     static bool CreateSoundBuffer(const char * file, const char * audioID);
 
+    /// \brief Creates an audio listener in the engine
+    static void CreateAudioListener();
+
+    /// \brief Returns the audio listener
+    /// \return A pointer on the listener
+    static AudioListener * GetAudioListener();
+
 private:
 
     friend class Engine;
@@ -58,8 +70,10 @@ private:
 
     static SoundEngine * s_pInstance;
 
-    ALCdevice          * m_pDevice;
-    ALCcontext         * m_pContext;
+    ALCdevice               *  m_pDevice;
+    ALCcontext              *  m_pContext;
+    AudioListener           *  m_pAudioListener;
+    std::vector<AudioSource *> m_audioSources;
 };
 
 } // !namespace
