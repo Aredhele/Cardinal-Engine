@@ -77,7 +77,7 @@ void AudioSource::SetLooping(bool bLoop)
 void AudioSource::SetVolume(float volume)
 {
     m_volume = volume;
-    alBufferf(m_sourceID, AL_GAIN, volume);
+    alSourcef(m_sourceID, AL_GAIN, volume);
 }
 
 /// \brief Sets the pitch
@@ -85,7 +85,7 @@ void AudioSource::SetVolume(float volume)
 void AudioSource::SetPitch(float pitch)
 {
     m_pitch = pitch;
-    alBufferf(m_sourceID, AL_PITCH, m_pitch);
+    alSourcef(m_sourceID, AL_PITCH, m_pitch);
 }
 
 /// \brief Sets the position of the audio source
@@ -93,7 +93,7 @@ void AudioSource::SetPitch(float pitch)
 void AudioSource::SetPosition(glm::vec3 const &position)
 {
     m_position = position;
-    alBuffer3f(m_sourceID, AL_POSITION, m_position.x, m_position.y, m_position.z);
+    alSource3f(m_sourceID, AL_POSITION, m_position.x, m_position.y, m_position.z);
 }
 
 /// \brief Sets the velocity of the audio source
@@ -101,13 +101,14 @@ void AudioSource::SetPosition(glm::vec3 const &position)
 void AudioSource::SetVelocity(glm::vec3 const &velocity)
 {
     m_velocity = velocity;
-    alBuffer3f(m_sourceID, AL_POSITION, m_velocity.x, m_velocity.y, m_velocity.z);
+    alSource3f(m_sourceID, AL_POSITION, m_velocity.x, m_velocity.y, m_velocity.z);
 }
 
 /// \brief Sets the sound buffer of the audio source
 void AudioSource::SetSoundBuffer(SoundBuffer const &buffer)
 {
     m_buffer = buffer;
+    alSourcei(m_sourceID, AL_BUFFER, m_buffer.GetID());
 
     SetPitch(m_pitch);
     SetLooping(m_bLoop);

@@ -48,6 +48,10 @@ public:
     /// \return True or false
     static bool CreateSoundBuffer(const char * file, const char * audioID);
 
+    /// \brief Returns the sound buffer referenced by the id
+    /// \param A sound buffer reference
+    static SoundBuffer GetSoundBuffer(const char * bufferID);
+
     /// \brief Creates an audio listener in the engine
     static void CreateAudioListener();
 
@@ -73,6 +77,9 @@ private:
 
     /// \brief Shutdowns the sound engine
     void Shutdown();
+
+    /// \brief Called to draw the GUI
+    void OnGUI();
 
 private:
 

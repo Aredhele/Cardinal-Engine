@@ -39,8 +39,7 @@ void OnPluginRegistration()
 }
 
 /// \brief Constructor
-Main_Plugin::Main_Plugin() :
-    m_cameraManager()
+Main_Plugin::Main_Plugin() : m_cameraManager()
 {
     m_pWorld = nullptr;
 }
@@ -90,7 +89,7 @@ void Main_Plugin::OnGUI()
     if (glfwGetKey(cardinal::RenderingEngine::GetWindow()->GetContext(), GLFW_KEY_F11) == GLFW_PRESS)
         m_debugWindow = !m_debugWindow;
 
-    if (m_debugWindow == false)
+    if (!m_debugWindow)
         return;
 
     // Game camera

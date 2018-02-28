@@ -42,8 +42,9 @@ bool SoundEngine::Initialize()
     ASSERT_NULL(SoundEngine::s_pInstance);
     Logger::LogInfo("Initializing the sound engine ...");
 
-    m_pDevice  = nullptr;
-    m_pContext = nullptr;
+    m_pDevice   = nullptr;
+    m_pContext  = nullptr;
+    s_pInstance = this;
 
     m_pDevice = alcOpenDevice(nullptr);
     if(m_pDevice == nullptr)
@@ -82,6 +83,12 @@ void SoundEngine::Shutdown()
     SoundBufferManager::Shutdown();
     alcDestroyContext(m_pContext);
     alcCloseDevice(m_pDevice);
+}
+
+/// \brief Called to draw the GUI
+void SoundEngine::OnGUI()
+{
+    // TODO
 }
 
 /// \brief Loads an audio buffer into the engine
@@ -163,6 +170,13 @@ void SoundEngine::Shutdown()
 
     delete pSource;
     pSource = nullptr;
+}
+
+/// \brief Returns the sound buffer referenced by the id
+/// \param A sound buffer reference
+/* static */ SoundBuffer SoundEngine::GetSoundBuffer(const char * bufferID)
+{
+    return SoundBufferManager::GetBuffer(bufferID);
 }
 
 } // !namespace
