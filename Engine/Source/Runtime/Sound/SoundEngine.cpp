@@ -126,4 +126,43 @@ void SoundEngine::Shutdown()
     return s_pInstance->m_pAudioListener;
 }
 
+/// \brief Allocates an audio source
+/// \return A pointer on a audio source
+/* static */ AudioSource * SoundEngine::AllocateAudioSource()
+{
+    ASSERT_NOT_NULL(SoundEngine::s_pInstance);
+
+    AudioSource * pSource = new AudioSource(); // NOLINT
+    SoundEngine::s_pInstance->m_audioSources.push_back(pSource);
+
+    return pSource;
+}
+
+/// \brief Releases an audio source
+/// \param pSource The pointer on the audio source to release
+/* static */ void SoundEngine::ReleaseAudioSource(AudioSource *& pSource)
+{
+    ASSERT_NOT_NULL(SoundEngine::s_pInstance);
+
+    int index = -1;
+    size_t count = SoundEngine::s_pInstance->m_audioSources.size();
+    for (size_t nSources = 0; nSources < count; ++nSources)
+    {
+        if (SoundEngine::s_pInstance->m_audioSources[nSources] == pSource)
+        {
+            index = static_cast<int>(nSources);
+            break;
+        }
+    }
+
+    if (index != -1)
+    {
+        SoundEngine::s_pInstance->m_audioSources.erase(
+                SoundEngine::s_pInstance->m_audioSources.begin() + index);
+    }
+
+    delete pSource;
+    pSource = nullptr;
+}
+
 } // !namespace

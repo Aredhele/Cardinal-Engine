@@ -55,6 +55,14 @@ public:
     /// \return A pointer on the listener
     static AudioListener * GetAudioListener();
 
+    /// \brief Allocates an audio source
+    /// \return A pointer on a audio source
+    static AudioSource * AllocateAudioSource();
+
+    /// \brief Releases an audio source
+    /// \param pSource The pointer on the audio source to release
+    static void ReleaseAudioSource(AudioSource *& pSource);
+
 private:
 
     friend class Engine;
