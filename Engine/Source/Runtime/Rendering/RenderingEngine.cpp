@@ -114,6 +114,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/Standard/StandardVertexShader.glsl",
             "Resources/Shaders/Standard/StandardFragmentShader.glsl"));
 
+    ShaderManager::Register("PostProcessing", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/PostProcessing/vs_post.glsl",
+            "Resources/Shaders/PostProcessing/fs_post.glsl"));
+
     // Debug
     DebugManager::Initialize();
 
@@ -150,8 +154,62 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     ImGui_ImplGlfwGL3_Init(m_window.GetContext(), true);
 
-    // io.NavFlags |= ImGuiNavFlags_EnableKeyboard;  // Enable Keyboard Controls
-    // io.NavFlags |= ImGuiNavFlags_EnableGamepad;   // Enable Gamepad Controls
+    // Initializing post-processing
+    m_fbo = 0;
+    glGenFramebuffers(1, &m_fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
+
+    // The texture we're going to render to
+    m_fboTexture = 0;
+    glGenTextures(1, &m_fboTexture);
+    glBindTexture(GL_TEXTURE_2D, m_fboTexture);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1600, 900, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+
+    // Poor filtering. Needed !
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    m_rbo_depth = 0;
+    glGenRenderbuffers(1, &m_rbo_depth);
+    glBindRenderbuffer(GL_RENDERBUFFER, m_rbo_depth);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1600, 900);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_rbo_depth);
+
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_fboTexture, 0);
+
+    // Set the list of draw buffers.
+    GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+    glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+
+    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    {
+        DEBUG_BREAK();
+    }
+
+    m_vao = 0;
+    glGenVertexArrays(1, &m_vao);
+    glBindVertexArray(m_vao);
+
+    static const GLfloat g_quad_vertex_buffer_data[] =
+    {
+        -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, -1.0f,  1.0f, 0.0f,
+        -1.0f,  1.0f, 0.0f, 1.0f, -1.0f, 0.0f,  1.0f,  1.0f, 0.0f,
+    };
+
+
+    GLuint vbo;
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+    uint program = (uint)ShaderManager::GetShaderID("PostProcessing");
+    m_uniform = glGetUniformLocation(program, "fbo_texture");
+
+    glBindVertexArray(0);
+    // End post-processing
+
 
     // Setup style
     ImGui::StyleColorsDark();
@@ -208,7 +266,7 @@ void RenderingEngine::Render(float step)
 void RenderingEngine::RenderFrame(float step)
 {
     // Clear
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Triggering ImGUI
     ImGui_ImplGlfwGL3_NewFrame();
@@ -233,6 +291,13 @@ void RenderingEngine::RenderFrame(float step)
     }
     // End debug draw
 
+    // Post-processing begin
+    glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
+    glViewport(0, 0, 1600, 900);
+
+    // Clearing buffer
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     // Lighting
     LightManager::OnRenderBegin();
 
@@ -253,11 +318,31 @@ void RenderingEngine::RenderFrame(float step)
 #ifdef CARDINAL_DEBUG
     DebugManager::Draw(ProjectionView);
     DebugManager::Clear();
-
-
 #endif
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, 1600, 900);
+
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     DisplayDebugWindow(step);
     m_currentTriangle = 0;
+
+    GLuint program = (GLuint)ShaderManager::GetShaderID("PostProcessing");
+
+    glUseProgram(program);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, m_fboTexture);
+    glUniform1i(m_uniform, 0);
+
+    glBindVertexArray(m_vao);
+    glEnableVertexAttribArray(0);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    glDisableVertexAttribArray(0);
+    // Post-processing end
 
     // Draw ImGUI
     ImGui::Render();

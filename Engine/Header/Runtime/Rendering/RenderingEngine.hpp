@@ -25,6 +25,8 @@
 #define CARDINAL_ENGINE_RENDERING_ENGINE_HPP__
 
 #include <vector>
+#include "Runtime/Platform/Configuration/Configuration.hh"
+
 #include "Runtime/Rendering/Context/Window.hpp"
 #include "Runtime/Rendering/Camera/Camera.hpp"
 
@@ -132,10 +134,13 @@ private:
     // Rendering objects
     std::vector<class IRenderer*> m_renderers;
 
-    class TextRenderer * m_pEngineName;
-    class TextRenderer * m_pCurrentFPS;
-    class TextRenderer * m_pTotalFPS;
-    class TextRenderer * m_pFrameTime;
+    // Post-processing
+    uint m_vao;
+    uint m_fbo;
+    uint m_rbo_depth;
+    uint m_fboTexture;
+    uint m_fboVertices;
+    int  m_uniform;
 };
 
 } // !namespace
