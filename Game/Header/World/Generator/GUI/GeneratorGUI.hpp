@@ -30,8 +30,10 @@ private:
 
     bool m_isDrawingFractalSettings = false;
     bool m_isDrawingCellularSettings = false;
+    bool m_isDrawingGradientPerturbSettings = false;
 
     void drawGeneralSettings();
     void drawFractalSettings();
     void drawCellularSettings();
+    void drawGradientPerturbSettings();
 };

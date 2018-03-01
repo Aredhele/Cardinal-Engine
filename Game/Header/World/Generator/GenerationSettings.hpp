@@ -9,6 +9,7 @@ struct GenerationSettings
     int seed = 0;
     float frequency = 1;
     FastNoise::Interp interpolationType = FastNoise::Interp::Hermite;
+    bool gradientPerturb = false;
 
     // Fractal settings
     FastNoise::FractalType fractalType = FastNoise::FractalType::Billow;
@@ -19,4 +20,8 @@ struct GenerationSettings
     // Cellular settings
     FastNoise::CellularDistanceFunction distanceFunction = FastNoise::CellularDistanceFunction::Euclidean;
     FastNoise::CellularReturnType returnType = FastNoise::CellularReturnType::CellValue;
+
+    // Grandient perturb settings
+    float gradientPertubAmplitude;
+    float gradientPerturbFrequency;
 };

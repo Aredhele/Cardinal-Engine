@@ -25,8 +25,6 @@ private:
 
 
     void generateCaves();
-    /// \brief Returns the sum of all air cube neighbors
-    int sumNeighbors(int x, int y, int z);
     void buildStack(int x, int y, int height, bool onlyIfZero = true);
 
     //Creation du monde entier, en utilisant le mouvement brownien fractionnaire
@@ -35,4 +33,6 @@ private:
                         int x3, int y3,
                         int x4, int y4, int prof = 0, int profMax = -1);
     void smooth();
+
+    void applySettings(GenerationSettings settings);
 };

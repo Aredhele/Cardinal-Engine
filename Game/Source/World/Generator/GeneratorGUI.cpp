@@ -16,6 +16,7 @@ void GeneratorGUI::drawGUI(bool * isDrawing)
     drawGeneralSettings();
     drawCellularSettings();
     drawFractalSettings();
+    drawGradientPerturbSettings();
     if (ImGui::Button("Generate") && mp_worldGenerator != nullptr) {
         mp_worldGenerator->regenerateWorld(m_generatorSettings);
     }
@@ -29,9 +30,9 @@ void GeneratorGUI::drawFractalSettings()
         if (ImGui::Combo("Fractal type", &m_fractalType_idx, "Billow\0FBM\0RigidMulti\0")) {
             m_generatorSettings.fractalType = FRACTAL_TYPES[m_fractalType_idx];
         }
-        ImGui::InputInt("Octaves", &m_generatorSettings.octaves);
-        ImGui::InputFloat("Lacunarity", &m_generatorSettings.lacunarity);
-        ImGui::InputFloat("Gain", &m_generatorSettings.gain);
+        ImGui::InputInt("Octaves", &m_generatorSettings.octaves, 1);
+        ImGui::InputFloat("Lacunarity", &m_generatorSettings.lacunarity, 0.05);
+        ImGui::InputFloat("Gain", &m_generatorSettings.gain, 0.05);
     }
 }
 
@@ -49,9 +50,12 @@ void GeneratorGUI::drawGeneralSettings() {
             m_generatorSettings.noiseType = NOISE_TYPES[m_noiseType_idx];
         }
         ImGui::InputInt("Seed", &m_generatorSettings.seed);
-        ImGui::InputFloat("Frequency", &m_generatorSettings.frequency);
+        ImGui::InputFloat("Frequency", &m_generatorSettings.frequency, 0.05);
         if (ImGui::Combo("Interpolation type", &m_interpType_idx, "Hermite\0Linear\0Quintic\0")) {
             m_generatorSettings.interpolationType = INTERPOLATION_TYPES[m_interpType_idx];
+        }
+        if (ImGui::Checkbox("Gradient Perturb", &m_generatorSettings.gradientPerturb)) {
+            m_isDrawingGradientPerturbSettings = m_generatorSettings.gradientPerturb;
         }
     }
 }
@@ -69,6 +73,16 @@ void GeneratorGUI::drawCellularSettings()
     }
 }
 
+
+
 void GeneratorGUI::setGenerator(BasicWorldGenerator* generator) {
     mp_worldGenerator = generator;
+}
+
+void GeneratorGUI::drawGradientPerturbSettings() {
+    if (!m_isDrawingGradientPerturbSettings) return;
+    if (ImGui::CollapsingHeader("Gradient Perturb Settings")) {
+        ImGui::InputFloat("Amplitude", &m_generatorSettings.gradientPertubAmplitude, 0.05);
+        ImGui::InputFloat("Perturb Frequency", &m_generatorSettings.gradientPerturbFrequency, 0.05);
+    }
 }

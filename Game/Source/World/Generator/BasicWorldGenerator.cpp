@@ -20,7 +20,7 @@ double map(double x, double in_min, double in_max, double out_min, double out_ma
 
 void BasicWorldGenerator::generateHeights()
 {
-    FastNoise noiseGenerator(m_seed);
+    FastNoise noiseGenerator(m_generationSettings.seed);
     noiseGenerator.SetNoiseType(m_generationSettings.noiseType);
     noiseGenerator.SetFractalOctaves(m_generationSettings.octaves);
 	for (int x = 0; x<WorldSettings::s_matSizeCubes; x++)
@@ -156,7 +156,7 @@ void BasicWorldGenerator::smooth()
 }
 
 void BasicWorldGenerator::generate3DPerlinWorld() {
-    FastNoise noiseGenerator(m_seed);
+    FastNoise noiseGenerator(m_generationSettings.seed);
     noiseGenerator.SetNoiseType(FastNoise::PerlinFractal);
     noiseGenerator.SetFractalOctaves(4);
     for (int x = 0; x<WorldSettings::s_matSizeCubes; x++)
@@ -258,15 +258,21 @@ World *BasicWorldGenerator::regenerateWorld(GenerationSettings settings)
         mp_currentWorld->Initialize();
     }
 
+    applySettings(settings);
     mp_currentWorld->Clean();
-    m_generationSettings = settings;
-    m_seed = m_generationSettings.seed;
-    m_randomGenerator = std::default_random_engine(m_seed);
 
-    generateHeights();
+    m_randomGenerator = std::default_random_engine(m_generationSettings.seed);
+
+    //generateHeights();
+    generateFBNWorld();
+    smooth();
 
     mp_currentWorld->Batch();
     return mp_currentWorld;
+}
+
+void BasicWorldGenerator::applySettings(GenerationSettings settings) {
+    m_generationSettings = settings;
 }
 
 
