@@ -109,7 +109,9 @@ void Camera::RotateUp(float angle)
 /// \param angle The angle to add
 void Camera::RotateAround(float angle)
 {
+    m_position -= m_lookAt;
     m_position = glm::rotate(m_position, angle, m_up);
+    m_position += m_lookAt;
 
     UpdateVectors();
 }
@@ -118,7 +120,9 @@ void Camera::RotateAround(float angle)
 /// \param angle The angle to add
 void Camera::RotateUpAround(float angle)
 {
+    m_position -= m_lookAt;
     m_position = glm::rotate(m_position, angle, m_right);
+    m_position += m_lookAt;
 
     UpdateVectors();
 }

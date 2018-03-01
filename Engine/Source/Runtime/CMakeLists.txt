@@ -19,7 +19,8 @@
 INCLUDE_DIRECTORIES(
         ${CARDINAL_ENGINE_DIR}/Header/
         ${CARDINAL_THIRD_PARTY_DIR}/ImGUI/Header/
-        ${CARDINAL_THIRD_PARTY_DIR}/Bullet3/src/)
+        ${CARDINAL_THIRD_PARTY_DIR}/Bullet3/src/
+        ${CARDINAL_THIRD_PARTY_DIR}/OpenAL/include/)
 
 # Compile all tests
 ADD_LIBRARY(CardinalEngine STATIC
@@ -28,6 +29,12 @@ ADD_LIBRARY(CardinalEngine STATIC
         Core/Debug/Logger.cpp
         Core/Memory/Allocator/StackAllocator.cpp
         Core/Plugin/PluginManager.cpp
+        Sound/SoundEngine.cpp
+        Sound/Buffer/SoundBuffer.cpp
+        Sound/Buffer/SoundBufferManager.cpp
+        Sound/Listener/AudioListener.cpp
+        Sound/Loader/AudioLoader.cpp
+        Sound/Source/AudioSource.cpp
         Physics/PhysicsEngine.cpp
         Rendering/Context/Window.cpp
         Rendering/Debug/DebugBox.cpp
@@ -64,7 +71,7 @@ ADD_LIBRARY(CardinalEngine STATIC
 ADD_DEPENDENCIES(CardinalEngine glfw glew ResourcesCopy ImGUI)
 
 # Linking ...
-TARGET_LINK_LIBRARIES(CardinalEngine ${COMPILER_DEPENDENCIES} glfw glew ImGUI ${PLATFORM_DEPENDENCIES})
+TARGET_LINK_LIBRARIES(CardinalEngine ${COMPILER_DEPENDENCIES} glfw glew ImGUI OpenAL ${PLATFORM_DEPENDENCIES})
 
 ADD_CUSTOM_TARGET(ResourcesCopy)
 

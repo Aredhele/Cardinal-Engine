@@ -59,6 +59,12 @@ void PluginManager::Release()
     }
 }
 
+/// \brief Returns the current registered plugin count
+size_t PluginManager::GetPluginCount() const
+{
+    return m_plugins.size();
+}
+
 /// \brief Called when the game begins
 void PluginManager::OnPlayStart()
 {

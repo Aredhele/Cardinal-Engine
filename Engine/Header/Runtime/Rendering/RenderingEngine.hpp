@@ -97,6 +97,10 @@ private:
     /// \param step The normalized progression in the frame
     void RenderFrame(float step);
 
+    /// \brief Displays a window with debug information
+    /// \param step The current step
+    void DisplayDebugWindow(float step);
+
 private:
 
     static RenderingEngine * s_pInstance;
@@ -107,6 +111,7 @@ private:
     Camera * m_pCamera;
     class PluginManager * m_pPluginManager;
 
+    bool m_debugWindow;
     bool m_bInterpolate;
 
     double m_frameDelta;
@@ -119,6 +124,9 @@ private:
 
     uint64_t  m_fpsCounter;
     uint64_t  m_frameCount;
+    uint64_t  m_currentTriangle;
+    uint64_t  m_triangleCounter;
+    uint64_t  m_triangleSecond;
     glm::mat4 m_projectionMatrix;
 
     // Rendering objects

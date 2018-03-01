@@ -56,6 +56,9 @@ private:
     /// \brief Releases the plugin manager
     void Release();
 
+    /// \brief Returns the current registered plugin count
+    size_t GetPluginCount() const;
+
     /// \brief Called when the game begins
     void OnPlayStart();
 
