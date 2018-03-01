@@ -250,17 +250,21 @@ World* BasicWorldGenerator::generateWorld()
     return generateWorld(m_generationSettings);
 }
 
-World *BasicWorldGenerator::regenerateWorld(GenerationSettings settings) {
-    if (mp_currentWorld == nullptr) {
+World *BasicWorldGenerator::regenerateWorld(GenerationSettings settings)
+{
+    if (mp_currentWorld == nullptr)
+    {
         mp_currentWorld = new World();
         mp_currentWorld->Initialize();
     }
+
+    mp_currentWorld->Clean();
     m_generationSettings = settings;
     m_seed = m_generationSettings.seed;
     m_randomGenerator = std::default_random_engine(m_seed);
+
     generateHeights();
-    mp_currentWorld->Batch();
-    mp_currentWorld->Clean();
+
     mp_currentWorld->Batch();
     return mp_currentWorld;
 }
