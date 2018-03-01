@@ -64,7 +64,8 @@ public:
 
 private:
 
-    GeneratorGUI  m_gui;
+    BasicWorldGenerator m_worldGenerator;
+    GeneratorGUI  m_generatorGui;
     World *       m_pWorld;
     Character     m_character;
     CameraManager m_cameraManager;

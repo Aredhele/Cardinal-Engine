@@ -45,7 +45,7 @@ void OnPluginRegistration()
 }
 
 /// \brief Constructor
-PCG_Plugin::PCG_Plugin() : m_gui()
+PCG_Plugin::PCG_Plugin() : m_generatorGui(), m_worldGenerator()
 {
     m_pWorld = nullptr;
 }
@@ -61,8 +61,7 @@ void PCG_Plugin::OnPlayStart()
     cardinal::DebugManager::EnableGizmo(cardinal::DebugManager::EGizmo::DirectionalLight);
 
     // Setting up the game
-    BasicWorldGenerator bwg;
-    m_pWorld = bwg.generateWorld();
+    m_pWorld = m_worldGenerator.generateWorld();
 
     m_cameraManager.SetCamera(cardinal::RenderingEngine::GetMainCamera());
     m_cameraManager.SetCharacter(&m_character);
@@ -77,7 +76,6 @@ void PCG_Plugin::OnPlayStop()
 /// \brief Called just before the engine update
 void PCG_Plugin::OnPreUpdate()
 {
-    //m_gui.drawGUI();
     // TODO
 }
 
@@ -92,8 +90,9 @@ void PCG_Plugin::OnPostUpdate(float dt)
 /// \brief Called when it's time to render the GUI
 void PCG_Plugin::OnGUI()
 {
-    bool a = true;
+    static bool a = true;
     //ImGui::ShowDemoWindow(&a);
-    m_gui.drawGUI();
+    m_generatorGui.setGenerator(&m_worldGenerator);
+    m_generatorGui.drawGUI(&a);
     // TODO
 }

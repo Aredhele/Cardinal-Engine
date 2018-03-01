@@ -1,18 +1,26 @@
 #pragma once
 
+#include <World/Generator/BasicWorldGenerator.hpp>
 #include "ImGUI/imgui.h"
 #include "World/Generator/GenerationSettings.hpp"
 
 class GeneratorGUI
 {
 public:
-    GenerationSettings m_generatorSettings;
 
-    void drawGUI();
+    void drawGUI(bool * isDrawing);
+    void setGenerator(BasicWorldGenerator* generator);
 
 private:
 
-    static const FastNoise::NoiseType NOISE_TYPES [];
+    static const FastNoise::NoiseType NOISE_TYPES[];
+    static const FastNoise::Interp INTERPOLATION_TYPES[];
+    static const FastNoise::FractalType FRACTAL_TYPES[];
+    static const FastNoise::CellularDistanceFunction CELLULAR_DIST_FUNCS[];
+    static const FastNoise::CellularReturnType CELLULAR_RETURN_TYPES[];
+
+    GenerationSettings m_generatorSettings;
+    BasicWorldGenerator* mp_worldGenerator = nullptr;
 
     int m_noiseType_idx = 0;
     int m_interpType_idx = 0;
@@ -23,8 +31,7 @@ private:
     bool m_isDrawingFractalSettings = false;
     bool m_isDrawingCellularSettings = false;
 
-
-    void drawFractalSettings(bool * isDrawing);
-
-    void drawCellularSettings(bool * isDrawing);
+    void drawGeneralSettings();
+    void drawFractalSettings();
+    void drawCellularSettings();
 };

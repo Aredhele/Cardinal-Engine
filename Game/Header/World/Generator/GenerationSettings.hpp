@@ -8,7 +8,7 @@ struct GenerationSettings
     FastNoise::NoiseType noiseType = FastNoise::NoiseType::PerlinFractal;
     int seed = 0;
     float frequency = 1;
-    FastNoise::Interp interpolation = FastNoise::Interp::Hermite;
+    FastNoise::Interp interpolationType = FastNoise::Interp::Hermite;
 
     // Fractal settings
     FastNoise::FractalType fractalType = FastNoise::FractalType::Billow;
