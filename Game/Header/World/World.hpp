@@ -65,6 +65,9 @@ public:
     /// \brief Creates the initial world
     void Initialize();
 
+    /// \brief Put air cube everywhere and disable them
+    void Clean();
+
     /// \brief Batch all the chunks
     /// \remark Should be called whenever a cube state of the world changes
     void Batch();

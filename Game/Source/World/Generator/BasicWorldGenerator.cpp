@@ -7,7 +7,15 @@
 World * BasicWorldGenerator::generateWorld(GenerationSettings settings)
 {
     mp_currentWorld = new World();
+    mp_currentWorld->Initialize();
     return regenerateWorld(settings);
+}
+
+double map(double x, double in_min, double in_max, double out_min, double out_max)
+{
+    double result = (x - in_min) / (in_max - in_min) + out_min * (out_max - out_min);
+    assert(result >= 0 && result <= 1);
+    return result;
 }
 
 void BasicWorldGenerator::generateHeights()
@@ -19,7 +27,8 @@ void BasicWorldGenerator::generateHeights()
 		for (int y = 0; y < WorldSettings::s_matSizeCubes; y++)
 		{
 			double noise = noiseGenerator.GetNoise(x, y);
-			buildStack(x, y, WorldSettings::s_matHeightCubes * abs(noise));
+            noise = map(noise, -1.0, 1.0, 0.0, 1.0);
+			buildStack(x, y, WorldSettings::s_matHeightCubes * noise, false);
 		}
 }
 
@@ -30,8 +39,8 @@ void BasicWorldGenerator::buildStack(int x, int y, int height, bool onlyIfZero)
 
 	if (height < 1)
 		height = 1;
-	if (height >= WorldSettings::s_matHeightCubes)
-		height = WorldSettings::s_matHeightCubes - 1;
+	if (height > WorldSettings::s_matHeightCubes)
+		height = WorldSettings::s_matHeightCubes;
 
     mp_currentWorld->m_worldHeights[x][y] = height;
 
@@ -39,17 +48,17 @@ void BasicWorldGenerator::buildStack(int x, int y, int height, bool onlyIfZero)
 	{
 		ByteCube* cube = mp_currentWorld->GetCube(x, y, z);
         cube->Enable();
-        cube->SetType(ByteCube::EType::Grass);
+        cube->SetType(ByteCube::EType::Rock);
 	}
 
-	if (height - 1>0)
+	if (height - 3 > 0)
 	{
         ByteCube* cube = mp_currentWorld->GetCube(x, y, height - 1);
 		cube->Enable();
         cube->SetType(ByteCube::EType::Grass);
 	}
 
-	for (int z = height; z<WorldSettings::s_matHeightCubes; z++)
+	for (int z = height; z < WorldSettings::s_matHeightCubes; z++)
 	{
         ByteCube* cube = mp_currentWorld->GetCube(x, y, z);
         cube->Enable();
@@ -242,15 +251,16 @@ World* BasicWorldGenerator::generateWorld()
 }
 
 World *BasicWorldGenerator::regenerateWorld(GenerationSettings settings) {
-    if (mp_currentWorld == nullptr)
+    if (mp_currentWorld == nullptr) {
         mp_currentWorld = new World();
+        mp_currentWorld->Initialize();
+    }
     m_generationSettings = settings;
     m_seed = m_generationSettings.seed;
     m_randomGenerator = std::default_random_engine(m_seed);
-    //Reset du monde
-    mp_currentWorld->Initialize();
     generateHeights();
-    //generateCaves();
+    mp_currentWorld->Batch();
+    mp_currentWorld->Clean();
     mp_currentWorld->Batch();
     return mp_currentWorld;
 }

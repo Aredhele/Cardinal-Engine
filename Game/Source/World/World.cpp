@@ -150,3 +150,13 @@ void World::Batch()
         }
     }
 }
+
+void World::Clean() {
+    for (int x = 0; x<WorldSettings::s_matSizeCubes; x++)
+        for (int y = 0; y < WorldSettings::s_matSizeCubes; y++)
+            for(int z = 0; z < WorldSettings::s_matHeightCubes; z++) {
+                ByteCube* cube = GetCube(x, y, z);
+                cube->SetType(ByteCube::EType::Air);
+                //cube->Disable();
+            }
+}
