@@ -50,7 +50,7 @@ void GeneratorGUI::drawGeneralSettings() {
             m_generatorSettings.noiseType = NOISE_TYPES[m_noiseType_idx];
         }
         ImGui::InputInt("Seed", &m_generatorSettings.seed);
-        ImGui::InputFloat("Frequency", &m_generatorSettings.frequency, 0.05);
+        ImGui::InputFloat("Frequency", &m_generatorSettings.frequency, 0.001);
         if (ImGui::Combo("Interpolation type", &m_interpType_idx, "Hermite\0Linear\0Quintic\0")) {
             m_generatorSettings.interpolationType = INTERPOLATION_TYPES[m_interpType_idx];
         }
@@ -67,7 +67,7 @@ void GeneratorGUI::drawCellularSettings()
         if (ImGui::Combo("Distance function", &m_distanceFunction_idx, "Euclidean\0Manhattan\0Natural\0")) {
             m_generatorSettings.distanceFunction = CELLULAR_DIST_FUNCS[m_distanceFunction_idx];
         }
-        if (ImGui::Combo("Return type", &m_returnType_idx, "CellValue\0Distance\0Distance2\0Distance2Add\0Distance2Div\0Distance2Mul\0Distance2Sub\0NoiseLookup")) {
+        if (ImGui::Combo("Return type", &m_returnType_idx, "CellValue\0Distance\0Distance2\0Distance2Add\0Distance2Div\0Distance2Mul\0Distance2Sub")) {
             m_generatorSettings.returnType = CELLULAR_RETURN_TYPES[m_returnType_idx];
         }
     }

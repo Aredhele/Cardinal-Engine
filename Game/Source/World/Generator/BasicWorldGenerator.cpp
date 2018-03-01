@@ -3,6 +3,7 @@
 #include <World/Generator/CellularAutomata.hpp>
 #include "Glm/glm/glm.hpp"
 #include "World/Generator/Noise/FastNoise.h"
+#include <algorithm>
 
 World * BasicWorldGenerator::generateWorld(GenerationSettings settings)
 {
@@ -13,20 +14,35 @@ World * BasicWorldGenerator::generateWorld(GenerationSettings settings)
 
 double map(double x, double in_min, double in_max, double out_min, double out_max)
 {
+    ASSERT_TRUE(x >= in_min && x <= in_max);
     double result = (x - in_min) / (in_max - in_min) + out_min * (out_max - out_min);
-    assert(result >= 0 && result <= 1);
+    ASSERT_TRUE(result >= out_min && result <= out_max);
     return result;
+}
+
+inline float clamp(double x, double a, double b)
+{
+    return x < a ? a : (x > b ? b : x);
 }
 
 void BasicWorldGenerator::generateHeights()
 {
     FastNoise noiseGenerator(m_generationSettings.seed);
     noiseGenerator.SetNoiseType(m_generationSettings.noiseType);
+    noiseGenerator.SetInterp(m_generationSettings.interpolationType);
+    noiseGenerator.SetFrequency(m_generationSettings.frequency);
+    //noiseGenerator.SetGradientPerturbAmp(m_generationSettings.gradientPerturb); // TODO check that
+    noiseGenerator.SetFractalType(m_generationSettings.fractalType);
     noiseGenerator.SetFractalOctaves(m_generationSettings.octaves);
+    noiseGenerator.SetFractalLacunarity(m_generationSettings.lacunarity);
+    noiseGenerator.SetFractalGain(m_generationSettings.gain);
+    noiseGenerator.SetCellularDistanceFunction(m_generationSettings.distanceFunction);
+    noiseGenerator.SetCellularReturnType(m_generationSettings.returnType);
 	for (int x = 0; x<WorldSettings::s_matSizeCubes; x++)
 		for (int y = 0; y < WorldSettings::s_matSizeCubes; y++)
 		{
-			double noise = noiseGenerator.GetNoise(x, y);
+			double noise = clamp(noiseGenerator.GetNoise(x, y), -1.0, 1.0);
+
             noise = map(noise, -1.0, 1.0, 0.0, 1.0);
 			buildStack(x, y, WorldSettings::s_matHeightCubes * noise, false);
 		}
@@ -263,9 +279,9 @@ World *BasicWorldGenerator::regenerateWorld(GenerationSettings settings)
 
     m_randomGenerator = std::default_random_engine(m_generationSettings.seed);
 
-    //generateHeights();
-    generateFBNWorld();
-    smooth();
+    generateHeights();
+    //generateFBNWorld();
+    //smooth();
 
     mp_currentWorld->Batch();
     return mp_currentWorld;
