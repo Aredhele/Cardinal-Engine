@@ -54,11 +54,17 @@ PCG_Plugin::PCG_Plugin() : m_generatorGui(), m_worldGenerator()
 void PCG_Plugin::OnPlayStart()
 {
     // Configure engine here
+    // Lighting
     cardinal::LightManager::CreateDirectionalLight();
     cardinal::LightManager::GetDirectionalLight()->SetPosition(glm::vec3(64.0f, 64.0f, 140.0f));
     cardinal::LightManager::GetDirectionalLight()->SetDirection(glm::vec3(-0.5f, -0.5f, -0.5f));
 
+    // Gizmos
     cardinal::DebugManager::EnableGizmo(cardinal::DebugManager::EGizmo::DirectionalLight);
+
+    // Post-processing
+    cardinal::RenderingEngine::SetPostProcessingActive(false);
+    cardinal::RenderingEngine::IsPostProcessingActive();
 
     // Setting up the game
     m_pWorld = m_worldGenerator.generateWorld();

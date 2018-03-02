@@ -148,6 +148,7 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     m_triangleCounter = 0;
     m_triangleSecond  = 0;
     m_currentTriangle = 0;
+    m_bIsPostProcessingEnabled = false;
 
     // Initializes ImGUI
     ImGui::CreateContext();
@@ -275,9 +276,6 @@ void RenderingEngine::Render(float step)
 /// \param step The normalized progression in the frame
 void RenderingEngine::RenderFrame(float step)
 {
-    // Clear
-    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     // Triggering ImGUI
     ImGui_ImplGlfwGL3_NewFrame();
     m_pPluginManager->OnGUI();
@@ -302,8 +300,15 @@ void RenderingEngine::RenderFrame(float step)
     // End debug draw
 
     // Post-processing begin
-    glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
-    glViewport(0, 0, 1600, 900);
+    if(m_bIsPostProcessingEnabled)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
+        glViewport(0, 0, 1600, 900);
+    }
+    else
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
 
     // Clearing buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -330,33 +335,35 @@ void RenderingEngine::RenderFrame(float step)
     DebugManager::Clear();
 #endif
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, 1600, 900);
+    if(m_bIsPostProcessingEnabled)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glViewport(0, 0, 1600, 900);
 
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        GLuint program = (GLuint)ShaderManager::GetShaderID("PostProcessing");
+
+        glUseProgram(program);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, m_fboTexture);
+        glUniform1i(m_uniform,   0);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, m_depthTexture);
+        glUniform1i(m_uniform_d, 1);
+
+        glBindVertexArray(m_vao);
+        glEnableVertexAttribArray(0);
+
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        glDisableVertexAttribArray(0);
+        // Post-processing end
+    }
 
     DisplayDebugWindow(step);
     m_currentTriangle = 0;
-
-    GLuint program = (GLuint)ShaderManager::GetShaderID("PostProcessing");
-
-    glUseProgram(program);
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m_fboTexture);
-    glUniform1i(m_uniform,   0);
-
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, m_depthTexture);
-    glUniform1i(m_uniform_d, 1);
-
-    glBindVertexArray(m_vao);
-    glEnableVertexAttribArray(0);
-
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-    glDisableVertexAttribArray(0);
-    // Post-processing end
 
     // Draw ImGUI
     ImGui::Render();
@@ -463,6 +470,22 @@ glm::mat4 const &RenderingEngine::GetProjectionMatrix()
 {
     ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
     return &s_pInstance->m_window;
+}
+
+/// \brief Sets the state of the post-processing
+/// \param bActive The new state
+/* static */ void RenderingEngine::SetPostProcessingActive(bool bActive)
+{
+    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
+    s_pInstance->m_bIsPostProcessingEnabled = bActive;
+}
+
+/// \brief Tells if the post-processing is active or not
+/// \return True or false
+/* static */ bool RenderingEngine::IsPostProcessingActive()
+{
+    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
+    return s_pInstance->m_bIsPostProcessingEnabled;
 }
 
 /// \brief Displays a window with debug information

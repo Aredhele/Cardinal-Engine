@@ -93,6 +93,14 @@ public:
     /// \return A pointer on the window
     static Window * GetWindow();
 
+    /// \brief Sets the state of the post-processing
+    /// \param bActive The new state
+    static void SetPostProcessingActive(bool bActive);
+
+    /// \brief Tells if the post-processing is active or not
+    /// \return True or false
+    static bool IsPostProcessingActive();
+
 private:
 
     /// \brief Frame rendering implementation
@@ -135,6 +143,7 @@ private:
     std::vector<class IRenderer*> m_renderers;
 
     // Post-processing
+    bool m_bIsPostProcessingEnabled;
     uint m_vao;
     uint m_fbo;
     uint m_rbo_depth;
