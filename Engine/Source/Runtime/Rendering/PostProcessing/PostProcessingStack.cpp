@@ -21,10 +21,12 @@
 /// \package    Runtime/Rendering/PostProcessing
 /// \author     Vincent STEHLY--CALISTO
 
+
 #include "Glew/include/GL/glew.h"
 
 #include "Runtime/Core/Debug/Logger.hpp"
 #include "Runtime/Rendering/PostProcessing/PostProcessingStack.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/Identity.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/Mirror.hpp"
 
 /// \namespace cardinal
@@ -116,7 +118,8 @@ void PostProcessingStack::Initialize()
     // Unbind vao
     glBindVertexArray(0);
 
-    m_stack[0] = new Mirror();
+    m_stack[0] = new Identity();
+    m_stack[1] = new Mirror();
 
     Logger::LogInfo("Post-processing stack successfully initialized");
 }
@@ -147,7 +150,7 @@ void PostProcessingStack::OnPostProcessingRender()
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Processing the stack
-    for(int nEffect = 0; nEffect < 1; ++nEffect) // NOLINT
+    for(int nEffect = 1; nEffect < 2; ++nEffect) // NOLINT
     {
         if(m_stack[nEffect]->IsActive())
         {
@@ -174,7 +177,7 @@ void PostProcessingStack::OnPostProcessingEnd()
 PostEffect * PostProcessingStack::GetPostEffect(PostEffect::EType type)
 {
     PostEffect * pEffect = nullptr;
-    for(int nEffect = 0; nEffect < 1; ++nEffect) // NOLINT
+    for(int nEffect = 0; nEffect < 2; ++nEffect) // NOLINT
     {
         if(m_stack[nEffect]->m_type == type)
         {
@@ -190,7 +193,7 @@ PostEffect * PostProcessingStack::GetPostEffect(PostEffect::EType type)
 /// \param type The type of the effect
 void PostProcessingStack::SetEffectActive(PostEffect::EType type, bool bActive)
 {
-    for(int nEffect = 0; nEffect < 1; ++nEffect) // NOLINT
+    for(int nEffect = 0; nEffect < 2; ++nEffect) // NOLINT
     {
         if(m_stack[nEffect]->m_type == type)
         {

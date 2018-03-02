@@ -82,7 +82,7 @@ private:
     uint m_postProcessDepthTexture;
 
     // PostEffects stack
-    PostEffect * m_stack[1];
+    PostEffect * m_stack[2];
 };
 
 } // !namespace 
