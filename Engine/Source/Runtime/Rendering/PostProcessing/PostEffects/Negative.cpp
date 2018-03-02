@@ -23,25 +23,24 @@
 
 #include "Glew/include/GL/glew.h"
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
-#include "Runtime/Rendering/PostProcessing/PostEffects/Mirror.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/Negative.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
 /// \brief Constructor
-Mirror::Mirror() : PostEffect(PostEffect::EType::Mirror, 1)
+Negative::Negative() : PostEffect(PostEffect::EType::Negative, 2)
 {
     // Getting shader ...
-    m_shaderID = (uint)ShaderManager::GetShaderID("MirrorPostProcess");
+    m_shaderID = (uint)ShaderManager::GetShaderID("NegativePostProcess");
 
     // Getting uniforms
     m_colorTextureID = glGetUniformLocation(m_shaderID, "colorTexture");
-    m_depthTextureID = glGetUniformLocation(m_shaderID, "depthTexture");
 }
 
 /// \brief Destructor
-Mirror::~Mirror() // NOLINT
+Negative::~Negative() // NOLINT
 {
     // None
 }
@@ -49,17 +48,13 @@ Mirror::~Mirror() // NOLINT
 /// \brief Applies the effect from the given textures
 /// \param colorTexture The color texture
 /// \param depthTexture The depth buffer texture
-void cardinal::Mirror::ApplyEffect(uint colorTexture, uint depthTexture)
+void Negative::ApplyEffect(uint colorTexture, uint depthTexture)
 {
     glUseProgram   (m_shaderID);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture  (GL_TEXTURE_2D, colorTexture);
     glUniform1i    (m_colorTextureID, 0);
-
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture  (GL_TEXTURE_2D, depthTexture);
-    glUniform1i    (m_depthTextureID, 1);
 }
 
 } // !namespace

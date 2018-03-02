@@ -25,8 +25,12 @@
 #define CARDINAL_ENGINE_POST_PROCESSING_STACK_HPP__
 
 #include <vector>
+
 #include "Runtime/Platform/Configuration/Type.hh"
 #include "Runtime/Rendering/PostProcessing/PostEffects/PostEffect.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/Identity.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/Mirror.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/Negative.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -74,15 +78,22 @@ private:
 
 private:
 
+    // QUAD
     uint m_postProcessVao;
+    uint m_postProcessQuadVbo;
+
+    // FBO 1
     uint m_postProcessFbo;
     uint m_postProcessRbo;
-    uint m_postProcessQuadVbo;
     uint m_postProcessTexture;
     uint m_postProcessDepthTexture;
 
+    // FBO 2
+    uint m_postProcessFboBuffer;
+    uint m_postProcessTextureBuffer;
+
     // PostEffects stack
-    PostEffect * m_stack[2];
+    PostEffect * m_stack[3];
 };
 
 } // !namespace 

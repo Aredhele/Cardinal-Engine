@@ -122,6 +122,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/PostProcessing/MirrorVertexShader.glsl",
             "Resources/Shaders/PostProcessing/MirrorFragmentShader.glsl"));
 
+    ShaderManager::Register("NegativePostProcess", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/PostProcessing/NegativeVertexShader.glsl",
+            "Resources/Shaders/PostProcessing/NegativeFragmentShader.glsl"));
+
     // Debug
     DebugManager::Initialize();
 

@@ -68,9 +68,11 @@ void PCG_Plugin::OnPlayStart()
     cardinal::RenderingEngine::IsPostProcessingActive();
 
     cardinal::PostProcessingStack * pPostProcessingStack = cardinal::RenderingEngine::GetPostProcessingStack();
-    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Mirror, true);
+    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Mirror,   true);
+    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Negative, true);
 
-    auto * pMirror = (cardinal::Mirror *)pPostProcessingStack->GetPostEffect(cardinal::PostEffect::EType::Mirror);
+    // auto * pMirror   = (cardinal::Mirror   *)pPostProcessingStack->GetPostEffect(cardinal::PostEffect::EType::Mirror);
+    // auto * pNegative = (cardinal::Negative *)pPostProcessingStack->GetPostEffect(cardinal::PostEffect::EType::Negative);
 
     // Setting up the game
     m_pWorld = m_worldGenerator.generateWorld();

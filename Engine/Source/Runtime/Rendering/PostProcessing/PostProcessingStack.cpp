@@ -21,13 +21,10 @@
 /// \package    Runtime/Rendering/PostProcessing
 /// \author     Vincent STEHLY--CALISTO
 
-
 #include "Glew/include/GL/glew.h"
 
 #include "Runtime/Core/Debug/Logger.hpp"
 #include "Runtime/Rendering/PostProcessing/PostProcessingStack.hpp"
-#include "Runtime/Rendering/PostProcessing/PostEffects/Identity.hpp"
-#include "Runtime/Rendering/PostProcessing/PostEffects/Mirror.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -59,13 +56,9 @@ void PostProcessingStack::Initialize()
     glGenFramebuffers(1, &m_postProcessFbo);
     glBindFramebuffer(GL_FRAMEBUFFER, m_postProcessFbo);
 
-    glGenTextures(1, &m_postProcessTexture);
-    glBindTexture(GL_TEXTURE_2D, m_postProcessTexture);
-
-    // TMP : Fixed screen size
-    glTexImage2D (GL_TEXTURE_2D, 0, GL_RGB, 1600, 900, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-
-    // Texture filtering low preset
+    glGenTextures  (1, &m_postProcessTexture);
+    glBindTexture  (GL_TEXTURE_2D, m_postProcessTexture);
+    glTexImage2D   (GL_TEXTURE_2D, 0, GL_RGB, 1600, 900, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
@@ -105,10 +98,10 @@ void PostProcessingStack::Initialize()
 
     // Quad vertices
     static const GLfloat g_quad_vertex_buffer_data[] =
-    {
-            -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, -1.0f,  1.0f, 0.0f,
-            -1.0f,  1.0f, 0.0f, 1.0f, -1.0f, 0.0f,  1.0f,  1.0f, 0.0f,
-    };
+            {
+                    -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, -1.0f,  1.0f, 0.0f,
+                    -1.0f,  1.0f, 0.0f, 1.0f, -1.0f, 0.0f,  1.0f,  1.0f, 0.0f,
+            };
 
     glGenBuffers(1, &m_postProcessQuadVbo);
     glBindBuffer(GL_ARRAY_BUFFER, m_postProcessQuadVbo);
@@ -118,8 +111,31 @@ void PostProcessingStack::Initialize()
     // Unbind vao
     glBindVertexArray(0);
 
+    // Generating the frame buffer object buffer
+    glGenFramebuffers(1, &m_postProcessFboBuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_postProcessFboBuffer);
+
+    glGenTextures  (1, &m_postProcessTextureBuffer);
+    glBindTexture  (GL_TEXTURE_2D, m_postProcessTextureBuffer);
+    glTexImage2D   (GL_TEXTURE_2D, 0, GL_RGB, 1600, 900, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    // Binding buffer
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_postProcessTextureBuffer, 0);
+
+    // Attaching the list of buffers to draw
+    DrawBuffers[0] = {GL_COLOR_ATTACHMENT0};
+    glDrawBuffers(1, DrawBuffers);
+
+    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    {
+        Logger::LogError("Error while creating the post-processing buffers");
+    }
+
     m_stack[0] = new Identity();
     m_stack[1] = new Mirror();
+    m_stack[2] = new Negative();
 
     Logger::LogInfo("Post-processing stack successfully initialized");
 }
@@ -141,28 +157,57 @@ void PostProcessingStack::OnPostProcessingBegin()
 /// \brief Called to render effects
 void PostProcessingStack::OnPostProcessingRender()
 {
+    bool bSwapped = true;
+
+    glBindFramebuffer     (GL_FRAMEBUFFER, m_postProcessFboBuffer);
+    glViewport            (0, 0, 1600, 900);
+    glFramebufferTexture2D(GL_FRAMEBUFFER , GL_COLOR_ATTACHMENT0 , GL_TEXTURE_2D, m_postProcessTextureBuffer, 0);
+
+    // Processing the stack
+    for(int nEffect = 1; nEffect < 3; ++nEffect) // NOLINT
+    {
+        if(m_stack[nEffect]->IsActive())
+        {
+            if(bSwapped)
+            {
+                glFramebufferTexture2D(GL_FRAMEBUFFER , GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_postProcessTextureBuffer, 0);
+                m_stack[nEffect]->ApplyEffect(m_postProcessTexture, m_postProcessDepthTexture);
+                bSwapped = false;
+            }
+            else
+            {
+                glFramebufferTexture2D(GL_FRAMEBUFFER , GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_postProcessTexture, 0);
+                m_stack[nEffect]->ApplyEffect(m_postProcessTextureBuffer, m_postProcessDepthTexture);
+                bSwapped = true;
+            }
+
+            glBindVertexArray(m_postProcessVao);
+            glEnableVertexAttribArray(0);
+
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+
+            glDisableVertexAttribArray(0);
+            glBindVertexArray(0);
+        }
+    }
+
     // Render the texture on the physical frame buffer
     // Binding physical buffer
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, 1600, 900);
 
     // Clears the buffer
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Processing the stack
-    for(int nEffect = 1; nEffect < 2; ++nEffect) // NOLINT
-    {
-        if(m_stack[nEffect]->IsActive())
-        {
-            m_stack[nEffect]->ApplyEffect(m_postProcessTexture, m_postProcessDepthTexture);
+    if(bSwapped)  m_stack[0]->ApplyEffect(m_postProcessTexture,       m_postProcessDepthTexture);
+    else          m_stack[0]->ApplyEffect(m_postProcessTextureBuffer, m_postProcessDepthTexture);
 
-            glBindVertexArray(m_postProcessVao);
-            glEnableVertexAttribArray(0);
 
-            glDrawArrays(GL_TRIANGLES, 0, 6);
-            glDisableVertexAttribArray(0);
-        }
-    }
+    glBindVertexArray(m_postProcessVao);
+    glEnableVertexAttribArray(0);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDisableVertexAttribArray(0);
 }
 
 /// \brief Called at the end of the frame
@@ -177,7 +222,7 @@ void PostProcessingStack::OnPostProcessingEnd()
 PostEffect * PostProcessingStack::GetPostEffect(PostEffect::EType type)
 {
     PostEffect * pEffect = nullptr;
-    for(int nEffect = 0; nEffect < 2; ++nEffect) // NOLINT
+    for(int nEffect = 0; nEffect < 3; ++nEffect) // NOLINT
     {
         if(m_stack[nEffect]->m_type == type)
         {
@@ -193,7 +238,7 @@ PostEffect * PostProcessingStack::GetPostEffect(PostEffect::EType type)
 /// \param type The type of the effect
 void PostProcessingStack::SetEffectActive(PostEffect::EType type, bool bActive)
 {
-    for(int nEffect = 0; nEffect < 2; ++nEffect) // NOLINT
+    for(int nEffect = 0; nEffect < 3; ++nEffect) // NOLINT
     {
         if(m_stack[nEffect]->m_type == type)
         {
