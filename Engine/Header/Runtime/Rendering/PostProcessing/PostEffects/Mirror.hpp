@@ -15,59 +15,38 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       PostProcessingStack.hpp
-/// \date       02/03/2018 
+/// \file       Mirror.hpp
+/// \date       02/03/2018
 /// \project    Cardinal Engine
-/// \package    Runtime/Rendering/PostProcessing
+/// \package    Runtime/Rendering/PostProcessing/PostEffects
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_POST_PROCESSING_STACK_HPP__
-#define CARDINAL_ENGINE_POST_PROCESSING_STACK_HPP__
+#ifndef CARDINAL_ENGINE_MIRROR_HPP__
+#define CARDINAL_ENGINE_MIRROR_HPP__
 
-#include <vector>
-#include "Runtime/Platform/Configuration/Type.hh"
 #include "Runtime/Rendering/PostProcessing/PostEffects/PostEffect.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \class PostProcessingStack
-/// \brief Provides to the user a way to add post-processing effects
-class PostProcessingStack
+/// \class Mirror
+/// \brief
+class Mirror : public PostEffect
 {
 public:
 
-
 private:
 
-    friend class RenderingEngine;
+    friend class PostProcessingStack;
 
     /// \brief Constructor
-    PostProcessingStack();
+    Mirror();
 
     /// \brief Destructor
-    ~PostProcessingStack();
-
-    /// \brief Initializes the post processing stack
-    void Initialize();
-
-    /// \brief Release the post processing stack
-    void Release();
-
-private:
-
-    uint m_postProcessVao;
-    uint m_postProcessFbo;
-    uint m_postProcessRbo;
-    uint m_postProcessQuadVbo;
-    uint m_postProcessTexture;
-    uint m_postProcessDepthTexture;
-
-    // PostEffects stack
-    PostEffect * m_stack[1];
+    ~Mirror();
 };
-    
-} // !namespace 
 
-#endif // !CARDINAL_ENGINE_POST_PROCESSING_STACK_HPP__
+} // !namespace
+
+#endif // !CARDINAL_ENGINE_MIRROR_HPP__

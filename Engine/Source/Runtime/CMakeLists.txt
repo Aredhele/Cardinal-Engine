@@ -66,7 +66,9 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Shader/Built-in/Unlit/UnlitTextureShader.cpp
         Rendering/Shader/Built-in/Unlit/UnlitTransparentShader.cpp
         Rendering/Shader/Built-in/Standard/StandardShader.cpp
-        Rendering/PostProcessing/PostProcessingStack.cpp)
+        Rendering/PostProcessing/PostProcessingStack.cpp
+        Rendering/PostProcessing/PostEffects/PostEffect.cpp
+        Rendering/PostProcessing/PostEffects/Mirror.cpp)
 
 # But tests depends on GTEST and GMOCK
 ADD_DEPENDENCIES(CardinalEngine glfw glew ResourcesCopy ImGUI)
