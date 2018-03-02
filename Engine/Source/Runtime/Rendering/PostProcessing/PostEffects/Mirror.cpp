@@ -33,7 +33,7 @@ namespace cardinal
 Mirror::Mirror() : PostEffect(PostEffect::EType::Mirror, 0)
 {
     // Getting shader ...
-    m_shaderID = (uint)ShaderManager::GetShaderID("MirrorShader");
+    m_shaderID = (uint)ShaderManager::GetShaderID("MirrorPostProcess");
 
     // Getting uniforms
     m_colorTextureID = glGetUniformLocation(m_shaderID, "fbo_texture");

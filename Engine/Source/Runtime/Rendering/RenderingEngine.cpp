@@ -114,7 +114,11 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/Standard/StandardVertexShader.glsl",
             "Resources/Shaders/Standard/StandardFragmentShader.glsl"));
 
-    ShaderManager::Register("MirrorShader", ShaderCompiler::LoadShaders(
+    ShaderManager::Register("IdentityPostProcess", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/PostProcessing/IdentityVertexShader.glsl",
+            "Resources/Shaders/PostProcessing/IdentityFragmentShader.glsl"));
+
+    ShaderManager::Register("MirrorPostProcess", ShaderCompiler::LoadShaders(
             "Resources/Shaders/PostProcessing/MirrorVertexShader.glsl",
             "Resources/Shaders/PostProcessing/MirrorFragmentShader.glsl"));
 
