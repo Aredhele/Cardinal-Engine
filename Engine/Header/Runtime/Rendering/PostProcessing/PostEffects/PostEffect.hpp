@@ -42,6 +42,15 @@ public:
         Mirror
     };
 
+protected:
+
+    friend class PostProcessingStack;
+
+    /// \brief Constructor
+    /// \param type The type of the effect
+    /// \param slot The slot
+    PostEffect(EType type, uint slot);
+
     /// \brief Enables or disable the effect
     /// \param bActive The new state
     void SetActive(bool bActive);
@@ -50,6 +59,11 @@ public:
     /// \return True or false
     bool IsActive() const;
 
+    /// \brief Applies the effect from the given textures
+    /// \param colorTexture The color texture
+    /// \param depthTexture The depth buffer texture
+    virtual void ApplyEffect(uint colorTexture, uint depthTexture) = 0;
+
 protected:
 
     EType m_type;
@@ -57,6 +71,8 @@ protected:
 
     uint  m_slot;
     uint  m_shaderID;
+    int   m_colorTextureID;
+    int   m_depthTextureID;
 };
 
 } // !namespace

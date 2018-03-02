@@ -21,10 +21,45 @@
 /// \package    Runtime/Rendering/PostProcessing/PostEffects
 /// \author     Vincent STEHLY--CALISTO
 
-#include "Runtime/Rendering/PostProcessing/PostEffects/PostEffect.hpp"
+#include "Glew/include/GL/glew.h"
+#include "Runtime/Rendering/Shader/ShaderManager.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/Mirror.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
+
+/// \brief Constructor
+Mirror::Mirror() : PostEffect(PostEffect::EType::Mirror, 0)
+{
+    // Getting shader ...
+    m_shaderID = (uint)ShaderManager::GetShaderID("MirrorShader");
+
+    // Getting uniforms
+    m_colorTextureID = glGetUniformLocation(m_shaderID, "fbo_texture");
+    m_depthTextureID = glGetUniformLocation(m_shaderID, "depth_texture");
+}
+
+/// \brief Destructor
+Mirror::~Mirror() // Nolint
+{
+    // None
+}
+
+/// \brief Applies the effect from the given textures
+/// \param colorTexture The color texture
+/// \param depthTexture The depth buffer texture
+void cardinal::Mirror::ApplyEffect(uint colorTexture, uint depthTexture)
+{
+    glUseProgram   (m_shaderID);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture  (GL_TEXTURE_2D, colorTexture);
+    glUniform1i    (m_colorTextureID, 0);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture  (GL_TEXTURE_2D, depthTexture);
+    glUniform1i    (m_depthTextureID, 1);
+}
 
 } // !namespace

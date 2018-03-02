@@ -45,6 +45,11 @@ private:
 
     /// \brief Destructor
     ~Mirror();
+
+    /// \brief Applies the effect from the given textures
+    /// \param colorTexture The color texture
+    /// \param depthTexture The depth buffer texture
+    void ApplyEffect(uint colorTexture, uint depthTexture) final;
 };
 
 } // !namespace

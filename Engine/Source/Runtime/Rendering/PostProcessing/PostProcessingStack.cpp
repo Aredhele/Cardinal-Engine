@@ -25,6 +25,7 @@
 
 #include "Runtime/Core/Debug/Logger.hpp"
 #include "Runtime/Rendering/PostProcessing/PostProcessingStack.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/Mirror.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -42,7 +43,7 @@ PostProcessingStack::PostProcessingStack()
 }
 
 /// \brief Initializes the post processing stack
-PostProcessingStack::~PostProcessingStack()
+PostProcessingStack::~PostProcessingStack() // NOLINT
 {
     // None
 }
@@ -115,6 +116,8 @@ void PostProcessingStack::Initialize()
     // Unbind vao
     glBindVertexArray(0);
 
+    m_stack[0] = new Mirror();
+
     Logger::LogInfo("Post-processing stack successfully initialized");
 }
 
@@ -123,6 +126,77 @@ void PostProcessingStack::Initialize()
 void PostProcessingStack::Release()
 {
 
+}
+
+/// \brief Called at the begining of the frame
+void PostProcessingStack::OnPostProcessingBegin()
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, m_postProcessFbo);
+    glViewport(0, 0, 1600, 900);
+}
+
+/// \brief Called to render effects
+void PostProcessingStack::OnPostProcessingRender()
+{
+    // Render the texture on the physical frame buffer
+    // Binding physical buffer
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, 1600, 900);
+
+    // Clears the buffer
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Processing the stack
+    for(int nEffect = 0; nEffect < 1; ++nEffect) // NOLINT
+    {
+        if(m_stack[nEffect]->IsActive())
+        {
+            m_stack[nEffect]->ApplyEffect(m_postProcessTexture, m_postProcessDepthTexture);
+
+            glBindVertexArray(m_postProcessVao);
+            glEnableVertexAttribArray(0);
+
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+            glDisableVertexAttribArray(0);
+        }
+    }
+}
+
+/// \brief Called at the end of the frame
+void PostProcessingStack::OnPostProcessingEnd()
+{
+    // None
+}
+
+/// \brief Returns the wanted effects
+/// \param type The type of the effect
+/// \return A pointer on the effect
+PostEffect * PostProcessingStack::GetPostEffect(PostEffect::EType type)
+{
+    PostEffect * pEffect = nullptr;
+    for(int nEffect = 0; nEffect < 1; ++nEffect) // NOLINT
+    {
+        if(m_stack[nEffect]->m_type == type)
+        {
+            pEffect = m_stack[nEffect];
+            break;
+        }
+    }
+
+    return pEffect;
+}
+
+/// \brief Enables or disable an effect
+/// \param type The type of the effect
+void PostProcessingStack::SetEffectActive(PostEffect::EType type, bool bActive)
+{
+    for(int nEffect = 0; nEffect < 1; ++nEffect) // NOLINT
+    {
+        if(m_stack[nEffect]->m_type == type)
+        {
+            m_stack[nEffect]->SetActive(bActive);
+        }
+    }
 }
 
 } // !namespace

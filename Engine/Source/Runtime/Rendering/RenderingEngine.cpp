@@ -114,7 +114,7 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/Standard/StandardVertexShader.glsl",
             "Resources/Shaders/Standard/StandardFragmentShader.glsl"));
 
-    ShaderManager::Register("PostProcessing", ShaderCompiler::LoadShaders(
+    ShaderManager::Register("MirrorShader", ShaderCompiler::LoadShaders(
             "Resources/Shaders/PostProcessing/MirrorVertexShader.glsl",
             "Resources/Shaders/PostProcessing/MirrorFragmentShader.glsl"));
 
@@ -237,8 +237,7 @@ void RenderingEngine::RenderFrame(float step)
     // Post-processing begin
     if(m_bIsPostProcessingEnabled)
     {
-        // glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
-        // glViewport(0, 0, 1600, 900);
+        m_postProcessingStack.OnPostProcessingBegin();
     }
     else
     {
@@ -272,31 +271,8 @@ void RenderingEngine::RenderFrame(float step)
 
     if(m_bIsPostProcessingEnabled)
     {
-        /*
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glViewport(0, 0, 1600, 900);
-
-        glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        GLuint program = (GLuint)ShaderManager::GetShaderID("PostProcessing");
-
-        glUseProgram(program);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, m_fboTexture);
-        glUniform1i(m_uniform,   0);
-
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, m_depthTexture);
-        glUniform1i(m_uniform_d, 1);
-
-        glBindVertexArray(m_vao);
-        glEnableVertexAttribArray(0);
-
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-
-        glDisableVertexAttribArray(0);
-        // Post-processing end
-        */
+        m_postProcessingStack.OnPostProcessingRender();
+        m_postProcessingStack.OnPostProcessingEnd();
     }
 
     DisplayDebugWindow(step);

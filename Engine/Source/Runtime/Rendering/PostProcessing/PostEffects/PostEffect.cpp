@@ -27,6 +27,20 @@
 namespace cardinal
 {
 
+/// \brief Constructor
+/// \param type The type of the effect
+/// \param slot The slot
+PostEffect::PostEffect(PostEffect::EType type, uint slot)
+{
+    m_type      = type;
+    m_bIsActive = false;
+    m_slot      = slot;
+    m_shaderID  = 0;
+
+    m_colorTextureID = -1;
+    m_depthTextureID = -1;
+}
+
 /// \brief Enables or disable the effect
 /// \param bActive The new state
 void PostEffect::SetActive(bool bActive)

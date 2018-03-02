@@ -38,6 +38,14 @@ class PostProcessingStack
 {
 public:
 
+    /// \brief Returns the wanted effects
+    /// \param type The type of the effect
+    /// \return A pointer on the effect
+    PostEffect * GetPostEffect(PostEffect::EType type);
+
+    /// \brief Enables or disable an effect
+    /// \param type The type of the effect
+    void SetEffectActive(PostEffect::EType type, bool bActive);
 
 private:
 
@@ -55,6 +63,15 @@ private:
     /// \brief Release the post processing stack
     void Release();
 
+    /// \brief Called at the begining of the frame
+    void OnPostProcessingBegin();
+
+    /// \brief Called to render effects
+    void OnPostProcessingRender();
+
+    /// \brief Called at the end of the frame
+    void OnPostProcessingEnd();
+
 private:
 
     uint m_postProcessVao;
@@ -67,7 +84,7 @@ private:
     // PostEffects stack
     PostEffect * m_stack[1];
 };
-    
+
 } // !namespace 
 
 #endif // !CARDINAL_ENGINE_POST_PROCESSING_STACK_HPP__

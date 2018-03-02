@@ -23,6 +23,7 @@
 
 // Engine
 #include "Runtime/Rendering/Lighting/Lighting.hh"
+#include "Runtime/Rendering/PostProcessing/PostEffects/Mirror.hpp"
 
 #include "ImGUI/imgui.h"
 
@@ -63,10 +64,13 @@ void PCG_Plugin::OnPlayStart()
     cardinal::DebugManager::EnableGizmo(cardinal::DebugManager::EGizmo::DirectionalLight);
 
     // Post-processing
-    cardinal::RenderingEngine::SetPostProcessingActive(false);
+    cardinal::RenderingEngine::SetPostProcessingActive(true);
     cardinal::RenderingEngine::IsPostProcessingActive();
 
     cardinal::PostProcessingStack * pPostProcessingStack = cardinal::RenderingEngine::GetPostProcessingStack();
+    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Mirror, true);
+
+    auto * pMirror = (cardinal::Mirror *)pPostProcessingStack->GetPostEffect(cardinal::PostEffect::EType::Mirror);
 
     // Setting up the game
     m_pWorld = m_worldGenerator.generateWorld();
