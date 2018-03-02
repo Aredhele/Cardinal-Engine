@@ -29,6 +29,7 @@
 
 #include "Runtime/Rendering/Context/Window.hpp"
 #include "Runtime/Rendering/Camera/Camera.hpp"
+#include "Runtime/Rendering/PostProcessing/PostProcessingStack.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -67,7 +68,7 @@ public:
     /// \param pManager The plugin manager pointer
     void SetPluginManager(class PluginManager * pManager);
 
-    /// TMP
+    /// Returns the projection matrix
     glm::mat4 const& GetProjectionMatrix();
 
 public:
@@ -100,6 +101,10 @@ public:
     /// \brief Tells if the post-processing is active or not
     /// \return True or false
     static bool IsPostProcessingActive();
+
+    /// \brief Returns a pointer on the post-processing stack
+    /// \return A pointer on the post-processing stack
+    static PostProcessingStack * GetPostProcessingStack();
 
 private:
 
@@ -143,15 +148,8 @@ private:
     std::vector<class IRenderer*> m_renderers;
 
     // Post-processing
-    bool m_bIsPostProcessingEnabled;
-    uint m_vao;
-    uint m_fbo;
-    uint m_rbo_depth;
-    uint m_fboTexture;
-    uint m_depthTexture;
-    uint m_fboVertices;
-    int  m_uniform;
-    int  m_uniform_d;
+    bool                m_bIsPostProcessingEnabled;
+    PostProcessingStack m_postProcessingStack;
 };
 
 } // !namespace

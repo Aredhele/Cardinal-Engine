@@ -66,6 +66,8 @@ void PCG_Plugin::OnPlayStart()
     cardinal::RenderingEngine::SetPostProcessingActive(false);
     cardinal::RenderingEngine::IsPostProcessingActive();
 
+    cardinal::PostProcessingStack * pPostProcessingStack = cardinal::RenderingEngine::GetPostProcessingStack();
+
     // Setting up the game
     m_pWorld = m_worldGenerator.generateWorld();
 

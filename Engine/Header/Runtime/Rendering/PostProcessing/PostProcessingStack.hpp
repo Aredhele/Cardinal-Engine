@@ -24,6 +24,8 @@
 #ifndef CARDINAL_ENGINE_POST_PROCESSING_STACK_HPP__
 #define CARDINAL_ENGINE_POST_PROCESSING_STACK_HPP__
 
+#include "Runtime/Platform/Configuration/Type.hh"
+
 /// \namespace cardinal
 namespace cardinal
 {
@@ -34,6 +36,31 @@ class PostProcessingStack
 {
 public:
 
+
+private:
+
+    friend class RenderingEngine;
+
+    /// \brief Constructor
+    PostProcessingStack();
+
+    /// \brief Destructor
+    ~PostProcessingStack();
+
+    /// \brief Initializes the post processing stack
+    void Initialize();
+
+    /// \brief Release the post processing stack
+    void Release();
+
+private:
+
+    uint m_postProcessVao;
+    uint m_postProcessFbo;
+    uint m_postProcessRbo;
+    uint m_postProcessQuadVbo;
+    uint m_postProcessTexture;
+    uint m_postProcessDepthTexture;
 };
     
 } // !namespace 
