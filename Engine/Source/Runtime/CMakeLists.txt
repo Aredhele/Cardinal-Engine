@@ -70,7 +70,8 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/PostProcessing/PostEffects/PostEffect.cpp
         Rendering/PostProcessing/PostEffects/Identity.cpp
         Rendering/PostProcessing/PostEffects/Mirror.cpp
-        Rendering/PostProcessing/PostEffects/Negative.cpp)
+        Rendering/PostProcessing/PostEffects/Negative.cpp
+        Rendering/PostProcessing/PostEffects/Sepia.cpp)
 
 # But tests depends on GTEST and GMOCK
 ADD_DEPENDENCIES(CardinalEngine glfw glew ResourcesCopy ImGUI)

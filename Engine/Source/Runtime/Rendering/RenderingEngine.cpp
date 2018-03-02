@@ -126,6 +126,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/PostProcessing/NegativeVertexShader.glsl",
             "Resources/Shaders/PostProcessing/NegativeFragmentShader.glsl"));
 
+    ShaderManager::Register("SepiaPostProcess", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/PostProcessing/SepiaVertexShader.glsl",
+            "Resources/Shaders/PostProcessing/SepiaFragmentShader.glsl"));
+
     // Debug
     DebugManager::Initialize();
 

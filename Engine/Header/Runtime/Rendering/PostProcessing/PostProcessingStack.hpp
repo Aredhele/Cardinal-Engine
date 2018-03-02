@@ -31,6 +31,7 @@
 #include "Runtime/Rendering/PostProcessing/PostEffects/Identity.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/Mirror.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/Negative.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/Sepia.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -93,7 +94,7 @@ private:
     uint m_postProcessTextureBuffer;
 
     // PostEffects stack
-    PostEffect * m_stack[3];
+    PostEffect * m_stack[4];
 };
 
 } // !namespace 
