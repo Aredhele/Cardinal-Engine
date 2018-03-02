@@ -139,8 +139,10 @@ private:
     uint m_fbo;
     uint m_rbo_depth;
     uint m_fboTexture;
+    uint m_depthTexture;
     uint m_fboVertices;
     int  m_uniform;
+    int  m_uniform_d;
 };
 
 } // !namespace

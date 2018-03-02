@@ -115,8 +115,8 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/Standard/StandardFragmentShader.glsl"));
 
     ShaderManager::Register("PostProcessing", ShaderCompiler::LoadShaders(
-            "Resources/Shaders/PostProcessing/vs_post.glsl",
-            "Resources/Shaders/PostProcessing/fs_post.glsl"));
+            "Resources/Shaders/PostProcessing/MirrorVertexShader.glsl",
+            "Resources/Shaders/PostProcessing/MirrorFragmentShader.glsl"));
 
     // Debug
     DebugManager::Initialize();
@@ -163,7 +163,6 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     m_fboTexture = 0;
     glGenTextures(1, &m_fboTexture);
     glBindTexture(GL_TEXTURE_2D, m_fboTexture);
-
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1600, 900, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 
     // Poor filtering. Needed !
@@ -176,11 +175,21 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1600, 900);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_rbo_depth);
 
+    m_depthTexture = 0;
+    glGenTextures(1, &m_depthTexture);
+    glBindTexture(GL_TEXTURE_2D, m_depthTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0,GL_DEPTH_COMPONENT24, 1600, 900, 0,GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
     glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_fboTexture, 0);
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,  m_depthTexture, 0);
 
     // Set the list of draw buffers.
-    GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
-    glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+    GLenum DrawBuffers[2] = {GL_COLOR_ATTACHMENT0, GL_DEPTH_ATTACHMENT};
+    glDrawBuffers(2, DrawBuffers); // "1" is the size of DrawBuffers
 
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     {
@@ -205,7 +214,8 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
     uint program = (uint)ShaderManager::GetShaderID("PostProcessing");
-    m_uniform = glGetUniformLocation(program, "fbo_texture");
+    m_uniform   = glGetUniformLocation(program, "fbo_texture");
+    m_uniform_d = glGetUniformLocation(program, "depth_texture");
 
     glBindVertexArray(0);
     // End post-processing
@@ -334,7 +344,11 @@ void RenderingEngine::RenderFrame(float step)
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_fboTexture);
-    glUniform1i(m_uniform, 0);
+    glUniform1i(m_uniform,   0);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, m_depthTexture);
+    glUniform1i(m_uniform_d, 1);
 
     glBindVertexArray(m_vao);
     glEnableVertexAttribArray(0);
