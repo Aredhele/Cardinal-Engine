@@ -36,7 +36,14 @@ Sharpen::Sharpen() : PostEffect(PostEffect::EType::Sharpen, "Sharpen")
     m_shaderID = (uint)ShaderManager::GetShaderID("SharpenPostProcess");
 
     // Getting uniforms
+    m_weightID       = glGetUniformLocation(m_shaderID, "weight");
     m_colorTextureID = glGetUniformLocation(m_shaderID, "colorTexture");
+
+    m_weight = 3;
+
+    glUseProgram(m_shaderID);
+    glUniform1i (m_weightID, m_weight);
+    glUseProgram(0);
 }
 
 /// \brief Destructor
@@ -60,7 +67,15 @@ void Sharpen::ApplyEffect(uint colorTexture, uint depthTexture)
 /// \brief Called to draw the gui
 void Sharpen::OnGUI()
 {
-    // TODO
+    ImGui::Checkbox("Enabled###Enabled_Sharpen", &m_bIsActive);
+
+    ImGui::Text("\nWeight");
+    if(ImGui::SliderInt("###Slider_SharpenWeight", &m_weight, 3, 10))
+    {
+        glUseProgram(m_shaderID);
+        glUniform1i (m_weightID, m_weight);
+        glUseProgram(0);
+    }
 }
 
 } // !namespace
