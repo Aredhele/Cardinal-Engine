@@ -150,6 +150,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/PostProcessing/GodRayVertexShader.glsl",
             "Resources/Shaders/PostProcessing/GodRayFragmentShader.glsl"));
 
+    ShaderManager::Register("LightScattering", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/Utils/LightScatteringVertexShader.glsl",
+            "Resources/Shaders/Utils/LightScatteringFragmentShader.glsl"));
+
     // Debug
     DebugManager::Initialize();
 
