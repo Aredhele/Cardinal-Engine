@@ -72,7 +72,8 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/PostProcessing/PostEffects/Mirror.cpp
         Rendering/PostProcessing/PostEffects/Negative.cpp
         Rendering/PostProcessing/PostEffects/Sepia.cpp
-        Rendering/PostProcessing/PostEffects/BoxBlur.cpp)
+        Rendering/PostProcessing/PostEffects/BoxBlur.cpp
+        Rendering/PostProcessing/PostEffects/GaussianBlur.cpp)
 
 # But tests depends on GTEST and GMOCK
 ADD_DEPENDENCIES(CardinalEngine glfw glew ResourcesCopy ImGUI)

@@ -33,6 +33,7 @@
 #include "Runtime/Rendering/PostProcessing/PostEffects/Negative.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/Sepia.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/BoxBlur.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/GaussianBlur.hpp"
 
 /// \namespace cardinal
 namespace cardinal

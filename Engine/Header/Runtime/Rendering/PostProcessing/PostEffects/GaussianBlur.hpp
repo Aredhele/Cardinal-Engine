@@ -30,9 +30,9 @@
 namespace cardinal
 {
 
-/// \class Identity
-/// \brief Draws a texture without deformations
-class Identity : public PostEffect
+/// \class GaussianBlur
+/// \brief Blurs an image with the gaussian blur
+class GaussianBlur : public PostEffect
 {
 public:
 
@@ -43,10 +43,10 @@ private:
     friend class PostProcessingStack;
 
     /// \brief Constructor
-    Identity();
+    GaussianBlur();
 
     /// \brief Destructor
-    ~Identity();
+    ~GaussianBlur();
 
     /// \brief Applies the effect from the given textures
     /// \param colorTexture The color texture
@@ -56,4 +56,4 @@ private:
 
 } // !namespace
 
-#endif // !CARDINAL_ENGINE_IDENTITY_HPP__
+#endif // !CARDINAL_ENGINE_GAUSSIAN_BLUR_HPP__

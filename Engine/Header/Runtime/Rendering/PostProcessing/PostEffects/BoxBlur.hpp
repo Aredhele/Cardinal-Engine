@@ -30,8 +30,8 @@
 namespace cardinal
 {
 
-/// \class Identity
-/// \brief Draws a texture without deformations
+/// \class BoxBlur
+/// \brief Blur an image with an non-weighted approach
 class BoxBlur : public PostEffect
 {
 public:
