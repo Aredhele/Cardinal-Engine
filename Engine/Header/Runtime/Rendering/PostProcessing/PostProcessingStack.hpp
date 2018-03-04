@@ -35,6 +35,7 @@
 #include "Runtime/Rendering/PostProcessing/PostEffects/BoxBlur.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/GaussianBlur.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/Sharpen.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/EdgeDetection.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -97,7 +98,7 @@ private:
     uint m_postProcessTextureBuffer;
 
     // PostEffects stack
-    PostEffect * m_stack[7];
+    PostEffect * m_stack[8];
 };
 
 } // !namespace 

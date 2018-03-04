@@ -15,46 +15,45 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       Sharpen.cpp
+/// \file       EdgeDetection.hpp
 /// \date       04/03/2018
 /// \project    Cardinal Engine
 /// \package    Runtime/Rendering/PostProcessing/PostEffects
 /// \author     Vincent STEHLY--CALISTO
 
-#include "Glew/include/GL/glew.h"
-#include "Runtime/Rendering/Shader/ShaderManager.hpp"
-#include "Runtime/Rendering/PostProcessing/PostEffects/Sharpen.hpp"
+#ifndef CARDINAL_ENGINE_EDGE_DETECTION_HPP__
+#define CARDINAL_ENGINE_EDGE_DETECTION_HPP__
+
+#include "Runtime/Rendering/PostProcessing/PostEffects/PostEffect.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \brief Constructor
-Sharpen::Sharpen() : PostEffect(PostEffect::EType::Sharpen, 6)
+/// \class EdgeDetection
+/// \brief Highlights edges
+class EdgeDetection : public PostEffect
 {
-    // Getting shader ...
-    m_shaderID = (uint)ShaderManager::GetShaderID("SharpenPostProcess");
+public:
 
-    // Getting uniforms
-    m_colorTextureID = glGetUniformLocation(m_shaderID, "colorTexture");
-}
-
-/// \brief Destructor
-Sharpen::~Sharpen() // NOLINT
-{
     // None
-}
 
-/// \brief Applies the effect from the given textures
-/// \param colorTexture The color texture
-/// \param depthTexture The depth buffer texture
-void Sharpen::ApplyEffect(uint colorTexture, uint depthTexture)
-{
-    glUseProgram   (m_shaderID);
+private:
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture  (GL_TEXTURE_2D, colorTexture);
-    glUniform1i    (m_colorTextureID, 0);
-}
+    friend class PostProcessingStack;
+
+    /// \brief Constructor
+    EdgeDetection();
+
+    /// \brief Destructor
+    ~EdgeDetection();
+
+    /// \brief Applies the effect from the given textures
+    /// \param colorTexture The color texture
+    /// \param depthTexture The depth buffer texture
+    void ApplyEffect(uint colorTexture, uint depthTexture) final;
+};
 
 } // !namespace
+
+#endif // !CARDINAL_ENGINE_EDGE_DETECTION_HPP__

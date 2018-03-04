@@ -142,6 +142,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/PostProcessing/SharpenVertexShader.glsl",
             "Resources/Shaders/PostProcessing/SharpenFragmentShader.glsl"));
 
+    ShaderManager::Register("EdgeDetectionPostProcess", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/PostProcessing/EdgeDetectionVertexShader.glsl",
+            "Resources/Shaders/PostProcessing/EdgeDetectionFragmentShader.glsl"));
+
     // Debug
     DebugManager::Initialize();
 

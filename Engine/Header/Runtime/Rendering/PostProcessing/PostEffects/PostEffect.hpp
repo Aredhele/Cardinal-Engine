@@ -46,6 +46,7 @@ public:
         BoxBlur,
         GaussianBlur,
         Sharpen,
+        EdgeDetection
     };
 
 protected:

@@ -15,7 +15,7 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       Sharpen.cpp
+/// \file       EdgeDetection.cpp
 /// \date       04/03/2018
 /// \project    Cardinal Engine
 /// \package    Runtime/Rendering/PostProcessing/PostEffects
@@ -23,24 +23,24 @@
 
 #include "Glew/include/GL/glew.h"
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
-#include "Runtime/Rendering/PostProcessing/PostEffects/Sharpen.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/EdgeDetection.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
 /// \brief Constructor
-Sharpen::Sharpen() : PostEffect(PostEffect::EType::Sharpen, 6)
+EdgeDetection::EdgeDetection() : PostEffect(PostEffect::EType::EdgeDetection, 7)
 {
     // Getting shader ...
-    m_shaderID = (uint)ShaderManager::GetShaderID("SharpenPostProcess");
+    m_shaderID = (uint)ShaderManager::GetShaderID("EdgeDetectionPostProcess");
 
     // Getting uniforms
     m_colorTextureID = glGetUniformLocation(m_shaderID, "colorTexture");
 }
 
 /// \brief Destructor
-Sharpen::~Sharpen() // NOLINT
+EdgeDetection::~EdgeDetection() // NOLINT
 {
     // None
 }
@@ -48,7 +48,7 @@ Sharpen::~Sharpen() // NOLINT
 /// \brief Applies the effect from the given textures
 /// \param colorTexture The color texture
 /// \param depthTexture The depth buffer texture
-void Sharpen::ApplyEffect(uint colorTexture, uint depthTexture)
+void EdgeDetection::ApplyEffect(uint colorTexture, uint depthTexture)
 {
     glUseProgram   (m_shaderID);
 
