@@ -21,6 +21,7 @@
 /// \package    Runtime/Rendering/PostProcessing/PostEffects
 /// \author     Vincent STEHLY--CALISTO
 
+#include <ThirdParty/Glm/glm/vec3.hpp>
 #include "Glew/include/GL/glew.h"
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/Sepia.hpp"
@@ -37,6 +38,16 @@ Sepia::Sepia() : PostEffect(PostEffect::EType::Sepia, "Sepia")
 
     // Getting uniforms
     m_colorTextureID = glGetUniformLocation(m_shaderID, "colorTexture");
+    m_thresholdID    = glGetUniformLocation(m_shaderID, "threshold");
+    m_toneID         = glGetUniformLocation(m_shaderID, "tone");
+
+    m_threshold = 0.25f;
+    m_tone      = glm::vec4(0.3686, 0.1490, 0.0705, 1.0f);
+
+    glUseProgram(m_shaderID);
+    glUniform1f (m_thresholdID, m_threshold);
+    glUniform3f (m_toneID, m_tone.x, m_tone.y, m_tone.z);
+    glUseProgram(0);
 }
 
 /// \brief Destructor
@@ -60,7 +71,23 @@ void Sepia::ApplyEffect(uint colorTexture, uint depthTexture)
 /// \brief Called to draw the gui
 void Sepia::OnGUI()
 {
-    // TODO
+    ImGui::Checkbox("Enabled###Enabled_Sepia", &m_bIsActive);
+
+    ImGui::Text("\nThreshold");
+    if(ImGui::SliderFloat("###Threshold_Sepia", &m_threshold, 0.0f, 1.0f, "Threshold = %.3f"))
+    {
+        glUseProgram(m_shaderID);
+        glUniform1f (m_thresholdID, m_threshold);
+        glUseProgram(0);
+    }
+
+    ImGui::Text("\nTone");
+    if(ImGui::ColorEdit4("###Tone_Sepia", &m_tone[0]))
+    {
+        glUseProgram(m_shaderID);
+        glUniform3f (m_toneID, m_tone.x, m_tone.y, m_tone.z);
+        glUseProgram(0);
+    }
 }
 
 } // !namespace

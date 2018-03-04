@@ -40,11 +40,13 @@ Mirror::Mirror() : PostEffect(PostEffect::EType::Mirror, "Mirror")
     m_mirrorXID      = glGetUniformLocation(m_shaderID, "bMirrorX");
     m_mirrorYID      = glGetUniformLocation(m_shaderID, "bMirrorY");
 
-    glUniform1i(m_mirrorXID, 0);
-    glUniform1i(m_mirrorYID, 0);
-
     m_mirrorX = false;
     m_mirrorY = false;
+
+    glUseProgram(m_shaderID);
+    glUniform1i (m_mirrorXID, 0);
+    glUniform1i (m_mirrorYID, 0);
+    glUseProgram(0);
 }
 
 /// \brief Destructor

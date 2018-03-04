@@ -24,6 +24,7 @@
 #ifndef CARDINAL_ENGINE_SEPIA_HPP__
 #define CARDINAL_ENGINE_SEPIA_HPP__
 
+#include "Glm/glm/glm.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/PostEffect.hpp"
 
 /// \namespace cardinal
@@ -55,6 +56,14 @@ private:
 
     /// \brief Called to draw the GUI
     void OnGUI() final;
+
+private:
+
+    float     m_threshold;
+    glm::vec4 m_tone;
+
+    int   m_toneID;
+    int   m_thresholdID;
 };
 
 } // !namespace

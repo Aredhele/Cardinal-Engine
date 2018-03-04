@@ -8,15 +8,11 @@ out vec3 color;
 
 // Uniform
 uniform sampler2D colorTexture;
+uniform float     threshold;
+uniform vec3      tone;
 
 void main(void)
 {
-    // Sepia tone
-    vec3 sepia = vec3(0.3686, 0.1490, 0.0705);
-
-    // Threshold
-    float threshold = 0.25f;
-
     // Fragment gray scale
     vec3 _color = texture2D(colorTexture, textureUV).rgb;
     float gray = dot(_color, vec3(0.299, 0.587, 0.114));
@@ -24,14 +20,14 @@ void main(void)
     if(gray < threshold)
     {
         float divide = gray / threshold;
-        color.x = divide * sepia.x;
-        color.y = divide * sepia.y;
-        color.z = divide * sepia.z;
+        color.x = divide * tone.x;
+        color.y = divide * tone.y;
+        color.z = divide * tone.z;
     }
     else
     {
-        color.x = gray * (1 - sepia.x) + sepia.x;
-        color.y = gray * (1 - sepia.y) + sepia.y;
-        color.z = gray * (1 - sepia.z) + sepia.z;
+        color.x = gray * (1 - tone.x) + tone.x;
+        color.y = gray * (1 - tone.y) + tone.y;
+        color.z = gray * (1 - tone.z) + tone.z;
     }
 }
