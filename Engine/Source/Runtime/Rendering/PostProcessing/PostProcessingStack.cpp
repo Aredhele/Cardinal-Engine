@@ -27,6 +27,10 @@
 #include "Runtime/Core/Debug/Logger.hpp"
 #include "Runtime/Rendering/PostProcessing/PostProcessingStack.hpp"
 
+#include "ImGUI/imgui.h"
+#include "ImGUI/imgui_impl_glfw_gl3.h"
+#include "ImGUI/imgui_internal.h"
+
 /// \namespace cardinal
 namespace cardinal
 {
@@ -134,17 +138,18 @@ void PostProcessingStack::Initialize()
         Logger::LogError("Error while creating the post-processing buffers");
     }
 
-    m_stack[0] = new Identity();
-    m_stack[1] = new Mirror();
-    m_stack[2] = new Negative();
-    m_stack[3] = new Sepia();
-    m_stack[4] = new BoxBlur();
-    m_stack[5] = new GaussianBlur();
-    m_stack[6] = new Sharpen();
-    m_stack[7] = new EdgeDetection();
-    m_stack[8] = new DepthBuffer();
-    m_stack[9] = new GodRay();
+    m_stack.push_back(new Identity());
+    m_stack.push_back(new Mirror());
+    m_stack.push_back(new Negative());
+    m_stack.push_back(new Sepia());
+    m_stack.push_back(new BoxBlur());
+    m_stack.push_back(new GaussianBlur());
+    m_stack.push_back(new Sharpen());
+    m_stack.push_back(new EdgeDetection());
+    m_stack.push_back(new DepthBuffer());
+    m_stack.push_back(new GodRay());
 
+    m_postProcessWindow = true;
     Logger::LogInfo("Post-processing stack successfully initialized");
 }
 
@@ -172,7 +177,8 @@ void PostProcessingStack::OnPostProcessingRender()
     glFramebufferTexture2D(GL_FRAMEBUFFER , GL_COLOR_ATTACHMENT0 , GL_TEXTURE_2D, m_postProcessTextureBuffer, 0);
 
     // Processing the stack
-    for(int nEffect = 1; nEffect < 10; ++nEffect) // NOLINT
+    int effectCount = static_cast<int>(m_stack.size());    // NOLINT
+    for(int nEffect = 0; nEffect < effectCount; ++nEffect) // NOLINT
     {
         if(m_stack[nEffect]->IsActive())
         {
@@ -230,7 +236,8 @@ void PostProcessingStack::OnPostProcessingEnd()
 PostEffect * PostProcessingStack::GetPostEffect(PostEffect::EType type)
 {
     PostEffect * pEffect = nullptr;
-    for(int nEffect = 0; nEffect < 10; ++nEffect) // NOLINT
+    int effectCount = static_cast<int>(m_stack.size());    // NOLINT
+    for(int nEffect = 0; nEffect < effectCount; ++nEffect) // NOLINT
     {
         if(m_stack[nEffect]->m_type == type)
         {
@@ -246,13 +253,32 @@ PostEffect * PostProcessingStack::GetPostEffect(PostEffect::EType type)
 /// \param type The type of the effect
 void PostProcessingStack::SetEffectActive(PostEffect::EType type, bool bActive)
 {
-    for(int nEffect = 0; nEffect < 10; ++nEffect) // NOLINT
+    int effectCount = static_cast<int>(m_stack.size());    // NOLINT
+    for(int nEffect = 0; nEffect < effectCount; ++nEffect) // NOLINT
     {
         if(m_stack[nEffect]->m_type == type)
         {
             m_stack[nEffect]->SetActive(bActive);
         }
     }
+}
+
+/// \brief Called to draw a small GUI to tweak post effects
+void PostProcessingStack::OnGUI()
+{
+    ImGui::Begin       ("Post Processing Stack", &m_postProcessWindow);
+    ImGui::SetWindowPos("Post Processing Stack", ImVec2(270.0f, 10.0f));
+
+    int effectCount = static_cast<int>(m_stack.size());    // NOLINT
+    for(int nEffect = 0; nEffect < effectCount; ++nEffect) // NOLINT
+    {
+        if (ImGui::CollapsingHeader(m_stack[nEffect]->GetName().c_str()))
+        {
+            m_stack[nEffect]->OnGUI();
+        }
+    }
+
+    ImGui::End();
 }
 
 } // !namespace

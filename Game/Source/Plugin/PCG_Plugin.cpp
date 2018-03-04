@@ -68,6 +68,7 @@ void PCG_Plugin::OnPlayStart()
     cardinal::RenderingEngine::IsPostProcessingActive();
 
     cardinal::PostProcessingStack * pPostProcessingStack = cardinal::RenderingEngine::GetPostProcessingStack();
+    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Identity,      false);
     pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Mirror,        false);
     pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Negative,      false);
     pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Sepia,         false);
@@ -76,7 +77,7 @@ void PCG_Plugin::OnPlayStart()
     pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Sharpen,       false);
     pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::EdgeDetection, false);
     pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::DepthBuffer ,  false);
-    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::GodRay ,       true);
+    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::GodRay ,       false);
 
     // auto * pMirror   = (cardinal::Mirror   *)pPostProcessingStack->GetPostEffect(cardinal::PostEffect::EType::Mirror);
     // auto * pNegative = (cardinal::Negative *)pPostProcessingStack->GetPostEffect(cardinal::PostEffect::EType::Negative);

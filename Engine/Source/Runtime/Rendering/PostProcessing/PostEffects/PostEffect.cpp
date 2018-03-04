@@ -29,16 +29,22 @@ namespace cardinal
 
 /// \brief Constructor
 /// \param type The type of the effect
-/// \param slot The slot
-PostEffect::PostEffect(PostEffect::EType type, uint slot)
+/// \param name The name of the post-effect
+PostEffect::PostEffect(PostEffect::EType type, std::string const& name)
 {
     m_type      = type;
     m_bIsActive = false;
-    m_slot      = slot;
+    m_name      = name;
     m_shaderID  = 0;
 
     m_colorTextureID = -1;
     m_depthTextureID = -1;
+}
+
+/// \brief Returns the name of the post effect
+std::string const& PostEffect::GetName() const
+{
+    return m_name;
 }
 
 /// \brief Enables or disable the effect

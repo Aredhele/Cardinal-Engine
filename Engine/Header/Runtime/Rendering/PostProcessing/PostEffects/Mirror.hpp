@@ -50,6 +50,16 @@ private:
     /// \param colorTexture The color texture
     /// \param depthTexture The depth buffer texture
     void ApplyEffect(uint colorTexture, uint depthTexture) final;
+
+    /// \brief Called to draw the GUI
+    void OnGUI() final;
+
+private:
+
+    bool m_mirrorX;
+    bool m_mirrorY;
+    int  m_mirrorXID;
+    int  m_mirrorYID;
 };
 
 } // !namespace

@@ -24,7 +24,12 @@
 #ifndef CARDINAL_ENGINE_POST_EFFECT_HPP__
 #define CARDINAL_ENGINE_POST_EFFECT_HPP__
 
+#include <string>
 #include "Runtime/Platform/Configuration/Type.hh"
+
+#include "ImGUI/imgui.h"
+#include "ImGUI/imgui_impl_glfw_gl3.h"
+#include "ImGUI/imgui_internal.h"
 
 /// \namespace cardinal
 namespace cardinal
@@ -51,14 +56,17 @@ public:
         GodRay
     };
 
+    /// \brief Returns the name of the post effect
+    std::string const& GetName() const;
+
 protected:
 
     friend class PostProcessingStack;
 
     /// \brief Constructor
     /// \param type The type of the effect
-    /// \param slot The slot
-    PostEffect(EType type, uint slot);
+    /// \param name The name of the post-effect
+    PostEffect(EType type, std::string const& name);
 
     /// \brief Enables or disable the effect
     /// \param bActive The new state
@@ -73,12 +81,15 @@ protected:
     /// \param depthTexture The depth buffer texture
     virtual void ApplyEffect(uint colorTexture, uint depthTexture) = 0;
 
+    /// \brief Called to display the GUI
+    virtual void OnGUI() = 0;
+
 protected:
 
-    EType m_type;
-    bool  m_bIsActive;
+    EType       m_type;
+    bool        m_bIsActive;
+    std::string m_name;
 
-    uint  m_slot;
     uint  m_shaderID;
     int   m_colorTextureID;
     int   m_depthTextureID;

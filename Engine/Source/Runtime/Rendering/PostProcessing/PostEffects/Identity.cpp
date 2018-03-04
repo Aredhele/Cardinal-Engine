@@ -30,7 +30,7 @@ namespace cardinal
 {
 
 /// \brief Constructor
-Identity::Identity() : PostEffect(PostEffect::EType::Identity, 0)
+Identity::Identity() : PostEffect(PostEffect::EType::Identity, "Identity")
 {
     // Getting shader ...
     m_shaderID = (uint)ShaderManager::GetShaderID("IdentityPostProcess");
@@ -55,6 +55,12 @@ void Identity::ApplyEffect(uint colorTexture, uint depthTexture)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture  (GL_TEXTURE_2D, colorTexture);
     glUniform1i    (m_colorTextureID, 0);
+}
+
+/// \brief Called to draw the GUI
+void Identity::OnGUI()
+{
+    ImGui::Checkbox("Enabled###Enabled_Identity", &m_bIsActive);
 }
 
 } // !namespace

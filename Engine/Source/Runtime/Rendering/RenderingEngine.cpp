@@ -250,6 +250,7 @@ void RenderingEngine::RenderFrame(float step)
     // Triggering ImGUI
     ImGui_ImplGlfwGL3_NewFrame();
     m_pPluginManager->OnGUI();
+    m_postProcessingStack.OnGUI();
 
     // Gets the projection matrix
     glm::mat4 Projection     = m_projectionMatrix;

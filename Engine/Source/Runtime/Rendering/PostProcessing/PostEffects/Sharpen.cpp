@@ -30,7 +30,7 @@ namespace cardinal
 {
 
 /// \brief Constructor
-Sharpen::Sharpen() : PostEffect(PostEffect::EType::Sharpen, 6)
+Sharpen::Sharpen() : PostEffect(PostEffect::EType::Sharpen, "Sharpen")
 {
     // Getting shader ...
     m_shaderID = (uint)ShaderManager::GetShaderID("SharpenPostProcess");
@@ -55,6 +55,12 @@ void Sharpen::ApplyEffect(uint colorTexture, uint depthTexture)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture  (GL_TEXTURE_2D, colorTexture);
     glUniform1i    (m_colorTextureID, 0);
+}
+
+/// \brief Called to draw the gui
+void Sharpen::OnGUI()
+{
+    // TODO
 }
 
 } // !namespace

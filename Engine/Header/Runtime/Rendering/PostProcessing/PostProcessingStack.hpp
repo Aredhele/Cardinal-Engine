@@ -83,6 +83,9 @@ private:
     /// \brief Called at the end of the frame
     void OnPostProcessingEnd();
 
+    /// \brief Called to draw a small GUI to tweak post effects
+    void OnGUI();
+
 private:
 
     // QUAD
@@ -100,7 +103,10 @@ private:
     uint m_postProcessTextureBuffer;
 
     // PostEffects stack
-    PostEffect * m_stack[10];
+    std::vector <PostEffect *> m_stack;
+
+    // ImGUI
+    bool m_postProcessWindow;
 };
 
 } // !namespace 

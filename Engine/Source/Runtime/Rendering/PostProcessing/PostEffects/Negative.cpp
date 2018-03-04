@@ -30,7 +30,7 @@ namespace cardinal
 {
 
 /// \brief Constructor
-Negative::Negative() : PostEffect(PostEffect::EType::Negative, 2)
+Negative::Negative() : PostEffect(PostEffect::EType::Negative, "Negative")
 {
     // Getting shader ...
     m_shaderID = (uint)ShaderManager::GetShaderID("NegativePostProcess");
@@ -55,6 +55,12 @@ void Negative::ApplyEffect(uint colorTexture, uint depthTexture)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture  (GL_TEXTURE_2D, colorTexture);
     glUniform1i    (m_colorTextureID, 0);
+}
+
+/// \brief Called to draw the gui
+void Negative::OnGUI()
+{
+    ImGui::Checkbox("Enabled###Enabled_Negative", &m_bIsActive);
 }
 
 } // !namespace

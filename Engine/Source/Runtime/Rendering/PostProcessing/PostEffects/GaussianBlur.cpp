@@ -30,7 +30,7 @@ namespace cardinal
 {
 
 /// \brief Constructor
-GaussianBlur::GaussianBlur() : PostEffect(PostEffect::EType::GaussianBlur, 5)
+GaussianBlur::GaussianBlur() : PostEffect(PostEffect::EType::GaussianBlur, "Gaussian blur")
 {
     // Getting shader ...
     m_shaderID = (uint)ShaderManager::GetShaderID("GaussianBlurPostProcess");
@@ -55,6 +55,12 @@ void GaussianBlur::ApplyEffect(uint colorTexture, uint depthTexture)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture  (GL_TEXTURE_2D, colorTexture);
     glUniform1i    (m_colorTextureID, 0);
+}
+
+/// \brief Called to draw the GUI
+void GaussianBlur::OnGUI()
+{
+    // TODO
 }
 
 } // !namespace

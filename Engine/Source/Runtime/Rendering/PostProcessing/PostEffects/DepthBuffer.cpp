@@ -30,7 +30,7 @@ namespace cardinal
 {
 
 /// \brief Constructor
-DepthBuffer::DepthBuffer() : PostEffect(PostEffect::EType::DepthBuffer, 8)
+DepthBuffer::DepthBuffer() : PostEffect(PostEffect::EType::DepthBuffer, "Depth buffer")
 {
     // Getting shader ...
     m_shaderID = (uint)ShaderManager::GetShaderID("DepthBufferPostProcess");
@@ -60,6 +60,12 @@ void DepthBuffer::ApplyEffect(uint colorTexture, uint depthTexture)
     glActiveTexture(GL_TEXTURE1);
     glBindTexture  (GL_TEXTURE_2D, depthTexture);
     glUniform1i    (m_depthTextureID, 1);
+}
+
+/// \brief Called to display the GUI
+void DepthBuffer::OnGUI()
+{
+    // TODO
 }
 
 } // !namespace

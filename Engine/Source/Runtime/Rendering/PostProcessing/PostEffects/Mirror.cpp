@@ -20,7 +20,7 @@
 /// \project    Cardinal Engine
 /// \package    Runtime/Rendering/PostProcessing/PostEffects
 /// \author     Vincent STEHLY--CALISTO
-
+#include <iostream>
 #include "Glew/include/GL/glew.h"
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/Mirror.hpp"
@@ -30,14 +30,21 @@ namespace cardinal
 {
 
 /// \brief Constructor
-Mirror::Mirror() : PostEffect(PostEffect::EType::Mirror, 1)
+Mirror::Mirror() : PostEffect(PostEffect::EType::Mirror, "Mirror")
 {
     // Getting shader ...
     m_shaderID = (uint)ShaderManager::GetShaderID("MirrorPostProcess");
 
     // Getting uniforms
     m_colorTextureID = glGetUniformLocation(m_shaderID, "colorTexture");
-    m_depthTextureID = glGetUniformLocation(m_shaderID, "depthTexture");
+    m_mirrorXID      = glGetUniformLocation(m_shaderID, "bMirrorX");
+    m_mirrorYID      = glGetUniformLocation(m_shaderID, "bMirrorY");
+
+    glUniform1i(m_mirrorXID, 0);
+    glUniform1i(m_mirrorYID, 0);
+
+    m_mirrorX = false;
+    m_mirrorY = false;
 }
 
 /// \brief Destructor
@@ -49,17 +56,33 @@ Mirror::~Mirror() // NOLINT
 /// \brief Applies the effect from the given textures
 /// \param colorTexture The color texture
 /// \param depthTexture The depth buffer texture
-void cardinal::Mirror::ApplyEffect(uint colorTexture, uint depthTexture)
+void Mirror::ApplyEffect(uint colorTexture, uint depthTexture)
 {
     glUseProgram   (m_shaderID);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture  (GL_TEXTURE_2D, colorTexture);
     glUniform1i    (m_colorTextureID, 0);
+}
 
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture  (GL_TEXTURE_2D, depthTexture);
-    glUniform1i    (m_depthTextureID, 1);
+/// \brief Called to draw the GUI
+void Mirror::OnGUI()
+{
+    ImGui::Checkbox("Enabled###Enabled_Mirror", &m_bIsActive);
+
+    if(ImGui::Checkbox("Mirror X", &m_mirrorX))
+    {
+        glUseProgram   (m_shaderID);
+        if(m_mirrorX) glUniform1i(m_mirrorXID, 1);
+        else          glUniform1i(m_mirrorXID, 0);
+    }
+
+    if(ImGui::Checkbox("Mirror Y", &m_mirrorY))
+    {
+        glUseProgram   (m_shaderID);
+        if(m_mirrorY) glUniform1i(m_mirrorYID, 1);
+        else          glUniform1i(m_mirrorYID, 0);
+    }
 }
 
 } // !namespace

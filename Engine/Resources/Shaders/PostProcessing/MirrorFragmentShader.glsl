@@ -9,15 +9,14 @@ out vec3 color;
 // Uniform
 uniform sampler2D colorTexture;
 uniform sampler2D depthTexture;
+uniform bool      bMirrorX;
+uniform bool      bMirrorY;
 
 void main(void)
 {
-    // X mirror
     vec2 coord = textureUV;
-    if(coord.x > 0.5)
-    {
-        coord.x = 1 - coord.x;
-    }
+    if(bMirrorX && coord.x > 0.5) coord.x = 1 - coord.x;
+    if(bMirrorY && coord.y > 0.5) coord.y = 1 - coord.y;
 
     color = texture2D(colorTexture, coord).rgb;
 }

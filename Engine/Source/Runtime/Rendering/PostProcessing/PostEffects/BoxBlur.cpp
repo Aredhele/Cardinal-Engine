@@ -30,7 +30,7 @@ namespace cardinal
 {
 
 /// \brief Constructor
-BoxBlur::BoxBlur() : PostEffect(PostEffect::EType::BoxBlur, 4)
+BoxBlur::BoxBlur() : PostEffect(PostEffect::EType::BoxBlur, "Box blur")
 {
     // Getting shader ...
     m_shaderID = (uint)ShaderManager::GetShaderID("BoxBlurPostProcess");
@@ -55,6 +55,12 @@ void BoxBlur::ApplyEffect(uint colorTexture, uint depthTexture)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture  (GL_TEXTURE_2D, colorTexture);
     glUniform1i    (m_colorTextureID, 0);
+}
+
+/// \brief Called to display the GUI
+void BoxBlur::OnGUI()
+{
+
 }
 
 } // !namespace

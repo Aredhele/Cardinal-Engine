@@ -30,7 +30,7 @@ namespace cardinal
 {
 
 /// \brief Constructor
-EdgeDetection::EdgeDetection() : PostEffect(PostEffect::EType::EdgeDetection, 7)
+EdgeDetection::EdgeDetection() : PostEffect(PostEffect::EType::EdgeDetection, "Edge detection")
 {
     // Getting shader ...
     m_shaderID = (uint)ShaderManager::GetShaderID("EdgeDetectionPostProcess");
@@ -55,6 +55,12 @@ void EdgeDetection::ApplyEffect(uint colorTexture, uint depthTexture)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture  (GL_TEXTURE_2D, colorTexture);
     glUniform1i    (m_colorTextureID, 0);
+}
+
+/// \brief Called to display the GUI
+void EdgeDetection::OnGUI()
+{
+    // TODO
 }
 
 } // !namespace

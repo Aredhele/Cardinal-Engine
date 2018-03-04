@@ -30,7 +30,7 @@ namespace cardinal
 {
 
 /// \brief Constructor
-Sepia::Sepia() : PostEffect(PostEffect::EType::Sepia, 3)
+Sepia::Sepia() : PostEffect(PostEffect::EType::Sepia, "Sepia")
 {
     // Getting shader ...
     m_shaderID = (uint)ShaderManager::GetShaderID("SepiaPostProcess");
@@ -55,6 +55,12 @@ void Sepia::ApplyEffect(uint colorTexture, uint depthTexture)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture  (GL_TEXTURE_2D, colorTexture);
     glUniform1i    (m_colorTextureID, 0);
+}
+
+/// \brief Called to draw the gui
+void Sepia::OnGUI()
+{
+    // TODO
 }
 
 } // !namespace

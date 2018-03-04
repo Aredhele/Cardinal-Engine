@@ -30,7 +30,7 @@ namespace cardinal
 {
 
 /// \brief Constructor
-GodRay::GodRay() : PostEffect(PostEffect::EType::GodRay, 9)
+GodRay::GodRay() : PostEffect(PostEffect::EType::GodRay, "God ray")
 {
     // Getting shader ...
     m_shaderID = (uint)ShaderManager::GetShaderID("GodRayPostProcess");
@@ -60,6 +60,12 @@ void GodRay::ApplyEffect(uint colorTexture, uint depthTexture)
     glActiveTexture(GL_TEXTURE1);
     glBindTexture  (GL_TEXTURE_2D, depthTexture);
     glUniform1i    (m_depthTextureID, 1);
+}
+
+/// \brief Called to draw the GUI
+void GodRay::OnGUI()
+{
+    // TODO
 }
 
 } // !namespace

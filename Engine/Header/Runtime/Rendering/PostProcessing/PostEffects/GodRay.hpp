@@ -52,6 +52,9 @@ private:
     /// \param colorTexture The color texture
     /// \param depthTexture The depth buffer texture
     void ApplyEffect(uint colorTexture, uint depthTexture) final;
+
+    /// \brief Called to draw the GUI
+    void OnGUI() final;
 };
 
 } // !namespace
