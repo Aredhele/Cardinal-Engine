@@ -36,7 +36,14 @@ GaussianBlur::GaussianBlur() : PostEffect(PostEffect::EType::GaussianBlur, "Gaus
     m_shaderID = (uint)ShaderManager::GetShaderID("GaussianBlurPostProcess");
 
     // Getting uniforms
+    m_intensityID    = glGetUniformLocation(m_shaderID, "intensity");
     m_colorTextureID = glGetUniformLocation(m_shaderID, "colorTexture");
+
+    m_intensity = 1.0f;
+
+    glUseProgram(m_shaderID);
+    glUniform1f (m_intensityID, m_intensity);
+    glUseProgram(0);
 }
 
 /// \brief Destructor
@@ -60,7 +67,15 @@ void GaussianBlur::ApplyEffect(uint colorTexture, uint depthTexture)
 /// \brief Called to draw the GUI
 void GaussianBlur::OnGUI()
 {
-    // TODO
+    ImGui::Checkbox("Enabled###Enabled_GaussianBlur", &m_bIsActive);
+
+    ImGui::Text("\nIntensity");
+    if(ImGui::SliderFloat("###Slider_GaussianBlurIntensity", &m_intensity, 0.0f, 10.0f))
+    {
+        glUseProgram(m_shaderID);
+        glUniform1f (m_intensityID, m_intensity);
+        glUseProgram(0);
+    }
 }
 
 } // !namespace

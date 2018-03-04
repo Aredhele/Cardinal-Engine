@@ -55,6 +55,11 @@ private:
 
     /// \brief Called to display the GUI
     void OnGUI() final;
+
+private:
+
+    int m_intensity;
+    int m_intesityID;
 };
 
 } // !namespace

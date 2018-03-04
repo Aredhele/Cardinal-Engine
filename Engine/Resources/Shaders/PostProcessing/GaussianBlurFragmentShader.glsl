@@ -7,16 +7,15 @@ in vec2 textureUV;
 out vec3 color;
 
 // Uniform
+uniform float     intensity;
 uniform sampler2D colorTexture;
 
 void main(void)
 {
-    float sigma = 1.0f;
     float g;
     float sum = 0;
     vec3 fColor = vec3(0.0f, 0.0f, 0.0f);
     vec2 offset = vec2(1.0f / 1600.0f, 1.0f / 900.0f);
-    float blur_intensity = 5.0f;
     float M[25];
     for(int u = 0; u < 5; ++u)
     {
@@ -24,12 +23,11 @@ void main(void)
         {
             float uc = u - 2;
             float vc = v - 2;
-            g = exp(-(uc*uc+vc*vc)/(2*blur_intensity*blur_intensity));
+            g = exp(-(uc*uc+vc*vc)/(2*intensity*intensity));
             sum += g;
             M[u * 5 + v] = g;
         }
     }
-
 
     for(int u = 0; u < 5 ; u++)
     {

@@ -37,6 +37,12 @@ BoxBlur::BoxBlur() : PostEffect(PostEffect::EType::BoxBlur, "Box blur")
 
     // Getting uniforms
     m_colorTextureID = glGetUniformLocation(m_shaderID, "colorTexture");
+    m_intesityID     = glGetUniformLocation(m_shaderID, "intensity");
+    m_intensity      = 3;
+
+    glUseProgram(m_shaderID);
+    glUniform1i (m_intesityID, m_intensity);
+    glUseProgram(0);
 }
 
 /// \brief Destructor
@@ -60,7 +66,21 @@ void BoxBlur::ApplyEffect(uint colorTexture, uint depthTexture)
 /// \brief Called to display the GUI
 void BoxBlur::OnGUI()
 {
+    ImGui::Checkbox("Enabled###Enabled_BoxBlur", &m_bIsActive);
 
+    ImGui::Text("\nIntensity");
+    if(ImGui::SliderInt("###Slider_BoxBlurIntensity", &m_intensity, 3, 20))
+    {
+        int _intensity = m_intensity;
+        if((_intensity & 1) == 0)
+        {
+            _intensity++;
+        }
+
+        glUseProgram(m_shaderID);
+        glUniform1i (m_intesityID, _intensity);
+        glUseProgram(0);
+    }
 }
 
 } // !namespace

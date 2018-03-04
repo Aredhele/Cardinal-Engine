@@ -8,21 +8,23 @@ out vec3 color;
 
 // Uniform
 uniform sampler2D colorTexture;
+uniform int       intensity;
 
 void main(void)
 {
     vec3 fColor = vec3(0.0f, 0.0f, 0.0f);
     vec2 offset = vec2(1.0f / 1600.0f, 1.0f / 900.0f);
 
-    for(int u = 0; u < 5; ++u)
+    int middle = intensity / 2;
+    for(int u = 0; u < intensity; ++u)
     {
-        for(int v = 0; v < 5; ++v)
+        for(int v = 0; v < intensity; ++v)
         {
-            float oX = (u - 2) * offset.x;
-            float oY = (v - 2) * offset.y;
+            float oX = (u - middle) * offset.x;
+            float oY = (v - middle) * offset.y;
             fColor += texture2D(colorTexture, vec2(textureUV.x + oX, textureUV.y + oY)).rgb;
         }
     }
 
-    color = fColor / 25;
+    color = fColor / (intensity * intensity);
 }
