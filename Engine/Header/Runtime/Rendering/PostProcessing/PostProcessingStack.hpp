@@ -32,6 +32,7 @@
 #include "Runtime/Rendering/PostProcessing/PostEffects/Mirror.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/Negative.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/Sepia.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/BoxBlur.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -94,7 +95,7 @@ private:
     uint m_postProcessTextureBuffer;
 
     // PostEffects stack
-    PostEffect * m_stack[4];
+    PostEffect * m_stack[6];
 };
 
 } // !namespace 

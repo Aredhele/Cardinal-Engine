@@ -15,32 +15,32 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       Identity.cpp
-/// \date       02/03/2018
+/// \file       BoxBlur.cpp
+/// \date       04/03/2018
 /// \project    Cardinal Engine
 /// \package    Runtime/Rendering/PostProcessing/PostEffects
 /// \author     Vincent STEHLY--CALISTO
 
 #include "Glew/include/GL/glew.h"
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
-#include "Runtime/Rendering/PostProcessing/PostEffects/Identity.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/BoxBlur.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
 /// \brief Constructor
-Identity::Identity() : PostEffect(PostEffect::EType::Identity, 0)
+BoxBlur::BoxBlur() : PostEffect(PostEffect::EType::BoxBlur, 4)
 {
     // Getting shader ...
-    m_shaderID = (uint)ShaderManager::GetShaderID("IdentityPostProcess");
+    m_shaderID = (uint)ShaderManager::GetShaderID("BoxBlurPostProcess");
 
     // Getting uniforms
     m_colorTextureID = glGetUniformLocation(m_shaderID, "colorTexture");
 }
 
 /// \brief Destructor
-Identity::~Identity() // NOLINT
+BoxBlur::~BoxBlur() // NOLINT
 {
     // None
 }
@@ -48,7 +48,7 @@ Identity::~Identity() // NOLINT
 /// \brief Applies the effect from the given textures
 /// \param colorTexture The color texture
 /// \param depthTexture The depth buffer texture
-void Identity::ApplyEffect(uint colorTexture, uint depthTexture)
+void BoxBlur::ApplyEffect(uint colorTexture, uint depthTexture)
 {
     glUseProgram   (m_shaderID);
 

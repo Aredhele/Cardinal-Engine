@@ -130,6 +130,14 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/PostProcessing/SepiaVertexShader.glsl",
             "Resources/Shaders/PostProcessing/SepiaFragmentShader.glsl"));
 
+    ShaderManager::Register("BoxBlurPostProcess", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/PostProcessing/BoxBlurVertexShader.glsl",
+            "Resources/Shaders/PostProcessing/BoxBlurFragmentShader.glsl"));
+
+    ShaderManager::Register("GaussianBlurPostProcess", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/PostProcessing/GaussianBlurVertexShader.glsl",
+            "Resources/Shaders/PostProcessing/GaussianBlurFragmentShader.glsl"));
+
     // Debug
     DebugManager::Initialize();
 

@@ -68,9 +68,10 @@ void PCG_Plugin::OnPlayStart()
     cardinal::RenderingEngine::IsPostProcessingActive();
 
     cardinal::PostProcessingStack * pPostProcessingStack = cardinal::RenderingEngine::GetPostProcessingStack();
-    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Mirror,   true);
+    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Mirror,   false);
     pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Negative, false);
     pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Sepia,    true);
+    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::BoxBlur,  false);
 
     // auto * pMirror   = (cardinal::Mirror   *)pPostProcessingStack->GetPostEffect(cardinal::PostEffect::EType::Mirror);
     // auto * pNegative = (cardinal::Negative *)pPostProcessingStack->GetPostEffect(cardinal::PostEffect::EType::Negative);

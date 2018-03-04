@@ -138,6 +138,7 @@ void PostProcessingStack::Initialize()
     m_stack[1] = new Mirror();
     m_stack[2] = new Negative();
     m_stack[3] = new Sepia();
+    m_stack[4] = new BoxBlur();
 
     Logger::LogInfo("Post-processing stack successfully initialized");
 }
@@ -166,7 +167,7 @@ void PostProcessingStack::OnPostProcessingRender()
     glFramebufferTexture2D(GL_FRAMEBUFFER , GL_COLOR_ATTACHMENT0 , GL_TEXTURE_2D, m_postProcessTextureBuffer, 0);
 
     // Processing the stack
-    for(int nEffect = 1; nEffect < 4; ++nEffect) // NOLINT
+    for(int nEffect = 1; nEffect < 5; ++nEffect) // NOLINT
     {
         if(m_stack[nEffect]->IsActive())
         {
@@ -224,7 +225,7 @@ void PostProcessingStack::OnPostProcessingEnd()
 PostEffect * PostProcessingStack::GetPostEffect(PostEffect::EType type)
 {
     PostEffect * pEffect = nullptr;
-    for(int nEffect = 0; nEffect < 4; ++nEffect) // NOLINT
+    for(int nEffect = 0; nEffect < 5; ++nEffect) // NOLINT
     {
         if(m_stack[nEffect]->m_type == type)
         {
@@ -240,7 +241,7 @@ PostEffect * PostProcessingStack::GetPostEffect(PostEffect::EType type)
 /// \param type The type of the effect
 void PostProcessingStack::SetEffectActive(PostEffect::EType type, bool bActive)
 {
-    for(int nEffect = 0; nEffect < 4; ++nEffect) // NOLINT
+    for(int nEffect = 0; nEffect < 5; ++nEffect) // NOLINT
     {
         if(m_stack[nEffect]->m_type == type)
         {
