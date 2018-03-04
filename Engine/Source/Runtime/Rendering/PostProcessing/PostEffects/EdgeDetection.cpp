@@ -36,7 +36,14 @@ EdgeDetection::EdgeDetection() : PostEffect(PostEffect::EType::EdgeDetection, "E
     m_shaderID = (uint)ShaderManager::GetShaderID("EdgeDetectionPostProcess");
 
     // Getting uniforms
+    m_weightID       = glGetUniformLocation(m_shaderID, "weight");
     m_colorTextureID = glGetUniformLocation(m_shaderID, "colorTexture");
+
+    m_weight = 8;
+
+    glUseProgram(m_shaderID);
+    glUniform1i (m_weightID, m_weight);
+    glUseProgram(0);
 }
 
 /// \brief Destructor
@@ -60,7 +67,15 @@ void EdgeDetection::ApplyEffect(uint colorTexture, uint depthTexture)
 /// \brief Called to display the GUI
 void EdgeDetection::OnGUI()
 {
-    // TODO
+    ImGui::Checkbox("Enabled###Enabled_EdgeDetection", &m_bIsActive);
+
+    ImGui::Text("\nWeight");
+    if(ImGui::SliderInt("###Slider_EdgeDetectuinWeight", &m_weight, 8, 12))
+    {
+        glUseProgram(m_shaderID);
+        glUniform1i (m_weightID, m_weight);
+        glUseProgram(0);
+    }
 }
 
 } // !namespace

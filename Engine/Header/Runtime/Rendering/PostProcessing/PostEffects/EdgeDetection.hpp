@@ -55,6 +55,11 @@ private:
 
     /// \brief Called to display the GUI
     void OnGUI() final;
+
+private:
+
+    int m_weight;
+    int m_weightID;
 };
 
 } // !namespace
