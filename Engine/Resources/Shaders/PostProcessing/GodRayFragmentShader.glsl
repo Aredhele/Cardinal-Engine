@@ -10,6 +10,10 @@ out vec3 color;
 uniform sampler2D colorTexture;
 uniform sampler2D depthTexture;
 
+uniform float     decay;
+uniform float     intensity;
+uniform int       sampleCount;
+
 float LinearizeDepth(in vec2 uv)
 {
     float zNear = 0.1f;
@@ -20,16 +24,15 @@ float LinearizeDepth(in vec2 uv)
 
 void main(void)
 {
-    int Samples = 128;
-    float Intensity = 0.125, Decay = 0.96875;
     vec2 TexCoord = textureUV, Direction = vec2(0.5) - textureUV;
-    Direction /= Samples;
+    Direction /= sampleCount;
     vec3 Color = texture2D(colorTexture, textureUV).rgb;
 
-    for(int Sample = 0; Sample < Samples; Sample++)
+    float _intensity = intensity;
+    for(int Sample = 0; Sample < sampleCount; Sample++)
     {
-        Color += texture2D(colorTexture, TexCoord).rgb * Intensity;
-        Intensity *= Decay;
+        Color += texture2D(colorTexture, TexCoord).rgb * _intensity;
+        _intensity *= decay;
         TexCoord += Direction;
     }
 

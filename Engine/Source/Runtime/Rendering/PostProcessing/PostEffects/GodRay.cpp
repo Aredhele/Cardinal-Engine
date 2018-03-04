@@ -38,6 +38,20 @@ GodRay::GodRay() : PostEffect(PostEffect::EType::GodRay, "God ray")
     // Getting uniforms
     m_colorTextureID = glGetUniformLocation(m_shaderID, "colorTexture");
     m_depthTextureID = glGetUniformLocation(m_shaderID, "depthTexture");
+
+    m_decayID       = glGetUniformLocation(m_shaderID, "decay");
+    m_intensityID   = glGetUniformLocation(m_shaderID, "intensity");
+    m_sampleCountID = glGetUniformLocation(m_shaderID, "sampleCount");
+
+    m_decay       = 0.96875f;
+    m_intensity   = 0.125f;
+    m_sampleCount = 128;
+
+    glUseProgram(m_shaderID);
+    glUniform1f (m_decayID, m_decay);
+    glUniform1f (m_intensityID, m_intensity);
+    glUniform1i (m_sampleCountID, m_sampleCount);
+    glUseProgram(0);
 }
 
 /// \brief Destructor
@@ -65,7 +79,31 @@ void GodRay::ApplyEffect(uint colorTexture, uint depthTexture)
 /// \brief Called to draw the GUI
 void GodRay::OnGUI()
 {
-    // TODO
+    ImGui::Checkbox("Enabled###Enabled_GodRay", &m_bIsActive);
+
+    ImGui::Text("\nIntensity");
+    if(ImGui::SliderFloat("###Intensity_GodRay", &m_intensity, 0.0f, 0.4f, "Intensity = %.3f"))
+    {
+        glUseProgram(m_shaderID);
+        glUniform1f (m_intensityID, m_intensity);
+        glUseProgram(0);
+    }
+
+    ImGui::Text("\nDecay");
+    if(ImGui::SliderFloat("###Decay_GodRay", &m_decay, 0.8, 1, "Decay = %.3f"))
+    {
+        glUseProgram(m_shaderID);
+        glUniform1f (m_decayID, m_decay);
+        glUseProgram(0);
+    }
+
+    ImGui::Text("\nSamples");
+    if(ImGui::SliderInt("###Samples_GodRay", &m_sampleCount, 0, 500))
+    {
+        glUseProgram(m_shaderID);
+        glUniform1i (m_sampleCountID, m_sampleCount);
+        glUseProgram(0);
+    }
 }
 
 } // !namespace

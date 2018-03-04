@@ -55,6 +55,16 @@ private:
 
     /// \brief Called to draw the GUI
     void OnGUI() final;
+
+private:
+
+    float m_decay;
+    float m_intensity;
+    int   m_sampleCount;
+
+    int m_decayID;
+    int m_intensityID;
+    int m_sampleCountID;
 };
 
 } // !namespace
