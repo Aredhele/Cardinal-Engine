@@ -139,6 +139,7 @@ void PostProcessingStack::Initialize()
     }
 
     m_stack.push_back(new Identity());
+    m_stack.push_back(new DepthBuffer());
     m_stack.push_back(new Mirror());
     m_stack.push_back(new Negative());
     m_stack.push_back(new Sepia());
@@ -146,7 +147,6 @@ void PostProcessingStack::Initialize()
     m_stack.push_back(new GaussianBlur());
     m_stack.push_back(new Sharpen());
     m_stack.push_back(new EdgeDetection());
-    m_stack.push_back(new DepthBuffer());
     m_stack.push_back(new GodRay());
 
     m_postProcessWindow = true;

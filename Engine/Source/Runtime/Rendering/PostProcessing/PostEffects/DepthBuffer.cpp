@@ -65,7 +65,7 @@ void DepthBuffer::ApplyEffect(uint colorTexture, uint depthTexture)
 /// \brief Called to display the GUI
 void DepthBuffer::OnGUI()
 {
-    // TODO
+    ImGui::Checkbox("Enabled###Enabled_DepthBuffer", &m_bIsActive);
 }
 
 } // !namespace
