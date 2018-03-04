@@ -15,75 +15,45 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       PostEffect.hpp
-/// \date       02/03/2018
+/// \file       GodRay.hpp
+/// \date       04/03/2018
 /// \project    Cardinal Engine
 /// \package    Runtime/Rendering/PostProcessing/PostEffects
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_POST_EFFECT_HPP__
-#define CARDINAL_ENGINE_POST_EFFECT_HPP__
+#ifndef CARDINAL_ENGINE_GOD_RAY_HPP__
+#define CARDINAL_ENGINE_GOD_RAY_HPP__
 
-#include "Runtime/Platform/Configuration/Type.hh"
+#include "Runtime/Rendering/PostProcessing/PostEffects/PostEffect.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \class PostEffect
-/// \brief
-class PostEffect
+/// \class GodRay
+/// \brief Volumetric light beam
+class GodRay : public PostEffect
 {
 public:
 
-    /// \enum The type of the post-effect
-    enum EType
-    {
-        Identity,
-        Mirror,
-        Negative,
-        Sepia,
-        BoxBlur,
-        GaussianBlur,
-        Sharpen,
-        EdgeDetection,
-        DepthBuffer,
-        GodRay
-    };
+    // None
 
-protected:
+private:
 
     friend class PostProcessingStack;
 
     /// \brief Constructor
-    /// \param type The type of the effect
-    /// \param slot The slot
-    PostEffect(EType type, uint slot);
+    GodRay();
 
-    /// \brief Enables or disable the effect
-    /// \param bActive The new state
-    void SetActive(bool bActive);
-
-    /// \brief Tells if the effect is active
-    /// \return True or false
-    bool IsActive() const;
+    /// \brief Destructor
+    ~GodRay();
 
     /// \brief Applies the effect from the given textures
     /// \param colorTexture The color texture
     /// \param depthTexture The depth buffer texture
-    virtual void ApplyEffect(uint colorTexture, uint depthTexture) = 0;
-
-protected:
-
-    EType m_type;
-    bool  m_bIsActive;
-
-    uint  m_slot;
-    uint  m_shaderID;
-    int   m_colorTextureID;
-    int   m_depthTextureID;
+    void ApplyEffect(uint colorTexture, uint depthTexture) final;
 };
 
 } // !namespace
 
-#endif // !CARDINAL_ENGINE_POST_EFFECT_HPP__
+#endif // !CARDINAL_ENGINE_GOD_RAY_HPP__

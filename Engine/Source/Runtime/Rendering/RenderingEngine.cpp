@@ -150,6 +150,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/PostProcessing/DepthBufferVertexShader.glsl",
             "Resources/Shaders/PostProcessing/DepthBufferFragmentShader.glsl"));
 
+    ShaderManager::Register("GodRayPostProcess", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/PostProcessing/GodRayVertexShader.glsl",
+            "Resources/Shaders/PostProcessing/GodRayFragmentShader.glsl"));
+
     // Debug
     DebugManager::Initialize();
 
