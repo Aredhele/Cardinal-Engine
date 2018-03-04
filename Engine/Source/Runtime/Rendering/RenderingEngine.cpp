@@ -146,6 +146,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/PostProcessing/EdgeDetectionVertexShader.glsl",
             "Resources/Shaders/PostProcessing/EdgeDetectionFragmentShader.glsl"));
 
+    ShaderManager::Register("DepthBufferPostProcess", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/PostProcessing/DepthBufferVertexShader.glsl",
+            "Resources/Shaders/PostProcessing/DepthBufferFragmentShader.glsl"));
+
     // Debug
     DebugManager::Initialize();
 

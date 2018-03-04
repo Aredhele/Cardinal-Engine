@@ -142,6 +142,7 @@ void PostProcessingStack::Initialize()
     m_stack[5] = new GaussianBlur();
     m_stack[6] = new Sharpen();
     m_stack[7] = new EdgeDetection();
+    m_stack[8] = new DepthBuffer();
 
     Logger::LogInfo("Post-processing stack successfully initialized");
 }
@@ -170,7 +171,7 @@ void PostProcessingStack::OnPostProcessingRender()
     glFramebufferTexture2D(GL_FRAMEBUFFER , GL_COLOR_ATTACHMENT0 , GL_TEXTURE_2D, m_postProcessTextureBuffer, 0);
 
     // Processing the stack
-    for(int nEffect = 1; nEffect < 8; ++nEffect) // NOLINT
+    for(int nEffect = 1; nEffect < 9; ++nEffect) // NOLINT
     {
         if(m_stack[nEffect]->IsActive())
         {
@@ -228,7 +229,7 @@ void PostProcessingStack::OnPostProcessingEnd()
 PostEffect * PostProcessingStack::GetPostEffect(PostEffect::EType type)
 {
     PostEffect * pEffect = nullptr;
-    for(int nEffect = 0; nEffect < 8; ++nEffect) // NOLINT
+    for(int nEffect = 0; nEffect < 9; ++nEffect) // NOLINT
     {
         if(m_stack[nEffect]->m_type == type)
         {
@@ -244,7 +245,7 @@ PostEffect * PostProcessingStack::GetPostEffect(PostEffect::EType type)
 /// \param type The type of the effect
 void PostProcessingStack::SetEffectActive(PostEffect::EType type, bool bActive)
 {
-    for(int nEffect = 0; nEffect < 8; ++nEffect) // NOLINT
+    for(int nEffect = 0; nEffect < 9; ++nEffect) // NOLINT
     {
         if(m_stack[nEffect]->m_type == type)
         {
