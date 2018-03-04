@@ -82,6 +82,12 @@ void Engine::GameLoop()
     double lag      = 0.0;
     double previous = glfwGetTime();
 
+    double pluginsTimer = 0.0;
+    double startPlugin  = 0.0;
+
+    double renderingTimer = 0.0;
+    double startRendering = 0.0f;
+
     // Game starts
     m_pluginManager.OnPlayStart();
 
@@ -100,20 +106,30 @@ void Engine::GameLoop()
         while(lag >= SECONDS_PER_UPDATE)
         {
             // Pre-update
+            startPlugin = glfwGetTime();
             m_pluginManager.OnPreUpdate();
-
-            // Engine update
-            // TODO
+            pluginsTimer += (glfwGetTime() - startPlugin);
 
             // Post-update
+            startPlugin = glfwGetTime();
             m_pluginManager.OnPostUpdate((float)SECONDS_PER_UPDATE);
+            pluginsTimer += (glfwGetTime() - startPlugin);
 
             // Retrieve elapsed time
             lag -= SECONDS_PER_UPDATE;
         }
 
+
+        startRendering = glfwGetTime();
+
         // Rendering the frame
         m_renderingEngine.Render((float)(lag / SECONDS_PER_UPDATE));
+        renderingTimer = (glfwGetTime() - startRendering);
+
+        m_renderingEngine.UpdateEngineTime(0.0f, (float)renderingTimer, (float)pluginsTimer);
+
+        pluginsTimer   = 0.0;
+        renderingTimer = 0.0;
     }
 
     // Game stops

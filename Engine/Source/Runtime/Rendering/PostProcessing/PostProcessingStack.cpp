@@ -266,8 +266,9 @@ void PostProcessingStack::SetEffectActive(PostEffect::EType type, bool bActive)
 /// \brief Called to draw a small GUI to tweak post effects
 void PostProcessingStack::OnGUI()
 {
-    ImGui::Begin       ("Post Processing Stack", &m_postProcessWindow);
-    ImGui::SetWindowPos("Post Processing Stack", ImVec2(270.0f, 10.0f));
+    ImGui::Begin        ("Post Processing Stack", &m_postProcessWindow);
+    ImGui::SetWindowPos ("Post Processing Stack", ImVec2(270.0f, 10.0f));
+    ImGui::SetWindowSize("Post Processing Stack", ImVec2(250.0f, 455.0f));
 
     int effectCount = static_cast<int>(m_stack.size());    // NOLINT
     for(int nEffect = 0; nEffect < effectCount; ++nEffect) // NOLINT
@@ -279,6 +280,19 @@ void PostProcessingStack::OnGUI()
     }
 
     ImGui::End();
+}
+
+/// \brief Returns the current count of active shader
+int PostProcessingStack::GetActivePostProcessShaders() const
+{
+    int sum = 0;
+    int effectCount = static_cast<int>(m_stack.size());    // NOLINT
+    for(int nEffect = 0; nEffect < effectCount; ++nEffect) // NOLINT
+    {
+       if(m_stack[nEffect]->IsActive()) sum++;
+    }
+
+    return sum;
 }
 
 } // !namespace

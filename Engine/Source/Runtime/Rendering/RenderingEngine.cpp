@@ -47,10 +47,6 @@
 #include "Runtime/Rendering/Lighting/Lights/PointLight.hpp"
 #include "Runtime/Rendering/Lighting/Lights/DirectionalLight.hpp"
 
-#include "ImGUI/imgui.h"
-#include "ImGUI/imgui_impl_glfw_gl3.h"
-#include "ImGUI/imgui_internal.h"
-
 /// \namespace cardinal
 namespace cardinal
 {
@@ -181,6 +177,7 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     m_fpsCounter   = 0;
     s_pInstance    = this;
     m_debugWindow  = true;
+    m_debugTime    = true;
     m_triangleCounter = 0;
     m_triangleSecond  = 0;
     m_currentTriangle = 0;
@@ -452,8 +449,9 @@ void RenderingEngine::DisplayDebugWindow(float step)
 {
     if (m_debugWindow)
     {
-        ImGui::Begin       ("Cardinal debug", &m_debugWindow);
-        ImGui::SetWindowPos("Cardinal debug", ImVec2(10.0f, 10.0f));
+        ImGui::Begin        ("Cardinal debug", &m_debugWindow);
+        ImGui::SetWindowPos ("Cardinal debug", ImVec2(10.0f, 10.0f));
+        ImGui::SetWindowSize("Cardinal debug", ImVec2(250.0f, 455.0f));
 
         // Header
         ImGuiContext & context = *ImGui::GetCurrentContext();
@@ -498,6 +496,10 @@ void RenderingEngine::DisplayDebugWindow(float step)
         ImGui::Text("Tri/f : %llu", m_currentTriangle);
         ImGui::Text("Tri/s : %llu", m_triangleSecond);
 
+        // Post-processing
+        ImGui::Text("\nPost-processing");
+        ImGui::Text("Active shaders : %d", m_postProcessingStack.GetActivePostProcessShaders());
+
         // Camera
         glm::vec3 const& position  = m_pCamera->GetPosition();
         glm::vec3 const& direction = m_pCamera->GetDirection();
@@ -507,6 +509,40 @@ void RenderingEngine::DisplayDebugWindow(float step)
 
         ImGui::End();
     }
+
+    if(m_debugTime)
+    {
+        ImGui::Begin        ("Engine debug",   &m_debugTime);
+        ImGui::SetWindowPos ("Engine debug",   ImVec2(530.0f, 10.0f));
+        ImGui::SetWindowSize("Engine debug", ImVec2(640.0f, 50.0f));
+
+        // Computes percentage
+        float timeSum = m_renderingTime + m_audioTime + m_pluginTime;
+
+        float renderingPercent = (m_renderingTime / timeSum) * 100.0f;
+        float audioPercent     = (m_audioTime     / timeSum) * 100.0f;
+        float pluginPercent    = (m_pluginTime    / timeSum) * 100.0f;
+
+        if(renderingPercent >= 99.0f)
+        {
+            renderingPercent = 100.0f;
+        }
+
+        ImGui::Text("Rendering %lf (%.2lf %)\t Audio %lf (%.2lf %)\t Plugins %lf (%.2lf %)",
+                    m_renderingTime, renderingPercent,
+                    m_audioTime,     audioPercent,
+                    m_pluginTime,    pluginPercent);
+
+        ImGui::End();
+    }
+}
+
+/// \brief Updates the values of the time passed into other engine parts
+void RenderingEngine::UpdateEngineTime(float audioTime, float renderingTime, float pluginTime)
+{
+    m_audioTime     = audioTime;
+    m_pluginTime    = pluginTime;
+    m_renderingTime = renderingTime;
 }
 
 } // !namespace

@@ -86,6 +86,10 @@ private:
     /// \brief Called to draw a small GUI to tweak post effects
     void OnGUI();
 
+    /// \brief Returns the current count of active shader
+    /// \return The count of active shaders
+    int GetActivePostProcessShaders() const;
+
 private:
 
     // QUAD

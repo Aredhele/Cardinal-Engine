@@ -68,6 +68,9 @@ public:
     /// \param pManager The plugin manager pointer
     void SetPluginManager(class PluginManager * pManager);
 
+    /// \brief Updates the values of the time passed into other engine parts
+    void UpdateEngineTime(float audioTime, float renderingTime, float pluginTime);
+
     /// Returns the projection matrix
     glm::mat4 const& GetProjectionMatrix();
 
@@ -127,6 +130,7 @@ private:
     class PluginManager * m_pPluginManager;
 
     bool m_debugWindow;
+    bool m_debugTime;
     bool m_bInterpolate;
 
     double m_frameDelta;
@@ -136,6 +140,10 @@ private:
     double m_previousTime;
     double m_currentFps;
     double m_elapsedTime;
+
+    float m_audioTime;
+    float m_pluginTime;
+    float m_renderingTime;
 
     uint64_t  m_fpsCounter;
     uint64_t  m_frameCount;
