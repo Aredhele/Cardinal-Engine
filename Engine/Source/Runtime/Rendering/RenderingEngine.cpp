@@ -138,6 +138,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/PostProcessing/GaussianBlurVertexShader.glsl",
             "Resources/Shaders/PostProcessing/GaussianBlurFragmentShader.glsl"));
 
+    ShaderManager::Register("SharpenPostProcess", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/PostProcessing/SharpenVertexShader.glsl",
+            "Resources/Shaders/PostProcessing/SharpenFragmentShader.glsl"));
+
     // Debug
     DebugManager::Initialize();
 

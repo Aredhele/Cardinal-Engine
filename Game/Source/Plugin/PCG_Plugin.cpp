@@ -72,7 +72,8 @@ void PCG_Plugin::OnPlayStart()
     pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Negative,     false);
     pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Sepia,        true);
     pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::BoxBlur,      false);
-    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::GaussianBlur, true);
+    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::GaussianBlur, false);
+    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Sharpen,      true);
 
     // auto * pMirror   = (cardinal::Mirror   *)pPostProcessingStack->GetPostEffect(cardinal::PostEffect::EType::Mirror);
     // auto * pNegative = (cardinal::Negative *)pPostProcessingStack->GetPostEffect(cardinal::PostEffect::EType::Negative);
