@@ -56,6 +56,7 @@ public:
         GodRay,
         LightScattering,
         Bloom,
+        Vignette,
         Experimental1,
         Experimental2
     };
