@@ -40,6 +40,8 @@
 #include "Runtime/Rendering/PostProcessing/PostEffects/GodRay.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/LightScattering.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/Bloom.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/Experimental/Experimental1.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/Experimental/Experimental2.hpp"
 
 /// \namespace cardinal
 namespace cardinal

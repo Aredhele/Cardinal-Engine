@@ -55,7 +55,9 @@ public:
         DepthBuffer,
         GodRay,
         LightScattering,
-        Bloom
+        Bloom,
+        Experimental1,
+        Experimental2
     };
 
     /// \brief Returns the name of the post effect

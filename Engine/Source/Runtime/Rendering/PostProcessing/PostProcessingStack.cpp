@@ -150,6 +150,8 @@ void PostProcessingStack::Initialize()
     m_stack.push_back(new EdgeDetection());
     m_stack.push_back(new GodRay());
     m_stack.push_back(new Bloom());
+    m_stack.push_back(new Experimental1());
+    m_stack.push_back(new Experimental2());
 
     m_postProcessWindow = true;
     Logger::LogInfo("Post-processing stack successfully initialized");

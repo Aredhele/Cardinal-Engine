@@ -158,6 +158,14 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/PostProcessing/BloomVertexShader.glsl",
             "Resources/Shaders/PostProcessing/BloomFragmentShader.glsl"));
 
+    ShaderManager::Register("Experimental1PostProcess", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/PostProcessing/Experimental/ExperimentalVertexShader_1.glsl",
+            "Resources/Shaders/PostProcessing/Experimental/ExperimentalFragmentShader_1.glsl"));
+
+    ShaderManager::Register("Experimental2PostProcess", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/PostProcessing/Experimental/ExperimentalVertexShader_2.glsl",
+            "Resources/Shaders/PostProcessing/Experimental/ExperimentalFragmentShader_2.glsl"));
+
     // Debug
     DebugManager::Initialize();
 
