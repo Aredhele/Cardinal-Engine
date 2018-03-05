@@ -165,7 +165,8 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     glFrontFace(GL_CCW);
 
     // TODO : Makes clear color configurable
-    glClearColor(0.0f, 0.709f, 0.866f, 1.0f);
+    m_clearColor = glm::vec3(0.0f, 0.709f, 0.866f);
+    glClearColor(m_clearColor.x, m_clearColor.y, m_clearColor.z, 1.0f);
 
     // TODO : Removes magic values
     m_projectionMatrix = glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 10000.0f);
@@ -188,6 +189,25 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     m_bIsPostProcessingEnabled = false;
 
     m_postProcessingStack.Initialize();
+
+    // Initializing light scattering frame buffer
+    glGenFramebuffers(1, &m_lightScatteringFbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_lightScatteringFbo);
+
+    glGenTextures  (1, &m_lightScatteringTexture);
+    glBindTexture  (GL_TEXTURE_2D, m_lightScatteringTexture);
+    glTexImage2D   (GL_TEXTURE_2D, 0, GL_RGB, 1600, 900, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_lightScatteringTexture, 0);
+
+    // Attaching the list of buffers to draw
+    GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+    glDrawBuffers(1, DrawBuffers);
+
+    // Re-bind physical buffer
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // Initializes ImGUI
     ImGui::CreateContext();
@@ -275,7 +295,62 @@ void RenderingEngine::RenderFrame(float step)
     // Post-processing begin
     if(m_bIsPostProcessingEnabled)
     {
-        m_postProcessingStack.OnPostProcessingBegin();
+        uint lightScatteringID = (uint)ShaderManager::GetShaderID("LightScattering");
+
+        glUseProgram(lightScatteringID);
+        int colorLocation  = glGetUniformLocation(lightScatteringID, "fragmentColor");
+        int matrixLocation = glGetUniformLocation(lightScatteringID, "MVP");
+
+        // Light scattering pass begin
+        glBindFramebuffer(GL_FRAMEBUFFER, m_lightScatteringFbo);
+
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(m_clearColor.x, m_clearColor.y, m_clearColor.z, 1.0f);
+
+        glViewport(0, 0, 1600, 900);
+
+        // Light scattering pass
+        if(pLight != nullptr)
+        {
+            glm::mat4 model = glm::scale(pLight->m_model, glm::vec3(10.0f, 10.0f, 10.0f));
+            glm::mat4 MVP   = ProjectionView * model;
+
+            glUniform3f       (colorLocation,  1.0f, 1.0f, 1.0f);
+            glUniformMatrix4fv(matrixLocation, 1, GL_FALSE, &MVP[0][0]);
+
+            glBindVertexArray(pLight->m_vao);
+            glEnableVertexAttribArray(0);
+
+            glDrawArrays(GL_TRIANGLES, 0, pLight->m_elementsCount);
+
+            glBindVertexArray(0);
+        }
+
+        glUniform3f       (colorLocation,  0.0f, 0.0f, 0.0f);
+
+        size_t rendererCount = m_renderers.size();
+        for (int nRenderer = 0; nRenderer < rendererCount; ++nRenderer)
+        {
+            // m_triangleCounter += m_renderers[nRenderer]->GetElementCount();
+            // m_currentTriangle += m_renderers[nRenderer]->GetElementCount();
+
+            glm::mat4 MVP  = ProjectionView * m_renderers[nRenderer]->m_model;
+
+            glUniformMatrix4fv(matrixLocation, 1, GL_FALSE, &MVP[0][0]);
+
+            glBindVertexArray(m_renderers[nRenderer]->m_vao);
+            glEnableVertexAttribArray(0);
+
+            glDrawElements(GL_TRIANGLES, m_renderers[nRenderer]->m_elementsCount, GL_UNSIGNED_SHORT, nullptr);
+
+            glBindVertexArray(0);
+        }
+
+        // Light scattering pass end
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        m_postProcessingStack.OnPostProcessingBegin(m_lightScatteringTexture);
     }
     else
     {

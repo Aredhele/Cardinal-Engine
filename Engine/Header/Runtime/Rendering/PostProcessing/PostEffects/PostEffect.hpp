@@ -53,7 +53,8 @@ public:
         Sharpen,
         EdgeDetection,
         DepthBuffer,
-        GodRay
+        GodRay,
+        LightScattering
     };
 
     /// \brief Returns the name of the post effect

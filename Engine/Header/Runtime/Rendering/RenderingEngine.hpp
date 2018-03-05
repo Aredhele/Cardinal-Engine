@@ -153,7 +153,12 @@ private:
     glm::mat4 m_projectionMatrix;
 
     // Rendering objects
+    glm::vec3                     m_clearColor;
     std::vector<class IRenderer*> m_renderers;
+
+    // Light scattering
+    uint m_lightScatteringFbo;
+    uint m_lightScatteringTexture;
 
     // Post-processing
     bool                m_bIsPostProcessingEnabled;

@@ -15,37 +15,28 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       IRenderer.cpp
-/// \date       18/02/2018
+/// \file       Cube.hpp
+/// \date       05/03/2018
 /// \project    Cardinal Engine
-/// \package    Runtime/Rendering/Renderer
+/// \package    Runtime/Rendering/Mesh
 /// \author     Vincent STEHLY--CALISTO
 
-#include "Runtime/Rendering/Renderer/IRenderer.hpp"
+#ifndef CARDINAL_ENGINE_CUBE_HPP__
+#define CARDINAL_ENGINE_CUBE_HPP__
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \brief Constructor
-IRenderer::IRenderer()
-: m_vao(0)
-, m_pShader(nullptr)
-, m_elementsCount(0)
+/// \class Cube
+/// \brief Vertices of a cube
+class Cube
 {
-    m_model = glm::mat4(1.0f);
-}
+public:
 
-/// \brief Returns the position of the renderer
-glm::vec3 const &IRenderer::GetPosition() const
-{
-    return m_position;
-}
-
-/// \brief Returns the count of element to be draw
-int IRenderer::GetElementCount() const
-{
-    return m_elementsCount;
-}
+    static const float s_vertices[108];
+};
 
 } // !namespace
+
+#endif // !CARDINAL_ENGINE_CUBE_HPP__

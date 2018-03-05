@@ -24,7 +24,9 @@
 #ifndef CARDINAL_ENGINE_DIRECTIONAL_LIGHT_HPP__
 #define CARDINAL_ENGINE_DIRECTIONAL_LIGHT_HPP__
 
+#include "Glm/glm/glm.hpp"
 #include "Glm/glm/vec3.hpp"
+#include "Runtime/Platform/Configuration/Type.hh"
 
 /// \namespace cardinal
 namespace cardinal
@@ -96,6 +98,8 @@ private:
 
 private:
 
+    friend class RenderingEngine;
+
     float     m_lightIntensity;
     float     m_ambientIntensity;
 
@@ -103,6 +107,12 @@ private:
     glm::vec3 m_ambientColor;
     glm::vec3 m_position;
     glm::vec3 m_direction;
+
+    // Mesh
+    uint      m_vao;
+    uint      m_vbo;
+    glm::mat4 m_model;
+    int       m_elementsCount;
 };
 
 } // !namespace 

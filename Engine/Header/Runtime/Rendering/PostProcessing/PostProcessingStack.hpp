@@ -38,6 +38,7 @@
 #include "Runtime/Rendering/PostProcessing/PostEffects/EdgeDetection.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/DepthBuffer.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/GodRay.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/LightScattering.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -74,8 +75,8 @@ private:
     /// \brief Release the post processing stack
     void Release();
 
-    /// \brief Called at the begining of the frame
-    void OnPostProcessingBegin();
+    /// \brief Called at the beginning of the frame
+    void OnPostProcessingBegin(uint lightScatteringTextureID);
 
     /// \brief Called to render effects
     void OnPostProcessingRender();
@@ -108,6 +109,9 @@ private:
 
     // PostEffects stack
     std::vector <PostEffect *> m_stack;
+
+    // Light scattering
+    uint m_lightScatteringTextureID;
 
     // ImGUI
     bool m_postProcessWindow;

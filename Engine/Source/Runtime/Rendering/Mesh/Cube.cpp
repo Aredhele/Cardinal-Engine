@@ -15,15 +15,19 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       ByteCube.cpp
-/// \date       15/02/2018
+/// \file       Cube.cpp
+/// \date       05/03/2018
 /// \project    Cardinal Engine
-/// \package    World/Cube
+/// \package    Runtime/Rendering/Mesh
 /// \author     Vincent STEHLY--CALISTO
 
-#include "World/Cube/ByteCube.hpp"
+#include "Runtime/Rendering/Mesh/Cube.hpp"
 
-/* static */ const float ByteCube::s_vertices[108] =
+/// \namespace cardinal
+namespace cardinal
+{
+
+/* static */ const float Cube::s_vertices[108] =
 {
     -1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f, -1.0f, -1.0f, -1.0f, -1.0f, /* Face LEFT   */
     -1.0f,  1.0f, -1.0f, -1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f, /* Face BACK   */
@@ -33,12 +37,4 @@
     -1.0f,  1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f, -1.0f  /* Face BOTTOM */
 };
 
-/* static */ const float ByteCube::s_normals[108] =
-{
-   -1.0f,  0.0f,  0.0f, -1.0f,   0.0f,   0.0f, -1.0f,   0.0f,   0.0f,  -1.0f,   0.0f,   0.0f, -1.0f,   0.0f,   0.0f,  -1.0f,   0.0f,   0.0f, /* Face LEFT   */
-    0.0f,  1.0f,  0.0f,  0.0f,   1.0f,   0.0f,  0.0f,   1.0f,   0.0f,   0.0f,   1.0f,   0.0f,  0.0f,   1.0f,   0.0f,   0.0f,   1.0f,   0.0f, /* Face FRONT  */
-    1.0f,  0.0f,  0.0f,  1.0f,   0.0f,   0.0f,  1.0f,   0.0f,   0.0f,   1.0f,   0.0f,   0.0f,  1.0f,   0.0f,   0.0f,   1.0f,   0.0f,   0.0f, /* Face RIGHT  */
-    0.0f, -1.0f,  0.0f,  0.0f,  -1.0f,   0.0f,  0.0f,  -1.0f,   0.0f,   0.0f,  -1.0f,   0.0f,  0.0f,  -1.0f,   0.0f,   0.0f,  -1.0f,   0.0f, /* Face BACK   */
-    0.0f,  0.0f,  1.0f,  0.0f,   0.0f,   1.0f,  0.0f,   0.0f,   1.0f,   0.0f,   0.0f,   1.0f,  0.0f,   0.0f,   1.0f,   0.0f,   0.0f,   1.0f, /* Face TOP    */
-    0.0f,  0.0f, -1.0f,  0.0f,   0.0f,  -1.0f,  0.0f,   0.0f,  -1.0f,   0.0f,   0.0f,  -1.0f,  0.0f,   0.0f,  -1.0f,   0.0f,   0.0f,  -1.0f, /* Face BOTTOM */
-};
+} // !namespace

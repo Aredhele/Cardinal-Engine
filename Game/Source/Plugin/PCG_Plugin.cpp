@@ -57,7 +57,7 @@ void PCG_Plugin::OnPlayStart()
     // Configure engine here
     // Lighting
     cardinal::LightManager::CreateDirectionalLight();
-    cardinal::LightManager::GetDirectionalLight()->SetPosition(glm::vec3(64.0f, 64.0f, 140.0f));
+    cardinal::LightManager::GetDirectionalLight()->SetPosition(glm::vec3(520.0f, 20.0f, 307.0f));
     cardinal::LightManager::GetDirectionalLight()->SetDirection(glm::vec3(-0.5f, -0.5f, -0.5f));
 
     // Gizmos

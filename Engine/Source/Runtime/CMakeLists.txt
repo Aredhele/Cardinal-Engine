@@ -36,6 +36,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Sound/Loader/AudioLoader.cpp
         Sound/Source/AudioSource.cpp
         Physics/PhysicsEngine.cpp
+        Rendering/Mesh/Cube.cpp
         Rendering/Context/Window.cpp
         Rendering/Debug/DebugBox.cpp
         Rendering/Debug/DebugGrid.cpp
@@ -77,7 +78,8 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/PostProcessing/PostEffects/Sharpen.cpp
         Rendering/PostProcessing/PostEffects/EdgeDetection.cpp
         Rendering/PostProcessing/PostEffects/DepthBuffer.cpp
-        Rendering/PostProcessing/PostEffects/GodRay.cpp)
+        Rendering/PostProcessing/PostEffects/GodRay.cpp
+        Rendering/PostProcessing/PostEffects/LightScattering.cpp)
 
 # But tests depends on GTEST and GMOCK
 ADD_DEPENDENCIES(CardinalEngine glfw glew ResourcesCopy ImGUI)

@@ -91,8 +91,6 @@ private:
     uint m_verticesObject;
     uint m_normalsObject;
     uint m_uvsObject;
-
-    glm::mat4 m_model;
 };
 
 }  // !namespace

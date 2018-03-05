@@ -21,6 +21,10 @@
 /// \package    Runtime/Rendering/Lighting
 /// \author     Vincent STEHLY--CALISTO
 
+
+#include "Glew/include/GL/glew.h"
+#include "Glm/glm/gtc/matrix_transform.hpp"
+#include "Runtime/Rendering/Mesh/Cube.hpp"
 #include "Runtime/Rendering/Lighting/Lights/DirectionalLight.hpp"
 
 /// \namespace cardinal
@@ -37,6 +41,19 @@ DirectionalLight::DirectionalLight()
     SetAmbientIntensity(0.3f);
     SetLightColor  (glm::vec3(1.0f, 1.0f, 1.0f));
     SetAmbientColor(glm::vec3(1.0f, 1.0f, 1.0f));
+
+    glGenVertexArrays(1, &m_vao);
+    glBindVertexArray(m_vao);
+
+    glGenBuffers(1, &m_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBufferData(GL_ARRAY_BUFFER, 108 * sizeof(float), &Cube::s_vertices[0], GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *) nullptr);
+
+    glEnableVertexAttribArray(0);
+    glBindVertexArray(0);
+
+    m_elementsCount = 108;
 }
 
 /// \brief Sets the light intensity
@@ -58,6 +75,8 @@ void DirectionalLight::SetAmbientIntensity(float intensity)
 void DirectionalLight::SetPosition(glm::vec3 const &position)
 {
     m_position = position;
+    m_model    = glm::mat4(1.0f);
+    m_model    = glm::translate(m_model, position);
 }
 
 /// \brief Sets the direction of the light
