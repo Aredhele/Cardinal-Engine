@@ -51,7 +51,8 @@ private:
     /// \brief Applies the effect from the given textures
     /// \param colorTexture The color texture
     /// \param depthTexture The depth buffer texture
-    void ApplyEffect(uint colorTexture, uint depthTexture) final;
+    /// \param lightScatteringTexture The result of the light scattering pass
+    void ApplyEffect(uint colorTexture, uint depthTexture, uint lightScatteringTexture) final;
 
     /// \brief Called to display the GUI
     void OnGUI() final;

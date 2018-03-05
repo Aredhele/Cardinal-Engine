@@ -51,7 +51,8 @@ private:
     /// \brief Applies the effect from the given textures
     /// \param colorTexture The color texture
     /// \param depthTexture The depth buffer texture
-    void ApplyEffect(uint colorTexture, uint depthTexture) final;
+    /// \param lightScatteringTexture The result of the light scattering pass
+    void ApplyEffect(uint colorTexture, uint depthTexture, uint lightScatteringTexture) final;
 
     /// \brief Called to draw the GUI
     void OnGUI() final;
@@ -59,12 +60,18 @@ private:
 private:
 
     float m_decay;
-    float m_intensity;
+    float m_weight;
+    float m_density;
+    float m_exposure;
     int   m_sampleCount;
 
     int m_decayID;
-    int m_intensityID;
+    int m_weightID;
+    int m_densityID;
+    int m_exposureID;
     int m_sampleCountID;
+    int m_lightPosition2DID;
+    int m_lightScatteringTextureID;
 };
 
 } // !namespace

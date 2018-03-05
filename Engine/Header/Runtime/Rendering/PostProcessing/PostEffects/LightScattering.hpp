@@ -51,17 +51,11 @@ private:
     /// \brief Applies the effect from the given textures
     /// \param colorTexture The color texture
     /// \param depthTexture The depth buffer texture
-    void ApplyEffect(uint colorTexture, uint depthTexture) final;
-
-    /// \brief Sets the light scattering texture ID
-    void SetLightScatteringTexture(uint texture);
+    /// \param lightScatteringTexture The result of the light scattering pass
+    void ApplyEffect(uint colorTexture, uint depthTexture, uint lightScatteringTexture) final;
 
     /// \brief Called to draw the GUI
     void OnGUI() final;
-
-private:
-
-    uint m_lightScatterinTexture;
 };
 
 } // !namespace

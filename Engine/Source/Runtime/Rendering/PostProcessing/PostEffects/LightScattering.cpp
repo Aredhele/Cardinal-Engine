@@ -49,19 +49,14 @@ LightScattering::~LightScattering() // NOLINT
 /// \brief Applies the effect from the given textures
 /// \param colorTexture The color texture
 /// \param depthTexture The depth buffer texture
-void LightScattering::ApplyEffect(uint colorTexture, uint depthTexture)
+/// \param lightScatteringTexture The result of the light scattering pass
+void LightScattering::ApplyEffect(uint colorTexture, uint depthTexture, uint lightScatteringTexture)
 {
     glUseProgram   (m_shaderID);
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture  (GL_TEXTURE_2D, m_lightScatterinTexture);
+    glBindTexture  (GL_TEXTURE_2D, lightScatteringTexture);
     glUniform1i    (m_colorTextureID, 0);
-}
-
-/// \brief Sets the light scattering texture ID
-void LightScattering::SetLightScatteringTexture(uint texture)
-{
-    m_lightScatterinTexture = texture;
 }
 
 /// \brief Called to draw the GUI

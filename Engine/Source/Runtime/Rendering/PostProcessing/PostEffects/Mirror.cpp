@@ -58,7 +58,8 @@ Mirror::~Mirror() // NOLINT
 /// \brief Applies the effect from the given textures
 /// \param colorTexture The color texture
 /// \param depthTexture The depth buffer texture
-void Mirror::ApplyEffect(uint colorTexture, uint depthTexture)
+/// \param lightScatteringTexture The result of the light scattering pass
+void Mirror::ApplyEffect(uint colorTexture, uint depthTexture, uint lightScatteringTexture)
 {
     glUseProgram   (m_shaderID);
 

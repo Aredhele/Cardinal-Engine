@@ -80,7 +80,8 @@ protected:
     /// \brief Applies the effect from the given textures
     /// \param colorTexture The color texture
     /// \param depthTexture The depth buffer texture
-    virtual void ApplyEffect(uint colorTexture, uint depthTexture) = 0;
+    /// \param lightScatteringTexture The result of the light scattering pass
+    virtual void ApplyEffect(uint colorTexture, uint depthTexture, uint lightScatteringTexture) = 0;
 
     /// \brief Called to display the GUI
     virtual void OnGUI() = 0;

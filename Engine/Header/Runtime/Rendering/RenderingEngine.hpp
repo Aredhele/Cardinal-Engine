@@ -71,9 +71,6 @@ public:
     /// \brief Updates the values of the time passed into other engine parts
     void UpdateEngineTime(float audioTime, float renderingTime, float pluginTime);
 
-    /// Returns the projection matrix
-    glm::mat4 const& GetProjectionMatrix();
-
 public:
 
     /// \brief Allocates and return a pointer on a renderer
@@ -108,6 +105,12 @@ public:
     /// \brief Returns a pointer on the post-processing stack
     /// \return A pointer on the post-processing stack
     static PostProcessingStack * GetPostProcessingStack();
+
+    /// \brief Returns the projection matrix
+    static glm::mat4 const& GetProjectionMatrix();
+
+    /// \brief Returns the view matrix
+    static glm::mat4 GetViewMatrix();
 
 private:
 

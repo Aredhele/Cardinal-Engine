@@ -425,12 +425,6 @@ void RenderingEngine::Shutdown()
     ImGui::DestroyContext();
 }
 
-/// \brief TMP
-glm::mat4 const &RenderingEngine::GetProjectionMatrix()
-{
-    return m_projectionMatrix;
-}
-
 /// \brief Allocates and return a pointer on a renderer
 ///        Registers the renderer into the engine
 /* static */ MeshRenderer *RenderingEngine::AllocateMeshRenderer()
@@ -622,6 +616,20 @@ void RenderingEngine::UpdateEngineTime(float audioTime, float renderingTime, flo
     m_audioTime     = audioTime;
     m_pluginTime    = pluginTime;
     m_renderingTime = renderingTime;
+}
+
+/// \brief Returns the projection view matrix
+/* static */ glm::mat4 const& RenderingEngine::GetProjectionMatrix()
+{
+    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
+    return s_pInstance->m_projectionMatrix;
+}
+
+/// \brief Returns the view matrix
+/* static */ glm::mat4 RenderingEngine::GetViewMatrix()
+{
+    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
+    return s_pInstance->m_pCamera->GetViewMatrix();
 }
 
 } // !namespace

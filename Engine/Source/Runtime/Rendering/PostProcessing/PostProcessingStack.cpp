@@ -185,21 +185,16 @@ void PostProcessingStack::OnPostProcessingRender()
     {
         if(m_stack[nEffect]->IsActive())
         {
-            if(m_stack[nEffect]->GetName() == "Light scattering")
-            {
-                ((LightScattering *)m_stack[nEffect])->SetLightScatteringTexture(m_lightScatteringTextureID);
-            }
-
             if(bSwapped)
             {
                 glFramebufferTexture2D(GL_FRAMEBUFFER , GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_postProcessTextureBuffer, 0);
-                m_stack[nEffect]->ApplyEffect(m_postProcessTexture, m_postProcessDepthTexture);
+                m_stack[nEffect]->ApplyEffect(m_postProcessTexture, m_postProcessDepthTexture, m_lightScatteringTextureID);
                 bSwapped = false;
             }
             else
             {
                 glFramebufferTexture2D(GL_FRAMEBUFFER , GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_postProcessTexture, 0);
-                m_stack[nEffect]->ApplyEffect(m_postProcessTextureBuffer, m_postProcessDepthTexture);
+                m_stack[nEffect]->ApplyEffect(m_postProcessTextureBuffer, m_postProcessDepthTexture, m_lightScatteringTextureID);
                 bSwapped = true;
             }
 
@@ -221,8 +216,8 @@ void PostProcessingStack::OnPostProcessingRender()
     // Clears the buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if(bSwapped)  m_stack[0]->ApplyEffect(m_postProcessTexture,       m_postProcessDepthTexture);
-    else          m_stack[0]->ApplyEffect(m_postProcessTextureBuffer, m_postProcessDepthTexture);
+    if(bSwapped)  m_stack[0]->ApplyEffect(m_postProcessTexture,       m_postProcessDepthTexture, m_lightScatteringTextureID);
+    else          m_stack[0]->ApplyEffect(m_postProcessTextureBuffer, m_postProcessDepthTexture, m_lightScatteringTextureID);
 
     glBindVertexArray(m_postProcessVao);
     glEnableVertexAttribArray(0);

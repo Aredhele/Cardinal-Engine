@@ -9,32 +9,34 @@ out vec3 color;
 // Uniform
 uniform sampler2D colorTexture;
 uniform sampler2D depthTexture;
+uniform sampler2D lightScatteringTexture;
 
-uniform float     decay;
-uniform float     intensity;
-uniform int       sampleCount;
-
-float LinearizeDepth(in vec2 uv)
-{
-    float zNear = 0.1f;
-    float zFar  = 10000.0f;
-    float depth = texture2D(depthTexture, uv).x;
-    return (2.0f * zNear) / (zFar + zNear - depth * (zFar - zNear));
-}
+uniform float decay;
+uniform float weight;
+uniform float density;
+uniform float exposure;
+uniform int   sampleCount;
+uniform vec2  lightPosition2D;
 
 void main(void)
 {
-    vec2 TexCoord = textureUV, Direction = vec2(0.5) - textureUV;
-    Direction /= sampleCount;
-    vec3 Color = texture2D(colorTexture, textureUV).rgb;
+    float illuminationDecay = 1.0f;
 
-    float _intensity = intensity;
-    for(int Sample = 0; Sample < sampleCount; Sample++)
+    vec2 tc  = textureUV;
+    vec2 deltaTexCoord = tc - lightPosition2D;
+    deltaTexCoord *= 1.0 / float(sampleCount) * density;
+
+    vec3 _color = texture2D(lightScatteringTexture, tc.xy).xyz * 0.4;
+
+    for(int i=0; i < sampleCount ; i++)
     {
-        Color += texture2D(colorTexture, TexCoord).rgb * _intensity;
-        _intensity *= decay;
-        TexCoord += Direction;
+        tc -= deltaTexCoord;
+        vec3 sampleX = texture2D(lightScatteringTexture, tc).xyz * 0.4;
+        sampleX *= illuminationDecay * weight;
+        _color += sampleX;
+        illuminationDecay *= decay;
     }
 
-    color = Color;
+    vec3 c = texture2D(colorTexture, textureUV).rgb;
+    color = (_color) * exposure + c * 1.1f;
 }
