@@ -93,7 +93,7 @@ void Bloom::OnGUI()
     }
 
     ImGui::Text("\nSamples");
-    if(ImGui::SliderInt("###Sample_Bloom", &m_sampleCount, 0, 100, "Samples = %d"))
+    if(ImGui::SliderInt("###Sample_Bloom", &m_sampleCount, 0, 100))
     {
         glUseProgram(m_shaderID);
         glUniform1i (m_sampleCountID, m_sampleCount);
