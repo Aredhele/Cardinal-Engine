@@ -77,7 +77,7 @@ void Bloom::OnGUI()
     ImGui::Checkbox("Enabled###Enabled_Bloom", &m_bIsActive);
 
     ImGui::Text("\nQuality");
-    if(ImGui::SliderFloat("###Quality_Bloom", &m_quality, 0.0f, 10.0f, "Quality = %.3f"))
+    if(ImGui::SliderFloat("###Quality_Bloom", &m_quality, 0.0f, 5.0f, "Quality = %.3f"))
     {
         glUseProgram(m_shaderID);
         glUniform1f (m_qualityID, m_quality);
@@ -93,7 +93,7 @@ void Bloom::OnGUI()
     }
 
     ImGui::Text("\nSamples");
-    if(ImGui::SliderInt("###Sample_Bloom", &m_sampleCount, 0, 100))
+    if(ImGui::SliderInt("###Sample_Bloom", &m_sampleCount, 0, 10))
     {
         glUseProgram(m_shaderID);
         glUniform1i (m_sampleCountID, m_sampleCount);
