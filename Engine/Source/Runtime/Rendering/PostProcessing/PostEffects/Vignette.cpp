@@ -37,6 +37,22 @@ Vignette::Vignette() : PostEffect(PostEffect::EType::Vignette, "Vignette")
 
     // Getting uniforms
     m_colorTextureID = glGetUniformLocation(m_shaderID, "colorTexture");
+    m_radiusID       = glGetUniformLocation(m_shaderID, "radius");
+    m_softnessID     = glGetUniformLocation(m_shaderID, "softness");
+    m_centerID       = glGetUniformLocation(m_shaderID, "center");
+    m_opacityID      = glGetUniformLocation(m_shaderID, "opacity");
+
+    m_radius   = 0.25f;
+    m_softness = 0.45f;
+    m_center   = glm::vec2(0.5f, 0.5f);
+    m_opacity  = 0.5f;
+
+    glUseProgram(m_shaderID);
+    glUniform1f (m_radiusID,   m_radius);
+    glUniform1f (m_softnessID, m_softness);
+    glUniform1f (m_opacityID,  m_opacity);
+    glUniform2f (m_centerID, m_center.x, m_center.y);
+    glUseProgram(0);
 }
 
 /// \brief Destructor
@@ -62,6 +78,38 @@ void Vignette::ApplyEffect(uint colorTexture, uint depthTexture, uint lightScatt
 void Vignette::OnGUI()
 {
     ImGui::Checkbox("Enabled###Enabled_Vignette", &m_bIsActive);
+
+    ImGui::Text("\nRadius");
+    if(ImGui::SliderFloat("###Radius_Vignette", &m_radius, 0.0f, 1.0f, "Radius = %.3f"))
+    {
+        glUseProgram(m_shaderID);
+        glUniform1f (m_radiusID,   1 - m_radius);
+        glUseProgram(0);
+    }
+
+    ImGui::Text("\nSoftness");
+    if(ImGui::SliderFloat("###Softness_Vignette", &m_softness, 0.0f, 1.0f, "Softness = %.3f"))
+    {
+        glUseProgram(m_shaderID);
+        glUniform1f (m_softnessID,   m_softness);
+        glUseProgram(0);
+    }
+
+    ImGui::Text("\nOpacity");
+    if(ImGui::SliderFloat("###Opacity_Vignette", &m_opacity, 0.0f, 1.0f, "Opacity = %.3f"))
+    {
+        glUseProgram(m_shaderID);
+        glUniform1f (m_opacityID,   m_opacity);
+        glUseProgram(0);
+    }
+
+    ImGui::Text("\nCenter");
+    if(ImGui::InputFloat2("###Center_Vignette", &m_center[0], 3))
+    {
+        glUseProgram(m_shaderID);
+        glUniform2f (m_centerID, m_center.x, m_center.y);
+        glUseProgram(0);
+    }
 }
 
 } // !namespace

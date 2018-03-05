@@ -24,6 +24,7 @@
 #ifndef CARDINAL_ENGINE_VIGNETTE_HPP__
 #define CARDINAL_ENGINE_VIGNETTE_HPP__
 
+#include "Glm/glm/vec2.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/PostEffect.hpp"
 
 /// \namespace cardinal
@@ -56,6 +57,18 @@ private:
 
     /// \brief Called to draw the GUI
     void OnGUI() final;
+
+private:
+
+    float     m_radius;
+    float     m_softness;
+    glm::vec2 m_center;
+    float     m_opacity;
+
+    int m_radiusID;
+    int m_softnessID;
+    int m_centerID;
+    int m_opacityID;
 };
 
 } // !namespace
