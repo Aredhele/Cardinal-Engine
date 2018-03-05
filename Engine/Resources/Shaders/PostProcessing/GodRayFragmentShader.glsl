@@ -38,5 +38,5 @@ void main(void)
     }
 
     vec3 c = texture2D(colorTexture, textureUV).rgb;
-    color = (_color) * exposure + c * 1.1f;
+    color = _color + c;
 }

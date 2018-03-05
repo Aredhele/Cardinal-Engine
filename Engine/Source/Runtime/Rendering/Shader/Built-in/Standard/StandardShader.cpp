@@ -61,18 +61,8 @@ StandardShader::StandardShader()
     s_ambientIntensity = glGetUniformLocation((GLuint)m_shaderID, "ambientIntensity");
     s_lightColor       = glGetUniformLocation((GLuint)m_shaderID, "lightColor");
 
-    /*ASSERT_NE(m_modelID,  -1);
-    ASSERT_NE(m_viewID,   -1);
-    ASSERT_NE(m_matrixID, -1);
-    ASSERT_NE(s_lightPosition,    -1);
-    ASSERT_NE(s_lightIntensity,   -1);
-    ASSERT_NE(s_ambientIntensity, -1);
-    ASSERT_NE(s_lightColor,       -1);*/
-
     // Lighting
     m_lightCountID = glGetUniformLocation((GLuint)m_shaderID, "lightCount");
-
-   // ASSERT_NE(m_lightCountID, -1);
 }
 
 /// \brief Sets the texture of the shader
@@ -85,6 +75,8 @@ void StandardShader::SetTexture(uint textureID)
 /// \param MVP The Projection-View-Model matrix to pass to the shader
 void StandardShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights)
 {
+    glEnable(GL_MULTISAMPLE);
+
     glUseProgram      ((GLuint)m_shaderID);
     glUniformMatrix4fv(m_projection,  1, GL_FALSE,   &P[0][0]);
     glUniformMatrix4fv(m_modelID,     1, GL_FALSE,   &M[0][0]);

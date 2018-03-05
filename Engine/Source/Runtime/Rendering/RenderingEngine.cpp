@@ -167,6 +167,7 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     glEnable   (GL_CULL_FACE);
     glCullFace (GL_BACK);
     glFrontFace(GL_CCW);
+    glEnable(GL_MULTISAMPLE);
 
     // TODO : Makes clear color configurable
     m_clearColor = glm::vec3(0.0f, 0.709f, 0.866f);
@@ -336,8 +337,8 @@ void RenderingEngine::RenderFrame(float step)
         size_t rendererCount = m_renderers.size();
         for (int nRenderer = 0; nRenderer < rendererCount; ++nRenderer)
         {
-            // m_triangleCounter += m_renderers[nRenderer]->GetElementCount();
-            // m_currentTriangle += m_renderers[nRenderer]->GetElementCount();
+            m_triangleCounter += m_renderers[nRenderer]->GetElementCount();
+            m_currentTriangle += m_renderers[nRenderer]->GetElementCount();
 
             glm::mat4 MVP  = ProjectionView * m_renderers[nRenderer]->m_model;
 
