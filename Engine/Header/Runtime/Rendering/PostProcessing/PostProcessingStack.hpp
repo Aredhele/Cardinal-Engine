@@ -39,6 +39,7 @@
 #include "Runtime/Rendering/PostProcessing/PostEffects/DepthBuffer.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/GodRay.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/LightScattering.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/Bloom.hpp"
 
 /// \namespace cardinal
 namespace cardinal

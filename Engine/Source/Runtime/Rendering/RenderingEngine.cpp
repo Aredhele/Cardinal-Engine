@@ -154,6 +154,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/Utils/LightScatteringVertexShader.glsl",
             "Resources/Shaders/Utils/LightScatteringFragmentShader.glsl"));
 
+    ShaderManager::Register("BloomPostProcess", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/PostProcessing/BloomVertexShader.glsl",
+            "Resources/Shaders/PostProcessing/BloomFragmentShader.glsl"));
+
     // Debug
     DebugManager::Initialize();
 

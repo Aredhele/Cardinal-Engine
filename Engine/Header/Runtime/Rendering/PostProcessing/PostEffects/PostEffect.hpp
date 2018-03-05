@@ -54,7 +54,8 @@ public:
         EdgeDetection,
         DepthBuffer,
         GodRay,
-        LightScattering
+        LightScattering,
+        Bloom
     };
 
     /// \brief Returns the name of the post effect
