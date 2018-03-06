@@ -85,6 +85,7 @@ void PCG_Plugin::OnPlayStart()
     // Setting up the game
     m_pWorld = m_worldGenerator.generateWorld();
 
+    // Camera and Character
     m_cameraManager.SetCamera(cardinal::RenderingEngine::GetMainCamera());
     m_cameraManager.SetCharacter(&m_character);
 }
@@ -92,7 +93,6 @@ void PCG_Plugin::OnPlayStart()
 /// \brief Called when the game stops
 void PCG_Plugin::OnPlayStop()
 {
-    // TODO
 }
 
 /// \brief Called just before the engine update

@@ -31,17 +31,18 @@
 namespace cardinal
 {
 
+class RigidBody;
+
 /// \class PhysicsEngine
 /// \brief Encapsulates Bullet3 physics
 class PhysicsEngine
 {
 public:
-
     /// \brief TODO
     bool Initialize(glm::vec3 const& gravity);
 
     /// \brief TODO
-    void Update();
+    void Update(float dt);
 
     /// \brief TODO
     void Shutdown();
@@ -49,7 +50,7 @@ public:
 public:
 
     /// \brief TODO
-    static btRigidBody * AllocateRigidbody();
+    static RigidBody * AllocateRigidbody(glm::vec3 halfExtents, glm::vec3 position, glm::vec4 rotation, float mass);
 
     /// \brief TODO
     static void ReleaseRigidbody(btRigidBody *& pBody);

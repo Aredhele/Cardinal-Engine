@@ -101,8 +101,8 @@ void CameraManager::Update(cardinal::Window * p_Window, float dt)
 
         case EStates::FPS:
         {
-            m_camera->Rotate    (static_cast<float>(-deltaMouse.x * m_sensitivity));
-            m_camera->RotateUp  (static_cast<float>(-deltaMouse.y * m_sensitivity));
+             m_camera->Rotate    (static_cast<float>(-deltaMouse.x * m_sensitivity));
+             m_camera->RotateUp  (static_cast<float>(-deltaMouse.y * m_sensitivity));
 
             m_camera->Translate( deltaCharacter);
 

@@ -35,7 +35,7 @@ bool Engine::Initialize()
 
     if (!m_renderingEngine.Initialize(1600, 900, "Cardinal", 10000.0f, false))
     {
-        cardinal::Logger::LogError("Cannot initialize the engine, aborting");
+        cardinal::Logger::LogError("Cannot initialize the rendering engine, aborting");
         return false;
     }
 
@@ -43,7 +43,13 @@ bool Engine::Initialize()
 
     if(!m_soundEngine.Initialize())
     {
-        cardinal::Logger::LogError("Cannot initialize the engine, aborting");
+        cardinal::Logger::LogError("Cannot initialize the sound engine, aborting");
+        return false;
+    }
+
+    if (!m_physicsEngine.Initialize( glm::vec3(0, 0, -9.81) ) )
+    {
+        cardinal::Logger::LogError("Cannot initialize the physics engine, aborting");
         return false;
     }
 
@@ -109,6 +115,9 @@ void Engine::GameLoop()
             startPlugin = glfwGetTime();
             m_pluginManager.OnPreUpdate();
             pluginsTimer += (glfwGetTime() - startPlugin);
+
+            // Physics update
+            m_physicsEngine.Update(SECONDS_PER_UPDATE);
 
             // Post-update
             startPlugin = glfwGetTime();

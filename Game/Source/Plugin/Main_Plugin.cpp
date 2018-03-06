@@ -58,6 +58,9 @@ void Main_Plugin::OnPlayStart()
     // Camera management
     m_cameraManager.SetCamera(cardinal::RenderingEngine::GetMainCamera());
     m_cameraManager.SetCharacter(&m_character);
+
+    // Initialization of character
+    m_character.SetPosition(glm::vec3(100,100,100));
 }
 
 /// \brief Called when the game stops

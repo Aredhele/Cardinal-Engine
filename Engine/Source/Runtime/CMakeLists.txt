@@ -36,6 +36,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Sound/Loader/AudioLoader.cpp
         Sound/Source/AudioSource.cpp
         Physics/PhysicsEngine.cpp
+        Physics/RigidBody.cpp
         Rendering/Mesh/Cube.cpp
         Rendering/Context/Window.cpp
         Rendering/Debug/DebugBox.cpp

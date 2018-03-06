@@ -26,17 +26,29 @@
 #include <World/Cube/UVManager.hpp>
 #include <Header/Runtime/Rendering/Optimization/VBOIndexer.hpp>
 #include <Header/Runtime/Rendering/Texture/TextureManager.hpp>
+#include <Header/Runtime/Physics/PhysicsEngine.hpp>
+#include <Header/Runtime/Physics/RigidBody.hpp>
 #include <World/WorldSettings.hpp>
 #include "Character/Character.hpp"
 #include "Runtime/Rendering/Camera/Camera.hpp"
 #include "Runtime/Rendering/Context/Window.hpp"
 #include "Runtime/Rendering/RenderingEngine.hpp"
 #include "Runtime/Rendering/Shader/Built-in/Unlit/UnlitTextureShader.hpp"
+#include "Runtime/Core/Debug/Logger.hpp"
 
 /// \brief Constructor
 Character::Character()
 {
+    // Visual
     InitializeAvatar();
+
+    // Physics
+    m_pBody = cardinal::PhysicsEngine::AllocateRigidbody(
+        glm::vec3(2,2,2),       ///< The half extents
+        glm::vec3(0,0,0),       ///< The position
+        glm::vec4(0,0,0,1),     ///< The rotation
+        45                      ///< The mass
+    );
 }
 
 /// \brief Updates the character
@@ -49,19 +61,31 @@ void Character::Update(cardinal::Window * pWindow, float dt)
     // if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_S) == GLFW_PRESS) Translate(-m_pCamera->GetDirection() * dt * m_speed * m_speedMultiplier);
     // if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_D) == GLFW_PRESS) Translate( m_pCamera->GetRight() * dt * m_speed * m_speedMultiplier);
     // if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_A) == GLFW_PRESS) Translate(-m_pCamera->GetRight() * dt * m_speed * m_speedMultiplier);
+
+    glm::vec3 pos = m_pBody->GetPosition();
+    glm::vec3 pos2 = m_meshRenderer->GetPosition();
+    cardinal::Logger::LogInfo("Player rigid body position %f,%f,%f", pos.x, pos.y, pos.z);
+    cardinal::Logger::LogInfo("Player renderer position %f,%f,%f",pos2.x, pos2.y, pos2.z );
 }
 
 /// \brief Returns the position of the avatar
-glm::vec3 const &Character::GetPosition() const
+glm::vec3 Character::GetPosition() const
 {
-    return m_position;
+   return m_pBody->GetPosition();
+}
+
+/// \brief Sets the position of the avatar
+void Character::SetPosition(glm::vec3 position)
+{
+    m_pBody->SetPosition(position);
+    m_meshRenderer->SetPosition(position);
 }
 
 /// \brief Translate the avatar
 /// \param translation The translation vector
 void Character::Translate(const glm::vec3 &translation)
 {
-    m_position += translation;
+    m_pBody->Translate(translation);
     m_meshRenderer->Translate(translation);
 }
 
@@ -112,10 +136,4 @@ void Character::InitializeAvatar()
 
     cardinal::VBOIndexer::Index(vertices, normals, uvs, indexes, indexedVertices, indexedNormals, indexedUVs);
     m_meshRenderer->Initialize(indexes, indexedVertices, indexedNormals, indexedUVs);
-
-    m_position.x = 165.0f;
-    m_position.y = 165.0f;
-    m_position.z =  96.0f;
-
-    m_meshRenderer->Translate(m_position);
 }

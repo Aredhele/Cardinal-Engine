@@ -180,11 +180,14 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
             WorldBuffers::s_chunkIndexedNormalBuffer,
             WorldBuffers::s_chunkIndexedUVsBuffer);
 
-    m_renderer->Initialize(
-            WorldBuffers::s_chunkIndexesBuffer,
-            WorldBuffers::s_chunkIndexedVertexBuffer,
-            WorldBuffers::s_chunkIndexedNormalBuffer,
-            WorldBuffers::s_chunkIndexedUVsBuffer);
+   if (WorldBuffers::s_chunkIndexesBuffer.size() != 0)
+   {
+        m_renderer->Initialize(
+                WorldBuffers::s_chunkIndexesBuffer,
+                WorldBuffers::s_chunkIndexedVertexBuffer,
+                WorldBuffers::s_chunkIndexedNormalBuffer,
+                WorldBuffers::s_chunkIndexedUVsBuffer);
+    }
 
     WorldBuffers::s_chunkUVsBuffer.clear();
     WorldBuffers::s_chunkNormalBuffer.clear();

@@ -34,6 +34,7 @@
 #include "Runtime/Core/Plugin/PluginManager.hpp"
 #include "Runtime/Rendering/RenderingEngine.hpp"
 #include "Runtime/Rendering/Debug/DebugManager.hpp"
+#include "Runtime/Physics/PhysicsEngine.hpp"
 #include "Runtime/Platform/Configuration/Configuration.hh"
 
 /// \namespace cardinal
@@ -65,6 +66,7 @@ private:
     SoundEngine     m_soundEngine;
     PluginManager   m_pluginManager;
     RenderingEngine m_renderingEngine;
+    PhysicsEngine   m_physicsEngine;
 
     static constexpr const double SECONDS_PER_UPDATE = 1.0 / 60.0;
 };

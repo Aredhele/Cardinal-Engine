@@ -31,6 +31,7 @@ FILE(GLOB_RECURSE GAME_SOURCES
 FILE(GLOB_RECURSE GAME_HEADERS
         ${CARDINAL_GAME_DIR}/Header/World/*.hpp
         ${CARDINAL_GAME_DIR}/Header/Character/*.hpp
+        ${CARDINAL_GAME_DIR}/Header/Physics/*.hpp
         ${CARDINAL_GAME_DIR}/Header/Rendering/*.hpp)
 
 # Linking with the engine

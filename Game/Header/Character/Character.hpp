@@ -34,6 +34,7 @@ namespace cardinal
 #include "Glm/glm/glm.hpp"
 #include "Runtime/Rendering/Renderer/TextRenderer.hpp"
 #include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
+#include "Runtime/Physics/RigidBody.hpp"
 
 /// \class Character
 /// \brief 
@@ -50,7 +51,10 @@ public:
     void Update(cardinal::Window * pWindow, float dt);
 
     /// \brief Returns the position of the avatar
-    glm::vec3 const& GetPosition() const;
+    glm::vec3 GetPosition() const;
+
+    /// \brief Sets the position of the avatar
+    void SetPosition(glm::vec3 position);
 
     /// \brief Translate the avatar
     /// \param translation The translation vector
@@ -63,13 +67,14 @@ private:
 
 private:
     // Controls
-    glm::tvec3<double> m_lastMouse;
-    glm::vec3          m_position;
+    glm::tvec3<double>      m_lastMouse;
 
-    float m_speed           = 50.0f;
-    float m_speedMultiplier = 2.0f;
+    float                   m_speed           = 50.0f;
+    float                   m_speedMultiplier = 2.0f;
 
-    cardinal::MeshRenderer * m_meshRenderer;
+    // Physics
+    cardinal::RigidBody   * m_pBody;
+    cardinal::MeshRenderer* m_meshRenderer;
 };
 
 #endif // !CARDINAL_ENGINE_CHARACTER_HPP__
