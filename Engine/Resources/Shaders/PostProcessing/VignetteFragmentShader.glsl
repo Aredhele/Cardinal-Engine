@@ -15,7 +15,7 @@ uniform float     opacity;
 
 void main(void)
 {
-   	vec3 texColor = texture2D(colorTexture, textureUV).rgb;
+   	vec3 texColor = texture(colorTexture, textureUV).rgb;
    	vec2 position = textureUV - center;
    	float len = length(position);
    	float vignette = smoothstep(radius, radius - softness, len);

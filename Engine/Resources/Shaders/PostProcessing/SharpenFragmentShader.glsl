@@ -23,7 +23,7 @@ void main(void)
         {
             float oX = (u - 1) * offset.x;
             float oY = (v - 1) * offset.y;
-            fColor += (texture2D(colorTexture, vec2(textureUV.x + oX, textureUV.y + oY)).rgb) * M[u * 3 + v];
+            fColor += (texture(colorTexture, vec2(textureUV.x + oX, textureUV.y + oY)).rgb) * M[u * 3 + v];
         }
     }
 
