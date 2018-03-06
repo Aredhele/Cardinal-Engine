@@ -57,6 +57,7 @@ public:
         LightScattering,
         Bloom,
         Vignette,
+        FXAA,
         Experimental1,
         Experimental2
     };

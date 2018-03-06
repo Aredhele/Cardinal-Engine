@@ -162,6 +162,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/PostProcessing/VignetteVertexShader.glsl",
             "Resources/Shaders/PostProcessing/VignetteFragmentShader.glsl"));
 
+    ShaderManager::Register("FXAAPostProcess", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/PostProcessing/FXAAVertexShader.glsl",
+            "Resources/Shaders/PostProcessing/FXAAFragmentShader.glsl"));
+
     ShaderManager::Register("Experimental1PostProcess", ShaderCompiler::LoadShaders(
             "Resources/Shaders/PostProcessing/Experimental/ExperimentalVertexShader_1.glsl",
             "Resources/Shaders/PostProcessing/Experimental/ExperimentalFragmentShader_1.glsl"));

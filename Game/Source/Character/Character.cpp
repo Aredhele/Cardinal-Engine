@@ -64,8 +64,8 @@ void Character::Update(cardinal::Window * pWindow, float dt)
 
     glm::vec3 pos = m_pBody->GetPosition();
     glm::vec3 pos2 = m_meshRenderer->GetPosition();
-    cardinal::Logger::LogInfo("Player rigid body position %f,%f,%f", pos.x, pos.y, pos.z);
-    cardinal::Logger::LogInfo("Player renderer position %f,%f,%f",pos2.x, pos2.y, pos2.z );
+    //cardinal::Logger::LogInfo("Player rigid body position %f,%f,%f", pos.x, pos.y, pos.z);
+    //cardinal::Logger::LogInfo("Player renderer position %f,%f,%f",pos2.x, pos2.y, pos2.z );
 }
 
 /// \brief Returns the position of the avatar

@@ -83,6 +83,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/PostProcessing/PostEffects/LightScattering.cpp
         Rendering/PostProcessing/PostEffects/Bloom.cpp
         Rendering/PostProcessing/PostEffects/Vignette.cpp
+        Rendering/PostProcessing/PostEffects/FXAA.cpp
         Rendering/PostProcessing/PostEffects/Experimental/Experimental1.cpp
         Rendering/PostProcessing/PostEffects/Experimental/Experimental2.cpp)
 
