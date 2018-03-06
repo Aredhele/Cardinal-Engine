@@ -26,17 +26,17 @@ void main(void)
     vec2 deltaTexCoord = tc - lightPosition2D;
     deltaTexCoord *= 1.0 / float(sampleCount) * density;
 
-    vec3 _color = texture2D(lightScatteringTexture, tc.xy).xyz * 0.4;
+    vec3 _color = texture(lightScatteringTexture, tc.xy).xyz * 0.4;
 
     for(int i=0; i < sampleCount ; i++)
     {
         tc -= deltaTexCoord;
-        vec3 sampleX = texture2D(lightScatteringTexture, tc).xyz * 0.4;
+        vec3 sampleX = texture(lightScatteringTexture, tc).xyz * 0.4;
         sampleX *= illuminationDecay * weight;
         _color += sampleX;
         illuminationDecay *= decay;
     }
 
-    vec3 c = texture2D(colorTexture, textureUV).rgb;
+    vec3 c = texture(colorTexture, textureUV).rgb;
     color = _color + c;
 }

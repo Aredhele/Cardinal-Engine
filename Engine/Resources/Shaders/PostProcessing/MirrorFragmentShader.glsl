@@ -18,5 +18,5 @@ void main(void)
     if(bMirrorX && coord.x > 0.5) coord.x = 1 - coord.x;
     if(bMirrorY && coord.y > 0.5) coord.y = 1 - coord.y;
 
-    color = texture2D(colorTexture, coord).rgb;
+    color = texture(colorTexture, coord).rgb;
 }

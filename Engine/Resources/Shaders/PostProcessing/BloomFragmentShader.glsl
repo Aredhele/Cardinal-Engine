@@ -19,14 +19,14 @@ void main(void)
     vec3 sum        = vec3(0.0f);
     int  diff       = (sampleCount - 1) / 2;
     vec2 sizeFactor = vec2(1.0f) / size * quality;
-    vec3 source     = texture2D(colorTexture, textureUV).rgb;
+    vec3 source     = texture(colorTexture, textureUV).rgb;
 
     for (int x = -diff; x <= diff; x++)
     {
         for (int y = -diff; y <= diff; y++)
         {
             vec2 offset = vec2(x, y) * sizeFactor;
-            sum        += texture2D(colorTexture, textureUV + offset).rgb;
+            sum        += texture(colorTexture, textureUV + offset).rgb;
         }
     }
 

@@ -11,5 +11,5 @@ uniform sampler2D colorTexture;
 
 void main(void)
 {
-  color = texture2D(colorTexture, textureUV).rgb;
+  color = texture(colorTexture, textureUV).rgb;
 }

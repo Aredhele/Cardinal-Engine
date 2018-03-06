@@ -12,6 +12,6 @@ uniform sampler2D depthTexture;
 
 void main(void)
 {
-    vec3 _color = texture2D(colorTexture, textureUV).rgb;
+    vec3 _color = texture(colorTexture, textureUV).rgb;
     color = vec3(1 - _color.x, 1 - _color.y, 1 - _color.z);
 }

@@ -571,7 +571,7 @@ void RenderingEngine::DisplayDebugWindow(float step)
 
         ImGui::Text("System : %2.2lf / %2.2lf Gio", availableRam,  totalRam);
         ImGui::Text("In use : %2.5lf Gio", inUseRam);
-        ImGui::Text("Plugin : %llu", m_pPluginManager->GetPluginCount());
+        ImGui::Text("Plugin : %lu", m_pPluginManager->GetPluginCount());
 
         // FPS
         ImGui::Text("\nRendering");
