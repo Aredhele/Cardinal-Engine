@@ -25,7 +25,7 @@
 #define CARDINAL_ENGINE_PLUGIN_MANAGER_HPP__
 
 #include <vector>
-#include "Runtime/Core/Plugin/GamePlugin.hpp"
+#include "Runtime/Core/Plugin/Plugin.hpp"
 
 /// \namespace cardinal
 namespace cardinal
