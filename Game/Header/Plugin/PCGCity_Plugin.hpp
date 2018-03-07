@@ -30,6 +30,7 @@
 // Game
 #include "World/World.hpp"
 #include "Character/Character.hpp"
+#include "City/ProceduralBuilding.hpp"
 #include "Rendering/CameraManager.hpp"
 #include "World/Generator/GUI/GeneratorGUI.hpp"
 
@@ -66,6 +67,8 @@ private:
 
     Character     m_character;
     CameraManager m_cameraManager;
+
+    ProceduralBuilding m_building;
 };
 
 #endif // !CARDINAL_ENGINE_PCG_CITY_PLUGIN_HPP__

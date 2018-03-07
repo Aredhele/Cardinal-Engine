@@ -33,7 +33,8 @@ IRenderer::IRenderer()
 , m_pShader(nullptr)
 , m_elementsCount(0)
 {
-    m_model = glm::mat4(1.0f);
+    m_model     = glm::mat4(1.0f);
+    m_isIndexed = true;
 }
 
 /// \brief Returns the position of the renderer

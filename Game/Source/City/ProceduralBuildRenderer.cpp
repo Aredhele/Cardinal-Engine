@@ -22,7 +22,7 @@
 /// \author     Vincent STEHLY--CALISTO
 
 #include "Glew/include/GL/glew.h"
-#include "City/ProceduralBuildingRenderer.hpp
+#include "City/ProceduralBuildingRenderer.hpp"
 
 /// \brief Default constructor
 ProceduralBuildingRenderer::ProceduralBuildingRenderer() : cardinal::IRenderer()
@@ -31,6 +31,7 @@ ProceduralBuildingRenderer::ProceduralBuildingRenderer() : cardinal::IRenderer()
     m_normalsObject  = 0;
     m_uvsObject      = 0;
     m_elementsCount  = 0;
+    m_isIndexed      = false;
 }
 
 /// \brief Destructor
@@ -163,5 +164,3 @@ void ProceduralBuildingRenderer::Draw(glm::mat4 const& P, glm::mat4 const& V, gl
 
     m_pShader->End();
 }
-
-} // !namespace

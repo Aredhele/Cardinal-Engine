@@ -73,6 +73,10 @@ public:
 
 public:
 
+    /// \brief Register a custom renderer in the engine
+    /// \param pRenderer The renderer to register
+    static void RegisterCustomRenderer(class IRenderer * pRenderer);
+
     /// \brief Allocates and return a pointer on a renderer
     ///        Registers the renderer into the engine
     static class MeshRenderer * AllocateMeshRenderer();

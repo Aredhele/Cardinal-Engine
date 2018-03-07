@@ -363,7 +363,10 @@ void RenderingEngine::RenderFrame(float step)
             glBindVertexArray(m_renderers[nRenderer]->m_vao);
             glEnableVertexAttribArray(0);
 
-            glDrawElements(GL_TRIANGLES, m_renderers[nRenderer]->m_elementsCount, GL_UNSIGNED_SHORT, nullptr);
+            if(m_renderers[nRenderer]->m_isIndexed)
+                glDrawElements(GL_TRIANGLES, m_renderers[nRenderer]->m_elementsCount, GL_UNSIGNED_SHORT, nullptr);
+            else
+                glDrawArrays(GL_TRIANGLES, 0, m_renderers[nRenderer]->m_elementsCount);
 
             glBindVertexArray(0);
         }
@@ -444,6 +447,15 @@ void RenderingEngine::Shutdown()
     // Shutting down ImGUI
     ImGui_ImplGlfwGL3_Shutdown();
     ImGui::DestroyContext();
+}
+
+
+/// \brief Register a custom renderer in the engine
+/// \param pRenderer The renderer to register
+/* static */ void RenderingEngine::RegisterCustomRenderer(IRenderer * pRenderer)
+{
+    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
+    RenderingEngine::s_pInstance->m_renderers.push_back((IRenderer *)pRenderer);
 }
 
 /// \brief Allocates and return a pointer on a renderer

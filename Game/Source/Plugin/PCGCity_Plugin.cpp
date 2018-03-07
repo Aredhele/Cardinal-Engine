@@ -68,6 +68,10 @@ void PCGCity_Plugin::OnPlayStart()
 
     m_cameraManager.SetCamera(cardinal::RenderingEngine::GetMainCamera());
     m_cameraManager.SetCharacter(&m_character);
+
+    m_building.Initialize();
+    m_building.Generate();
+    m_building.Batch();
 }
 
 /// \brief Called when the game stops

@@ -77,7 +77,7 @@ public :
 
 private:
 
-    friend class cardinal::RenderingEngine;
+    friend class RenderingEngine;
 
     uint m_verticesObject;
     uint m_normalsObject;

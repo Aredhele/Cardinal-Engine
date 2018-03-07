@@ -25,6 +25,8 @@
 #define CARDINAL_ENGINE_PROCEDURAL_BUILDING_HPP
 
 #include "World/Cube/ByteCube.hpp"
+#include "World/Cube/UVManager.hpp"
+#include "ProceduralBuildingRenderer.hpp"
 
 #define BUILDING_MAX_SIZE   16
 #define BUILDING_MAX_HEIGHT 16
@@ -49,6 +51,7 @@ public:
 
 private:
 
+    ProceduralBuildingRenderer m_renderer;
     ByteCube m_building[BUILDING_MAX_SIZE][BUILDING_MAX_SIZE][BUILDING_MAX_HEIGHT];
 };
 
