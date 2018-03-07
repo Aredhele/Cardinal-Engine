@@ -99,5 +99,5 @@ cardinal::Logger::LogError  ("Foo %d", foo); // Write in stderr with [Erro] tag
 Output example
 
 <p align="center">
-  <img src="http://image.noelshack.com/minis/2018/10/3/1520382473-readme-1.png" width="409" height="89" />
+  <img src="http://image.noelshack.com/fichiers/2018/10/3/1520382473-readme-1.png" width="409" height="89" />
 </p>
