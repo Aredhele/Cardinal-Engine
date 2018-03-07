@@ -31,8 +31,8 @@ class ByteCube
 public:
 
     static const int s_cubeSize = 4;
-    static const unsigned char s_typeMask  = 0xE1; ///< 1111 0001
-    static const unsigned char s_stateMask = 0x3E; ///< 0011 1110
+    static const unsigned char s_typeMask  = 0x01; ///< 0000 0001
+    static const unsigned char s_stateMask = 0xFE; ///< 1111 1110
 
     static const float s_vertices[108];
     static const float s_normals [108];
@@ -62,6 +62,8 @@ public:
         Sand      = 0x10 << 1, ///< 0010 0000
         Ice       = 0x11 << 1, ///< 0010 0010
         WoodPlank = 0x12 << 1, ///< 0010 0100
+        Brick     = 0x13 << 1, ///< 0010 0110
+        Stone     = 0x14 << 1, ///< 0010 1000
     };
 
     /// \brief Constructor

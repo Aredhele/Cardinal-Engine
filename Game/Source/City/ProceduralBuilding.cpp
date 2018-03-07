@@ -61,52 +61,89 @@ void ProceduralBuilding::Initialize()
 void ProceduralBuilding::Generate()
 {
     // TMP
-    int l = 16;
-    int t = 10;
+    int o = 3;
+    int l = 20;
+    int t = 14;
     int h = 14;
 
     // Floor
-    for(int x = 0; x < l; ++x) // NOLINT
+    for(int x = 0; x < l + o; ++x) // NOLINT
     {
-        for(int y = 0; y < t; ++y)
+        for(int y = 0; y < t + o; ++y)
         {
-            m_building[x][y][0].SetType(ByteCube::EType::Rock);
+            m_building[x][y][0].SetType(ByteCube::EType::Stone);
         }
     }
 
     // Walls 1
-    for(int x = 0; x < l; ++x) // NOLINT
+    for(int x = o; x < l; ++x) // NOLINT
     {
         for(int z = 0; z < h; ++z)
         {
-            m_building[x][0][0].SetType(ByteCube::EType::Rock);
+            m_building[x][o][z].SetType(ByteCube::EType::Brick);
         }
     }
 
     // Walls 2
-    for(int x = 0; x < l; ++x) // NOLINT
+    for(int x = o; x < l; ++x) // NOLINT
     {
         for(int z = 0; z < h; ++z)
         {
-            m_building[x][t - 1][z].SetType(ByteCube::EType::Rock);
+            m_building[x][t - 1][z].SetType(ByteCube::EType::Brick);
         }
     }
 
     // Walls 3
-    for(int y = 0; y < t; ++y) // NOLINT
+    for(int y = o; y < t; ++y) // NOLINT
     {
         for(int z = 0; z < h; ++z)
         {
-            m_building[0][y][z].SetType(ByteCube::EType::Rock);
+            m_building[o][y][z].SetType(ByteCube::EType::Brick);
         }
     }
 
     // Walls 4
-    for(int y = 0; y < t; ++y) // NOLINT
+    for(int y = o; y < t; ++y) // NOLINT
     {
         for(int z = 0; z < h; ++z)
         {
-            m_building[l - 1][y][z].SetType(ByteCube::EType::Rock);
+            m_building[l - 1][y][z].SetType(ByteCube::EType::Brick);
+        }
+    }
+
+    // Roof L-1
+    // Walls 4
+    for(int x = o; x < l; ++x) // NOLINT
+    {
+        for(int y = o; y < t; ++y)
+        {
+            m_building[x][y][h - 2].SetType(ByteCube::EType::Stone);
+            m_building[x][y][h - 1].SetType(ByteCube::EType::Stone);
+        }
+    }
+
+    // Roof L
+    // Walls 4
+    for(int x = o + 1; x < l - 1; ++x) // NOLINT
+    {
+        for(int y = o + 1; y < t - 1; ++y)
+        {
+            m_building[x][y][h - 1].SetType(ByteCube::EType::Air);
+        }
+    }
+
+    // Door
+    int sx = l / 2;
+    int sy = t - 1;
+    int sz = 1;
+    int dw = 3;
+    int dh = 3;
+
+    for(int x = sx; x < sx + dw; ++x) // NOLINT
+    {
+        for(int z = sz; z < sz + dh; ++z)
+        {
+            m_building[x][sy][z].SetType(ByteCube::EType::Air);
         }
     }
 }
@@ -238,5 +275,5 @@ void ProceduralBuilding::Batch()
         m_renderer.Initialize(vertices, normals, uvs);
     }
 
-    m_renderer.SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+    m_renderer.SetPosition(glm::vec3(64.0f, 64.0f, 64.0f));
 }

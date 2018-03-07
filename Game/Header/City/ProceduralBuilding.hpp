@@ -28,8 +28,8 @@
 #include "World/Cube/UVManager.hpp"
 #include "ProceduralBuildingRenderer.hpp"
 
-#define BUILDING_MAX_SIZE   16
-#define BUILDING_MAX_HEIGHT 16
+#define BUILDING_MAX_SIZE   32
+#define BUILDING_MAX_HEIGHT 32
 
 /// \class ProceduralBuilding
 /// \brief Procedural building system using sockets
