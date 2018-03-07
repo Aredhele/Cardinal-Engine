@@ -22,6 +22,9 @@
 /// \author     Vincent STEHLY--CALISTO
 
 // Engine
+#include "Runtime/Sound/SoundEngine.hpp"
+#include "Runtime/Sound/Listener/AudioListener.hpp"
+
 #include "Runtime/Rendering/Lighting/Lighting.hh"
 #include "Runtime/Rendering/PostProcessing/PostEffects/Mirror.hpp"
 
@@ -57,7 +60,7 @@ void PCG_Plugin::OnPlayStart()
     // Configure engine here
     // Lighting
     cardinal::LightManager::CreateDirectionalLight();
-    cardinal::LightManager::GetDirectionalLight()->SetPosition(glm::vec3(520.0f, 20.0f, 307.0f));
+    cardinal::LightManager::GetDirectionalLight()->SetPosition(glm::vec3(525.0f, 20.0f, 307.0f));
     cardinal::LightManager::GetDirectionalLight()->SetDirection(glm::vec3(-0.5f, -0.5f, -0.5f));
 
     // Gizmos
@@ -65,22 +68,6 @@ void PCG_Plugin::OnPlayStart()
 
     // Post-processing
     cardinal::RenderingEngine::SetPostProcessingActive(true);
-    cardinal::RenderingEngine::IsPostProcessingActive();
-
-    cardinal::PostProcessingStack * pPostProcessingStack = cardinal::RenderingEngine::GetPostProcessingStack();
-    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Identity,      false);
-    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Mirror,        false);
-    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Negative,      false);
-    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Sepia,         false);
-    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::BoxBlur,       false);
-    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::GaussianBlur,  false);
-    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::Sharpen,       false);
-    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::EdgeDetection, false);
-    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::DepthBuffer ,  false);
-    pPostProcessingStack->SetEffectActive(cardinal::PostEffect::EType::GodRay ,       false);
-
-    // auto * pMirror   = (cardinal::Mirror   *)pPostProcessingStack->GetPostEffect(cardinal::PostEffect::EType::Mirror);
-    // auto * pNegative = (cardinal::Negative *)pPostProcessingStack->GetPostEffect(cardinal::PostEffect::EType::Negative);
 
     // Setting up the game
     m_pWorld = m_worldGenerator.generateWorld();
@@ -93,6 +80,7 @@ void PCG_Plugin::OnPlayStart()
 /// \brief Called when the game stops
 void PCG_Plugin::OnPlayStop()
 {
+
 }
 
 /// \brief Called just before the engine update

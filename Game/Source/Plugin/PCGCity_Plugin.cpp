@@ -58,6 +58,9 @@ void PCGCity_Plugin::OnPlayStart()
     cardinal::LightManager::GetDirectionalLight()->SetPosition(glm::vec3(520.0f, 20.0f, 307.0f));
     cardinal::LightManager::GetDirectionalLight()->SetDirection(glm::vec3(-0.5f, -0.5f, -0.5f));
 
+    // Post-processing
+    cardinal::RenderingEngine::SetPostProcessingActive(true);
+
     // Gizmos
     cardinal::DebugManager::EnableGizmo(cardinal::DebugManager::EGizmo::DirectionalLight);
     cardinal::DebugManager::EnableGizmo(cardinal::DebugManager::EGizmo::Grid);

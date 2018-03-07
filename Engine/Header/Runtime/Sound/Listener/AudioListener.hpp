@@ -40,6 +40,10 @@ public:
     /// \param position The new position
     void SetPosition(glm::vec3 const& position);
 
+    /// \brief Sets the direction of the listener
+    /// \param direction The direction of the listener
+    void SetDirection(glm::vec3 const& direction);
+
     /// \brief Returns the position of the audio listener
     /// \return the position of the listener
     glm::vec3 const& GetPosition() const;
@@ -54,6 +58,7 @@ private:
 private:
 
     glm::vec3 m_position;
+    glm::vec3 m_direction;
 };
 
 } // !namespace

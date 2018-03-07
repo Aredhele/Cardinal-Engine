@@ -25,11 +25,13 @@ INCLUDE_DIRECTORIES(
 # Gets all source files
 FILE(GLOB_RECURSE GAME_SOURCES
         World/*.cpp
+        City/*.cpp
         Character/*.cpp
         Rendering/*.cpp)
 
 FILE(GLOB_RECURSE GAME_HEADERS
         ${CARDINAL_GAME_DIR}/Header/World/*.hpp
+        ${CARDINAL_GAME_DIR}/Header/City/*.hpp
         ${CARDINAL_GAME_DIR}/Header/Character/*.hpp
         ${CARDINAL_GAME_DIR}/Header/Physics/*.hpp
         ${CARDINAL_GAME_DIR}/Header/Rendering/*.hpp)
