@@ -35,6 +35,17 @@ class ProceduralBuilding
 {
 public:
 
+    /// \brief Constructor
+    ProceduralBuilding();
+
+    /// \brief Initializes the building before generation
+    void Initialize();
+
+    /// \brief Generates the building
+    void Generate();
+
+    /// \brief Batch geometry
+    void Batch();
 
 private:
 
