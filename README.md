@@ -78,3 +78,26 @@ void OnPluginRegistration()
     // After this call, plugin virtual methods will be call automatically
 }
 ```
+
+#### Log
+
+At any time in your code you can log debug messages using the engine built-in log 
+system. There are 4 log levels : User, Info, Warning and Error.
+
+Code
+```cpp
+#include "Runtime/Core/Debug/Logger.hpp"
+
+...
+
+cardinal::Logger::LogUser   ("Foo %d", foo); // Write in stdout with [User] tag
+cardinal::Logger::LogInfo   ("Foo %d", foo); // Write in stdout with [Info] tag
+cardinal::Logger::LogWarning("Foo %d", foo); // Write in stdout with [Warn] tag
+cardinal::Logger::LogError  ("Foo %d", foo); // Write in stderr with [Erro] tag
+```
+
+Output example
+
+<p align="center">
+  <img src="http://image.noelshack.com/minis/2018/10/3/1520382473-readme-1.png" width="409" height="89" />
+</p>
