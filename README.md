@@ -109,11 +109,11 @@ Output example
 </p>
 
 <p align="center">
-  <img src="http://image.noelshack.com/fichiers/2018/10/3/1520384419-gallery-2.png" width="768" height="432" />
+  <img src="http://image.noelshack.com/fichiers/2018/10/3/1520384521-gallery-2.jpg" width="768" height="432" />
 </p>
 
 <p align="center">
-  <img src="http://image.noelshack.com/fichiers/2018/10/3/1520383656-gallery-3.png" width="768" height="432" />
+  <img src="http://image.noelshack.com/fichiers/2018/10/3/1520384523-gallery-3.jpg" width="768" height="432" />
 </p>
 
 <p align="center">
