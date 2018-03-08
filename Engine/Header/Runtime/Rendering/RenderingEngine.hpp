@@ -167,6 +167,10 @@ private:
     uint m_lightScatteringFbo;
     uint m_lightScatteringTexture;
 
+    // Shadow mapping
+    uint m_shadowMapFbo;
+    uint m_shadowMapTexture;
+
     // Post-processing
     bool                m_bIsPostProcessingEnabled;
     PostProcessingStack m_postProcessingStack;

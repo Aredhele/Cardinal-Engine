@@ -174,6 +174,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/PostProcessing/Experimental/ExperimentalVertexShader_2.glsl",
             "Resources/Shaders/PostProcessing/Experimental/ExperimentalFragmentShader_2.glsl"));
 
+    ShaderManager::Register("ShadowMap", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/Shadow/ShadowMapVertexShader.glsl",
+            "Resources/Shaders/Shadow/ShadowMapFragmentShader.glsl"));
+
     // Debug
     DebugManager::Initialize();
 
@@ -229,6 +233,30 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
 
     // Re-bind physical buffer
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // Shadow mapping
+    m_shadowMapFbo = 0;
+    glGenFramebuffers(1, &m_shadowMapFbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_shadowMapFbo);
+
+    // Depth texture
+    m_shadowMapTexture = 0;
+    glGenTextures  (1, &m_shadowMapTexture);
+    glBindTexture  (GL_TEXTURE_2D, m_shadowMapTexture);
+    glTexImage2D   (GL_TEXTURE_2D, 0,GL_DEPTH_COMPONENT16, 1024, 1024, 0,GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_shadowMapTexture, 0);
+    glDrawBuffer(GL_NONE);
+
+    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    {
+        Logger::LogError("Unable to create the shadow maps");
+        return false;
+    }
 
     // Initializes ImGUI
     ImGui::CreateContext();
@@ -312,6 +340,33 @@ void RenderingEngine::RenderFrame(float step)
         debug::DrawPointLight(pPointLight->GetPosition(), glm::vec3(1.0f), 32, pPointLight->GetRange(), 1.0f);
     }
     // End debug draw
+
+
+    // Shadow mapping
+    if(pLight != nullptr)
+    {
+        glm::mat4 depthProjectionMatrix  = glm::ortho(0.0f, 1600.0f, 0.0f, 900.0f, 0.1f, 10000.0f);
+        glm::mat4 depthViewMatrix        = glm::lookAt(-pLight->GetDirection(), glm::vec3(0,0,0), glm::vec3(0, 0, 1));
+        glm::mat4 depthModelMatrix       = glm::mat4(1.0);
+        glm::mat4 depthMVP               = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
+
+        uint shadowMapShader = (uint)ShaderManager::GetShaderID("ShadowMap");
+        int  shadowMVPID     = glGetUniformLocation(shadowMapShader, "MVP");
+
+        // Shader start
+        glUseProgram(shadowMapShader);
+        glUniformMatrix4fv(shadowMVPID, 1, GL_FALSE, &depthMVP[0][0]);
+
+        // FBO start
+        glBindFramebuffer(GL_FRAMEBUFFER, m_shadowMapFbo);
+
+
+        // FBO end
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        // Shader end
+        glUseProgram(0);
+    }
 
     // Post-processing begin
     if(m_bIsPostProcessingEnabled)
