@@ -92,6 +92,8 @@ void PCGCity_Plugin::OnPostUpdate(float dt)
 {
     m_character.Update(cardinal::RenderingEngine::GetWindow(), dt);
     m_cameraManager.Update(cardinal::RenderingEngine::GetWindow(), dt);
+
+    m_building.Update(dt);
 }
 
 /// \brief Called when it's time to render the GUI

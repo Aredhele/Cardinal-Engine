@@ -49,10 +49,21 @@ public:
     /// \brief Batch geometry
     void Batch();
 
+    /// \brief Updates the geometry of the building
+    /// \param dt The elapsed time
+    void Update(float dt);
+
 private:
 
     ProceduralBuildingRenderer m_renderer;
     ByteCube m_building[BUILDING_MAX_SIZE][BUILDING_MAX_SIZE][BUILDING_MAX_HEIGHT];
+
+    std::vector<glm::vec3> m_vertices;
+    std::vector<glm::vec3> m_normals;
+    std::vector<glm::vec2> m_uvs;
+
+    float m_offset;
+    float m_elapsed;
 };
 
 #endif // !CARDINAL_ENGINE_PROCEDURAL_BUILDING_HPP
