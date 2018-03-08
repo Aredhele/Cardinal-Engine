@@ -55,6 +55,9 @@ void ProceduralBuilding::Initialize()
             }
         }
     }
+
+    m_offset  = 1.0f;
+    m_elapsed = 0.0f;
 }
 
 /// \brief Generates the building
@@ -146,19 +149,39 @@ void ProceduralBuilding::Generate()
             m_building[x][sy][z].SetType(ByteCube::EType::Air);
         }
     }
+
+    Batch();
+    m_renderer.SetPosition(glm::vec3(64.0f, 64.0f, 64.0f));
 }
 
+/// \brief Updates the geometry of the building
+/// \param dt The elapsed time
+void ProceduralBuilding::Update(float dt)
+{
+    m_elapsed += dt;
+    if(m_elapsed >= 2.0f)
+    {
+        m_elapsed = 0.0f;
+        m_offset *= -1.0f;
+    }
+
+    for(int i = 0; i < m_vertices.size(); ++i)
+    {
+        if(m_vertices[i].z >= ByteCube::s_cubeSize * 2)
+        {
+            m_vertices[i].z += m_offset * dt *  m_vertices[i].z * 0.2f;
+        }
+    }
+
+    m_renderer.Update(m_vertices, m_normals, m_uvs);
+}
 
 /// \brief Batch geometry
 void ProceduralBuilding::Batch()
 {
-    std::vector<glm::vec3> vertices;
-    std::vector<glm::vec3> normals;
-    std::vector<glm::vec2> uvs;
-
-    vertices.resize(BUILDING_MAX_SIZE * BUILDING_MAX_SIZE * BUILDING_MAX_HEIGHT * 36);
-    normals.resize (BUILDING_MAX_SIZE * BUILDING_MAX_SIZE * BUILDING_MAX_HEIGHT * 36);
-    uvs.resize     (BUILDING_MAX_SIZE * BUILDING_MAX_SIZE * BUILDING_MAX_HEIGHT * 36);
+    m_vertices.resize(BUILDING_MAX_SIZE * BUILDING_MAX_SIZE * BUILDING_MAX_HEIGHT * 36);
+    m_normals.resize (BUILDING_MAX_SIZE * BUILDING_MAX_SIZE * BUILDING_MAX_HEIGHT * 36);
+    m_uvs.resize     (BUILDING_MAX_SIZE * BUILDING_MAX_SIZE * BUILDING_MAX_HEIGHT * 36);
 
     size_t vertexIndex = 0;
     float half = ByteCube::s_cubeSize / 2.0f;
@@ -201,64 +224,64 @@ void ProceduralBuilding::Batch()
                     float UVx = UVManager::UV[cube.GetType() >> 1][nFace * 2 + 0] * step;
                     float UVy = UVManager::UV[cube.GetType() >> 1][nFace * 2 + 1] * step;
 
-                    uvs[vertexIndex].x      = UVx + step;
-                    uvs[vertexIndex].y      = UVy;
-                    normals[vertexIndex].x  = ByteCube::s_normals[faceIndex + 0];
-                    normals[vertexIndex].y  = ByteCube::s_normals[faceIndex + 1];
-                    normals[vertexIndex].z  = ByteCube::s_normals[faceIndex + 2];
-                    vertices[vertexIndex].x = ByteCube::s_vertices[faceIndex + 0] * half + offset.x;
-                    vertices[vertexIndex].y = ByteCube::s_vertices[faceIndex + 1] * half + offset.y;
-                    vertices[vertexIndex].z = ByteCube::s_vertices[faceIndex + 2] * half + offset.z;
+                    m_uvs[vertexIndex].x      = UVx + step;
+                    m_uvs[vertexIndex].y      = UVy;
+                    m_normals[vertexIndex].x  = ByteCube::s_normals[faceIndex + 0];
+                    m_normals[vertexIndex].y  = ByteCube::s_normals[faceIndex + 1];
+                    m_normals[vertexIndex].z  = ByteCube::s_normals[faceIndex + 2];
+                    m_vertices[vertexIndex].x = ByteCube::s_vertices[faceIndex + 0] * half + offset.x;
+                    m_vertices[vertexIndex].y = ByteCube::s_vertices[faceIndex + 1] * half + offset.y;
+                    m_vertices[vertexIndex].z = ByteCube::s_vertices[faceIndex + 2] * half + offset.z;
 
                     vertexIndex += 1;
-                    uvs[vertexIndex].x      = UVx + step;
-                    uvs[vertexIndex].y      = UVy + step;
-                    normals[vertexIndex].x  = ByteCube::s_normals[faceIndex + 3];
-                    normals[vertexIndex].y  = ByteCube::s_normals[faceIndex + 4];
-                    normals[vertexIndex].z  = ByteCube::s_normals[faceIndex + 5];
-                    vertices[vertexIndex].x = ByteCube::s_vertices[faceIndex + 3] * half + offset.x;
-                    vertices[vertexIndex].y = ByteCube::s_vertices[faceIndex + 4] * half + offset.y;
-                    vertices[vertexIndex].z = ByteCube::s_vertices[faceIndex + 5] * half + offset.z;
+                    m_uvs[vertexIndex].x      = UVx + step;
+                    m_uvs[vertexIndex].y      = UVy + step;
+                    m_normals[vertexIndex].x  = ByteCube::s_normals[faceIndex + 3];
+                    m_normals[vertexIndex].y  = ByteCube::s_normals[faceIndex + 4];
+                    m_normals[vertexIndex].z  = ByteCube::s_normals[faceIndex + 5];
+                    m_vertices[vertexIndex].x = ByteCube::s_vertices[faceIndex + 3] * half + offset.x;
+                    m_vertices[vertexIndex].y = ByteCube::s_vertices[faceIndex + 4] * half + offset.y;
+                    m_vertices[vertexIndex].z = ByteCube::s_vertices[faceIndex + 5] * half + offset.z;
 
                     vertexIndex += 1;
-                    uvs[vertexIndex].x      = UVx;
-                    uvs[vertexIndex].y      = UVy + step;
-                    normals[vertexIndex].x  = ByteCube::s_normals[faceIndex + 6];
-                    normals[vertexIndex].y  = ByteCube::s_normals[faceIndex + 7];
-                    normals[vertexIndex].z  = ByteCube::s_normals[faceIndex + 8];
-                    vertices[vertexIndex].x = ByteCube::s_vertices[faceIndex + 6] * half + offset.x;
-                    vertices[vertexIndex].y = ByteCube::s_vertices[faceIndex + 7] * half + offset.y;
-                    vertices[vertexIndex].z = ByteCube::s_vertices[faceIndex + 8] * half + offset.z;
+                    m_uvs[vertexIndex].x      = UVx;
+                    m_uvs[vertexIndex].y      = UVy + step;
+                    m_normals[vertexIndex].x  = ByteCube::s_normals[faceIndex + 6];
+                    m_normals[vertexIndex].y  = ByteCube::s_normals[faceIndex + 7];
+                    m_normals[vertexIndex].z  = ByteCube::s_normals[faceIndex + 8];
+                    m_vertices[vertexIndex].x = ByteCube::s_vertices[faceIndex + 6] * half + offset.x;
+                    m_vertices[vertexIndex].y = ByteCube::s_vertices[faceIndex + 7] * half + offset.y;
+                    m_vertices[vertexIndex].z = ByteCube::s_vertices[faceIndex + 8] * half + offset.z;
 
                     vertexIndex += 1;
-                    uvs[vertexIndex].x      = UVx;
-                    uvs[vertexIndex].y      = UVy + step;
-                    normals[vertexIndex].x  = ByteCube::s_normals[faceIndex + 9];
-                    normals[vertexIndex].y  = ByteCube::s_normals[faceIndex + 10];
-                    normals[vertexIndex].z  = ByteCube::s_normals[faceIndex + 11];
-                    vertices[vertexIndex].x = ByteCube::s_vertices[faceIndex + 9]  * half + offset.x;
-                    vertices[vertexIndex].y = ByteCube::s_vertices[faceIndex + 10] * half + offset.y;
-                    vertices[vertexIndex].z = ByteCube::s_vertices[faceIndex + 11] * half + offset.z;
+                    m_uvs[vertexIndex].x      = UVx;
+                    m_uvs[vertexIndex].y      = UVy + step;
+                    m_normals[vertexIndex].x  = ByteCube::s_normals[faceIndex + 9];
+                    m_normals[vertexIndex].y  = ByteCube::s_normals[faceIndex + 10];
+                    m_normals[vertexIndex].z  = ByteCube::s_normals[faceIndex + 11];
+                    m_vertices[vertexIndex].x = ByteCube::s_vertices[faceIndex + 9]  * half + offset.x;
+                    m_vertices[vertexIndex].y = ByteCube::s_vertices[faceIndex + 10] * half + offset.y;
+                    m_vertices[vertexIndex].z = ByteCube::s_vertices[faceIndex + 11] * half + offset.z;
 
                     vertexIndex += 1;
-                    uvs[vertexIndex].x      = UVx;
-                    uvs[vertexIndex].y      = UVy;
-                    normals[vertexIndex].x  = ByteCube::s_normals[faceIndex + 12];
-                    normals[vertexIndex].y  = ByteCube::s_normals[faceIndex + 13];
-                    normals[vertexIndex].z  = ByteCube::s_normals[faceIndex + 14];
-                    vertices[vertexIndex].x = ByteCube::s_vertices[faceIndex + 12] * half + offset.x;
-                    vertices[vertexIndex].y = ByteCube::s_vertices[faceIndex + 13] * half + offset.y;
-                    vertices[vertexIndex].z = ByteCube::s_vertices[faceIndex + 14] * half + offset.z;
+                    m_uvs[vertexIndex].x      = UVx;
+                    m_uvs[vertexIndex].y      = UVy;
+                    m_normals[vertexIndex].x  = ByteCube::s_normals[faceIndex + 12];
+                    m_normals[vertexIndex].y  = ByteCube::s_normals[faceIndex + 13];
+                    m_normals[vertexIndex].z  = ByteCube::s_normals[faceIndex + 14];
+                    m_vertices[vertexIndex].x = ByteCube::s_vertices[faceIndex + 12] * half + offset.x;
+                    m_vertices[vertexIndex].y = ByteCube::s_vertices[faceIndex + 13] * half + offset.y;
+                    m_vertices[vertexIndex].z = ByteCube::s_vertices[faceIndex + 14] * half + offset.z;
 
                     vertexIndex += 1;
-                    uvs[vertexIndex].x      = UVx + step;
-                    uvs[vertexIndex].y      = UVy;
-                    normals[vertexIndex].x  = ByteCube::s_normals[faceIndex + 15];
-                    normals[vertexIndex].y  = ByteCube::s_normals[faceIndex + 16];
-                    normals[vertexIndex].z  = ByteCube::s_normals[faceIndex + 17];
-                    vertices[vertexIndex].x = ByteCube::s_vertices[faceIndex + 15] * half + offset.x;
-                    vertices[vertexIndex].y = ByteCube::s_vertices[faceIndex + 16] * half + offset.y;
-                    vertices[vertexIndex].z = ByteCube::s_vertices[faceIndex + 17] * half + offset.z;
+                    m_uvs[vertexIndex].x      = UVx + step;
+                    m_uvs[vertexIndex].y      = UVy;
+                    m_normals[vertexIndex].x  = ByteCube::s_normals[faceIndex + 15];
+                    m_normals[vertexIndex].y  = ByteCube::s_normals[faceIndex + 16];
+                    m_normals[vertexIndex].z  = ByteCube::s_normals[faceIndex + 17];
+                    m_vertices[vertexIndex].x = ByteCube::s_vertices[faceIndex + 15] * half + offset.x;
+                    m_vertices[vertexIndex].y = ByteCube::s_vertices[faceIndex + 16] * half + offset.y;
+                    m_vertices[vertexIndex].z = ByteCube::s_vertices[faceIndex + 17] * half + offset.z;
 
                     vertexIndex += 1;
                 }
@@ -266,14 +289,12 @@ void ProceduralBuilding::Batch()
         }
     }
 
-    vertices.resize(vertexIndex);
-    normals.resize (vertexIndex);
-    uvs.resize     (vertexIndex);
+    m_vertices.resize(vertexIndex);
+    m_normals.resize (vertexIndex);
+    m_uvs.resize     (vertexIndex);
 
     if (vertexIndex != 0)
     {
-        m_renderer.Initialize(vertices, normals, uvs);
+        m_renderer.Update(m_vertices, m_normals, m_uvs);
     }
-
-    m_renderer.SetPosition(glm::vec3(64.0f, 64.0f, 64.0f));
 }
