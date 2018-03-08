@@ -1,60 +1,92 @@
 #include "Runtime/Physics/RigidBody.hpp"
+#include "Runtime/Core/Assertion/Assert.hh"
 
 namespace cardinal
 {
 
 /// \brief Constructor
-RigidBody::RigidBody(btDynamicsWorld* world, btCollisionShape* shape, glm::vec3 const& position, glm::vec4 const& rotation, float mass, glm::vec3 const& fallInertia) :
-    m_rotation(rotation),
-    m_mass(mass),
-    m_pWorld(world),
-    m_pShape(shape)
+RigidBody::RigidBody(btDynamicsWorld* world) :
+    m_pWorld(world)
 {
-    // Build default motion state
-    m_pMotionState = new btDefaultMotionState(
-            btTransform(btQuaternion(rotation.x, rotation.y, rotation.z, rotation.w), 
-            btVector3(position.x, position.y, position.z))
-        );
-
-    // Build rigid body info
-    btRigidBody::btRigidBodyConstructionInfo
-        groundRigidBodyCI(btScalar(mass), m_pMotionState, m_pShape, btVector3(fallInertia.x, fallInertia.y, fallInertia.z));
-
-    // Build the rigid body
-    m_pBody = new btRigidBody(groundRigidBodyCI);
-//
-//m_pMotionState =
-//        new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 50, 0)));
-//btScalar bmass = 1;
-//    btVector3 bfallInertia(0, 0, 0);
-//    m_pShape = new btSphereShape(1);
-//    m_pShape->calculateLocalInertia(mass, bfallInertia);
-//    btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(bmass, m_pMotionState, m_pShape, bfallInertia);
-//    m_pBody = new btRigidBody(fallRigidBodyCI);
-    
 }
 
 /// \brief Translate the physical body
 void RigidBody::Translate(glm::vec3 const& translate)
 {
+    ASSERT_TRUE_MSG(IsInitialized() == true, "You must build the inner physics first (RigidBody.buildPhysics())");
+
     m_pBody->translate( btVector3(translate.x, translate.y, translate.z));
 }
 
 /// \brief Set body position
 void RigidBody::SetPosition(glm::vec3 const& position)
 {
+    ASSERT_NOT_NULL_MSG(m_pShape, "You must first give a shape to the rigid body.");
+
     btTransform initialTransform;
+    btQuaternion rotation = m_pBody->getWorldTransform().getRotation();
 
     initialTransform.setOrigin( btVector3(position.x, position.y, position.z));
-    initialTransform.setRotation( btQuaternion(m_rotation.x, m_rotation.y, m_rotation.z, m_rotation.w));
+    initialTransform.setRotation( rotation );
+
+    m_pBody->setWorldTransform( initialTransform );
+    m_pMotionState->setWorldTransform( initialTransform );
+}
+
+
+/// \brief Set body rotation
+void RigidBody::SetRotation(glm::vec4 const& rotation)
+{
+    ASSERT_NOT_NULL_MSG(m_pShape, "You must first give a shape to the rigid body.");
+
+    btTransform initialTransform;
+    btVector3   position = m_pBody->getWorldTransform().getOrigin();
+
+    initialTransform.setOrigin(position);
+    initialTransform.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z, rotation.w));
 
     m_pBody->setWorldTransform(initialTransform);
     m_pMotionState->setWorldTransform(initialTransform);
 }
 
+/// \brief Set the body shape
+void RigidBody::SetShape(CollisionShape* shape)
+{
+    m_pShape = shape;
+}
+
+/// \brief Set body mass
+void RigidBody::SetMass(float mass)
+{
+    ASSERT_TRUE_MSG(IsInitialized() == true, "You must build the inner physics first (RigidBody.buildPhysics())");
+
+    m_pShape->SetMass(mass);
+    glm::vec3 inertia = m_pShape->GetInertia();
+    m_pBody->setMassProps(mass, btVector3(inertia.x, inertia.y, inertia.z) );
+}
+
+/// \brief Build physics body and return true on success
+void RigidBody::BuildPhysics(void)
+{
+    ASSERT_TRUE_MSG(IsInitialized() == false && m_pShape != nullptr, "You must first give the rigid body a shape.");
+
+    m_pMotionState = new btDefaultMotionState();
+
+    glm::vec3 inertia = m_pShape->GetInertia();
+    m_pBody = new btRigidBody(m_pShape->GetMass(), m_pMotionState, m_pShape->GetShape(), btVector3(inertia.x, inertia.y, inertia.z));
+}
+
+/// \brief Returns true if the body is initialized
+bool RigidBody::IsInitialized(void) const
+{
+    return m_pBody != nullptr;
+}
+
 /// \brief Get body position
 glm::vec3 RigidBody::GetPosition(void) const
 {
+    ASSERT_TRUE_MSG(IsInitialized() == true, "You must build the inner physics first (RigidBody.buildPhysics())");
+
     btVector3 pos = m_pBody->getWorldTransform().getOrigin();
     return glm::vec3(pos.x(), pos.y(), pos.z());
 }

@@ -49,8 +49,11 @@ public:
 
 public:
 
-    /// \brief TODO
-    static RigidBody * AllocateRigidbody(glm::vec3 halfExtents, glm::vec3 position, glm::vec4 rotation, float mass);
+    /// \brief Returns a Rigid Body with some data already set, still requires a CollisionShape and MotionFall
+    static RigidBody * AllocateRigidbody(void);
+
+    /// \brief Add the given rigid body to the physics world with security
+    static void AddRigidbody(RigidBody* body);
 
     /// \brief TODO
     static void ReleaseRigidbody(btRigidBody *& pBody);

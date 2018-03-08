@@ -27,6 +27,7 @@
 #include <Header/Runtime/Rendering/Optimization/VBOIndexer.hpp>
 #include <Header/Runtime/Rendering/Texture/TextureManager.hpp>
 #include <Header/Runtime/Physics/PhysicsEngine.hpp>
+#include <Header/Runtime/Physics/CollisionShape.hpp>
 #include <Header/Runtime/Physics/RigidBody.hpp>
 #include <World/WorldSettings.hpp>
 #include "Character/Character.hpp"
@@ -44,11 +45,19 @@ Character::Character()
 
     // Physics
     m_pBody = cardinal::PhysicsEngine::AllocateRigidbody(
-        glm::vec3(2,2,2),       ///< The half extents
-        glm::vec3(0,0,0),       ///< The position
-        glm::vec4(0,0,0,1),     ///< The rotation
-        45                      ///< The mass
+        //glm::vec3(2,2,2),       ///< The half extents
+        //glm::vec3(0,0,0),       ///< The position
+        //glm::vec4(0,0,0,1),     ///< The rotation
+        //45                      ///< The mass
     );
+
+    m_pBody->SetShape       ( new cardinal::BoxShape(glm::vec3(2, 2, 2), 45));
+    m_pBody->BuildPhysics   ();
+
+    m_pBody->SetPosition    ( glm::vec3(0, 0, 0));
+    m_pBody->SetRotation    ( glm::vec4(0, 0, 0, 1));
+    
+    cardinal::PhysicsEngine::AddRigidbody(m_pBody);
 }
 
 /// \brief Updates the character

@@ -82,31 +82,30 @@ void PhysicsEngine::Shutdown()
 }
 
 /// \brief Allocates a BOX collision shape 
-RigidBody * PhysicsEngine::AllocateRigidbody(glm::vec3 halfExtents, glm::vec3 position, glm::vec4 rotation, float mass)
+RigidBody * PhysicsEngine::AllocateRigidbody(void)
 {
     ASSERT_NOT_NULL(s_pInstance->m_pDynamicWorld);
+    return new RigidBody(s_pInstance->m_pDynamicWorld);
+}
 
-    btCollisionShape* shape = new btBoxShape(btVector3(halfExtents.x, halfExtents.y, halfExtents.z));
-    btVector3 fallInertia; 
-    shape->calculateLocalInertia(mass, fallInertia);
-
-    RigidBody* rb = new RigidBody(s_pInstance->m_pDynamicWorld, 
-    shape, 
-    position, 
-    rotation, 
-    mass,
-    glm::vec3(fallInertia.x(), fallInertia.y(), fallInertia.z())
-   );
-
-    s_pInstance->m_pDynamicWorld->addRigidBody(rb->GetBody());
-
-    return rb;
+/// \brief Add the given rigid body to the physics world with security
+/*static */void PhysicsEngine::AddRigidbody(RigidBody* body)
+{
+    if ( body != nullptr && body->IsInitialized() == true)
+    {
+        s_pInstance->m_pDynamicWorld->addRigidBody(body->GetBody());
+    }
+    else
+    {
+        Logger::LogError("PhysicsEngine::AddRigidbody(): Given body is not initialized.");
+    }
 }
 
 /// \brief TODO
 void PhysicsEngine::ReleaseRigidbody(btRigidBody *&pBody)
 {
     s_pInstance->m_pDynamicWorld->removeRigidBody(pBody);
+
     delete pBody;
 }
 

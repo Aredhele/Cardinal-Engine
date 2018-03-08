@@ -26,6 +26,7 @@
 
 #include "Glm/glm/glm.hpp"
 #include "btBulletDynamicsCommon.h"
+#include "Runtime/Physics/CollisionShape.hpp"
 
 namespace cardinal
 {
@@ -36,13 +37,28 @@ class RigidBody
 public:
 
     /// \brief Constructor
-    RigidBody(btDynamicsWorld* world, btCollisionShape* shape, glm::vec3 const& position, glm::vec4 const& rotation, float mass, glm::vec3 const& fallInertia = glm::vec3(0,0,0));
+    RigidBody(btDynamicsWorld* world);
+
+    /// \brief Set body shape
+    void SetShape(CollisionShape* shape);
 
     /// \brief Translate the physical body
     void Translate(glm::vec3 const& translate);
 
     /// \brief Set body position
     void SetPosition(glm::vec3 const& position);
+
+    /// \brief Set body rotation
+    void SetRotation(glm::vec4 const& rotation);
+
+    /// \brief Set body mass
+    void SetMass(float mass);
+
+    /// \brief Build physics body 
+    void BuildPhysics(void);
+
+    /// \brief Returns true if the body is initialized
+    bool IsInitialized(void) const;
 
     /// \brief Get body position
     glm::vec3 GetPosition(void) const;
@@ -53,16 +69,14 @@ public:
 protected:
 friend class PhysicsEngine;
 
+    /// \brief Return intern rigid body
     inline btRigidBody* GetBody(void) const
     {return m_pBody;}
 
-    glm::vec4               m_rotation;
-    float                   m_mass;
-
     btDynamicsWorld         * m_pWorld          = nullptr;
     btRigidBody             * m_pBody           = nullptr;
-    btCollisionShape        * m_pShape          = nullptr;
     btDefaultMotionState    * m_pMotionState    = nullptr;
+    CollisionShape          * m_pShape          = nullptr;
 
 };
 
