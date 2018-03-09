@@ -58,6 +58,7 @@ public:
         Bloom,
         Vignette,
         FXAA,
+        ShadowMap,
         Experimental1,
         Experimental2
     };
@@ -86,7 +87,7 @@ protected:
     /// \param colorTexture The color texture
     /// \param depthTexture The depth buffer texture
     /// \param lightScatteringTexture The result of the light scattering pass
-    virtual void ApplyEffect(uint colorTexture, uint depthTexture, uint lightScatteringTexture) = 0;
+    virtual void ApplyEffect(uint colorTexture, uint depthTexture, uint lightScatteringTexture, uint shadowMapTexture) = 0;
 
     /// \brief Called to display the GUI
     virtual void OnGUI() = 0;

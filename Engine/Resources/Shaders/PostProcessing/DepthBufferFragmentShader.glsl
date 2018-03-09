@@ -20,6 +20,7 @@ float LinearizeDepth(in vec2 uv)
 
 void main(void)
 {
-    float c = LinearizeDepth(textureUV);
+    // float c = LinearizeDepth(textureUV);
+    float c = texture(depthTexture, textureUV).r;
     color = vec3(c, c, c);
 }

@@ -15,38 +15,32 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       BoxBlur.cpp
-/// \date       04/03/2018
+/// \file       ShadowMap.cpp
+/// \date       08/03/2018
 /// \project    Cardinal Engine
 /// \package    Runtime/Rendering/PostProcessing/PostEffects
 /// \author     Vincent STEHLY--CALISTO
 
 #include "Glew/include/GL/glew.h"
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
-#include "Runtime/Rendering/PostProcessing/PostEffects/BoxBlur.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/ShadowMap.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
 /// \brief Constructor
-BoxBlur::BoxBlur() : PostEffect(PostEffect::EType::BoxBlur, "Box blur")
+ShadowMap::ShadowMap() : PostEffect(PostEffect::EType::ShadowMap, "Shadow map")
 {
     // Getting shader ...
-    m_shaderID = (uint)ShaderManager::GetShaderID("BoxBlurPostProcess");
+    m_shaderID = (uint)ShaderManager::GetShaderID("DepthBufferPostProcess");
 
     // Getting uniforms
-    m_colorTextureID = glGetUniformLocation(m_shaderID, "colorTexture");
-    m_intesityID     = glGetUniformLocation(m_shaderID, "intensity");
-    m_intensity      = 3;
-
-    glUseProgram(m_shaderID);
-    glUniform1i (m_intesityID, m_intensity);
-    glUseProgram(0);
+    m_depthTextureID = glGetUniformLocation(m_shaderID, "depthTexture");
 }
 
 /// \brief Destructor
-BoxBlur::~BoxBlur() // NOLINT
+ShadowMap::~ShadowMap() // NOLINT
 {
     // None
 }
@@ -55,34 +49,19 @@ BoxBlur::~BoxBlur() // NOLINT
 /// \param colorTexture The color texture
 /// \param depthTexture The depth buffer texture
 /// \param lightScatteringTexture The result of the light scattering pass
-void BoxBlur::ApplyEffect(uint colorTexture, uint depthTexture, uint lightScatteringTexture,
-                          uint shadowMapTexture)
+void ShadowMap::ApplyEffect(uint colorTexture, uint depthTexture, uint lightScatteringTexture, uint shadowMapTexture)
 {
     glUseProgram   (m_shaderID);
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture  (GL_TEXTURE_2D, colorTexture);
-    glUniform1i    (m_colorTextureID, 0);
+    glBindTexture  (GL_TEXTURE_2D, shadowMapTexture);
+    glUniform1i    (m_depthTextureID, 0);
 }
 
-/// \brief Called to display the GUI
-void BoxBlur::OnGUI()
+/// \brief Called to draw the GUI
+void ShadowMap::OnGUI()
 {
-    ImGui::Checkbox("Enabled###Enabled_BoxBlur", &m_bIsActive);
-
-    ImGui::Text("\nIntensity");
-    if(ImGui::SliderInt("###Slider_BoxBlurIntensity", &m_intensity, 3, 20))
-    {
-        int _intensity = m_intensity;
-        if((_intensity & 1) == 0)
-        {
-            _intensity++;
-        }
-
-        glUseProgram(m_shaderID);
-        glUniform1i (m_intesityID, _intensity);
-        glUseProgram(0);
-    }
+    ImGui::Checkbox("Enabled###Enabled_ShadowMap", &m_bIsActive);
 }
 
 } // !namespace

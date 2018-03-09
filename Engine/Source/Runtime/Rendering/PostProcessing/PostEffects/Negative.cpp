@@ -49,7 +49,8 @@ Negative::~Negative() // NOLINT
 /// \param colorTexture The color texture
 /// \param depthTexture The depth buffer texture
 /// \param lightScatteringTexture The result of the light scattering pass
-void Negative::ApplyEffect(uint colorTexture, uint depthTexture, uint lightScatteringTexture)
+void Negative::ApplyEffect(uint colorTexture, uint depthTexture, uint lightScatteringTexture,
+                           uint shadowMapTexture)
 {
     glUseProgram   (m_shaderID);
 

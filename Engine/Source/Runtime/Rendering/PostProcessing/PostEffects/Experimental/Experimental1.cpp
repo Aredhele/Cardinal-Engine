@@ -49,7 +49,8 @@ Experimental1::~Experimental1() // NOLINT
 /// \param colorTexture The color texture
 /// \param depthTexture The depth buffer texture
 /// \param lightScatteringTexture The result of the light scattering pass
-void Experimental1::ApplyEffect(uint colorTexture, uint depthTexture, uint lightScatteringTexture)
+void Experimental1::ApplyEffect(uint colorTexture, uint depthTexture, uint lightScatteringTexture,
+                                uint shadowMapTexture)
 {
     glUseProgram   (m_shaderID);
 

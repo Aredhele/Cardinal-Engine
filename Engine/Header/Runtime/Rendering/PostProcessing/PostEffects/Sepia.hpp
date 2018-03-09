@@ -53,7 +53,7 @@ private:
     /// \param colorTexture The color texture
     /// \param depthTexture The depth buffer texture
     /// \param lightScatteringTexture The result of the light scattering pass
-    void ApplyEffect(uint colorTexture, uint depthTexture, uint lightScatteringTexture) final;
+    void ApplyEffect(uint colorTexture, uint depthTexture, uint lightScatteringTexture, uint shadowMapTexture) final;
 
     /// \brief Called to draw the GUI
     void OnGUI() final;

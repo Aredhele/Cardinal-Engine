@@ -195,6 +195,7 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
 
     // TODO : Removes magic values
     m_projectionMatrix = glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 10000.0f);
+    // m_projectionMatrix = glm::ortho(0.0f, 1600.0f, 0.0f, 900.0f, -0.1f, 1000.0f);
 
     m_frameDelta   = 1.0 / fps;
     m_frameTime    = 0.0;
@@ -243,7 +244,7 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     m_shadowMapTexture = 0;
     glGenTextures  (1, &m_shadowMapTexture);
     glBindTexture  (GL_TEXTURE_2D, m_shadowMapTexture);
-    glTexImage2D   (GL_TEXTURE_2D, 0,GL_DEPTH_COMPONENT16, 1024, 1024, 0,GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+    glTexImage2D   (GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1024, 1024, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -251,12 +252,16 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
 
     glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_shadowMapTexture, 0);
     glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
 
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     {
         Logger::LogError("Unable to create the shadow maps");
         return false;
     }
+
+    // Re-bind physical buffer
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // Initializes ImGUI
     ImGui::CreateContext();
@@ -345,13 +350,13 @@ void RenderingEngine::RenderFrame(float step)
     // Shadow mapping
     if(pLight != nullptr)
     {
-        glm::mat4 depthProjectionMatrix  = glm::ortho(0.0f, 1600.0f, 0.0f, 900.0f, 0.1f, 10000.0f);
-        glm::mat4 depthViewMatrix        = glm::lookAt(-pLight->GetDirection(), glm::vec3(0,0,0), glm::vec3(0, 0, 1));
+        glm::mat4 depthProjectionMatrix  = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, 0.1f, 5000.0f);
+        glm::mat4 depthViewMatrix        = glm::lookAt(pLight->GetPosition(), glm::vec3(0,0,0) + pLight->GetDirection(), glm::vec3(0, 0, 1));
         glm::mat4 depthModelMatrix       = glm::mat4(1.0);
         glm::mat4 depthMVP               = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
 
         uint shadowMapShader = (uint)ShaderManager::GetShaderID("ShadowMap");
-        int  shadowMVPID     = glGetUniformLocation(shadowMapShader, "MVP");
+        int  shadowMVPID     = glGetUniformLocation(shadowMapShader, "depthMVP");
 
         // Shader start
         glUseProgram(shadowMapShader);
@@ -359,7 +364,25 @@ void RenderingEngine::RenderFrame(float step)
 
         // FBO start
         glBindFramebuffer(GL_FRAMEBUFFER, m_shadowMapFbo);
+        glViewport(0, 0, 1024, 1024);
+        glClear(GL_DEPTH_BUFFER_BIT);
 
+        size_t rendererCount = m_renderers.size();
+        for (int nRenderer = 0; nRenderer < rendererCount; ++nRenderer)
+        {
+            m_triangleCounter += m_renderers[nRenderer]->GetElementCount();
+            m_currentTriangle += m_renderers[nRenderer]->GetElementCount();
+
+            glBindVertexArray(m_renderers[nRenderer]->m_vao);
+            glEnableVertexAttribArray(0);
+
+            if(m_renderers[nRenderer]->m_isIndexed)
+                glDrawElements(GL_TRIANGLES, m_renderers[nRenderer]->m_elementsCount, GL_UNSIGNED_SHORT, nullptr);
+            else
+                glDrawArrays(GL_TRIANGLES, 0, m_renderers[nRenderer]->m_elementsCount);
+
+            glBindVertexArray(0);
+        }
 
         // FBO end
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -429,7 +452,7 @@ void RenderingEngine::RenderFrame(float step)
         // Light scattering pass end
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        m_postProcessingStack.OnPostProcessingBegin(m_lightScatteringTexture);
+        m_postProcessingStack.OnPostProcessingBegin(m_lightScatteringTexture, m_shadowMapTexture);
     }
     else
     {

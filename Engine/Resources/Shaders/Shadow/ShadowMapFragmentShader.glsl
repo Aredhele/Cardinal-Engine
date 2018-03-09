@@ -1,9 +1,8 @@
-#version 330 core
+#version 330
 
-// Out
-layout(location = 0) out float fragmentdepth;
+layout (location = 0) out vec3 color;
 
-void main()
+void main(void)
 {
-    fragmentdepth = gl_FragCoord.z;
+   color = vec3(0.0f, 0.0f, 0.0f);
 }

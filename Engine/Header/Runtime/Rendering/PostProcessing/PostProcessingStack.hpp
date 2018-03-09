@@ -42,6 +42,7 @@
 #include "Runtime/Rendering/PostProcessing/PostEffects/Bloom.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/Vignette.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/FXAA.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/ShadowMap.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/Experimental/Experimental1.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/Experimental/Experimental2.hpp"
 
@@ -81,7 +82,7 @@ private:
     void Release();
 
     /// \brief Called at the beginning of the frame
-    void OnPostProcessingBegin(uint lightScatteringTextureID);
+    void OnPostProcessingBegin(uint lightScatteringTextureID, uint shadowMapTextureID);
 
     /// \brief Called to render effects
     void OnPostProcessingRender();
@@ -117,6 +118,9 @@ private:
 
     // Light scattering
     uint m_lightScatteringTextureID;
+
+    // Shadowing
+    uint m_shadowMapTextureID;
 
     // ImGUI
     bool m_postProcessWindow;

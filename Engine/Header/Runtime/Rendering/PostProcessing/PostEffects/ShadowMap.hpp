@@ -15,25 +15,24 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       Bloom.hpp
-/// \date       05/03/2018
+/// \file       ShadowMap.hpp
+/// \date       08/03/2018
 /// \project    Cardinal Engine
 /// \package    Runtime/Rendering/PostProcessing/PostEffects
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_BLOOM_HPP__
-#define CARDINAL_ENGINE_BLOOM_HPP__
+#ifndef CARDINAL_ENGINE_SHADOW_MAP_HPP__
+#define CARDINAL_ENGINE_SHADOW_MAP_HPP__
 
-#include <ThirdParty/Glm/glm/vec3.hpp>
 #include "Runtime/Rendering/PostProcessing/PostEffects/PostEffect.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \class Bloom
-/// \brief Basic glow effect
-class Bloom : public PostEffect
+/// \class ShadowMap
+/// \brief Display the current shadow map
+class ShadowMap : public PostEffect
 {
 public:
 
@@ -44,10 +43,10 @@ private:
     friend class PostProcessingStack;
 
     /// \brief Constructor
-    Bloom();
+    ShadowMap();
 
     /// \brief Destructor
-    ~Bloom();
+    ~ShadowMap();
 
     /// \brief Applies the effect from the given textures
     /// \param colorTexture The color texture
@@ -57,18 +56,8 @@ private:
 
     /// \brief Called to draw the GUI
     void OnGUI() final;
-
-private:
-
-    glm::vec3 m_color;
-    float     m_quality;
-    int       m_sampleCount;
-
-    int       m_colorID;
-    int       m_qualityID;
-    int       m_sampleCountID;
 };
 
 } // !namespace
 
-#endif // !CARDINAL_ENGINE_BLOOM_HPP__
+#endif // !CARDINAL_ENGINE_SHADOW_MAP_HPP__
