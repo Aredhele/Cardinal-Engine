@@ -42,7 +42,7 @@
 #include "Runtime/Rendering/Renderer/TextRenderer.hpp"
 #include "Runtime/Rendering/Texture/TextureLoader.hpp"
 #include "Runtime/Rendering/Texture/TextureManager.hpp"
-
+#include "Runtime/Rendering/Particle/ParticleSystem.hpp"
 #include "Runtime/Rendering/Lighting/LightManager.hpp"
 #include "Runtime/Rendering/Lighting/Lights/PointLight.hpp"
 #include "Runtime/Rendering/Lighting/Lights/DirectionalLight.hpp"
@@ -768,45 +768,45 @@ void RenderingEngine::RenderStereoTarget()
     UpdateHMDPositions();
 
     glClearColor(m_clearColor.x, m_clearColor.y, m_clearColor.z, 1.0f);
-    glEnable( GL_MULTISAMPLE );
+    glEnable(GL_MULTISAMPLE);
 
     // Left Eye
-    glBindFramebuffer( GL_FRAMEBUFFER, leftEyeDesc.m_nRenderFramebufferId );
-    glViewport(0, 0, m_nRenderWidth, m_nRenderHeight );
-    RenderScene( vr::Eye_Left );
-    glBindFramebuffer( GL_FRAMEBUFFER, 0 );
+    glBindFramebuffer(GL_FRAMEBUFFER, leftEyeDesc.m_nRenderFramebufferId);
+    glViewport(0, 0, m_nRenderWidth, m_nRenderHeight);
+    RenderScene(vr::Eye_Left);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    glDisable( GL_MULTISAMPLE );
+    glDisable(GL_MULTISAMPLE);
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, leftEyeDesc.m_nRenderFramebufferId);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, leftEyeDesc.m_nResolveFramebufferId );
 
-    glBlitFramebuffer( 0, 0, m_nRenderWidth, m_nRenderHeight, 0, 0, m_nRenderWidth, m_nRenderHeight,
+    glBlitFramebuffer(0, 0, m_nRenderWidth, m_nRenderHeight, 0, 0, m_nRenderWidth, m_nRenderHeight,
                        GL_COLOR_BUFFER_BIT,
-                       GL_LINEAR );
+                       GL_LINEAR);
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0 );
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
-    glEnable( GL_MULTISAMPLE );
+    glEnable(GL_MULTISAMPLE);
 
     // Right Eye
     glBindFramebuffer( GL_FRAMEBUFFER, rightEyeDesc.m_nRenderFramebufferId );
     glViewport(0, 0, m_nRenderWidth, m_nRenderHeight );
-    RenderScene( vr::Eye_Right );
-    glBindFramebuffer( GL_FRAMEBUFFER, 0 );
+    RenderScene(vr::Eye_Right);
+    glBindFramebuffer( GL_FRAMEBUFFER, 0);
 
-    glDisable( GL_MULTISAMPLE );
+    glDisable(GL_MULTISAMPLE);
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, rightEyeDesc.m_nRenderFramebufferId );
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, rightEyeDesc.m_nResolveFramebufferId );
 
-    glBlitFramebuffer( 0, 0, m_nRenderWidth, m_nRenderHeight, 0, 0, m_nRenderWidth, m_nRenderHeight,
+    glBlitFramebuffer(0, 0, m_nRenderWidth, m_nRenderHeight, 0, 0, m_nRenderWidth, m_nRenderHeight,
                        GL_COLOR_BUFFER_BIT,
-                       GL_LINEAR  );
+                       GL_LINEAR);
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0 );
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }
 
 glm::mat4 RenderingEngine::ConvertOpenVRMatrixToGLM( const vr::HmdMatrix34_t &matPose )
@@ -989,6 +989,45 @@ void RenderingEngine::Shutdown()
     pRenderer = nullptr;
 }
 
+/// \brief Allocates and return a pointer on a particle system
+///        Registers the system into the engine
+/* static */ ParticleSystem * RenderingEngine::AllocateParticleSystem()
+{
+    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
+
+    ParticleSystem * pSystem = new ParticleSystem(); // NOLINT
+    RenderingEngine::s_pInstance->m_paricleSystems.push_back(pSystem);
+
+    return pSystem;
+}
+
+/// \brief Deallocates the given system
+/// \param pSystem The particle system to deallocate
+/* static */ void RenderingEngine::ReleaseParticleSystem(ParticleSystem *& pSystem)
+{
+    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
+
+    int index = -1;
+    size_t count = RenderingEngine::s_pInstance->m_paricleSystems.size();
+    for (size_t nSystem = 0; nSystem < count; ++nSystem)
+    {
+        if (RenderingEngine::s_pInstance->m_paricleSystems[nSystem] == pSystem)
+        {
+            index = static_cast<int>(nSystem);
+            break;
+        }
+    }
+
+    if (index != -1)
+    {
+        RenderingEngine::s_pInstance->m_paricleSystems.erase(
+                RenderingEngine::s_pInstance->m_paricleSystems.begin() + index);
+    }
+
+    delete pSystem;
+    pSystem = nullptr;
+}
+
 /// \brief Returns the main camera
 /// \return A pointer on the main camera
 /* static */ Camera *RenderingEngine::GetMainCamera()
@@ -1120,6 +1159,13 @@ void RenderingEngine::DisplayDebugWindow(float step)
 
         ImGui::End();
     }
+}
+
+/// \brief Called each frame
+/// \param dt The elapsed time
+void RenderingEngine::Update(float dt)
+{
+
 }
 
 /// \brief Updates the values of the time passed into other engine parts

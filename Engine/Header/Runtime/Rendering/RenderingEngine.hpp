@@ -62,6 +62,10 @@ public:
     /// \param step The normalized progression in the frame
     void Render(float step);
 
+    /// \brief Called each frame
+    /// \param dt The elapsed time
+    void Update(float dt);
+
     /// \brief Shutdown the engine
     void Shutdown();
 
@@ -92,6 +96,14 @@ public:
     /// \brief Allocates and return a pointer on a renderer
     ///        Registers the renderer into the engine
     static class TextRenderer * AllocateTextRenderer();
+
+    /// \brief Allocates and return a pointer on a particle system
+    ///        Registers the system into the engine
+    static class ParticleSystem * AllocateParticleSystem();
+
+    /// \brief Deallocates the given system
+    /// \param pSystem The particle system to deallocate
+    static void ReleaseParticleSystem(class ParticleSystem *& pSystem);
 
     /// \brief Deallocates a renderer
     ///        Unregisters the renderer
@@ -241,8 +253,9 @@ private:
     glm::mat4 m_projectionMatrix;
 
     // Rendering objects
-    glm::vec3                     m_clearColor;
-    std::vector<class IRenderer*> m_renderers;
+    glm::vec3                          m_clearColor;
+    std::vector<class IRenderer*>      m_renderers;
+    std::vector<class ParticleSystem*> m_paricleSystems;
 
     // Light scattering
     uint m_lightScatteringFbo;
