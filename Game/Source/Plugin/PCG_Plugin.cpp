@@ -26,6 +26,7 @@
 #include "Runtime/Sound/Listener/AudioListener.hpp"
 
 #include "Runtime/Rendering/Lighting/Lighting.hh"
+#include "Runtime/Rendering/Particle/ParticleSystem.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/Mirror.hpp"
 
 #include "ImGUI/imgui.h"

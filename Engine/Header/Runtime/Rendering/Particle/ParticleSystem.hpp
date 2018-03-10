@@ -24,6 +24,9 @@
 #ifndef CARDINAL_ENGINE_PARTICLE_SYSTEM_HPP__
 #define CARDINAL_ENGINE_PARTICLE_SYSTEM_HPP__
 
+#include "Glm/glm/vec3.hpp"
+#include "Runtime/Platform/Configuration/Type.hh"
+
 /// \namespace cardinal
 namespace cardinal
 {
@@ -32,10 +35,28 @@ namespace cardinal
 /// \brief System of basic particles
 class ParticleSystem
 {
+private:
+
+    /// \struct Particle
+    struct Particle
+    {
+        glm::vec3 velocity;
+    };
+
 public:
 
+    /// \brief Initializes the particle system with
+    ///        the give amount of particles
+    void Initialize(uint64 amount);
+
+    /// \brief Updates the particle system
+    /// \param dt The elapsed time
+    void Update(float dt);
+
 private:
-    
+
+    Particle * m_pParticles;
+    uint64     m_amount;
 };
 
 } // !namespace

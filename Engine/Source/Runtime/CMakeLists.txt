@@ -58,6 +58,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Texture/TextureLoader.cpp
         Rendering/Texture/TextureManager.cpp
         Rendering/Texture/TextureImporter.cpp
+        Rendering/Particle/ParticleSystem.cpp
         Rendering/Shader/IShader.cpp
         Rendering/Shader/ShaderManager.cpp
         Rendering/Shader/ShaderCompiler.cpp
