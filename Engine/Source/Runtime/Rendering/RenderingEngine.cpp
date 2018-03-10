@@ -351,7 +351,7 @@ void RenderingEngine::RenderFrame(float step)
     if(pLight != nullptr)
     {
         glm::mat4 depthProjectionMatrix  = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, 0.1f, 5000.0f);
-        glm::mat4 depthViewMatrix        = glm::lookAt(pLight->GetPosition(), glm::vec3(0,0,0) + pLight->GetDirection(), glm::vec3(0, 0, 1));
+        glm::mat4 depthViewMatrix        = glm::lookAt(-pLight->GetDirection(), glm::vec3(0,0,0), glm::vec3(0, 0, 1));
         glm::mat4 depthModelMatrix       = glm::mat4(1.0);
         glm::mat4 depthMVP               = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
 
