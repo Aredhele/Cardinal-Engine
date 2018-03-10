@@ -178,6 +178,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/Shadow/ShadowMapVertexShader.glsl",
             "Resources/Shaders/Shadow/ShadowMapFragmentShader.glsl"));
 
+    ShaderManager::Register("VRMirror", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/VR/VRMirrorVertexShader.glsl",
+            "Resources/Shaders/VR/VRMirrorFragmentShader.glsl"));
+
     // Debug
     DebugManager::Initialize();
 
@@ -348,6 +352,26 @@ bool RenderingEngine::InitStereoscopicRendering()
     m_mat4ProjectionRight = GetHMDMatrixProjectionEye(vr::Eye_Right);
     m_mat4eyePosLeft      = GetHMDMatrixPoseEye      (vr::Eye_Left);
     m_mat4eyePosRight     = GetHMDMatrixPoseEye      (vr::Eye_Right);
+
+    // Quad to render HMD frames (left - right)
+    // VAO for the quad
+    glGenVertexArrays(1, &m_HMDVao);
+    glBindVertexArray(m_HMDVao);
+
+    // Quad vertices
+    static const GLfloat g_quad_vertex_buffer_data[] =
+    {
+            -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, -1.0f,  1.0f, 0.0f,
+            -1.0f,  1.0f, 0.0f, 1.0f, -1.0f, 0.0f,  1.0f,  1.0f, 0.0f,
+    };
+
+    glGenBuffers(1, &m_HMDVbo);
+    glBindBuffer(GL_ARRAY_BUFFER, m_HMDVbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
+
+    // Unbind vao
+    glBindVertexArray(0);
 
     return true;
 }
@@ -669,15 +693,46 @@ void RenderingEngine::RenderFrame(float step)
         vr::VRCompositor()->Submit(vr::Eye_Left, &leftEyeTexture );
         vr::Texture_t rightEyeTexture = {(void*)(uintptr_t)rightEyeDesc.m_nResolveTextureId, vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
         vr::VRCompositor()->Submit(vr::Eye_Right, &rightEyeTexture );
-    }
+        // vr::VRCompositor()->ShowMirrorWindow();
 
-    // Draw
-    size_t rendererCount = m_renderers.size();
-    for (int nRenderer = 0; nRenderer < rendererCount; ++nRenderer)
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glViewport(0, 0, 1600, 900);
+
+        // Clears the buffer
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        uint shaderID = (uint)ShaderManager::GetShaderID("VRMirror");
+        glUseProgram(shaderID);
+
+        int leftEyeID  = glGetUniformLocation(shaderID, "leftEyeTexture");
+        int rightEyeID = glGetUniformLocation(shaderID, "rightEyeTexture");
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture  (GL_TEXTURE_2D, leftEyeDesc.m_nResolveTextureId);
+        glUniform1i(leftEyeID,  0);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture  (GL_TEXTURE_2D, rightEyeDesc.m_nResolveTextureId);
+        glUniform1i(rightEyeID, 1);
+
+        glBindVertexArray(m_HMDVao);
+        glEnableVertexAttribArray(0);
+
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDisableVertexAttribArray(0);
+
+        glUseProgram(0);
+    }
+    else
     {
-        m_triangleCounter += m_renderers[nRenderer]->GetElementCount();
-        m_currentTriangle += m_renderers[nRenderer]->GetElementCount();
-        m_renderers[nRenderer]->Draw(Projection, View, glm::vec3(0.0f, 0.0f, 0.0f), LightManager::GetNearestPointLights(m_renderers[nRenderer]->GetPosition()));
+        // Draw
+        size_t rendererCount = m_renderers.size();
+        for (int nRenderer = 0; nRenderer < rendererCount; ++nRenderer)
+        {
+            m_triangleCounter += m_renderers[nRenderer]->GetElementCount();
+            m_currentTriangle += m_renderers[nRenderer]->GetElementCount();
+            m_renderers[nRenderer]->Draw(Projection, View, glm::vec3(0.0f, 0.0f, 0.0f), LightManager::GetNearestPointLights(m_renderers[nRenderer]->GetPosition()));
+        }
     }
 
     // Cleanup

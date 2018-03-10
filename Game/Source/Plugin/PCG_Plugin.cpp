@@ -68,12 +68,12 @@ void PCG_Plugin::OnPlayStart()
     cardinal::DebugManager::EnableGizmo(cardinal::DebugManager::EGizmo::DirectionalLight);
 
     // Post-processing
-    cardinal::RenderingEngine::SetPostProcessingActive(true);
+    cardinal::RenderingEngine::SetPostProcessingActive(false);
 
     // VR
-    // cardinal::RenderingEngine::InitializeStereoscopicRendering();
-    // m_pHMD = cardinal::RenderingEngine::GetHMD();
-    // ASSERT_NOT_NULL(m_pHMD);
+    cardinal::RenderingEngine::InitializeStereoscopicRendering();
+    m_pHMD = cardinal::RenderingEngine::GetHMD();
+    ASSERT_NOT_NULL(m_pHMD);
 
     // Setting up the game
     m_pWorld = m_worldGenerator.generateWorld();

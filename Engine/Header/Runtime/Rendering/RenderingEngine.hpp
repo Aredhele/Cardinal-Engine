@@ -207,6 +207,9 @@ private:
     int         m_iValidPoseCount;
     std::string m_strPoseClasses;
 
+    uint m_HMDVao;
+    uint m_HMDVbo;
+
 private:
 
     Window   m_window;
