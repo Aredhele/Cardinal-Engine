@@ -67,12 +67,19 @@ private:
     /// \brief Process HMD events
     void ProcessVREvent(vr::VREvent_t const& event);
 
+    /// \brief Render some debug lines for controllers axes
+    void RenderControllerAxes();
+
 private:
 
-    Character          m_character;
-    CameraManager      m_cameraManager;
-    ProceduralBuilding m_building;
-    vr::IVRSystem *    m_pHMD;
+    Character               m_character;
+    CameraManager           m_cameraManager;
+    ProceduralBuilding      m_building;
+    vr::IVRSystem *         m_pHMD;
+    vr::TrackedDevicePose_t m_rTrackedDevicePose [ vr::k_unMaxTrackedDeviceCount ];
+    glm::mat4               m_rmat4DevicePose    [ vr::k_unMaxTrackedDeviceCount ];
+    bool                    m_rbShowTrackedDevice[ vr::k_unMaxTrackedDeviceCount ];
+    int                     m_iTrackedControllerCount;
 };
 
 #endif // !CARDINAL_ENGINE_VR_PLUGIN_HPP__

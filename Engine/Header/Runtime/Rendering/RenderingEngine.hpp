@@ -126,6 +126,18 @@ public:
 
 private:
 
+    // VR framebuffers
+    struct FramebufferDesc
+    {
+        GLuint m_nDepthBufferId;
+        GLuint m_nRenderTextureId;
+        GLuint m_nRenderFramebufferId;
+        GLuint m_nResolveTextureId;
+        GLuint m_nResolveFramebufferId;
+    };
+
+private:
+
     /// \brief Frame rendering implementation
     /// \param step The normalized progression in the frame
     void RenderFrame(float step);
@@ -137,8 +149,17 @@ private:
     /// \brief Initializes VR rendering
     bool InitStereoscopicRendering();
 
+    /// \brief Creates fbo
+    bool CreateVRFrameBuffer(int nWidth, int nHeight, FramebufferDesc &framebufferDesc);
+
     /// \brief ...
     void ShutdownStereoscopicRendering();
+
+    /// \brief Renders the scene in stereo
+    void RenderStereoTarget();
+
+    /// \brief Returns the wanted string
+    std::string GetTrackedDeviceString(vr::IVRSystem *pHmd, vr::TrackedDeviceIndex_t unDevice, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError *peError = NULL);
 
 private:
 
@@ -154,6 +175,12 @@ private:
     vr::TrackedDevicePose_t m_rTrackedDevicePose [ vr::k_unMaxTrackedDeviceCount ];
     glm::mat4               m_rmat4DevicePose    [ vr::k_unMaxTrackedDeviceCount ];
     bool                    m_rbShowTrackedDevice[ vr::k_unMaxTrackedDeviceCount ];
+
+    FramebufferDesc leftEyeDesc;
+    FramebufferDesc rightEyeDesc;
+
+    uint32_t m_nRenderWidth;
+    uint32_t m_nRenderHeight;
 
 private:
 

@@ -327,8 +327,63 @@ bool RenderingEngine::InitStereoscopicRendering()
         Logger::LogInfo("Compositor initialized");
     }
 
-    // m_strDriver  = GetTrackedDeviceString( m_pHMD, vr::k_unTrackedDeviceIndex_Hmd, vr::Prop_TrackingSystemName_String );
-    // m_strDisplay = GetTrackedDeviceString( m_pHMD, vr::k_unTrackedDeviceIndex_Hmd, vr::Prop_SerialNumber_String );
+    m_strDriver  = GetTrackedDeviceString(m_pHMD, vr::k_unTrackedDeviceIndex_Hmd, vr::Prop_TrackingSystemName_String);
+    m_strDisplay = GetTrackedDeviceString(m_pHMD, vr::k_unTrackedDeviceIndex_Hmd, vr::Prop_SerialNumber_String);
+
+    Logger::LogInfo("VR driver  : %s", m_strDriver.c_str());
+    Logger::LogInfo("VR display : %s", m_strDisplay.c_str());
+
+    m_nRenderWidth  = 0;
+    m_nRenderHeight = 0;
+
+    m_pHMD->GetRecommendedRenderTargetSize(&m_nRenderWidth, &m_nRenderHeight);
+
+    Logger::LogInfo("VR FBO recommended width  : %u", m_nRenderWidth);
+    Logger::LogInfo("VR FBO recommended height : %u", m_nRenderHeight);
+
+    CreateVRFrameBuffer(m_nRenderWidth, m_nRenderHeight, leftEyeDesc );
+    CreateVRFrameBuffer(m_nRenderWidth, m_nRenderHeight, rightEyeDesc);
+
+    return true;
+}
+
+/// \brief Creates fbo
+bool RenderingEngine::CreateVRFrameBuffer(int nWidth, int nHeight, FramebufferDesc &framebufferDesc)
+{
+    glGenFramebuffers(1, &framebufferDesc.m_nRenderFramebufferId );
+    glBindFramebuffer(GL_FRAMEBUFFER, framebufferDesc.m_nRenderFramebufferId);
+
+    glGenRenderbuffers(1, &framebufferDesc.m_nDepthBufferId);
+    glBindRenderbuffer(GL_RENDERBUFFER, framebufferDesc.m_nDepthBufferId);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT, nWidth, nHeight );
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,	framebufferDesc.m_nDepthBufferId );
+
+    glGenTextures(1, &framebufferDesc.m_nRenderTextureId );
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, framebufferDesc.m_nRenderTextureId );
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA8, nWidth, nHeight, (GLboolean)true);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, framebufferDesc.m_nRenderTextureId, 0);
+
+    glGenFramebuffers(1, &framebufferDesc.m_nResolveFramebufferId );
+    glBindFramebuffer(GL_FRAMEBUFFER, framebufferDesc.m_nResolveFramebufferId);
+
+    glGenTextures(1, &framebufferDesc.m_nResolveTextureId );
+    glBindTexture(GL_TEXTURE_2D, framebufferDesc.m_nResolveTextureId );
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, nWidth, nHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebufferDesc.m_nResolveTextureId, 0);
+
+    // check FBO status
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    if (status != GL_FRAMEBUFFER_COMPLETE)
+    {
+        Logger::LogError("Unable to create VR FBO");
+        return false;
+    }
+
+    glBindFramebuffer( GL_FRAMEBUFFER, 0 );
+
+    return true;
 }
 
 /// \brief ...
@@ -339,6 +394,20 @@ void RenderingEngine::ShutdownStereoscopicRendering()
         vr::VR_Shutdown();
         m_pHMD = nullptr;
     }
+}
+
+/// \brief Returns the wanted string
+std::string RenderingEngine::GetTrackedDeviceString( vr::IVRSystem *pHmd, vr::TrackedDeviceIndex_t unDevice, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError *peError)
+{
+    uint32_t unRequiredBufferLen = pHmd->GetStringTrackedDeviceProperty( unDevice, prop, nullptr, 0, peError );
+    if( unRequiredBufferLen == 0 )
+        return "";
+
+    char *pchBuffer = new char[ unRequiredBufferLen ];
+    unRequiredBufferLen = pHmd->GetStringTrackedDeviceProperty( unDevice, prop, pchBuffer, unRequiredBufferLen, peError );
+    std::string sResult = pchBuffer;
+    delete [] pchBuffer;
+    return sResult;
 }
 
 /// \brief Renders the frame
@@ -525,6 +594,7 @@ void RenderingEngine::RenderFrame(float step)
     else
     {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glViewport(0, 0, 1600, 900);
     }
 
     // Clearing buffer
@@ -532,6 +602,16 @@ void RenderingEngine::RenderFrame(float step)
 
     // Lighting
     LightManager::OnRenderBegin();
+
+    if(m_bStereoscopicRendering)
+    {
+        RenderStereoTarget();
+
+        vr::Texture_t leftEyeTexture = {(void*)(uintptr_t)leftEyeDesc.m_nResolveTextureId, vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
+        vr::VRCompositor()->Submit(vr::Eye_Left, &leftEyeTexture );
+        vr::Texture_t rightEyeTexture = {(void*)(uintptr_t)rightEyeDesc.m_nResolveTextureId, vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
+        vr::VRCompositor()->Submit(vr::Eye_Right, &rightEyeTexture );
+    }
 
     // Draw
     size_t rendererCount = m_renderers.size();
@@ -567,6 +647,51 @@ void RenderingEngine::RenderFrame(float step)
 
     // Display
     glfwSwapBuffers(m_window.GetContext());
+}
+
+/// \brief Renders the scene in stereo
+void RenderingEngine::RenderStereoTarget()
+{
+    glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+    glEnable( GL_MULTISAMPLE );
+
+    // Left Eye
+    glBindFramebuffer( GL_FRAMEBUFFER, leftEyeDesc.m_nRenderFramebufferId );
+    glViewport(0, 0, m_nRenderWidth, m_nRenderHeight );
+    // RenderScene( vr::Eye_Left );
+    glBindFramebuffer( GL_FRAMEBUFFER, 0 );
+
+    glDisable( GL_MULTISAMPLE );
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, leftEyeDesc.m_nRenderFramebufferId);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, leftEyeDesc.m_nResolveFramebufferId );
+
+    glBlitFramebuffer( 0, 0, m_nRenderWidth, m_nRenderHeight, 0, 0, m_nRenderWidth, m_nRenderHeight,
+                       GL_COLOR_BUFFER_BIT,
+                       GL_LINEAR );
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0 );
+
+    glEnable( GL_MULTISAMPLE );
+
+    // Right Eye
+    glBindFramebuffer( GL_FRAMEBUFFER, rightEyeDesc.m_nRenderFramebufferId );
+    glViewport(0, 0, m_nRenderWidth, m_nRenderHeight );
+    // RenderScene( vr::Eye_Right );
+    glBindFramebuffer( GL_FRAMEBUFFER, 0 );
+
+    glDisable( GL_MULTISAMPLE );
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, rightEyeDesc.m_nRenderFramebufferId );
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, rightEyeDesc.m_nResolveFramebufferId );
+
+    glBlitFramebuffer( 0, 0, m_nRenderWidth, m_nRenderHeight, 0, 0, m_nRenderWidth, m_nRenderHeight,
+                       GL_COLOR_BUFFER_BIT,
+                       GL_LINEAR  );
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0 );
 }
 
 /// \brief Sets the current camera

@@ -57,7 +57,7 @@ void VR_Plugin::OnPlayStart()
     cardinal::LightManager::GetDirectionalLight()->SetDirection(glm::vec3(-0.5f, -0.5f, -0.5f));
 
     // Post-processing
-    cardinal::RenderingEngine::SetPostProcessingActive(true);
+    cardinal::RenderingEngine::SetPostProcessingActive(false);
 
     // Gizmos
     cardinal::DebugManager::EnableGizmo(cardinal::DebugManager::EGizmo::DirectionalLight);
@@ -68,6 +68,8 @@ void VR_Plugin::OnPlayStart()
     cardinal::RenderingEngine::InitializeStereoscopicRendering();
     m_pHMD = cardinal::RenderingEngine::GetHMD();
     ASSERT_NOT_NULL(m_pHMD);
+
+    m_iTrackedControllerCount = 0;
 
     m_cameraManager.SetCamera(cardinal::RenderingEngine::GetMainCamera());
     m_cameraManager.SetCharacter(&m_character);
@@ -108,9 +110,12 @@ void VR_Plugin::OnPostUpdate(float dt)
         vr::VRControllerState_t state {};
         if( m_pHMD->GetControllerState( unDevice, &state, sizeof(state) ) )
         {
-            // m_rbShowTrackedDevice[ unDevice ] = state.ulButtonPressed == 0;
+            m_rbShowTrackedDevice[ unDevice ] = state.ulButtonPressed == 0;
         }
     }
+
+    // Render debug information
+    RenderControllerAxes();
 }
 
 /// \brief Called when it's time to render the GUI
@@ -122,5 +127,54 @@ void VR_Plugin::OnGUI()
 /// \brief Process HMD events
 void VR_Plugin::ProcessVREvent(vr::VREvent_t const& event)
 {
+    switch( event.eventType )
+    {
+        case vr::VREvent_TrackedDeviceActivated:
+        {
+            //SetupRenderModelForTrackedDevice(event.trackedDeviceIndex);
+            cardinal::Logger::LogInfo("Device %u attached. Setting up render model", event.trackedDeviceIndex);
+        }
+        break;
 
+        case vr::VREvent_TrackedDeviceDeactivated:
+        {
+            cardinal::Logger::LogInfo("Device %u detached", event.trackedDeviceIndex);
+        }
+        break;
+
+        case vr::VREvent_TrackedDeviceUpdated:
+        {
+            cardinal::Logger::LogInfo("Device %u updated.\n", event.trackedDeviceIndex);
+        }
+        break;
+
+        default: break;
+    }
+}
+
+/// \brief Render some debug lines for controllers axes
+void VR_Plugin::RenderControllerAxes()
+{
+    if(m_pHMD == nullptr)
+        return;
+
+    m_iTrackedControllerCount = 0;
+
+    for (vr::TrackedDeviceIndex_t unTrackedDevice = vr::k_unTrackedDeviceIndex_Hmd + 1; unTrackedDevice < vr::k_unMaxTrackedDeviceCount; ++unTrackedDevice)
+    {
+        if (!m_pHMD->IsTrackedDeviceConnected(unTrackedDevice))
+            continue;
+
+        if(m_pHMD->GetTrackedDeviceClass(unTrackedDevice) != vr::TrackedDeviceClass_Controller)
+            continue;
+
+        m_iTrackedControllerCount += 1;
+
+        if( !m_rTrackedDevicePose[ unTrackedDevice ].bPoseIsValid )
+            continue;
+
+        glm::mat4 const& mat = m_rmat4DevicePose[unTrackedDevice];
+    }
+
+    // TODO
 }
