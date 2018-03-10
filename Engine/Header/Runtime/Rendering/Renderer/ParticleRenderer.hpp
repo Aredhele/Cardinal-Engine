@@ -49,18 +49,24 @@ public :
 
     /// \brief Initializes the renderer
     /// \param particleAmount The max amount of particles
-    void Initialize(int particleAmount);
-
-    /// \brief Sets the color of particles
-    void SetColor(glm::vec3 const& color);
+    void Initialize(int maxParticleAmount);
 
     /// \brief Sets the renderer shader
     /// \param pShader The pointer on the shader
     void SetShader(IShader * pShader);
 
+    /// \brief Sets the currentElementCount
+    void SetElementCount(int count);
+
+    /// \brief Updates positions and color buffer
+    void UpdateBuffer();
+
     /// \brief Base method implementation
     /// \param PV The projection view matrix
     void Draw(glm::mat4 const& P, glm::mat4 const& V, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights) final;
+
+    float * billboardColorBuffer;
+    float * billboardPositionBuffer;
 
 private:
 
@@ -69,6 +75,7 @@ private:
     uint m_billboardVertexBuffer;
     uint m_billboardPositionBuffer;
     uint m_billboardColorBuffer;
+    uint m_maxParticleAmount;
 };
 
 }  // !namespace

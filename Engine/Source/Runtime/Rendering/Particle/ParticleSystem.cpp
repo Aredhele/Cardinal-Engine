@@ -56,6 +56,8 @@ void ParticleSystem::Initialize()
     {
         m_pParticles[i].lifeTime = 0.0f;
     }
+
+    m_renderer.Initialize(100000);
 }
 
 /// \brief Updates billboards
@@ -84,6 +86,7 @@ void ParticleSystem::Update(float dt)
     }
 
     // Simulate all particles
+    int particlesCount = 0;
     for(int i = 0; i < m_particleAmount; i++)
     {
         Particle& currentParticle = m_pParticles[i];
@@ -99,19 +102,23 @@ void ParticleSystem::Update(float dt)
                 currentParticle.position += currentParticle.velocity * dt;
 
                 // Fill the GPU buffer
-                // g_particule_position_size_data[4*ParticlesCount+0] = p.pos.x;
-                // g_particule_position_size_data[4*ParticlesCount+1] = p.pos.y;
-                // g_particule_position_size_data[4*ParticlesCount+2] = p.pos.z;
+                m_renderer.billboardPositionBuffer[particlesCount * 4 + 0] = currentParticle.position.x;
+                m_renderer.billboardPositionBuffer[particlesCount * 4 + 1] = currentParticle.position.y;
+                m_renderer.billboardPositionBuffer[particlesCount * 4 + 2] = currentParticle.position.z;
+                m_renderer.billboardPositionBuffer[particlesCount * 4 + 3] = currentParticle.size;
 
-                // g_particule_position_size_data[4*ParticlesCount+3] = p.size;
-
-                // g_particule_color_data[4*ParticlesCount+0] = p.r;
-                // g_particule_color_data[4*ParticlesCount+1] = p.g;
-                // g_particule_color_data[4*ParticlesCount+2] = p.b;
-                // g_particule_color_data[4*ParticlesCount+3] = p.a;
+                m_renderer.billboardColorBuffer[particlesCount * 4 + 0] = currentParticle.color.x;
+                m_renderer.billboardColorBuffer[particlesCount * 4 + 1] = currentParticle.color.y;
+                m_renderer.billboardColorBuffer[particlesCount * 4 + 2] = currentParticle.color.z;
             }
+
+            particlesCount++;
         }
     }
+
+    // Update renderer
+    m_renderer.SetElementCount(particlesCount);
+    m_renderer.UpdateBuffer();
 }
 
 /// \brief Finds and returns a new particle

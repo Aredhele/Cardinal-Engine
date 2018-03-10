@@ -26,6 +26,7 @@
 
 #include "Glm/glm/vec3.hpp"
 #include "Runtime/Platform/Configuration/Type.hh"
+#include "Runtime/Rendering/Renderer/ParticleRenderer.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -72,12 +73,13 @@ private:
 
 private:
 
-    Particle * m_pParticles;
-    int        m_lastUsedParticle;
-    int        m_particleAmount;
-    int        m_emissionRate;
-    float      m_lifeTime;
-    float      m_size;
+    Particle *       m_pParticles;
+    ParticleRenderer m_renderer;
+    int              m_lastUsedParticle;
+    int              m_particleAmount;
+    int              m_emissionRate;
+    float            m_lifeTime;
+    float            m_size;
 };
 
 } // !namespace

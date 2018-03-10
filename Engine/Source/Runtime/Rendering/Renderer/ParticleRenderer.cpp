@@ -35,16 +35,22 @@ ParticleRenderer::ParticleRenderer() : IRenderer()
     m_billboardPositionBuffer = 0;
     m_billboardColorBuffer    = 0;
     m_elementsCount           = 0;
+    m_maxParticleAmount       = 0;
+
+    billboardColorBuffer      = nullptr;
+    billboardPositionBuffer   = nullptr;
 }
 
 /// \brief Destructor
 ParticleRenderer::~ParticleRenderer() // NOLINT
 {
-    // TODO
+    delete[] billboardColorBuffer;
+    delete[] billboardPositionBuffer;
 }
 
 /// \brief Initializes the renderer
-void ParticleRenderer::Initialize(int particleAmount)
+/// \param particleAmount The max amount of particles
+void ParticleRenderer::Initialize(int maxParticleAmount)
 {
     const GLfloat g_vertex_buffer_data[] =
     {
@@ -53,6 +59,10 @@ void ParticleRenderer::Initialize(int particleAmount)
         -0.5f,  0.5f, 0.0f,
          0.5f,  0.5f, 0.0f,
     };
+
+    m_maxParticleAmount     = (uint)maxParticleAmount;
+    billboardColorBuffer    = new float[maxParticleAmount * 3];
+    billboardPositionBuffer = new float[maxParticleAmount * 4];
 
     glGenVertexArrays(1, &m_vao);
     glBindVertexArray(m_vao);
@@ -67,14 +77,14 @@ void ParticleRenderer::Initialize(int particleAmount)
     m_billboardPositionBuffer = 0;
     glGenBuffers(1, &m_billboardPositionBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, m_billboardPositionBuffer);
-    glBufferData(GL_ARRAY_BUFFER, particleAmount * 4 * sizeof(GLfloat), nullptr, GL_STREAM_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, maxParticleAmount * 4 * sizeof(GLfloat), nullptr, GL_STREAM_DRAW);
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE,0, (void*)0);
     glVertexAttribDivisor(1, 1);
 
     m_billboardColorBuffer = 0;
     glGenBuffers(1, &m_billboardColorBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, m_billboardColorBuffer);
-    glBufferData(GL_ARRAY_BUFFER, particleAmount * sizeof(glm::vec3), nullptr, GL_STREAM_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, maxParticleAmount * sizeof(glm::vec3), nullptr, GL_STREAM_DRAW);
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void *) nullptr);
     glVertexAttribDivisor(2, 1);
 
@@ -82,17 +92,17 @@ void ParticleRenderer::Initialize(int particleAmount)
     glBindVertexArray(0);
 }
 
+/// \brief Sets the currentElementCount
+void ParticleRenderer::SetElementCount(int count)
+{
+    m_elementsCount = count;
+}
+
 /// \brief Sets the renderer shader
 /// \param pShader The pointer on the shader
 void ParticleRenderer::SetShader(IShader * pShader)
 {
     m_pShader = pShader;
-}
-
-/// \brief Sets the color of particles
-void ParticleRenderer::SetColor(glm::vec3 const& color)
-{
-    // TODO
 }
 
 /// \brief Base method implementation
@@ -109,6 +119,22 @@ void ParticleRenderer::Draw(glm::mat4 const& P, glm::mat4 const& V, glm::vec3 co
     glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, m_elementsCount);
 
     m_pShader->End();
+}
+
+/// \brief Updates positions and color buffers
+void ParticleRenderer::UpdateBuffer()
+{
+    glBindVertexArray(m_vao);
+
+    glBindBuffer   (GL_ARRAY_BUFFER, m_billboardPositionBuffer);
+    glBufferData   (GL_ARRAY_BUFFER, m_maxParticleAmount * 4 * sizeof(GLfloat), nullptr, GL_STREAM_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, m_elementsCount * sizeof(GLfloat) * 4, billboardPositionBuffer);
+
+    glBindBuffer   (GL_ARRAY_BUFFER, m_billboardColorBuffer);
+    glBufferData   (GL_ARRAY_BUFFER, m_maxParticleAmount * 4 * sizeof(GLubyte), nullptr, GL_STREAM_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, m_elementsCount * sizeof(GLubyte) * 4, billboardColorBuffer);
+
+    glBindVertexArray(0);
 }
 
 } // !namespace
