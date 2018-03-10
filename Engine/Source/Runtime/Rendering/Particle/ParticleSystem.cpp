@@ -27,67 +27,118 @@
 namespace cardinal
 {
 
-/// \brief Initializes the particle system with
-///        the give amount of particles
-void ParticleSystem::Initialize(uint64 amount)
+/// \brief Constructor
+ParticleSystem::ParticleSystem()
 {
-    m_amount     = 0;
-    m_pParticles = nullptr;
-
-#ifdef CARDINAL_USE_GCC
-    char * pBuffer = (char *)_mm_malloc(amount * sizeof(Particle), 8); // NOLINT
-    m_pParticles = (Particle *)pBuffer; // NOLINT
-    memset(m_pParticles, 0, amount * sizeof(Particle));
-
-    m_amount = amount;
-#endif
+    m_pParticles       = nullptr;
+    m_particleAmount   = 0;
+    m_lastUsedParticle = 0;
+    m_emissionRate     = 0;
+    m_lifeTime         = 0.0f;
 }
 
-/// \brief Updates the particle system
+/// \brief Destructor
+ParticleSystem::~ParticleSystem() // NOLINT
+{
+    delete[] m_pParticles;
+}
+
+/// \brief None
+void ParticleSystem::Initialize()
+{
+    m_pParticles     = new Particle[100000];
+    m_particleAmount = 100000;
+    m_emissionRate   = 100;
+    m_lifeTime       = 5.0f;
+    m_size           = 1.0f;
+
+    for(int i = 0; i < m_particleAmount; ++i)
+    {
+        m_pParticles[i].lifeTime = 0.0f;
+    }
+}
+
+/// \brief Updates billboards
 /// \param dt The elapsed time
 void ParticleSystem::Update(float dt)
 {
-#ifdef CARDINAL_USE_GCC
-    __m128 gravity = _mm_set_ps(-9.81f * dt, -9.81f * dt, -9.81f * dt, -9.81f * dt);
+    int particleToEmit = (int)(dt * (float)m_emissionRate); // NOLINT
 
-    for(int i = 0; i < m_amount; i += 16)
+    // Emitting
+    for(int i = 0; i < particleToEmit; ++i)
     {
-        __m128 v1 =  _mm_set_ps(m_pParticles[i +  0].velocity.z, m_pParticles[i +  1].velocity.z, m_pParticles[i +  2].velocity.z, m_pParticles[i +  3].velocity.z);
-        __m128 v2 =  _mm_set_ps(m_pParticles[i +  4].velocity.z, m_pParticles[i +  5].velocity.z, m_pParticles[i +  6].velocity.z, m_pParticles[i +  7].velocity.z);
-        __m128 v3 =  _mm_set_ps(m_pParticles[i +  8].velocity.z, m_pParticles[i +  9].velocity.z, m_pParticles[i + 10].velocity.z, m_pParticles[i + 11].velocity.z);
-        __m128 v4 =  _mm_set_ps(m_pParticles[i + 12].velocity.z, m_pParticles[i + 13].velocity.z, m_pParticles[i + 14].velocity.z, m_pParticles[i + 15].velocity.z);
+        int index = GetNewParticle();
+        Particle& currentParticle = m_pParticles[index];
 
-        __m128 r1 = _mm_add_ps(v1, gravity);
-        __m128 r2 = _mm_add_ps(v2, gravity);
-        __m128 r3 = _mm_add_ps(v3, gravity);
-        __m128 r4 = _mm_add_ps(v4, gravity);
+        float spread = 1.5f;
+        glm::vec3 randDir = glm::vec3(
+                (rand() % 2000 - 1000.0f) / 1000.0f,  // NOLINT
+                (rand() % 2000 - 1000.0f) / 1000.0f,  // NOLINT
+                (rand() % 2000 - 1000.0f) / 1000.0f); // NOLINT
 
-        float unit[16];
-
-        _mm_store_ps(&unit[ 0], r1);
-        _mm_store_ps(&unit[ 4], r2);
-        _mm_store_ps(&unit[ 8], r3);
-        _mm_store_ps(&unit[12], r4);
-
-        m_pParticles[i +  0].velocity.z = unit[ 0];
-        m_pParticles[i +  1].velocity.z = unit[ 1];
-        m_pParticles[i +  2].velocity.z = unit[ 2];
-        m_pParticles[i +  3].velocity.z = unit[ 3];
-        m_pParticles[i +  4].velocity.z = unit[ 4];
-        m_pParticles[i +  5].velocity.z = unit[ 5];
-        m_pParticles[i +  6].velocity.z = unit[ 6];
-        m_pParticles[i +  7].velocity.z = unit[ 7];
-        m_pParticles[i +  8].velocity.z = unit[ 8];
-        m_pParticles[i +  9].velocity.z = unit[ 9];
-        m_pParticles[i + 10].velocity.z = unit[10];
-        m_pParticles[i + 11].velocity.z = unit[11];
-        m_pParticles[i + 12].velocity.z = unit[12];
-        m_pParticles[i + 13].velocity.z = unit[13];
-        m_pParticles[i + 14].velocity.z = unit[14];
-        m_pParticles[i + 15].velocity.z = unit[15];
+        currentParticle.size     = m_size;
+        currentParticle.lifeTime = m_lifeTime;
+        currentParticle.position = glm::vec3(0.0f, 0.0f, 0.0f);
+        currentParticle.color    = glm::vec3(0.5f, 1.0f, 0.8f);
+        currentParticle.velocity = glm::vec3(0.0f, 0.0f, 10.0f) + randDir * spread;
     }
 
-#endif
+    // Simulate all particles
+    for(int i = 0; i < m_particleAmount; i++)
+    {
+        Particle& currentParticle = m_pParticles[i];
+
+        if(currentParticle.lifeTime > 0.0f)
+        {
+            // Decrease life
+            currentParticle.lifeTime -= dt;
+            if (currentParticle.lifeTime > 0.0f)
+            {
+                // Simple physics : gravity only, no collisions
+                currentParticle.velocity += glm::vec3(0.0f, 0.0f, -9.81f) * dt * 0.5f;
+                currentParticle.position += currentParticle.velocity * dt;
+
+                // Fill the GPU buffer
+                // g_particule_position_size_data[4*ParticlesCount+0] = p.pos.x;
+                // g_particule_position_size_data[4*ParticlesCount+1] = p.pos.y;
+                // g_particule_position_size_data[4*ParticlesCount+2] = p.pos.z;
+
+                // g_particule_position_size_data[4*ParticlesCount+3] = p.size;
+
+                // g_particule_color_data[4*ParticlesCount+0] = p.r;
+                // g_particule_color_data[4*ParticlesCount+1] = p.g;
+                // g_particule_color_data[4*ParticlesCount+2] = p.b;
+                // g_particule_color_data[4*ParticlesCount+3] = p.a;
+            }
+        }
+    }
+}
+
+/// \brief Finds and returns a new particle
+int ParticleSystem::GetNewParticle()
+{
+    for(int i = m_lastUsedParticle; i < m_particleAmount; i++)
+    {
+        if (m_pParticles[i].lifeTime <= 0.0f)
+        {
+            m_lastUsedParticle = i;
+            return i;
+        }
+    }
+
+    // The linear search failed from the last used particle index
+    // Restarting
+    for(int i = 0; i < m_lastUsedParticle; i++)
+    {
+        if (m_pParticles[i].lifeTime <= 0.0f)
+        {
+            m_lastUsedParticle = i;
+            return i;
+        }
+    }
+
+    // Not enough particles ...
+    return 0;
 }
 
 } // !namespace

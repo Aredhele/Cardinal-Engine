@@ -37,26 +37,47 @@ class ParticleSystem
 {
 private:
 
-    /// \struct Particle
     struct Particle
     {
+        glm::vec3 position;
         glm::vec3 velocity;
+        glm::vec3 color;
+
+        float size;
+        float angle;
+        float weight;
+        float lifeTime;
     };
 
 public:
 
-    /// \brief Initializes the particle system with
-    ///        the give amount of particles
-    void Initialize(uint64 amount);
+    void Initialize();
 
-    /// \brief Updates the particle system
+private:
+
+    friend class RenderingEngine;
+
+    /// \brief Constructor
+    ParticleSystem();
+
+    /// \brief Destructor
+    ~ParticleSystem();
+
+    /// \brief Updates billboards
     /// \param dt The elapsed time
     void Update(float dt);
+
+    /// \brief Finds and returns a new particle
+    int GetNewParticle();
 
 private:
 
     Particle * m_pParticles;
-    uint64     m_amount;
+    int        m_lastUsedParticle;
+    int        m_particleAmount;
+    int        m_emissionRate;
+    float      m_lifeTime;
+    float      m_size;
 };
 
 } // !namespace
