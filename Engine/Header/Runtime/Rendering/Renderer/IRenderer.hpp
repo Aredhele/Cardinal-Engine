@@ -55,12 +55,13 @@ protected:
 
     friend class RenderingEngine;
 
-    uint      m_vao;           ///< All renderers have at least one vao
-    IShader * m_pShader;       ///< All renderers have at least one shader
-    glm::vec3 m_position;      ///< The position of the renderer
-    glm::mat4 m_model;         ///< The model of the renderer
-    int       m_elementsCount; ///< The count of element to be draw
-    bool      m_isIndexed;     ///< Tells if the renderer contains indexed data
+    uint      m_vao;            ///< All renderers have at least one vao
+    IShader * m_pShader;        ///< All renderers have at least one shader
+    glm::vec3 m_position;       ///< The position of the renderer
+    glm::mat4 m_model;          ///< The model of the renderer
+    int       m_elementsCount;  ///< The count of element to be draw
+    bool      m_isIndexed;      ///< Tells if the renderer contains indexed data
+    bool      m_isInstantiated; ///< Tells if the renderer contains instantiated data
 };
 
 } // !namespace

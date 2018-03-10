@@ -39,6 +39,9 @@ ParticleRenderer::ParticleRenderer() : IRenderer()
 
     billboardColorBuffer      = nullptr;
     billboardPositionBuffer   = nullptr;
+
+    m_isInstantiated = true;
+    m_isIndexed      = false;
 }
 
 /// \brief Destructor
@@ -131,8 +134,8 @@ void ParticleRenderer::UpdateBuffer()
     glBufferSubData(GL_ARRAY_BUFFER, 0, m_elementsCount * sizeof(GLfloat) * 4, billboardPositionBuffer);
 
     glBindBuffer   (GL_ARRAY_BUFFER, m_billboardColorBuffer);
-    glBufferData   (GL_ARRAY_BUFFER, m_maxParticleAmount * 4 * sizeof(GLubyte), nullptr, GL_STREAM_DRAW);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, m_elementsCount * sizeof(GLubyte) * 4, billboardColorBuffer);
+    glBufferData   (GL_ARRAY_BUFFER, m_maxParticleAmount * sizeof(glm::vec3), nullptr, GL_STREAM_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, m_elementsCount * sizeof(glm::vec3), billboardColorBuffer);
 
     glBindVertexArray(0);
 }

@@ -182,6 +182,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/VR/VRMirrorVertexShader.glsl",
             "Resources/Shaders/VR/VRMirrorFragmentShader.glsl"));
 
+    ShaderManager::Register("ParticleShader", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/Particle/ParticleVertexShader.glsl",
+            "Resources/Shaders/Particle/ParticleFragmentShader.glsl"));
+
     // Debug
     DebugManager::Initialize();
 
@@ -595,7 +599,9 @@ void RenderingEngine::RenderFrame(float step)
             glBindVertexArray(m_renderers[nRenderer]->m_vao);
             glEnableVertexAttribArray(0);
 
-            if(m_renderers[nRenderer]->m_isIndexed)
+            if(m_renderers[nRenderer]->m_isInstantiated)
+                glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, m_renderers[nRenderer]->m_elementsCount);
+            else if(m_renderers[nRenderer]->m_isIndexed)
                 glDrawElements(GL_TRIANGLES, m_renderers[nRenderer]->m_elementsCount, GL_UNSIGNED_SHORT, nullptr);
             else
                 glDrawArrays(GL_TRIANGLES, 0, m_renderers[nRenderer]->m_elementsCount);
@@ -660,7 +666,9 @@ void RenderingEngine::RenderFrame(float step)
             glBindVertexArray(m_renderers[nRenderer]->m_vao);
             glEnableVertexAttribArray(0);
 
-            if(m_renderers[nRenderer]->m_isIndexed)
+            if(m_renderers[nRenderer]->m_isInstantiated)
+                glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, m_renderers[nRenderer]->m_elementsCount);
+            else if(m_renderers[nRenderer]->m_isIndexed)
                 glDrawElements(GL_TRIANGLES, m_renderers[nRenderer]->m_elementsCount, GL_UNSIGNED_SHORT, nullptr);
             else
                 glDrawArrays(GL_TRIANGLES, 0, m_renderers[nRenderer]->m_elementsCount);
@@ -964,7 +972,7 @@ void RenderingEngine::Shutdown()
 /// \brief Deallocates a renderer
 ///        Unregisters the renderer
 /// \param pRenderer The renderer to release
-/* static */ void RenderingEngine::ReleaseRenderer(class IRenderer *&pRenderer)
+/* static */ void RenderingEngine::ReleaseRenderer(IRenderer *& pRenderer)
 {
     ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
 
@@ -998,6 +1006,9 @@ void RenderingEngine::Shutdown()
     ParticleSystem * pSystem = new ParticleSystem(); // NOLINT
     RenderingEngine::s_pInstance->m_paricleSystems.push_back(pSystem);
 
+    // Auto-registration of the internal renderer
+    RegisterCustomRenderer(&pSystem->m_renderer);
+
     return pSystem;
 }
 
@@ -1023,6 +1034,10 @@ void RenderingEngine::Shutdown()
         RenderingEngine::s_pInstance->m_paricleSystems.erase(
                 RenderingEngine::s_pInstance->m_paricleSystems.begin() + index);
     }
+
+    // Auto-removal of the internal renderer
+    IRenderer * pRenderer = &pSystem->m_renderer;
+    ReleaseRenderer(pRenderer);
 
     delete pSystem;
     pSystem = nullptr;

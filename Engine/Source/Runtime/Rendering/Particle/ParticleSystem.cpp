@@ -49,15 +49,17 @@ void ParticleSystem::Initialize()
     m_pParticles     = new Particle[100000];
     m_particleAmount = 100000;
     m_emissionRate   = 100;
-    m_lifeTime       = 5.0f;
+    m_lifeTime       = 6.0f;
     m_size           = 1.0f;
 
     for(int i = 0; i < m_particleAmount; ++i)
     {
         m_pParticles[i].lifeTime = 0.0f;
+        m_pParticles[i].color    = glm::vec3(1.0f, 1.0f, 1.0f);
     }
 
     m_renderer.Initialize(100000);
+    m_renderer.SetShader(&m_shader);
 }
 
 /// \brief Updates billboards
@@ -72,17 +74,22 @@ void ParticleSystem::Update(float dt)
         int index = GetNewParticle();
         Particle& currentParticle = m_pParticles[index];
 
-        float spread = 1.5f;
+        float spread = 2.5f;
         glm::vec3 randDir = glm::vec3(
                 (rand() % 2000 - 1000.0f) / 1000.0f,  // NOLINT
                 (rand() % 2000 - 1000.0f) / 1000.0f,  // NOLINT
                 (rand() % 2000 - 1000.0f) / 1000.0f); // NOLINT
 
+        glm::vec3 randColor = glm::vec3(
+                (rand() % 1000) / 1000.0f,  // NOLINT
+                (rand() % 1000) / 1000.0f,  // NOLINT
+                (rand() % 1000) / 1000.0f); // NOLINT
+
         currentParticle.size     = m_size;
         currentParticle.lifeTime = m_lifeTime;
         currentParticle.position = glm::vec3(0.0f, 0.0f, 0.0f);
-        currentParticle.color    = glm::vec3(0.5f, 1.0f, 0.8f);
-        currentParticle.velocity = glm::vec3(0.0f, 0.0f, 10.0f) + randDir * spread;
+        currentParticle.color    = randColor;
+        currentParticle.velocity = glm::vec3(0.0f, 0.0f, 20.0f) + randDir * spread;
     }
 
     // Simulate all particles
@@ -98,7 +105,7 @@ void ParticleSystem::Update(float dt)
             if (currentParticle.lifeTime > 0.0f)
             {
                 // Simple physics : gravity only, no collisions
-                currentParticle.velocity += glm::vec3(0.0f, 0.0f, -9.81f) * dt * 0.5f;
+                currentParticle.velocity += glm::vec3(0.0f, 0.0f, -9.81f) * dt;
                 currentParticle.position += currentParticle.velocity * dt;
 
                 // Fill the GPU buffer
@@ -107,9 +114,9 @@ void ParticleSystem::Update(float dt)
                 m_renderer.billboardPositionBuffer[particlesCount * 4 + 2] = currentParticle.position.z;
                 m_renderer.billboardPositionBuffer[particlesCount * 4 + 3] = currentParticle.size;
 
-                m_renderer.billboardColorBuffer[particlesCount * 4 + 0] = currentParticle.color.x;
-                m_renderer.billboardColorBuffer[particlesCount * 4 + 1] = currentParticle.color.y;
-                m_renderer.billboardColorBuffer[particlesCount * 4 + 2] = currentParticle.color.z;
+                m_renderer.billboardColorBuffer[particlesCount * 3 + 0] = currentParticle.color.x;
+                m_renderer.billboardColorBuffer[particlesCount * 3 + 1] = currentParticle.color.y;
+                m_renderer.billboardColorBuffer[particlesCount * 3 + 2] = currentParticle.color.z;
             }
 
             particlesCount++;

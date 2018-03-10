@@ -33,7 +33,7 @@ namespace cardinal
 /// \brief Constructor
 ParticleShader::ParticleShader()
 {
-    m_shaderID = ShaderManager::GetShaderID("UnlitColor");
+    m_shaderID = ShaderManager::GetShaderID("ParticleShader");
 
     m_VPID          = glGetUniformLocation((uint)m_shaderID, "VP");
     m_cameraUpID    = glGetUniformLocation((uint)m_shaderID, "cameraUpWorld");

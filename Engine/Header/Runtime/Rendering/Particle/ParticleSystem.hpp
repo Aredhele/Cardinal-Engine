@@ -27,6 +27,7 @@
 #include "Glm/glm/vec3.hpp"
 #include "Runtime/Platform/Configuration/Type.hh"
 #include "Runtime/Rendering/Renderer/ParticleRenderer.hpp"
+#include "Runtime/Rendering/Shader/Built-in/Particle/ParticleShader.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -75,6 +76,7 @@ private:
 
     Particle *       m_pParticles;
     ParticleRenderer m_renderer;
+    ParticleShader   m_shader;
     int              m_lastUsedParticle;
     int              m_particleAmount;
     int              m_emissionRate;
