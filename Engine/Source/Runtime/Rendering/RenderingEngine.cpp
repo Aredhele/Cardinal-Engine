@@ -1165,7 +1165,10 @@ void RenderingEngine::DisplayDebugWindow(float step)
 /// \param dt The elapsed time
 void RenderingEngine::Update(float dt)
 {
-
+    for(ParticleSystem * pSystem : m_paricleSystems)
+    {
+        pSystem->Update(dt);
+    }
 }
 
 /// \brief Updates the values of the time passed into other engine parts

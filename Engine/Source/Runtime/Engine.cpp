@@ -117,7 +117,8 @@ void Engine::GameLoop()
             pluginsTimer += (glfwGetTime() - startPlugin);
 
             // Physics update
-            m_physicsEngine.Update(SECONDS_PER_UPDATE);
+            m_physicsEngine.Update  ((float)SECONDS_PER_UPDATE);
+            m_renderingEngine.Update((float)SECONDS_PER_UPDATE);
 
             // Post-update
             startPlugin = glfwGetTime();
