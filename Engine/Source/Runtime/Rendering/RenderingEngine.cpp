@@ -712,7 +712,7 @@ void RenderingEngine::RenderStereoTarget()
 {
     UpdateHMDPositions();
 
-    glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+    glClearColor(m_clearColor.x, m_clearColor.y, m_clearColor.z, 1.0f);
     glEnable( GL_MULTISAMPLE );
 
     // Left Eye
@@ -816,7 +816,11 @@ void RenderingEngine::RenderScene(vr::Hmd_Eye nEye)
     {
         m_triangleCounter += m_renderers[nRenderer]->GetElementCount();
         m_currentTriangle += m_renderers[nRenderer]->GetElementCount();
-        m_renderers[nRenderer]->Draw(GetHMDMatrixProjectionEye(nEye), GetHMDMatrixPoseEye(nEye) * m_mat4HMDPose, glm::vec3(0.0f, 0.0f, 0.0f), LightManager::GetNearestPointLights(m_renderers[nRenderer]->GetPosition()));
+
+        // Hot code
+        glm::mat4 hmdViewMatrix = GetHMDMatrixPoseEye(nEye) * glm::translate(m_mat4HMDPose, glm::vec3(0.0f, -235.0f, 100.0f));
+        hmdViewMatrix           = glm::rotate(hmdViewMatrix, -(float)M_PI_2,   glm::vec3(1.0f, 0.0f, 0.0f));
+        m_renderers[nRenderer]->Draw(GetHMDMatrixProjectionEye(nEye), hmdViewMatrix, glm::vec3(0.0f, 0.0f, 0.0f), LightManager::GetNearestPointLights(m_renderers[nRenderer]->GetPosition()));
     }
 }
 

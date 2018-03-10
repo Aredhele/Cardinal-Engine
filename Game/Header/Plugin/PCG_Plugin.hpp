@@ -65,10 +65,11 @@ public:
 private:
 
     BasicWorldGenerator m_worldGenerator;
-    GeneratorGUI  m_generatorGui;
-    World *       m_pWorld;
-    Character     m_character;
-    CameraManager m_cameraManager;
+    GeneratorGUI        m_generatorGui;
+    World *             m_pWorld;
+    Character           m_character;
+    CameraManager       m_cameraManager;
+    vr::IVRSystem *     m_pHMD;
 };
 
 #endif // !CARDINAL_ENGINE_PCG_PLUGIN_HPP__
