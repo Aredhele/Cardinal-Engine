@@ -74,6 +74,13 @@ public:
 
 public:
 
+    /// \brief Initializes the VR rendering
+    static bool InitializeStereoscopicRendering();
+
+    /// \brief Returns a pointer on the HMD
+    /// \return A pointer on the current HMD
+    static vr::IVRSystem * GetHMD();
+
     /// \brief Register a custom renderer in the engine
     /// \param pRenderer The renderer to register
     static void RegisterCustomRenderer(class IRenderer * pRenderer);

@@ -213,7 +213,8 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     m_triangleSecond  = 0;
     m_currentTriangle = 0;
     m_bIsPostProcessingEnabled = false;
-    m_bStereoscopicRendering   = true;
+    m_bStereoscopicRendering   = false;
+    m_pHMD                     = nullptr;
 
     m_postProcessingStack.Initialize();
 
@@ -271,11 +272,6 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
 
     // Setup style
     ImGui::StyleColorsDark();
-
-    if(m_bStereoscopicRendering)
-    {
-        bool ret = InitStereoscopicRendering();
-    }
 
     Logger::LogInfo("Rendering engine successfully initialized in %3.4lf s.", glfwGetTime());
 }
@@ -599,6 +595,29 @@ void RenderingEngine::Shutdown()
     ImGui::DestroyContext();
 }
 
+/// \brief Initializes the VR rendering
+/* static */ bool RenderingEngine::InitializeStereoscopicRendering()
+{
+    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
+    bool ret = s_pInstance->InitStereoscopicRendering();
+
+    if(ret)
+    {
+        s_pInstance->m_bStereoscopicRendering = true;
+        return true;
+    }
+
+    s_pInstance->m_bStereoscopicRendering = false;
+    return false;
+}
+
+/// \brief Returns a pointer on the HMD
+/// \return A pointer on the current HMD
+/* static */ vr::IVRSystem *RenderingEngine::GetHMD()
+{
+    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
+    return s_pInstance->m_pHMD;
+}
 
 /// \brief Register a custom renderer in the engine
 /// \param pRenderer The renderer to register

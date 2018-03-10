@@ -41,22 +41,27 @@ FILE(GLOB_RECURSE GAME_HEADERS
 ADD_EXECUTABLE(Main_Plugin    "Plugin/Main_Plugin.cpp")
 ADD_EXECUTABLE(PCG_Plugin     "Plugin/PCG_Plugin.cpp")
 ADD_EXECUTABLE(PCGCity_Plugin "Plugin/PCGCity_Plugin.cpp")
+ADD_EXECUTABLE(VR_Plugin      "Plugin/VR_Plugin.cpp")
 
 # Creating a librariy for PCG and Main sources
-ADD_LIBRARY(PCGLib     STATIC Plugin/PCG_Plugin.cpp     ${GAME_SOURCES} ${GAME_HEADERS})
-ADD_LIBRARY(MainLib    STATIC Plugin/Main_Plugin.cpp    ${GAME_SOURCES} ${GAME_HEADERS})
-ADD_LIBRARY(PCGCityLib STATIC Plugin/PCGCity_Plugin.cpp ${GAME_SOURCES} ${GAME_HEADERS})
+ADD_LIBRARY(PCGLib      STATIC Plugin/PCG_Plugin.cpp     ${GAME_SOURCES} ${GAME_HEADERS})
+ADD_LIBRARY(MainLib     STATIC Plugin/Main_Plugin.cpp    ${GAME_SOURCES} ${GAME_HEADERS})
+ADD_LIBRARY(PCGCityLib  STATIC Plugin/PCGCity_Plugin.cpp ${GAME_SOURCES} ${GAME_HEADERS})
+ADD_LIBRARY(VRPLuginLib STATIC Plugin/VR_Plugin.cpp      ${GAME_SOURCES} ${GAME_HEADERS})
 
 # Add dependencies
-ADD_DEPENDENCIES(PCGLib     CardinalEngine BulletDynamics BulletCollision LinearMath)
-ADD_DEPENDENCIES(MainLib    CardinalEngine BulletDynamics BulletCollision LinearMath)
-ADD_DEPENDENCIES(PCGCityLib CardinalEngine BulletDynamics BulletCollision LinearMath)
+ADD_DEPENDENCIES(PCGLib      CardinalEngine BulletDynamics BulletCollision LinearMath)
+ADD_DEPENDENCIES(MainLib     CardinalEngine BulletDynamics BulletCollision LinearMath)
+ADD_DEPENDENCIES(PCGCityLib  CardinalEngine BulletDynamics BulletCollision LinearMath)
+ADD_DEPENDENCIES(VRPLuginLib CardinalEngine BulletDynamics BulletCollision LinearMath)
 
 # Linking dependencies
-TARGET_LINK_LIBRARIES(PCGLib     CardinalEngine ${COMPILER_DEPENDENCIES} ImGUI BulletDynamics BulletCollision LinearMath)
-TARGET_LINK_LIBRARIES(MainLib    CardinalEngine ${COMPILER_DEPENDENCIES} ImGUI BulletDynamics BulletCollision LinearMath)
-TARGET_LINK_LIBRARIES(PCGCityLib CardinalEngine ${COMPILER_DEPENDENCIES} ImGUI BulletDynamics BulletCollision LinearMath)
+TARGET_LINK_LIBRARIES(PCGLib      CardinalEngine ${COMPILER_DEPENDENCIES} ImGUI BulletDynamics BulletCollision LinearMath)
+TARGET_LINK_LIBRARIES(MainLib     CardinalEngine ${COMPILER_DEPENDENCIES} ImGUI BulletDynamics BulletCollision LinearMath)
+TARGET_LINK_LIBRARIES(PCGCityLib  CardinalEngine ${COMPILER_DEPENDENCIES} ImGUI BulletDynamics BulletCollision LinearMath)
+TARGET_LINK_LIBRARIES(VRPLuginLib CardinalEngine ${COMPILER_DEPENDENCIES} ImGUI BulletDynamics BulletCollision LinearMath)
 
-TARGET_LINK_LIBRARIES(Main_Plugin     CardinalEngine MainLib    ${COMPILER_DEPENDENCIES} ImGUI BulletDynamics BulletCollision LinearMath)
-TARGET_LINK_LIBRARIES(PCG_Plugin      CardinalEngine PCGLib     ${COMPILER_DEPENDENCIES} ImGUI BulletDynamics BulletCollision LinearMath)
-TARGET_LINK_LIBRARIES(PCGCity_Plugin  CardinalEngine PCGCityLib ${COMPILER_DEPENDENCIES} ImGUI BulletDynamics BulletCollision LinearMath)
+TARGET_LINK_LIBRARIES(Main_Plugin     CardinalEngine MainLib     ${COMPILER_DEPENDENCIES} ImGUI BulletDynamics BulletCollision LinearMath)
+TARGET_LINK_LIBRARIES(PCG_Plugin      CardinalEngine PCGLib      ${COMPILER_DEPENDENCIES} ImGUI BulletDynamics BulletCollision LinearMath)
+TARGET_LINK_LIBRARIES(PCGCity_Plugin  CardinalEngine PCGCityLib  ${COMPILER_DEPENDENCIES} ImGUI BulletDynamics BulletCollision LinearMath)
+TARGET_LINK_LIBRARIES(VR_Plugin       CardinalEngine VRPLuginLib ${COMPILER_DEPENDENCIES} ImGUI BulletDynamics BulletCollision LinearMath)
