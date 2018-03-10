@@ -213,6 +213,7 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     m_triangleSecond  = 0;
     m_currentTriangle = 0;
     m_bIsPostProcessingEnabled = false;
+    m_bStereoscopicRendering   = true;
 
     m_postProcessingStack.Initialize();
 
@@ -270,7 +271,78 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
 
     // Setup style
     ImGui::StyleColorsDark();
+
+    if(m_bStereoscopicRendering)
+    {
+        bool ret = InitStereoscopicRendering();
+    }
+
     Logger::LogInfo("Rendering engine successfully initialized in %3.4lf s.", glfwGetTime());
+}
+
+/// \brief Initializes VR rendering
+bool RenderingEngine::InitStereoscopicRendering()
+{
+    // Loading the SteamVR Runtime
+    vr::EVRInitError eError = vr::VRInitError_None;
+    m_pHMD                  = vr::VR_Init( &eError, vr::VRApplication_Scene );
+
+    if (eError != vr::VRInitError_None)
+    {
+        m_pHMD = nullptr;
+        char buf[1024];
+        sprintf_s(buf, sizeof(buf), "Unable to init VR runtime: %s", vr::VR_GetVRInitErrorAsEnglishDescription(eError));
+        Logger::LogError("VR_Init Failed : %s", buf);
+        return false;
+    }
+    else
+    {
+        Logger::LogInfo("VR_Init successful, HMD initialized");
+    }
+
+    m_pRenderModels = (vr::IVRRenderModels *)vr::VR_GetGenericInterface( vr::IVRRenderModels_Version, &eError );
+    if( !m_pRenderModels)
+    {
+        m_pHMD = nullptr;
+        vr::VR_Shutdown();
+
+        char buf[1024];
+        sprintf_s( buf, sizeof( buf ), "Unable to get render model interface: %s", vr::VR_GetVRInitErrorAsEnglishDescription( eError ));
+        Logger::LogError("VR_Init Failed : %s", buf);
+        return false;
+    }
+    else
+    {
+        Logger::LogInfo("vr::IVRRenderModels successful");
+    }
+
+    m_strDriver  = "No Driver";
+    m_strDisplay = "No Display";
+
+    vr::EVRInitError peError = vr::VRInitError_None;
+
+    if (!vr::VRCompositor())
+    {
+        Logger::LogError("Compositor initialization failed");
+        return false;
+    }
+    else
+    {
+        Logger::LogInfo("Compositor initialized");
+    }
+
+    // m_strDriver  = GetTrackedDeviceString( m_pHMD, vr::k_unTrackedDeviceIndex_Hmd, vr::Prop_TrackingSystemName_String );
+    // m_strDisplay = GetTrackedDeviceString( m_pHMD, vr::k_unTrackedDeviceIndex_Hmd, vr::Prop_SerialNumber_String );
+}
+
+/// \brief ...
+void RenderingEngine::ShutdownStereoscopicRendering()
+{
+    if(m_pHMD)
+    {
+        vr::VR_Shutdown();
+        m_pHMD = nullptr;
+    }
 }
 
 /// \brief Renders the frame

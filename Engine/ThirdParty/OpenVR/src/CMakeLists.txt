@@ -68,11 +68,11 @@ elseif(BUILD_FRAMEWORK)
 	set( LIBNAME "OpenVR" )
 	add_library( ${LIBNAME} 
             SHARED ${SOURCE_FILES}
-            ${CMAKE_SOURCE_DIR}/headers/openvr.h
-            ${CMAKE_SOURCE_DIR}/headers/openvr_api.cs
-            ${CMAKE_SOURCE_DIR}/headers/openvr_api.json
-            ${CMAKE_SOURCE_DIR}/headers/openvr_capi.h
-            ${CMAKE_SOURCE_DIR}/headers/openvr_driver.h
+            ${CARDINAL_THIRD_PARTY_DIR}/OpenVR/headers/openvr.h
+            ${CARDINAL_THIRD_PARTY_DIR}/OpenVR/headers/openvr_api.cs
+            ${CARDINAL_THIRD_PARTY_DIR}/OpenVR/headers/openvr_api.json
+            ${CARDINAL_THIRD_PARTY_DIR}/OpenVR/headers/openvr_capi.h
+            ${CARDINAL_THIRD_PARTY_DIR}/OpenVR/headers/openvr_driver.h
 	)
 	set_target_properties(OpenVR PROPERTIES
 		FRAMEWORK TRUE

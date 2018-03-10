@@ -90,10 +90,10 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/PostProcessing/PostEffects/Experimental/Experimental2.cpp)
 
 # But tests depends on GTEST and GMOCK
-ADD_DEPENDENCIES(CardinalEngine glfw glew ResourcesCopy ImGUI)
+ADD_DEPENDENCIES(CardinalEngine glfw glew ResourcesCopy ImGUI OpenVR)
 
 # Linking ...
-TARGET_LINK_LIBRARIES(CardinalEngine ${COMPILER_DEPENDENCIES} glfw glew ImGUI OpenAL ${PLATFORM_DEPENDENCIES})
+TARGET_LINK_LIBRARIES(CardinalEngine ${COMPILER_DEPENDENCIES} glfw glew ImGUI OpenAL OpenVR ${PLATFORM_DEPENDENCIES})
 
 ADD_CUSTOM_TARGET(ResourcesCopy)
 

@@ -25,6 +25,7 @@
 #define CARDINAL_ENGINE_RENDERING_ENGINE_HPP__
 
 #include <vector>
+#include "OpenVR/headers/openvr.h"
 #include "Runtime/Platform/Configuration/Configuration.hh"
 
 #include "Runtime/Rendering/Context/Window.hpp"
@@ -126,9 +127,26 @@ private:
     /// \param step The current step
     void DisplayDebugWindow(float step);
 
+    /// \brief Initializes VR rendering
+    bool InitStereoscopicRendering();
+
+    /// \brief ...
+    void ShutdownStereoscopicRendering();
+
 private:
 
     static RenderingEngine * s_pInstance;
+
+private:
+
+    // VR
+    vr::IVRSystem *         m_pHMD;
+    vr::IVRRenderModels *   m_pRenderModels;
+    std::string             m_strDriver;
+    std::string             m_strDisplay;
+    vr::TrackedDevicePose_t m_rTrackedDevicePose [ vr::k_unMaxTrackedDeviceCount ];
+    glm::mat4               m_rmat4DevicePose    [ vr::k_unMaxTrackedDeviceCount ];
+    bool                    m_rbShowTrackedDevice[ vr::k_unMaxTrackedDeviceCount ];
 
 private:
 
@@ -139,6 +157,7 @@ private:
     bool m_debugWindow;
     bool m_debugTime;
     bool m_bInterpolate;
+    bool m_bStereoscopicRendering;
 
     double m_frameDelta;
     double m_frameTime;
