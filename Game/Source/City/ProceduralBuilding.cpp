@@ -151,7 +151,7 @@ void ProceduralBuilding::Generate()
     }
 
     Batch();
-    m_renderer.SetPosition(glm::vec3(64.0f, 64.0f, 64.0f));
+    m_renderer.SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
 /// \brief Updates the geometry of the building

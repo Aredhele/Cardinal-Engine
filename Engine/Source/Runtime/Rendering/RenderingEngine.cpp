@@ -344,6 +344,11 @@ bool RenderingEngine::InitStereoscopicRendering()
     CreateVRFrameBuffer(m_nRenderWidth, m_nRenderHeight, leftEyeDesc );
     CreateVRFrameBuffer(m_nRenderWidth, m_nRenderHeight, rightEyeDesc);
 
+    m_mat4ProjectionLeft  = GetHMDMatrixProjectionEye(vr::Eye_Left);
+    m_mat4ProjectionRight = GetHMDMatrixProjectionEye(vr::Eye_Right);
+    m_mat4eyePosLeft      = GetHMDMatrixPoseEye      (vr::Eye_Left);
+    m_mat4eyePosRight     = GetHMDMatrixPoseEye      (vr::Eye_Right);
+
     return true;
 }
 
@@ -811,7 +816,7 @@ void RenderingEngine::RenderScene(vr::Hmd_Eye nEye)
     {
         m_triangleCounter += m_renderers[nRenderer]->GetElementCount();
         m_currentTriangle += m_renderers[nRenderer]->GetElementCount();
-        m_renderers[nRenderer]->Draw(GetHMDMatrixProjectionEye(nEye), GetHMDMatrixPoseEye(nEye), glm::vec3(0.0f, 0.0f, 0.0f), LightManager::GetNearestPointLights(m_renderers[nRenderer]->GetPosition()));
+        m_renderers[nRenderer]->Draw(GetHMDMatrixProjectionEye(nEye), GetHMDMatrixPoseEye(nEye) * m_mat4HMDPose, glm::vec3(0.0f, 0.0f, 0.0f), LightManager::GetNearestPointLights(m_renderers[nRenderer]->GetPosition()));
     }
 }
 
