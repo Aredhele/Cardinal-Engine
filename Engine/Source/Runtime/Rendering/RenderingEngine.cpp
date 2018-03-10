@@ -386,6 +386,59 @@ bool RenderingEngine::CreateVRFrameBuffer(int nWidth, int nHeight, FramebufferDe
     return true;
 }
 
+/// \brief Returns the right matrix for the right eye
+glm::mat4 RenderingEngine::GetHMDMatrixProjectionEye(vr::Hmd_Eye nEye)
+{
+    if (!m_pHMD)
+        return glm::mat4(1.0f);
+
+    vr::IVRSystem *vr_sys = vr::VRSystem();
+
+#if defined(__GNUC__) && defined(_WIN32)
+    typedef void (vr::IVRSystem::*FuncPtr)(vr::HmdMatrix44_t *, vr::EVREye, float, float);
+    FuncPtr get_projection_matrix = reinterpret_cast<FuncPtr>(&vr::IVRSystem::GetProjectionMatrix); // NOLINT
+
+    vr::HmdMatrix44_t mat {};
+    (vr_sys->*get_projection_matrix)(&mat, nEye, 0.1f, 1000.0f);
+#else
+    vr::HmdMatrix44_t mat = m_pHMD->GetProjectionMatrix(nEye, 0.1, 1000.0f);
+#endif
+
+    return glm::mat4(
+            mat.m[0][0], mat.m[1][0], mat.m[2][0], mat.m[3][0],
+            mat.m[0][1], mat.m[1][1], mat.m[2][1], mat.m[3][1],
+            mat.m[0][2], mat.m[1][2], mat.m[2][2], mat.m[3][2],
+            mat.m[0][3], mat.m[1][3], mat.m[2][3], mat.m[3][3]);
+}
+
+/// \brief Returns the transform of an eye
+glm::mat4 RenderingEngine::GetHMDMatrixPoseEye(vr::Hmd_Eye nEye)
+{
+    if (!m_pHMD)
+        return glm::mat4(1.0f);
+
+    vr::IVRSystem *vr_sys = vr::VRSystem();
+
+#if defined(__GNUC__) && defined(_WIN32)
+    typedef void (vr::IVRSystem::*FuncPtr)(vr::HmdMatrix34_t *, vr::EVREye);
+    FuncPtr get_eye_to_head_transform = reinterpret_cast<FuncPtr>(&vr::IVRSystem::GetEyeToHeadTransform); // NOLINT
+
+    vr::HmdMatrix34_t mat {};
+    (vr_sys->*get_eye_to_head_transform)(&mat, nEye);
+#else
+    vr::HmdMatrix34_t mat = m_pHMD->GetEyeToHeadTransform( nEye );
+#endif
+
+    glm::mat4 matrixObj(
+            mat.m[0][0], mat.m[1][0], mat.m[2][0], 0.0,
+            mat.m[0][1], mat.m[1][1], mat.m[2][1], 0.0,
+            mat.m[0][2], mat.m[1][2], mat.m[2][2], 0.0,
+            mat.m[0][3], mat.m[1][3], mat.m[2][3], 1.0f
+    );
+
+    return glm::inverse(matrixObj);
+}
+
 /// \brief ...
 void RenderingEngine::ShutdownStereoscopicRendering()
 {
@@ -652,13 +705,15 @@ void RenderingEngine::RenderFrame(float step)
 /// \brief Renders the scene in stereo
 void RenderingEngine::RenderStereoTarget()
 {
+    UpdateHMDPositions();
+
     glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
     glEnable( GL_MULTISAMPLE );
 
     // Left Eye
     glBindFramebuffer( GL_FRAMEBUFFER, leftEyeDesc.m_nRenderFramebufferId );
     glViewport(0, 0, m_nRenderWidth, m_nRenderHeight );
-    // RenderScene( vr::Eye_Left );
+    RenderScene( vr::Eye_Left );
     glBindFramebuffer( GL_FRAMEBUFFER, 0 );
 
     glDisable( GL_MULTISAMPLE );
@@ -678,7 +733,7 @@ void RenderingEngine::RenderStereoTarget()
     // Right Eye
     glBindFramebuffer( GL_FRAMEBUFFER, rightEyeDesc.m_nRenderFramebufferId );
     glViewport(0, 0, m_nRenderWidth, m_nRenderHeight );
-    // RenderScene( vr::Eye_Right );
+    RenderScene( vr::Eye_Right );
     glBindFramebuffer( GL_FRAMEBUFFER, 0 );
 
     glDisable( GL_MULTISAMPLE );
@@ -692,6 +747,72 @@ void RenderingEngine::RenderStereoTarget()
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0 );
+}
+
+glm::mat4 RenderingEngine::ConvertOpenVRMatrixToGLM( const vr::HmdMatrix34_t &matPose )
+{
+    glm::mat4 matrixObj(
+            matPose.m[0][0], matPose.m[1][0], matPose.m[2][0], 0.0,
+            matPose.m[0][1], matPose.m[1][1], matPose.m[2][1], 0.0,
+            matPose.m[0][2], matPose.m[1][2], matPose.m[2][2], 0.0,
+            matPose.m[0][3], matPose.m[1][3], matPose.m[2][3], 1.0f
+    );
+    return matrixObj;
+}
+
+/// \brief Updates HMD matrix positions
+void RenderingEngine::UpdateHMDPositions()
+{
+    if ( !m_pHMD )
+        return;
+
+    vr::VRCompositor()->WaitGetPoses(m_rTrackedDevicePose, vr::k_unMaxTrackedDeviceCount, NULL, 0 );
+
+    m_iValidPoseCount = 0;
+    m_strPoseClasses = "";
+    for ( int nDevice = 0; nDevice < vr::k_unMaxTrackedDeviceCount; ++nDevice )
+    {
+        if ( m_rTrackedDevicePose[nDevice].bPoseIsValid )
+        {
+            m_iValidPoseCount++;
+            m_rmat4DevicePose[nDevice] = ConvertOpenVRMatrixToGLM(m_rTrackedDevicePose[nDevice].mDeviceToAbsoluteTracking);
+            if (m_rDevClassChar[nDevice]==0)
+            {
+                switch (m_pHMD->GetTrackedDeviceClass(nDevice))
+                {
+                    case vr::TrackedDeviceClass_Controller:        m_rDevClassChar[nDevice] = 'C'; break;
+                    case vr::TrackedDeviceClass_HMD:               m_rDevClassChar[nDevice] = 'H'; break;
+                    case vr::TrackedDeviceClass_Invalid:           m_rDevClassChar[nDevice] = 'I'; break;
+                    case vr::TrackedDeviceClass_GenericTracker:    m_rDevClassChar[nDevice] = 'G'; break;
+                    case vr::TrackedDeviceClass_TrackingReference: m_rDevClassChar[nDevice] = 'T'; break;
+                    default:                                       m_rDevClassChar[nDevice] = '?'; break;
+                }
+            }
+            m_strPoseClasses += m_rDevClassChar[nDevice];
+        }
+    }
+
+    if ( m_rTrackedDevicePose[vr::k_unTrackedDeviceIndex_Hmd].bPoseIsValid )
+    {
+        m_mat4HMDPose = m_rmat4DevicePose[vr::k_unTrackedDeviceIndex_Hmd];
+        m_mat4HMDPose = glm::inverse(m_mat4HMDPose);
+    }
+}
+
+/// \brief Renders the scene for a particular eye
+void RenderingEngine::RenderScene(vr::Hmd_Eye nEye)
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+
+    // Draw
+    size_t rendererCount = m_renderers.size();
+    for (int nRenderer = 0; nRenderer < rendererCount; ++nRenderer)
+    {
+        m_triangleCounter += m_renderers[nRenderer]->GetElementCount();
+        m_currentTriangle += m_renderers[nRenderer]->GetElementCount();
+        m_renderers[nRenderer]->Draw(GetHMDMatrixProjectionEye(nEye), GetHMDMatrixPoseEye(nEye), glm::vec3(0.0f, 0.0f, 0.0f), LightManager::GetNearestPointLights(m_renderers[nRenderer]->GetPosition()));
+    }
 }
 
 /// \brief Sets the current camera

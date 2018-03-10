@@ -152,6 +152,21 @@ private:
     /// \brief Creates fbo
     bool CreateVRFrameBuffer(int nWidth, int nHeight, FramebufferDesc &framebufferDesc);
 
+    /// \brief Returns the right matrix for the right eye
+    glm::mat4 GetHMDMatrixProjectionEye(vr::Hmd_Eye nEye);
+
+    /// \brief Returns the transform of an eye
+    glm::mat4 GetHMDMatrixPoseEye(vr::Hmd_Eye nEye);
+
+    /// \brief Updates HMD matrix positions
+    void UpdateHMDPositions();
+
+    /// \brief Convert OpenVR matrix to glm
+    glm::mat4 ConvertOpenVRMatrixToGLM(const vr::HmdMatrix34_t &matPose);
+
+    /// \brief Renders the scene for a particular eye
+    void RenderScene(vr::Hmd_Eye nEye);
+
     /// \brief ...
     void ShutdownStereoscopicRendering();
 
@@ -175,12 +190,22 @@ private:
     vr::TrackedDevicePose_t m_rTrackedDevicePose [ vr::k_unMaxTrackedDeviceCount ];
     glm::mat4               m_rmat4DevicePose    [ vr::k_unMaxTrackedDeviceCount ];
     bool                    m_rbShowTrackedDevice[ vr::k_unMaxTrackedDeviceCount ];
+    char                    m_rDevClassChar      [ vr::k_unMaxTrackedDeviceCount ];
 
     FramebufferDesc leftEyeDesc;
     FramebufferDesc rightEyeDesc;
 
     uint32_t m_nRenderWidth;
     uint32_t m_nRenderHeight;
+
+    glm::mat4 m_mat4ProjectionLeft;
+    glm::mat4 m_mat4ProjectionRight;
+    glm::mat4 m_mat4eyePosLeft;
+    glm::mat4 m_mat4eyePosRight;
+    glm::mat4 m_mat4HMDPose;
+
+    int         m_iValidPoseCount;
+    std::string m_strPoseClasses;
 
 private:
 
