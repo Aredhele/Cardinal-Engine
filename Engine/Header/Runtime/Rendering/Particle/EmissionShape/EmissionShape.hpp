@@ -37,12 +37,15 @@ class EmissionShape
 public:
 
     /// \brief Returns a random position in the base of the emission shape
+    /// \param systemPosition The position of the particle system
     /// \return The position
-    virtual glm::vec3 GetStartPosition() const = 0;
+    virtual glm::vec3 GetStartPosition(glm::vec3 const& systemPosition) const = 0;
 
     /// \brief Perturbs a velocity vector from a position and depending the shape
+    /// \param initialVelocity The user predefined initial velocity
+    /// \param systemPosition The position of the particle system
     /// \return The new velocity
-    virtual glm::vec3 Perturb(glm::vec3 const& initialVelocity, glm::vec3 const& position) const = 0;
+    virtual glm::vec3 Perturb(glm::vec3 const& initialVelocity, glm::vec3 const& systemPosition) const = 0;
 };
 
 } // !namespace

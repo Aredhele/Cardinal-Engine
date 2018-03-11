@@ -36,13 +36,27 @@ class Cone : public EmissionShape
 {
 public:
 
+    /// \brief Constuctor
+    /// \param radius The base radius of the cone
+    /// \param angle The angle of the cone
+    Cone(float radius, float angle);
+
     /// \brief Returns a random position in the base of the emission shape
+    /// \param systemPosition The position of the particle system
     /// \return The position
-    glm::vec3 GetStartPosition() const final;
+    glm::vec3 GetStartPosition(glm::vec3 const& systemPosition) const final;
 
     /// \brief Perturbs a velocity vector from a position and depending the shape
+    /// \param initialVelocity The user predefined initial velocity
+    /// \param systemPosition The position of the particle system
     /// \return The new velocity
-    glm::vec3 Perturb(glm::vec3 const& initialVelocity, glm::vec3 const& position) const final;
+    glm::vec3 Perturb(glm::vec3 const& initialVelocity, glm::vec3 const& systemPosition) const final;
+
+private:
+
+    float m_lenght;
+    float m_radius;
+    float m_angle;
 };
 
 } // !namespace
