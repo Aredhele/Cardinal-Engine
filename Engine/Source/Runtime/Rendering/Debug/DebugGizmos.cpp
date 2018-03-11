@@ -217,7 +217,7 @@ void DrawCone(glm::vec3 const& position, float radius,  float angle, float lengh
     DebugManager::AddLine(points[0], points[points.size() - 1], color);
 
     // Compute top radius
-    float x  = cosf(angle) * lenght;
+    float x  = cosf(angle) * radius;
     float z  = sinf(angle) * lenght;
 
     glm::vec2 offset = glm::vec2(x, z) - glm::vec2(position.x, position.y);
