@@ -8,6 +8,7 @@ libraries :
 * Glfw 
 * Glm
 * OpenAL
+* OpenVR
 * Bullet3
 * ImGui
 * Google Test
