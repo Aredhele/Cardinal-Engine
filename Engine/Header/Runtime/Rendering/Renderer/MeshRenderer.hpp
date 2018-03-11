@@ -83,6 +83,9 @@ public :
     /// \param PV The projection view matrix
     void Draw(glm::mat4 const& P, glm::mat4 const& V, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights) final;
 
+    /// \brief Called when the object is inspected
+    void OnInspectorGUI() final;
+
 private:
 
     friend class RenderingEngine;

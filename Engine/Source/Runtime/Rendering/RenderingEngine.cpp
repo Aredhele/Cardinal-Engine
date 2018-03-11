@@ -1216,7 +1216,7 @@ void RenderingEngine::UpdateEngineTime(float audioTime, float renderingTime, flo
 /// \brief Called to render the hierarchy
 void RenderingEngine::RenderHierarchy()
 {
-    ImGui::ShowDemoWindow(&m_debugWindow);
+    // ImGui::ShowDemoWindow(&m_debugWindow);
 
     ImGui::Begin        ("Scene explorer", &m_debugWindow);
     ImGui::SetWindowPos ("Scene explorer", ImVec2(1300, 10));
@@ -1241,6 +1241,10 @@ void RenderingEngine::RenderHierarchy()
     // Particles
     for(ParticleSystem * pSystem : m_paricleSystems)
         items.emplace_back(pSystem);
+
+    // Renderer
+    for(IRenderer * pRenderer : m_renderers)
+        items.emplace_back(pRenderer);
 
     // Generating names
     for(Inspector * pInspector : items)

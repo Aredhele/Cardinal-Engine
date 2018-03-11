@@ -22,6 +22,7 @@
 /// \author     Vincent STEHLY--CALISTO
 
 #include "Glew/include/GL/glew.h"
+#include "ImGUI/Header/ImGUI/imgui.h"
 
 #include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
 #include "Runtime/Rendering/Texture/TextureManager.hpp"
@@ -38,6 +39,8 @@ MeshRenderer::MeshRenderer() : IRenderer()
     m_normalsObject  = 0;
     m_uvsObject      = 0;
     m_elementsCount  = 0;
+
+    inspectorName = "Mesh Renderer";
 }
 
 /// \brief Destructor
@@ -182,6 +185,27 @@ void MeshRenderer::Draw(glm::mat4 const& P, glm::mat4 const& V, glm::vec3 const&
     glDrawElements(GL_TRIANGLES, m_elementsCount, GL_UNSIGNED_SHORT, nullptr);
 
     m_pShader->End();
+}
+
+/// \brief Called when the object is inspected
+void MeshRenderer::OnInspectorGUI()
+{
+    if(ImGui::CollapsingHeader("Renderer"))
+    {
+        ImGui::Text(inspectorName.c_str());
+
+        glm::vec3 position(m_model[3][0], m_model[3][1], m_model[3][2]);
+        if(ImGui::InputFloat3("Position###Particle_direction", &position[0], 3))
+        {
+            SetPosition(position);
+        }
+
+        ImGui::TextDisabled("\nVao : %u", m_vao);
+        ImGui::TextDisabled("Indexed buffer ID : %u", m_indexesObject);
+        ImGui::TextDisabled("Vertex buffer ID  : %u", m_verticesObject);
+        ImGui::TextDisabled("Normal buffer ID  : %u", m_normalsObject);
+        ImGui::TextDisabled("UV buffer ID      : %u", m_uvsObject);
+    }
 }
 
 } // !namespace
