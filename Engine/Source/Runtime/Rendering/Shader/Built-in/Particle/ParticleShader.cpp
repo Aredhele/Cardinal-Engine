@@ -22,6 +22,7 @@
 /// \author     Vincent STEHLY--CALISTO
 
 #include "Glew/include/GL/glew.h"
+#include "ImGUI/Header/ImGUI/imgui.h"
 
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
 #include "Runtime/Rendering/Shader/Built-in/Particle/ParticleShader.hpp"
@@ -38,6 +39,8 @@ ParticleShader::ParticleShader()
     m_VPID          = glGetUniformLocation((uint)m_shaderID, "VP");
     m_cameraUpID    = glGetUniformLocation((uint)m_shaderID, "cameraUpWorld");
     m_cameraRightID = glGetUniformLocation((uint)m_shaderID, "cameraRightWorld");
+
+    inspectorName = "Particle Shader";
 }
 
 /// \brief Sets up the pipeline for the shader
@@ -59,6 +62,20 @@ void ParticleShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 c
 void ParticleShader::End()
 {
     // None
+}
+
+/// \brief Called when the object is inspected
+void ParticleShader::OnInspectorGUI()
+{
+    if(ImGui::CollapsingHeader("Material"))
+    {
+        ImGui::Text(inspectorName.c_str());
+
+        ImGui::TextDisabled("Shader ID : %d", m_shaderID);
+        ImGui::TextDisabled("Uniform VP ID          : %d", m_VPID);
+        ImGui::TextDisabled("Uniform CameraUp    ID : %d", m_cameraUpID);
+        ImGui::TextDisabled("Uniform CameraRight ID : %d", m_cameraRightID);
+    }
 }
 
 } // !namespace

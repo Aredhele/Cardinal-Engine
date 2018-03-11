@@ -26,6 +26,7 @@
 
 #include "Glm/glm/vec3.hpp"
 #include "Runtime/Platform/Configuration/Type.hh"
+#include "Runtime/Rendering/Hierarchy/Inspector.hpp"
 #include "Runtime/Rendering/Renderer/ParticleRenderer.hpp"
 #include "Runtime/Rendering/Particle/EmissionShape/EmissionShape.hpp"
 #include "Runtime/Rendering/Shader/Built-in/Particle/ParticleShader.hpp"
@@ -36,7 +37,7 @@ namespace cardinal
 
 /// \class ParticleSystem
 /// \brief System of basic particles
-class ParticleSystem
+class ParticleSystem : public Inspector
 {
 private:
 
@@ -66,6 +67,9 @@ public:
     /// \brief Sets the position of the particle system
     /// \param position The new position
     void SetPosition(glm::vec3 const& position);
+
+    /// \brief Called when the object is inspected
+    void OnInspectorGUI() final;
 
 private:
 

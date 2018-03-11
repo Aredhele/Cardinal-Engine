@@ -56,6 +56,9 @@ public:
     /// \return The new direction
     glm::vec3 GetDirection(glm::vec3 const& particlePosition, glm::vec3 const& systemPosition) const final;
 
+    /// \brief Called when the object is inspected
+    void OnInspectorGUI() final;
+
 private:
 
     float     m_lenght;

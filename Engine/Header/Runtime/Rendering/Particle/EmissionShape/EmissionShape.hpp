@@ -24,15 +24,16 @@
 #ifndef CARDINAL_ENGINE_EMISSION_SHAPE_HPP__
 #define CARDINAL_ENGINE_EMISSION_SHAPE_HPP__
 
-/// \namespace cardinal
-#include <ThirdParty/Glm/glm/vec3.hpp>
+#include "Glm/glm/vec3.hpp"
+#include "Runtime/Rendering/Hierarchy/Inspector.hpp"
 
+/// \namespace cardinal
 namespace cardinal
 {
 
 /// \class EmissionShape
 /// \brief Interface for all emission shapes
-class EmissionShape
+class EmissionShape : public Inspector
 {
 public:
 

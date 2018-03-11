@@ -1238,6 +1238,10 @@ void RenderingEngine::RenderHierarchy()
     for(PointLight * pLight : pointLights)
         items.emplace_back(pLight);
 
+    // Particles
+    for(ParticleSystem * pSystem : m_paricleSystems)
+        items.emplace_back(pSystem);
+
     // Generating names
     for(Inspector * pInspector : items)
         cnames.emplace_back(pInspector->inspectorName.c_str());

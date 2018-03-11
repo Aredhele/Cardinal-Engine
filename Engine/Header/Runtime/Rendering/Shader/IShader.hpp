@@ -27,6 +27,7 @@
 #include <vector>
 #include "Glm/glm/glm.hpp"
 #include "Runtime/Platform/Configuration/Type.hh"
+#include "Runtime/Rendering/Hierarchy/Inspector.hpp"
 #include "Runtime/Rendering/Lighting/LightStructure.hpp"
 
 /// \namespace cardinal
@@ -35,7 +36,7 @@ namespace cardinal
 
 /// \class IShader
 /// \brief Base class for all built-in shaders
-class IShader
+class IShader : public Inspector
 {
 public:
 

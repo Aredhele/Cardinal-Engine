@@ -21,6 +21,7 @@
 /// \package    Runtime/Rendering/Particle
 /// \author     Vincent STEHLY--CALISTO
 
+#include "ImGUI/Header/ImGUI/imgui.h"
 #include "Runtime/Core/Assertion/Assert.hh"
 #include "Runtime/Rendering/Debug/Debug.hpp"
 #include "Runtime/Rendering/Particle/ParticleSystem.hpp"
@@ -43,6 +44,8 @@ ParticleSystem::ParticleSystem()
     m_gravity          = glm::vec3(0.0f, 0.0f, -9.81);
     m_color            = glm::vec3(1.0f, 1.0f, 1.0f);
     m_position         = glm::vec3(0.0f);
+
+    inspectorName = "Particle System";
 }
 
 /// \brief Destructor
@@ -173,6 +176,39 @@ int ParticleSystem::GetNewParticle()
 void ParticleSystem::SetPosition(glm::vec3 const& position)
 {
     m_position = position;
+}
+
+/// \brief Called when the object is inspected
+void ParticleSystem::OnInspectorGUI()
+{
+    ImGui::Text(inspectorName.c_str());
+    ImGui::InputFloat("Life time###Particle_LifeTime",  &m_lifeTime,   0.1f, 0.5f);
+    ImGui::InputFloat("Size###Particle_size",           &m_size,       0.1f, 0.5f);
+    ImGui::InputFloat("Speed###Particle_speed",         &m_speed,      0.1f, 0.5f);
+    ImGui::InputInt  ("Emission###Particle_emission",   &m_emissionRate, 1,   100);
+
+    glm::vec4 lcolor  (m_color.x,   m_color.y,   m_color.z,   1.0f);
+
+    ImGui::Text("\nParticle color");
+    if(ImGui::ColorEdit4("###Particle_lcolor", &lcolor[0]))
+    {
+        m_color.x = lcolor.x;
+        m_color.y = lcolor.y;
+        m_color.z = lcolor.z;
+    }
+
+    ImGui::InputFloat3("Gravity###Particle_direction", &m_gravity[0],  3);
+    ImGui::InputFloat3("Position###Particle_position", &m_position[0], 3);
+
+    // Debugs
+    ImGui::TextDisabled("\nLast index : %d", m_lastUsedParticle);
+    ImGui::TextDisabled(  "Max amount : %d", m_particleAmount);
+
+    // Components
+    ImGui::TextColored(ImVec4(1,1,0,1), "\nAttached components\n\n");
+    m_pEmissionShape->OnInspectorGUI();
+    m_renderer.OnInspectorGUI();
+    m_shader.OnInspectorGUI();
 }
 
 } // !namespace

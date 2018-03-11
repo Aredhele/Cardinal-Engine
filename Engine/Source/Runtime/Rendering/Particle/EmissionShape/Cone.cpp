@@ -23,6 +23,7 @@
 
 #include "Glm/glm/glm.hpp"
 #include "Glm/glm/ext.hpp"
+#include "ImGUI/Header/ImGUI/imgui.h"
 
 #include "Runtime/Core/Debug/Logger.hpp"
 #include "Runtime/Rendering/Debug/Debug.hpp"
@@ -40,6 +41,8 @@ Cone::Cone(float radius, float topRadius)
     m_radius    = radius;
     m_topRadius = topRadius;
     m_lenght    = 15.0f;
+
+    inspectorName = "Cone shape";
 }
 
 /// \brief Called to draw the emission shape
@@ -73,6 +76,19 @@ glm::vec3 Cone::GetDirection(glm::vec3 const& particlePosition, glm::vec3 const&
     glm::vec3 B   = systemPosition + glm::vec3(dir.x, dir.y, m_lenght);
 
     return glm::normalize(B - A);
+}
+
+/// \brief Called when the object is inspected
+void Cone::OnInspectorGUI()
+{
+    if(ImGui::CollapsingHeader(inspectorName.c_str()))
+    {
+        ImGui::InputFloat("Base radius###Cone_BaseRadius",  &m_radius,    0.1f, 0.5f);
+        ImGui::InputFloat("Top radius###Cone_TopRadius",    &m_topRadius, 0.1f, 1.0f);
+
+        ImGui::TextDisabled("\nLenght   : %f", m_lenght);
+        ImGui::TextDisabled(  "Position : %f %f %f", m_position.x, m_position.y, m_position.z);
+    }
 }
 
 } // !namespace
