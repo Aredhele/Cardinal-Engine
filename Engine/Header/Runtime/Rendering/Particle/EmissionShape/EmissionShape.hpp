@@ -36,16 +36,19 @@ class EmissionShape
 {
 public:
 
+    /// \brief Called to draw the emission shape
+    /// \param systemPosition The position of the particle system
+    virtual void DrawGizmo(glm::vec3 const& systemPosition) = 0;
+
     /// \brief Returns a random position in the base of the emission shape
     /// \param systemPosition The position of the particle system
     /// \return The position
     virtual glm::vec3 GetStartPosition(glm::vec3 const& systemPosition) const = 0;
 
-    /// \brief Perturbs a velocity vector from a position and depending the shape
-    /// \param initialVelocity The user predefined initial velocity
+    /// \brief Computes the start direction of a particles
     /// \param systemPosition The position of the particle system
-    /// \return The new velocity
-    virtual glm::vec3 Perturb(glm::vec3 const& initialVelocity, glm::vec3 const& systemPosition) const = 0;
+    /// \return The new direction
+    virtual glm::vec3 GetDirection(glm::vec3 const& systemPosition) const = 0;
 };
 
 } // !namespace

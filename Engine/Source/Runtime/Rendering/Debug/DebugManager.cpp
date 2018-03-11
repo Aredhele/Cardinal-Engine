@@ -69,6 +69,7 @@ DebugManager::DebugManager()
     m_activeGizmos.emplace(EGizmo::Line, false);
     m_activeGizmos.emplace(EGizmo::Axis, false);
     m_activeGizmos.emplace(EGizmo::Grid, false);
+    m_activeGizmos.emplace(EGizmo::Cone, false);
     m_activeGizmos.emplace(EGizmo::PointLight,       false);
     m_activeGizmos.emplace(EGizmo::DirectionalLight, false);
 

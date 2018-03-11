@@ -555,20 +555,8 @@ void RenderingEngine::RenderFrame(float step)
     glm::mat4 View           = m_pCamera->GetViewMatrix();
     glm::mat4 ProjectionView = Projection * View;
 
-    // Start debug draw
-    DirectionalLight * pLight = LightManager::GetDirectionalLight();
-    if(pLight != nullptr)
-    {
-        debug::DrawDirectionalLight(pLight->GetPosition(), pLight->GetDirection(), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
-    }
-
+    DirectionalLight * pLight                = LightManager::GetDirectionalLight();
     std::vector<PointLight *> const& pLights = LightManager::GetPointLights();
-    for(const PointLight* pPointLight : pLights)
-    {
-        debug::DrawPointLight(pPointLight->GetPosition(), glm::vec3(1.0f), 32, pPointLight->GetRange(), 1.0f);
-    }
-    // End debug draw
-
 
     // Shadow mapping
     if(pLight != nullptr)
@@ -701,7 +689,7 @@ void RenderingEngine::RenderFrame(float step)
         vr::VRCompositor()->Submit(vr::Eye_Left, &leftEyeTexture );
         vr::Texture_t rightEyeTexture = {(void*)(uintptr_t)rightEyeDesc.m_nResolveTextureId, vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
         vr::VRCompositor()->Submit(vr::Eye_Right, &rightEyeTexture );
-        // vr::VRCompositor()->ShowMirrorWindow();
+        // vr::VRCompositor()->ShowMirrorWindow(); (No need anymore)
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(0, 0, 1600, 900);
@@ -750,7 +738,6 @@ void RenderingEngine::RenderFrame(float step)
 
 #ifdef CARDINAL_DEBUG
     DebugManager::Draw(ProjectionView);
-    DebugManager::Clear();
 #endif
 
     if(m_bIsPostProcessingEnabled)
@@ -1180,6 +1167,21 @@ void RenderingEngine::DisplayDebugWindow(float step)
 /// \param dt The elapsed time
 void RenderingEngine::Update(float dt)
 {
+    DebugManager::Clear();
+
+    // Start debug draw
+    DirectionalLight * pLight = LightManager::GetDirectionalLight();
+    if(pLight != nullptr)
+    {
+        debug::DrawDirectionalLight(pLight->GetPosition(), pLight->GetDirection(), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
+    }
+
+    std::vector<PointLight *> const& pLights = LightManager::GetPointLights();
+    for(const PointLight* pPointLight : pLights)
+    {
+        debug::DrawPointLight(pPointLight->GetPosition(), glm::vec3(1.0f), 32, pPointLight->GetRange(), 1.0f);
+    }
+
     for(ParticleSystem * pSystem : m_paricleSystems)
     {
         pSystem->Update(dt);

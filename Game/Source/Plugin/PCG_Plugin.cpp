@@ -22,6 +22,7 @@
 /// \author     Vincent STEHLY--CALISTO
 
 // Engine
+#include "Runtime/Rendering/Particle/EmissionShape/Cone.hpp"
 #include "Runtime/Sound/SoundEngine.hpp"
 #include "Runtime/Sound/Listener/AudioListener.hpp"
 
@@ -67,6 +68,7 @@ void PCG_Plugin::OnPlayStart()
 
     // Gizmos
     cardinal::DebugManager::EnableGizmo(cardinal::DebugManager::EGizmo::DirectionalLight);
+    cardinal::DebugManager::EnableGizmo(cardinal::DebugManager::EGizmo::Cone);
 
     // Post-processing
     cardinal::RenderingEngine::SetPostProcessingActive(true);
@@ -85,7 +87,11 @@ void PCG_Plugin::OnPlayStart()
 
     // Particle system
     cardinal::ParticleSystem * pSystem = cardinal::RenderingEngine::AllocateParticleSystem();
-    pSystem->Initialize();
+    pSystem->Initialize(10000, 100, 5.0f, 1.0f, glm::vec3(0.0f, 0.0f, -9.81), glm::vec3(1.0f), new cardinal::Cone(10.0f, 1.0f));
+    pSystem->SetPosition(glm::vec3(-10.0f, -1.0f, 0.0f));
+
+    cardinal::Cone cone(1.0f, (float)M_PI_4);
+    cone.Perturb(glm::vec3(0.0f), glm::vec3(0.0f));
 }
 
 /// \brief Called when the game stops

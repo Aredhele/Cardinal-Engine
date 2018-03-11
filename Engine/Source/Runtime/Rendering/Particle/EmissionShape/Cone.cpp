@@ -25,6 +25,7 @@
 #include "Glm/glm/ext.hpp"
 
 #include "Runtime/Core/Debug/Logger.hpp"
+#include "Runtime/Rendering/Debug/Debug.hpp"
 #include "Runtime/Rendering/Particle/EmissionShape/Cone.hpp"
 
 /// \namespace cardinal
@@ -36,9 +37,16 @@ namespace cardinal
 /// \param angle The angle of the cone
 Cone::Cone(float radius, float angle)
 {
-    m_radius = radius;
-    m_angle  = angle;
-    m_lenght = 5.0f;
+    m_radius   = radius;
+    m_angle    = angle;
+    m_lenght   = 5.0f;
+}
+
+/// \brief Called to draw the emission shape
+/// \param systemPosition The position of the particle system
+void Cone::DrawGizmo(glm::vec3 const& systemPosition)
+{
+    cardinal::debug::DrawCone(systemPosition, m_radius, m_angle, m_lenght, glm::vec3(1.0, 0.0f, 0.0f));
 }
 
 /// \brief Returns a random position in the base of the emission shape
@@ -51,11 +59,10 @@ glm::vec3 Cone::GetStartPosition(glm::vec3 const& systemPosition) const
                      systemPosition.y + position2D.y, systemPosition.z);
 }
 
-/// \brief Perturbs a velocity vector from a position and depending the shape
-/// \param initialVelocity The user predefined initial velocity
+/// \brief Computes the start direction of a particles
 /// \param systemPosition The position of the particle system
-/// \return The new velocity
-glm::vec3 Cone::Perturb(glm::vec3 const &initialVelocity, glm::vec3 const &systemPosition) const
+/// \return The new direction
+glm::vec3 Cone::GetDirection(glm::vec3 const& systemPosition) const
 {
     float baseRadius = m_radius;
 

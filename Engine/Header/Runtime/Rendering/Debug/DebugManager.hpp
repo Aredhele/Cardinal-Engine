@@ -51,6 +51,7 @@ public:
         Line,
         Axis,
         Grid,
+        Cone,
         PointLight,
         DirectionalLight
     };
