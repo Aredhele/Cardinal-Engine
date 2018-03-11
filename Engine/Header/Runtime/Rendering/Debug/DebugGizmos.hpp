@@ -51,10 +51,10 @@ void DrawPointLight(glm::vec3 const& position, glm::vec3 const& color, int resol
 /// \brief Draw a cone in the world
 /// \param position The start point of the cone
 /// \param radius The base radius of the cone
-/// \param angle The angle of the cone
+/// \param topRadius The top radius
 /// \param lenght The lenght of the cone
 /// \param color The color of the line
-void DrawCone(glm::vec3 const& position, float radius, float angle, float lenght, glm::vec3 const& color);
+void DrawCone(glm::vec3 const& position, float radius, float topRadius, float lenght, glm::vec3 const& color);
 
 }  // !namespace
 

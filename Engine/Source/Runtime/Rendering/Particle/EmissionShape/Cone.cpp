@@ -34,19 +34,19 @@ namespace cardinal
 
 /// \brief Constuctor
 /// \param radius The base radius of the cone
-/// \param angle The angle of the cone
-Cone::Cone(float radius, float angle)
+/// \param topRadius The top radius
+Cone::Cone(float radius, float topRadius)
 {
-    m_radius   = radius;
-    m_angle    = angle;
-    m_lenght   = 5.0f;
+    m_radius    = radius;
+    m_topRadius = topRadius;
+    m_lenght    = 15.0f;
 }
 
 /// \brief Called to draw the emission shape
 /// \param systemPosition The position of the particle system
 void Cone::DrawGizmo(glm::vec3 const& systemPosition)
 {
-    cardinal::debug::DrawCone(systemPosition, m_radius, m_angle, m_lenght, glm::vec3(1.0, 0.0f, 0.0f));
+    cardinal::debug::DrawCone(systemPosition, m_radius, m_topRadius, m_lenght, glm::vec3(1.0, 0.0f, 0.0f));
 }
 
 /// \brief Returns a random position in the base of the emission shape
@@ -62,20 +62,17 @@ glm::vec3 Cone::GetStartPosition(glm::vec3 const& systemPosition) const
 /// \brief Computes the start direction of a particles
 /// \param systemPosition The position of the particle system
 /// \return The new direction
-glm::vec3 Cone::GetDirection(glm::vec3 const& systemPosition) const
+glm::vec3 Cone::GetDirection(glm::vec3 const& particlePosition, glm::vec3 const& systemPosition) const
 {
-    float baseRadius = m_radius;
+    float radiusRatio    = m_topRadius / m_radius;
+    glm::vec2 direction  = (particlePosition - systemPosition) * radiusRatio;
+    glm::vec3 endPoint   = glm::vec3(direction.x, direction.y, systemPosition.z + m_lenght);
 
-    float x  = cosf(m_angle) * m_lenght;
-    float y  = sinf(m_angle) * m_lenght;
+    glm::vec3 dir = glm::normalize(particlePosition - systemPosition) * m_topRadius;
+    glm::vec3 A   = particlePosition;
+    glm::vec3 B   = systemPosition + glm::vec3(dir.x, dir.y, m_lenght);
 
-    glm::vec2 offset = glm::vec2(x, y) - glm::vec2(systemPosition.x, systemPosition.y);
-    float topRadius  = glm::sqrt(offset.x * offset.x + offset.y * offset.y);
-
-    Logger::LogInfo("Base radius = %f", baseRadius);
-    Logger::LogInfo("Top  radius = %f", topRadius);
-
-    return glm::vec3();
+    return glm::normalize(B - A);
 }
 
 } // !namespace

@@ -38,8 +38,8 @@ public:
 
     /// \brief Constuctor
     /// \param radius The base radius of the cone
-    /// \param angle The angle of the cone
-    Cone(float radius, float angle);
+    /// \param topRadius The top radius
+    Cone(float radius, float topRadius);
 
     /// \brief Called to draw the emission shape
     /// \param systemPosition The position of the particle system
@@ -51,15 +51,16 @@ public:
     glm::vec3 GetStartPosition(glm::vec3 const& systemPosition) const final;
 
     /// \brief Computes the start direction of a particles
+    /// \param particlePosition The position of the particle
     /// \param systemPosition The position of the particle system
     /// \return The new direction
-    glm::vec3 GetDirection(glm::vec3 const& systemPosition) const final;
+    glm::vec3 GetDirection(glm::vec3 const& particlePosition, glm::vec3 const& systemPosition) const final;
 
 private:
 
     float     m_lenght;
     float     m_radius;
-    float     m_angle;
+    float     m_topRadius;
     glm::vec3 m_position;
 };
 

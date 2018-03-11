@@ -181,18 +181,16 @@ void DrawPointLight(glm::vec3 const& position, glm::vec3 const& color, int resol
 /// \brief Draw a cone in the world
 /// \param position The start point of the cone
 /// \param radius The base radius of the cone
-/// \param angle The angle of the cone
+/// \param topRadius The top radius
 /// \param lenght The lenght of the cone
 /// \param color The color of the line
-void DrawCone(glm::vec3 const& position, float radius,  float angle, float lenght, glm::vec3 const& color)
+void DrawCone(glm::vec3 const& position, float radius,  float topRadius, float lenght, glm::vec3 const& color)
 {
 #ifdef CARDINAL_DEBUG
     if(!DebugManager::IsGizmoEnabled(DebugManager::EGizmo::Cone))
     {
         return;
     }
-
-    lenght *= 10;
 
     // Compute spherical coordinates
     int pointCount = static_cast<int>(20 * radius); // NOLINT
@@ -216,13 +214,6 @@ void DrawCone(glm::vec3 const& position, float radius,  float angle, float lengh
     // Adding last points
     DebugManager::AddLine(points[0], points[points.size() - 1], color);
 
-    // Compute top radius
-    float x  = cosf(angle) * radius;
-    float z  = sinf(angle) * lenght;
-
-    glm::vec2 offset = glm::vec2(x, z) - glm::vec2(position.x, position.y);
-    float topRadius  = glm::sqrt(offset.x * offset.x + offset.y * offset.y);
-
     // Compute spherical coordinates
     pointCount = static_cast<int>(32 * topRadius); // NOLINT
     alpha      = (360.0f * (glm::pi<float>() / 180.0f)) / pointCount;
@@ -232,7 +223,7 @@ void DrawCone(glm::vec3 const& position, float radius,  float angle, float lengh
     {
         float x1 = position.x + glm::cos(alpha * nPoint) * topRadius;
         float y1 = position.y + glm::sin(alpha * nPoint) * topRadius;
-        float z1 = position.z + z;
+        float z1 = position.z + lenght;
 
         points.emplace_back(x1, y1, z1);
 
@@ -247,16 +238,16 @@ void DrawCone(glm::vec3 const& position, float radius,  float angle, float lengh
 
     // Add 4 four side lines
     DebugManager::AddLine(glm::vec3(position.x + glm::cos(0) * radius,    position.y + glm::sin(0) * radius,    position.z),
-                          glm::vec3(position.x + glm::cos(0) * topRadius, position.y + glm::sin(0) * topRadius, position.z + z), color);
+                          glm::vec3(position.x + glm::cos(0) * topRadius, position.y + glm::sin(0) * topRadius, position.z + lenght), color);
 
     DebugManager::AddLine(glm::vec3(position.x + glm::cos(M_PI_2) * radius,    position.y + glm::sin(M_PI_2) * radius,    position.z),
-                          glm::vec3(position.x + glm::cos(M_PI_2) * topRadius, position.y + glm::sin(M_PI_2) * topRadius, position.z + z), color);
+                          glm::vec3(position.x + glm::cos(M_PI_2) * topRadius, position.y + glm::sin(M_PI_2) * topRadius, position.z + lenght), color);
 
     DebugManager::AddLine(glm::vec3(position.x + glm::cos(M_PI) * radius,    position.y + glm::sin(M_PI) * radius,    position.z),
-                          glm::vec3(position.x + glm::cos(M_PI) * topRadius, position.y + glm::sin(M_PI) * topRadius, position.z + z), color);
+                          glm::vec3(position.x + glm::cos(M_PI) * topRadius, position.y + glm::sin(M_PI) * topRadius, position.z + lenght), color);
 
     DebugManager::AddLine(glm::vec3(position.x + glm::cos(M_PI + M_PI_2) * radius,    position.y + glm::sin(M_PI + M_PI_2) * radius,    position.z),
-                          glm::vec3(position.x + glm::cos(M_PI + M_PI_2) * topRadius, position.y + glm::sin(M_PI + M_PI_2) * topRadius, position.z + z), color);
+                          glm::vec3(position.x + glm::cos(M_PI + M_PI_2) * topRadius, position.y + glm::sin(M_PI + M_PI_2) * topRadius, position.z + lenght), color);
 
 #endif
 }

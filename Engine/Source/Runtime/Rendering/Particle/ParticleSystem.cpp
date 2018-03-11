@@ -99,7 +99,7 @@ void ParticleSystem::Update(float dt)
         currentParticle.lifeTime = m_lifeTime;
         currentParticle.position = m_pEmissionShape->GetStartPosition(m_position);
         currentParticle.color    = m_color;
-        currentParticle.velocity = m_pEmissionShape->GetDirection(currentParticle.position) * m_speed;
+        currentParticle.velocity = m_pEmissionShape->GetDirection(currentParticle.position, m_position) * m_speed;
     }
 
     // Simulate all particles

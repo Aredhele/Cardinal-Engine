@@ -46,9 +46,10 @@ public:
     virtual glm::vec3 GetStartPosition(glm::vec3 const& systemPosition) const = 0;
 
     /// \brief Computes the start direction of a particles
+    /// \param particlePosition The position of the particle
     /// \param systemPosition The position of the particle system
     /// \return The new direction
-    virtual glm::vec3 GetDirection(glm::vec3 const& systemPosition) const = 0;
+    virtual glm::vec3 GetDirection(glm::vec3 const& particlePosition, glm::vec3 const& systemPosition) const = 0;
 };
 
 } // !namespace
