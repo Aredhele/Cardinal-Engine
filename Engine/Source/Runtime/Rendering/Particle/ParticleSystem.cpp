@@ -50,7 +50,7 @@ void ParticleSystem::Initialize()
     m_particleAmount = 100000;
     m_emissionRate   = 100;
     m_lifeTime       = 6.0f;
-    m_size           = 1.0f;
+    m_size           = 10.0f;
 
     for(int i = 0; i < m_particleAmount; ++i)
     {

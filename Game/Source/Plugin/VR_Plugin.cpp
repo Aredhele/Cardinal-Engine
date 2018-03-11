@@ -42,7 +42,7 @@ void OnPluginRegistration()
 }
 
 /// \brief Constructor
-VR_Plugin::VR_Plugin()
+VR_Plugin::VR_Plugin() // NOLINT
 {
     // None
 }
