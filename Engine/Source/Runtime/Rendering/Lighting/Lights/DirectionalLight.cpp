@@ -21,8 +21,8 @@
 /// \package    Runtime/Rendering/Lighting
 /// \author     Vincent STEHLY--CALISTO
 
-
 #include "Glew/include/GL/glew.h"
+#include "ImGUI/Header/ImGUI/imgui.h"
 #include "Glm/glm/gtc/matrix_transform.hpp"
 #include "Runtime/Rendering/Mesh/Cube.hpp"
 #include "Runtime/Rendering/Lighting/Lights/DirectionalLight.hpp"
@@ -54,6 +54,7 @@ DirectionalLight::DirectionalLight()
     glBindVertexArray(0);
 
     m_elementsCount = 108;
+    inspectorName   = "Directional Light";
 }
 
 /// \brief Sets the light intensity
@@ -140,6 +141,39 @@ glm::vec3 const &DirectionalLight::GetLightColor() const
 glm::vec3 const &DirectionalLight::GetAmbientColor() const
 {
     return m_ambientColor;
+}
+
+/// \brief Called when the object is inspected
+void DirectionalLight::OnInspectorGUI()
+{
+    ImGui::Text(inspectorName.c_str());
+    ImGui::InputFloat("Light intensity###Directional_lightIntensity",     &m_lightIntensity,   0.01f, 0.1f);
+    ImGui::InputFloat("Ambient intensity###Directional_ambientIntensity", &m_ambientIntensity, 0.01f, 0.1f);
+
+    glm::vec4 lcolor  (m_lightColor.x,   m_lightColor.y,   m_lightColor.z,   1.0f);
+    glm::vec4 aambient(m_ambientColor.x, m_ambientColor.y, m_ambientColor.z, 1.0f);
+
+    ImGui::Text("\nLight color");
+    if(ImGui::ColorEdit4("###Dir_lcolor", &lcolor[0]))
+    {
+        m_lightColor.x = lcolor.x;
+        m_lightColor.y = lcolor.y;
+        m_lightColor.z = lcolor.z;
+    }
+
+    ImGui::Text("\nAmbient color");
+    if(ImGui::ColorEdit4("###Dir_acolor", &aambient[0]))
+    {
+        m_ambientColor.x = aambient.x;
+        m_ambientColor.y = aambient.y;
+        m_ambientColor.z = aambient.z;
+    }
+
+    ImGui::InputFloat3("Position###Dir_position", &m_position[0], 3);
+    ImGui::InputFloat3("Direction###Dir_direction", &m_direction[0], 3);
+
+    ImGui::TextDisabled("\nVAO : %u", m_vao);
+    ImGui::TextDisabled(  "VBO : %u",m_vbo);
 }
 
 } // !namespace

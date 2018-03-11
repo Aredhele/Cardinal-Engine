@@ -39,6 +39,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Physics/RigidBody.cpp
         Physics/CollisionShape.cpp
         Rendering/Mesh/Cube.cpp
+        Rendering/Hierarchy/Inspector.cpp
         Rendering/Context/Window.cpp
         Rendering/Debug/DebugBox.cpp
         Rendering/Debug/DebugGrid.cpp

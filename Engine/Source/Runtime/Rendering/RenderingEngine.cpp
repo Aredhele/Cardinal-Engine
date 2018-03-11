@@ -36,6 +36,7 @@
 #include "Runtime/Core/Plugin/PluginManager.hpp"
 #include "Runtime/Rendering/Debug/DebugManager.hpp"
 #include "Header/Runtime/Rendering/Debug/Debug.hpp"
+#include "Runtime/Rendering/Hierarchy/Hierarchy.hpp"
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
 #include "Runtime/Rendering/Shader/ShaderCompiler.hpp"
 #include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
@@ -547,6 +548,8 @@ void RenderingEngine::RenderFrame(float step)
 {
     // Triggering ImGUI
     ImGui_ImplGlfwGL3_NewFrame();
+
+    RenderHierarchy();
     m_pPluginManager->OnGUI();
     m_postProcessingStack.OnGUI();
 
@@ -1208,6 +1211,50 @@ void RenderingEngine::UpdateEngineTime(float audioTime, float renderingTime, flo
 {
     ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
     return s_pInstance->m_pCamera->GetViewMatrix();
+}
+
+/// \brief Called to render the hierarchy
+void RenderingEngine::RenderHierarchy()
+{
+    ImGui::ShowDemoWindow(&m_debugWindow);
+
+    ImGui::Begin        ("Scene explorer", &m_debugWindow);
+    ImGui::SetWindowPos ("Scene explorer", ImVec2(1300, 10));
+    ImGui::SetWindowSize("Scene explorer", ImVec2(290, 500));
+
+    ImGui::TextColored(ImVec4(1,1,0,1), "Hierarchy\n\n");
+
+    std::vector<Inspector *>  items;
+    std::vector<const char *> cnames;
+
+    // Camera
+    items.emplace_back(m_pCamera);
+
+    // Lights
+    if(LightManager::GetDirectionalLight() != nullptr)
+        items.emplace_back(LightManager::GetDirectionalLight());
+
+    std::vector <PointLight*> pointLights = LightManager::GetPointLights();
+    for(PointLight * pLight : pointLights)
+        items.emplace_back(pLight);
+
+    // Generating names
+    for(Inspector * pInspector : items)
+        cnames.emplace_back(pInspector->inspectorName.c_str());
+
+    static int listbox_item_current = 0;
+
+    ImGui::PushItemWidth(280);
+    ImGui::ListBox("###Hierarchy", &listbox_item_current, cnames.data(), (int)cnames.size(), 14);
+    ImGui::PopItemWidth();
+
+    ImGui::TextColored(ImVec4(1,1,0,1), "Inspector\n\n");
+
+    ImGui::BeginChild("");
+    items[listbox_item_current]->OnInspectorGUI();
+    ImGui::EndChild();
+
+    ImGui::End();
 }
 
 } // !namespace

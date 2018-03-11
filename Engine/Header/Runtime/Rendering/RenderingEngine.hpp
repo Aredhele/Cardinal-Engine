@@ -185,6 +185,9 @@ private:
     /// \brief Renders the scene in stereo
     void RenderStereoTarget();
 
+    /// \brief Called to render the hierarchy
+    void RenderHierarchy();
+
     /// \brief Returns the wanted string
     std::string GetTrackedDeviceString(vr::IVRSystem *pHmd, vr::TrackedDeviceIndex_t unDevice, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError *peError = NULL);
 
