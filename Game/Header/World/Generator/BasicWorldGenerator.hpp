@@ -22,6 +22,9 @@ private:
     void generateFBNWorld();
     void generateHeights();
     void generateCavesWithCA();
+    void generateTrees(int number);
+    void generateTree(int x, int y, int z);
+    void generateGrass();
 
 
     void generateCaves();

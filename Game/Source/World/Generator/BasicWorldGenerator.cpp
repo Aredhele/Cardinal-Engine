@@ -60,12 +60,18 @@ void BasicWorldGenerator::buildStack(int x, int y, int height, bool onlyIfZero)
 
     mp_currentWorld->m_worldHeights[x][y] = height;
 
-	for (int z = 0; z<height; z++)
+	for (int z = 0; z<height - 3; z++)
 	{
 		ByteCube* cube = mp_currentWorld->GetCube(x, y, z);
         cube->Enable();
         cube->SetType(ByteCube::EType::Rock);
 	}
+    for (int z = height - 3; z<height; z++)
+    {
+        ByteCube* cube = mp_currentWorld->GetCube(x, y, z);
+        cube->Enable();
+        cube->SetType(ByteCube::EType::Dirt);
+    }
 
 	if (height - 3 > 0)
 	{
@@ -209,29 +215,26 @@ void BasicWorldGenerator::generateCaves() {
     mp_currentWorld->GetCube(x, y, z)->SetType(ByteCube::EType::Dirt);
     FastNoise noiseGeneratorX(rand());
     noiseGeneratorX.SetNoiseType(FastNoise::PerlinFractal);
+    noiseGeneratorX.SetFrequency(0.01);
     noiseGeneratorX.SetFractalOctaves(1);
     FastNoise noiseGeneratorY(rand());
     noiseGeneratorY.SetNoiseType(FastNoise::PerlinFractal);
     noiseGeneratorY.SetFractalOctaves(1);
+    noiseGeneratorY.SetFrequency(0.01);
     FastNoise noiseGeneratorZ(rand());
     noiseGeneratorZ.SetNoiseType(FastNoise::PerlinFractal);
     noiseGeneratorZ.SetFractalOctaves(1);
+    noiseGeneratorZ.SetFrequency(0.01);
     for (int i = 0; i < iter; ++i) {
         double noiseX = noiseGeneratorX.GetNoise(x, y, z);
         double noiseY = noiseGeneratorY.GetNoise(x, y, z);
         double noiseZ = noiseGeneratorZ.GetNoise(x, y, z);
-        if (noiseX < -0.33)
-            x += 1;
-        else if (noiseX > 0.33)
-            x -= 1;
-        if (noiseY < -0.33)
-            y += 1;
-        else if (noiseY > 0.33)
-            y -= 1;
-        if (noiseZ < -0.66)
-            z += 1;
-        else if (noiseZ > 0)
-            z -= 1;
+        if (noiseX > 0) x += 1;
+        else x -= 1;
+        if (noiseY > 0) y += 1;
+        else y -= 1;
+        if (noiseZ > 0) z += 1;
+        else z -= 1;
         mp_currentWorld->GetCube(x, y, z)->SetType(ByteCube::EType::Dirt);
     }
 }
@@ -279,7 +282,10 @@ World *BasicWorldGenerator::regenerateWorld(GenerationSettings settings)
 
     m_randomGenerator = std::default_random_engine(m_generationSettings.seed);
 
+    //generateCaves();
     generateHeights();
+    generateGrass();
+    generateTrees(70);
     //generateFBNWorld();
     //smooth();
 
@@ -289,6 +295,49 @@ World *BasicWorldGenerator::regenerateWorld(GenerationSettings settings)
 
 void BasicWorldGenerator::applySettings(GenerationSettings settings) {
     m_generationSettings = settings;
+}
+
+void BasicWorldGenerator::generateTree(int x, int y, int z) {
+    int trunkHeight = 4;
+    for (int i = 0; i < trunkHeight; ++i) {
+        mp_currentWorld->GetCube(x, y, z + i)->SetType(ByteCube::EType::Wood1);
+    }
+
+    // Create leaves
+    for (int i = -1; i < 2; ++i) {
+        for (int j = -1; j < 2; ++j) {
+            for (int k = 0; k < 2; ++k) {
+                mp_currentWorld->GetCube(x + i, y + j, z + k + trunkHeight - 1)->SetType(ByteCube::EType::Leaf1);
+            }
+        }
+    }
+
+    mp_currentWorld->GetCube(x, y, z + 2 + trunkHeight - 1)->SetType(ByteCube::EType::Leaf1);
+}
+
+void BasicWorldGenerator::generateTrees(int numberTrees) {
+    std::default_random_engine generator;
+    std::poisson_distribution<int> distribution(WorldSettings::s_matSizeCubes / 2);
+    for (int i = 0; i < numberTrees; ++i) {
+        int x = rand()  % WorldSettings::s_matSizeCubes;
+        int y = rand()  % WorldSettings::s_matSizeCubes;
+        if (x >= 2 && x < WorldSettings::s_matSizeCubes - 1 && y >= 2 && y < WorldSettings::s_matSizeCubes - 1)
+            generateTree(x, y, mp_currentWorld->m_worldHeights[x][y]);
+        else numberTrees++;
+    }
+}
+
+void BasicWorldGenerator::generateGrass() {
+    FastNoise noiseGenerator(rand());
+    noiseGenerator.SetNoiseType(FastNoise::PerlinFractal);
+    noiseGenerator.SetFrequency(0.15);
+    noiseGenerator.SetFractalOctaves(1);
+    for (int x = 0; x<WorldSettings::s_matSizeCubes; x++)
+        for (int y = 0; y < WorldSettings::s_matSizeCubes; y++) {
+            double noise = noiseGenerator.GetNoise(x, y);
+            if (noise > 0)
+                mp_currentWorld->GetCube(x, y, mp_currentWorld->m_worldHeights[x][y])->SetType(ByteCube::EType::Water);
+        }
 }
 
 
