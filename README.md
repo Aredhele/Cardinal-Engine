@@ -131,11 +131,12 @@ Output
   <img src="http://image.noelshack.com/fichiers/2018/11/1/1520822401-cardinal-engine-67.png" width="768" height="432" />
 </p>
 
-Note : In VR, the post-processing is disabled but there is at least the MSAA (x4).
+Note : In VR, the post-processing is disabled but there is at least the MSAA (x4). You can watch a
+<a href="https://www.youtube.com/watch?v=nuETZs1WaYo">short video</a>  showing this feature.
 
 #### Particle system
 
-Cardinal Engine has it own basic particle system GPU instantiation based. So it allows you to deal
+Cardinal Engine has it own basic particle system **GPU instantiation based**. So it allows you to deal
 with a lot of particles at the same time. The only emission shape available is the cone. 
 Particle systems can be created through code and modified with the GUI.
 

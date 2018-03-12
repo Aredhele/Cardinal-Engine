@@ -877,7 +877,7 @@ void RenderingEngine::RenderScene(vr::Hmd_Eye nEye)
         m_currentTriangle += m_renderers[nRenderer]->GetElementCount();
 
         // Hot code
-        glm::mat4 hmdViewMatrix = GetHMDMatrixPoseEye(nEye) * glm::translate(m_mat4HMDPose, glm::vec3(0.0f, -150.0f, 100.0f));
+        glm::mat4 hmdViewMatrix = GetHMDMatrixPoseEye(nEye) * glm::translate(m_mat4HMDPose, glm::vec3(-200.0f, -300.0f, 200.0f));
         hmdViewMatrix           = glm::rotate(hmdViewMatrix, -(float)M_PI_2,   glm::vec3(1.0f, 0.0f, 0.0f));
         m_renderers[nRenderer]->Draw(GetHMDMatrixProjectionEye(nEye), hmdViewMatrix, glm::vec3(0.0f, 0.0f, 0.0f), LightManager::GetNearestPointLights(m_renderers[nRenderer]->GetPosition()));
     }
