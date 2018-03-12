@@ -24,7 +24,7 @@ This section will enumerate all engine-side implemented features.
 
 #### Plugins
 Because the engine was designed to create procedural voxel worlds, the code of 
-the project has been quickly split into two main parts : Engine and Game
+the project has been quickly split into two main parts : Engine and Game.
 To achieve that, the game part is compiled separately into a plugin that can
 be registered and called from the engine.
 
@@ -102,6 +102,36 @@ Output example
 <p align="center">
   <img src="http://image.noelshack.com/fichiers/2018/10/3/1520382473-readme-1.png" width="409" height="89" />
 </p>
+
+### Virtual Reality
+
+The engine supports stereoscopic rendering with OpenVR. It allows you to see the world in
+VR through an HMD (Tested with an HTC Vive). To enable stereoscopic rendering just type 
+the following lines at the beginning of your code.
+
+Code
+```cpp
+/// \brief Called when the game begins
+void MyPlugin::OnPlayStart()
+{
+    cardinal::RenderingEngine::InitializeStereoscopicRendering();
+    vr::IVRSystem * pHMD = cardinal::RenderingEngine::GetHMD();
+    
+    // Always check pointers
+    ASSERT_NOT_NULL(pHMD);
+}
+```
+
+The first call will initialize VR rendering and start SteamVR. It might fail if SteamVR is not
+installed or if there is no HMD connected. The engine embeds his own system to mirror the frames
+that are sent to the HMD before the pass of the SteamVR compositor.
+
+Output
+<p align="center">
+  <img src="http://image.noelshack.com/fichiers/2018/11/1/1520822401-cardinal-engine-67.png" width="768" height="432" />
+</p>
+
+Note : In VR, the post-processing is disabled but there is at least the MSAA (x4).
 
 ## Gallery
 
