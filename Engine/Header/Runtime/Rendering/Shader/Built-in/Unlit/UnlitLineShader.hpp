@@ -49,6 +49,9 @@ public:
     /// \brief Restore the pipeline state
     void End() final;
 
+    /// \brief Called when the object is inspected
+    void OnInspectorGUI() final;
+
 private:
 
     int       m_colorID;

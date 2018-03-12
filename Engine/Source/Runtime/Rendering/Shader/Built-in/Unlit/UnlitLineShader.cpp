@@ -21,8 +21,10 @@
 /// \package    Runtime/Rendering/Shader/Built-in
 /// \author     Vincent STEHLY--CALISTO
 
+
 #include "Glew/include/GL/glew.h"
 
+#include "ImGUI/Header/ImGUI/imgui.h"
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
 #include "Runtime/Rendering/Shader/Built-in/Unlit/UnlitLineShader.hpp"
 
@@ -36,6 +38,8 @@ UnlitLineShader::UnlitLineShader()
     m_shaderID = ShaderManager::GetShaderID("LineShader");
     m_matrixID = glGetUniformLocation((uint)m_shaderID, "MVP");
     m_colorID  = glGetUniformLocation((uint)m_shaderID, "lineColor");
+
+    inspectorName = "Unlit line shader";
 }
 
 /// \brief Sets up the pipeline for the shader
@@ -57,6 +61,24 @@ void UnlitLineShader::End()
 void UnlitLineShader::SetColor(glm::vec3 const& color)
 {
     m_color = color;
+}
+
+/// \brief Called when the object is inspected
+void UnlitLineShader::OnInspectorGUI()
+{
+    if(ImGui::CollapsingHeader("Material"))
+    {
+        ImGui::Text(inspectorName.c_str());
+
+        if(ImGui::ColorEdit3("", &m_color[0]))
+        {
+            // None
+        }
+
+        ImGui::TextDisabled("Shader ID : %d", m_shaderID);
+        ImGui::TextDisabled("Uniform MVP ID   : %d", m_matrixID);
+        ImGui::TextDisabled("Uniform color ID : %d", m_colorID);
+    }
 }
 
 } // !namespace

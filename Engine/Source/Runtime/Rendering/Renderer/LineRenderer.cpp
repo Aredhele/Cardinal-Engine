@@ -141,17 +141,48 @@ void LineRenderer::OnInspectorGUI()
             SetPosition(position);
         }
 
-        // Lines
-        ImGui::BeginChild("");
-        for(glm::vec3 const& vertex : m_lines)
+        ImGui::Text("\nVertices\n");
+        ImGui::BeginChild("Vertices_Line");
+
+        for(size_t i = 0; i < m_lines.size(); ++i)
         {
-            // TODO : ImGui::InputFloat3()
+            std::string id = "Vertex " + std::to_string(i) + "###LineRenderer_Input" + std::to_string(i);
+            if(ImGui::InputFloat3(id.c_str(), &m_lines[i][0]))
+            {
+                // Quick buffer updates
+                glBindVertexArray(m_vao);
+
+                glBindBuffer   (GL_ARRAY_BUFFER, m_verticesObject);
+                glBufferSubData(GL_ARRAY_BUFFER, i * sizeof(glm::vec3), sizeof(glm::vec3), &m_lines[i]);
+
+                glBindVertexArray(0);
+            }
         }
+
         ImGui::EndChild();
+
+        if(ImGui::Button("Add line###LineRenderer_ButtonAdd"))
+        {
+            AddLine(glm::vec3(0.0f), glm::vec3(0.0f));
+        }
+
+        if(ImGui::Button("Remove Last###LineRenderer_ButtonRemove"))
+        {
+            if(m_lines.size() >= 2)
+            {
+                m_lines.pop_back();
+                m_lines.pop_back();
+
+                // Updating
+                m_elementsCount -= 2;
+            }
+        }
 
         ImGui::TextDisabled("\nVao : %u", m_vao);
         ImGui::TextDisabled("Vertex buffer ID  : %u", m_verticesObject);
     }
+
+    m_pShader->OnInspectorGUI();
 }
 
 } // !namespace
