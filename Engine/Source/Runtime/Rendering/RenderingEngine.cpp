@@ -193,6 +193,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/Particle/ParticleVertexShader.glsl",
             "Resources/Shaders/Particle/ParticleFragmentShader.glsl"));
 
+    ShaderManager::Register("LineShader", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/Unlit/UnlitLineVertexShader.glsl",
+            "Resources/Shaders/Unlit/UnlitLineFragmentShader.glsl"));
+
     // Debug
     DebugManager::Initialize();
 
@@ -202,7 +206,7 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     glEnable   (GL_CULL_FACE);
     glCullFace (GL_BACK);
     glFrontFace(GL_CCW);
-    glEnable(GL_MULTISAMPLE);
+    glEnable   (GL_MULTISAMPLE);
 
     // TODO : Makes clear color configurable
     m_clearColor = glm::vec3(0.0f, 0.709f, 0.866f);

@@ -73,6 +73,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Shader/Built-in/Unlit/UnlitColorShader.cpp
         Rendering/Shader/Built-in/Unlit/UnlitTextureShader.cpp
         Rendering/Shader/Built-in/Unlit/UnlitTransparentShader.cpp
+        Rendering/Shader/Built-in/Unlit/UnlitLineShader.cpp
         Rendering/Shader/Built-in/Standard/StandardShader.cpp
         Rendering/Shader/Built-in/Particle/ParticleShader.cpp
         Rendering/PostProcessing/PostProcessingStack.cpp

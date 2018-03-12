@@ -140,6 +140,14 @@ void LineRenderer::OnInspectorGUI()
             SetPosition(position);
         }
 
+        // Lines
+        ImGui::BeginChild("");
+        for(glm::vec3 const& vertex : m_lines)
+        {
+            // TODO : ImGui::InputFloat3()
+        }
+        ImGui::EndChild();
+
         ImGui::TextDisabled("\nVao : %u", m_vao);
         ImGui::TextDisabled("Vertex buffer ID  : %u", m_verticesObject);
     }
