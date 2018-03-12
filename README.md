@@ -133,6 +133,41 @@ Output
 
 Note : In VR, the post-processing is disabled but there is at least the MSAA (x4).
 
+#### Particle system
+
+Cardinal Engine has it own basic particle system GPU instantiation based. So it allows you to deal
+with a lot of particles at the same time. The only emission shape available is the cone. 
+Particle systems can be created through code and modified with the GUI.
+
+Code
+
+```cpp
+#include "Runtime/Rendering/Particle/ParticleSystem.hpp"
+
+// Allocating a particle system
+cardinal::ParticleSystem * pSystem = cardinal::RenderingEngine::AllocateParticleSystem();
+
+// Initializing the particle system with the following parameters
+// Max particle, Emission rate, Life time, Size, Speed, Gravity, Color, Shape
+pSystem->Initialize(200000, 5000, 3.0f, 0.5f, 30.0f, glm::vec3(0.0f, 0.0f, -13.0f), glm::vec3(1.0f), new cardinal::Cone(4.0f, 2.0f));
+
+// Setting the position of the particle system
+pSystem->SetPosition(glm::vec3(0.0f, 0.0f, 300.0f));
+```
+
+Output 
+
+<p align="center">
+  <img src="http://image.noelshack.com/fichiers/2018/11/1/1520875924-cardinal-engine-80.jpg" width="768" height="432" />
+</p>
+
+<p align="center">
+  <img src="http://image.noelshack.com/fichiers/2018/11/1/1520876102-cardinal-engine-81.jpg" width="768" height="432" />
+</p>
+
+Note : Here is a <a href="https://youtu.be/DPy669-xMyU">short video</a> 
+demonstrating the modification of the particle system through the inspector.
+
 #### Gizmos
 
 At any time, you can request the engine to draw debug information. The engine only supports
