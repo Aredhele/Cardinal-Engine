@@ -21,6 +21,11 @@
 /// \package    Core/Rendering/Debug
 /// \author     Vincent STEHLY--CALISTO
 
+#ifndef _USE_MATH_DEFINES
+#	define _USE_MATH_DEFINES
+#endif
+
+#include <cmath>
 #include <vector>
 #include "Glm/glm/ext.hpp"
 #include "Runtime/Rendering/Debug/DebugGizmos.hpp"
