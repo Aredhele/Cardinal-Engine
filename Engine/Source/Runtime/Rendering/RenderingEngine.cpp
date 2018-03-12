@@ -1141,9 +1141,9 @@ void RenderingEngine::DisplayDebugWindow(float step)
 
     if(m_debugTime)
     {
-        ImGui::Begin        ("Engine debug",   &m_debugTime);
-        ImGui::SetWindowPos ("Engine debug",   ImVec2(530.0f, 10.0f));
-        ImGui::SetWindowSize("Engine debug", ImVec2(640.0f, 50.0f));
+        ImGui::Begin        ("Engine debug", &m_debugTime);
+        ImGui::SetWindowPos ("Engine debug", ImVec2(530.0f, 10.0f));
+        ImGui::SetWindowSize("Engine debug", ImVec2(580.0f, 50.0f));
 
         // Computes percentage
         float timeSum = m_renderingTime + m_audioTime + m_pluginTime;
@@ -1157,7 +1157,7 @@ void RenderingEngine::DisplayDebugWindow(float step)
             renderingPercent = 100.0f;
         }
 
-        ImGui::Text("Rendering %lf (%.2lf %)\t Audio %lf (%.2lf %)\t Plugins %lf (%.2lf %)",
+        ImGui::Text("Rendering %.3f (%.2f %)\t Audio %.3f (%.2f %)\t Plugins %.3f (%.2f %)",
                     m_renderingTime, renderingPercent,
                     m_audioTime,     audioPercent,
                     m_pluginTime,    pluginPercent);

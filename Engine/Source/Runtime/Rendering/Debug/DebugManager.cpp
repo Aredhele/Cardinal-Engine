@@ -22,6 +22,7 @@
 /// \author     Vincent STEHLY--CALISTO
 
 #include "Glew/include/GL/glew.h"
+#include "ImGUI/Header/ImGUI/imgui.h"
 #include "Runtime/Core/Assertion/Assert.hh"
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
 #include "Runtime/Rendering/Debug/DebugManager.hpp"
@@ -77,8 +78,8 @@ DebugManager::DebugManager()
     m_grid.Initialize(50, 400.0f, glm::vec3(0.4f, 0.4f, 0.4f));
 }
 
-/// \brief Desutrctor, free buffers
-DebugManager::~DebugManager()
+/// \brief Destructor, free buffers
+DebugManager::~DebugManager() // NOLINT
 {
     // TODO
 }
@@ -199,6 +200,28 @@ DebugManager::~DebugManager()
     {
         s_pInstance->m_grid.Draw(PV);
     }
+
+#ifdef CARDINAL_DEBUG
+    static bool debugWindow =  true;
+    if (debugWindow)
+    {
+        ImGui::Begin        ("Gizmos", &debugWindow);
+        ImGui::SetWindowPos ("Gizmos", ImVec2(1120.0f, 10.0f));
+        ImGui::SetWindowSize("Gizmos", ImVec2(170.0f,  250.0f));
+
+        ImGui::TextColored(ImVec4(1,1,0,1), "Built-in components\n\n");
+        ImGui::Checkbox("Box",               &s_pInstance->m_activeGizmos[EGizmo::Box]);
+        ImGui::Checkbox("Ray",               &s_pInstance->m_activeGizmos[EGizmo::Ray]);
+        ImGui::Checkbox("Line",              &s_pInstance->m_activeGizmos[EGizmo::Line]);
+        ImGui::Checkbox("Axis",              &s_pInstance->m_activeGizmos[EGizmo::Axis]);
+        ImGui::Checkbox("Grid",              &s_pInstance->m_activeGizmos[EGizmo::Grid]);
+        ImGui::Checkbox("Cone",              &s_pInstance->m_activeGizmos[EGizmo::Cone]);
+        ImGui::Checkbox("Point Light",       &s_pInstance->m_activeGizmos[EGizmo::PointLight]);
+        ImGui::Checkbox("Directional Light", &s_pInstance->m_activeGizmos[EGizmo::DirectionalLight]);
+
+        ImGui::End();
+    }
+#endif
 }
 
 /// \brief Enables a gizmo
@@ -214,7 +237,7 @@ DebugManager::~DebugManager()
 /* static */void DebugManager::DisableGizmo(EGizmo type)
 {
     ASSERT_NOT_NULL(DebugManager::s_pInstance);
-   s_pInstance->m_activeGizmos[type] = false;
+    s_pInstance->m_activeGizmos[type] = false;
 }
 
 /// \brief Tells if the given gizmo is enabled
@@ -222,7 +245,7 @@ DebugManager::~DebugManager()
 /* static */ bool DebugManager::IsGizmoEnabled(EGizmo type)
 {
     ASSERT_NOT_NULL(DebugManager::s_pInstance);
-   return s_pInstance->m_activeGizmos[type];
+    return s_pInstance->m_activeGizmos[type];
 }
 
 } // !namespace
