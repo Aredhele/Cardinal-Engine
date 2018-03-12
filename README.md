@@ -103,7 +103,7 @@ Output example
   <img src="http://image.noelshack.com/fichiers/2018/10/3/1520382473-readme-1.png" width="409" height="89" />
 </p>
 
-### Virtual Reality
+#### Virtual Reality
 
 The engine supports stereoscopic rendering with OpenVR. It allows you to see the world in
 VR through an HMD (Tested with an HTC Vive). To enable stereoscopic rendering just type 
@@ -132,6 +132,88 @@ Output
 </p>
 
 Note : In VR, the post-processing is disabled but there is at least the MSAA (x4).
+
+#### Particle system
+
+Cardinal Engine has it own basic particle system GPU instantiation based. So it allows you to deal
+with a lot of particles at the same time. The only emission shape available is the cone. 
+Particle systems can be created through code and modified with the GUI.
+
+Code
+
+```cpp
+#include "Runtime/Rendering/Particle/ParticleSystem.hpp"
+
+// Allocating a particle system
+cardinal::ParticleSystem * pSystem = cardinal::RenderingEngine::AllocateParticleSystem();
+
+// Initializing the particle system with the following parameters
+// Max particle, Emission rate, Life time, Size, Speed, Gravity, Color, Shape
+pSystem->Initialize(200000, 5000, 3.0f, 0.5f, 30.0f, glm::vec3(0.0f, 0.0f, -13.0f), glm::vec3(1.0f), new cardinal::Cone(4.0f, 2.0f));
+
+// Setting the position of the particle system
+pSystem->SetPosition(glm::vec3(0.0f, 0.0f, 300.0f));
+```
+
+Output 
+
+<p align="center">
+  <img src="http://image.noelshack.com/fichiers/2018/11/1/1520875924-cardinal-engine-80.jpg" width="768" height="432" />
+</p>
+
+<p align="center">
+  <img src="http://image.noelshack.com/fichiers/2018/11/1/1520876102-cardinal-engine-81.jpg" width="768" height="432" />
+</p>
+
+Note : Here is a <a href="https://youtu.be/DPy669-xMyU">short video</a> 
+demonstrating the modification of the particle system through the inspector.
+
+#### Gizmos
+
+At any time, you can request the engine to draw debug information. The engine only supports
+gizmos for built-in components :
+* Box
+* Ray
+* Line
+* Axis
+* Grid
+* Cone
+* Point Light
+* Directional Light
+
+To enable or disable a gizmo, just call on small function :
+
+```cpp
+#include "Runtime/Rendering/Debug/Debug.hpp"
+#include "Runtime/Rendering/Debug/DebugManager.hpp"
+
+/// \brief Called when the game begins
+void MyPlugin::OnPlayStart()
+{
+    // Tells to the engine to draw debug boxes and lines
+    cardinal::DebugManager::EnableGizmo(cardinal::DebugManager::EGizmo::Box);
+    cardinal::DebugManager::EnableGizmo(cardinal::DebugManager::EGizmo::Line);
+}
+
+/// \brief Called after the engine update
+/// \param dt The elapsed time in seconds
+void MyPlugin::OnPostUpdate(float dt)
+{
+    // Asks the engine to draw a white box in 0, 0, 0 with a size of 8
+    cardinal::debug::DrawBox(glm::vec3(0.0f), 8.0f, 8.0f, glm::vec(1.0f));
+    
+    // Asks the engine to draw a white line starting at 0, 0, 0 
+    // and ending at 8, 8, 8
+    cardinal::debug::DrawLine(glm::vec3(0.0f), glm::vec3(8.0f), glm::vec3(1.0f));
+}
+```
+
+Note : You can also enable or disable gizmos directly from the game with the
+gizmos window.
+
+<p align="center">
+  <img src="http://image.noelshack.com/fichiers/2018/11/1/1520868995-cardinal-engine-79.jpg" width="180" height="260" />
+</p>
 
 ## Gallery
 
