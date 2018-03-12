@@ -26,6 +26,8 @@
 #define CARDINAL_ENGINE_COLLISION_SHAPE_HPP
 
 
+#include <vector>
+
 #include "Glm/glm/glm.hpp"
 #include "btBulletDynamicsCommon.h"
 
@@ -77,7 +79,7 @@ class BoxShape : public CollisionShape
 class SphereShape : public CollisionShape
 {
 public:
-    /// \brief Box Constructor
+    /// \brief Constructor
     SphereShape(float radius, float mass);
 
 protected:
@@ -89,11 +91,17 @@ protected:
 class VertexShape : public CollisionShape
 {
 public:
-    /// \brief Box Constructor
+    /// \brief Constructor
     VertexShape(float mass);
+    
+    /// \biref Set triangle of collision shapes
+    void SetTriangles(std::vector<glm::vec3>& const);
+    
+    /// \brief Destructors
+    ~VertexShape(void);
 
 protected:
-    glm::vec3 m_halfExtends;
+    btTriangleMesh         * m_triangleMesh;
 };
 
 }

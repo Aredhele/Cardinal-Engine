@@ -55,7 +55,7 @@ public:
     void SetMass(float mass);
 
     /// \brief Build physics body 
-    void BuildPhysics(void);
+    void BuildPhysics(bool hasInertia = true);
 
     /// \brief Returns true if the body is initialized
     bool IsInitialized(void) const;

@@ -102,11 +102,11 @@ RigidBody * PhysicsEngine::AllocateRigidbody(void)
 }
 
 /// \brief TODO
-void PhysicsEngine::ReleaseRigidbody(btRigidBody *&pBody)
+void PhysicsEngine::ReleaseRigidbody(RigidBody *&pBody)
 {
-    s_pInstance->m_pDynamicWorld->removeRigidBody(pBody);
+    ASSERT_NOT_NULL(pBody);
 
-    delete pBody;
+    s_pInstance->m_pDynamicWorld->removeRigidBody(pBody->m_pBody);
 }
 
 } // !namespace

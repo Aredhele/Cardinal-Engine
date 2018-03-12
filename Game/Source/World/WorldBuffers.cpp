@@ -27,6 +27,7 @@
 // Terrain
 /* static */ std::vector<glm::vec2>  WorldBuffers::s_chunkUVsBuffer;
 /* static */ std::vector<glm::vec3>  WorldBuffers::s_chunkVertexBuffer;
+/* static */ std::vector<glm::vec3>  WorldBuffers::s_chunkPhysicalVertexBuffer;
 /* static */ std::vector<ushort>     WorldBuffers::s_chunkIndexesBuffer;
 /* static */ std::vector<glm::vec2>  WorldBuffers::s_chunkIndexedUVsBuffer;
 /* static */ std::vector<glm::vec3>  WorldBuffers::s_chunkIndexedVertexBuffer;
@@ -45,6 +46,7 @@
     s_chunkUVsBuffer    = std::vector<glm::vec2>(WorldSettings::s_chunkVertexCount);
 
     s_chunkIndexesBuffer.reserve       (WorldSettings::s_chunkVertexCount);
+    s_chunkPhysicalVertexBuffer.reserve(WorldSettings::s_chunkVertexCount);
     s_chunkIndexedUVsBuffer.reserve    (WorldSettings::s_chunkUVsCount);
     s_chunkIndexedVertexBuffer.reserve (WorldSettings::s_chunkVertexCount);
 

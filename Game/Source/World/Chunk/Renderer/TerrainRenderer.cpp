@@ -31,6 +31,8 @@
 #include "World/Cube/UVManager.hpp"
 #include "Runtime/Rendering/Optimization/VBOIndexer.hpp"
 
+#include <algorithm>
+
 /// TODO
 TerrainRenderer::TerrainRenderer()
 {
@@ -170,6 +172,9 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
     WorldBuffers::s_chunkVertexBuffer.resize(vertexIndex);
     WorldBuffers::s_chunkNormalBuffer.resize(vertexIndex);
     WorldBuffers::s_chunkUVsBuffer.resize   (vertexIndex);
+
+    // Copy vertex for later physical updates before optimizing
+    std::copy(WorldBuffers::s_chunkVertexBuffer.begin(), WorldBuffers::s_chunkVertexBuffer.end(), std::back_inserter(WorldBuffers::s_chunkPhysicalVertexBuffer));
 
     cardinal::VBOIndexer::Index(
             WorldBuffers::s_chunkVertexBuffer,

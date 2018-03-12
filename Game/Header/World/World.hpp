@@ -28,6 +28,7 @@
 #include <Header/Runtime/Rendering/Renderer/TextRenderer.hpp>
 #include "Runtime/Core/Assertion/Assert.hh"
 #include "Runtime/Rendering/Debug/Debug.hpp"
+#include "Runtime/Physics/RigidBody.hpp"
 
 // World
 #include "World/Chunk/Chunk.hpp"
@@ -81,6 +82,7 @@ private:
     cardinal::TextRenderer * m_worldText;
     cardinal::TextRenderer * m_cubeText;
     cardinal::TextRenderer * m_chunkText;
+    cardinal::RigidBody    * m_body;
 };
 
 #include "World/Impl/World.inl"

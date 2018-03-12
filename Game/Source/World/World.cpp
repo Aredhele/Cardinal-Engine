@@ -24,6 +24,8 @@
 #include <iostream>
 #include "World/World.hpp"
 
+#include "Runtime/Physics/PhysicsEngine.hpp"
+
 /// \brief Default constructor
 World::World()
 {
@@ -41,6 +43,8 @@ World::World()
     m_worldText->SetText("World info",          730, 580, 14, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
     m_cubeText->SetText ("Cubes count  : 0",    680, 560, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
     m_chunkText->SetText("Chunks count : 0",    680, 545, 12, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+
+    m_body = cardinal::PhysicsEngine::AllocateRigidbody();
 }
 
 /// \brief Destructor
@@ -49,6 +53,8 @@ World::~World() // NOLINT
     // TODO : Delete chunks
     delete[](m_chunks);
     delete[](m_worldHeights);
+
+    cardinal::PhysicsEngine::ReleaseRigidbody(m_body);
 }
 
 
@@ -149,18 +155,31 @@ void World::Batch()
             }
         }
     }
+
+    if (m_body->IsInitialized() == true)
+        cardinal::PhysicsEngine::ReleaseRigidbody(m_body);
+
+    cardinal::VertexShape* shape = new cardinal::VertexShape(0);
+
+    shape->SetTriangles(WorldBuffers::s_chunkPhysicalVertexBuffer);
+
+    m_body->SetShape(shape);
+    m_body->BuildPhysics(false);
+
+    cardinal::PhysicsEngine::AddRigidbody(m_body);
 }
 
 void World::Clean()
 {
     for (int x = 0; x<WorldSettings::s_matSizeCubes; x++)
-        for (int y = 0; y < WorldSettings::s_matSizeCubes; y++) {
+        for (int y = 0; y < WorldSettings::s_matSizeCubes; y++) 
+        {
             m_worldHeights[x][y] = 0;
-            for (int z = 0; z < WorldSettings::s_matHeightCubes; z++) {
+            for (int z = 0; z < WorldSettings::s_matHeightCubes; z++) 
+            {
                 ByteCube *cube = GetCube(x, y, z);
                 cube->SetType(ByteCube::EType::Air);
                 cube->Disable();
-
             }
         }
 }

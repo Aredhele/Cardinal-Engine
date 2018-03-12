@@ -66,13 +66,16 @@ void RigidBody::SetMass(float mass)
 }
 
 /// \brief Build physics body and return true on success
-void RigidBody::BuildPhysics(void)
+void RigidBody::BuildPhysics(bool hasInertia)
 {
     ASSERT_TRUE_MSG(IsInitialized() == false && m_pShape != nullptr, "You must first give the rigid body a shape.");
 
     m_pMotionState = new btDefaultMotionState();
 
-    glm::vec3 inertia = m_pShape->GetInertia();
+    glm::vec3 inertia;
+    if (hasInertia == true)
+        inertia = m_pShape->GetInertia();
+
     m_pBody = new btRigidBody(m_pShape->GetMass(), m_pMotionState, m_pShape->GetShape(), btVector3(inertia.x, inertia.y, inertia.z));
 }
 

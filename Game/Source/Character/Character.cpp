@@ -44,12 +44,7 @@ Character::Character()
     InitializeAvatar();
 
     // Physics
-    m_pBody = cardinal::PhysicsEngine::AllocateRigidbody(
-        //glm::vec3(2,2,2),       ///< The half extents
-        //glm::vec3(0,0,0),       ///< The position
-        //glm::vec4(0,0,0,1),     ///< The rotation
-        //45                      ///< The mass
-    );
+    m_pBody = cardinal::PhysicsEngine::AllocateRigidbody();
 
     m_pBody->SetShape       ( new cardinal::BoxShape(glm::vec3(2, 2, 2), 45));
     m_pBody->BuildPhysics   ();

@@ -1,5 +1,7 @@
 #include "Runtime/Physics/CollisionShape.hpp"
 
+#include "Runtime/Core/Assertion/Assert.hh"
+
 namespace cardinal
 {
 
@@ -64,6 +66,37 @@ SphereShape::SphereShape(float radius, float mass) :
 VertexShape::VertexShape(float mass) :
     CollisionShape(mass)
 {
-    //m_pShape = new btBoxShape(btvector3(halfExtents.x, halfExtents.y, halfExtents.z));
+   m_triangleMesh   = new btTriangleMesh();
 }
+
+void VertexShape::SetTriangles(std::vector<glm::vec3>& const verteces )
+{
+    ASSERT_NOT_NULL(m_triangleMesh);
+
+    size_t size = verteces.size();
+
+    for (size_t i = 0ul; i < size; i += 3)
+    {
+        m_triangleMesh->addTriangle( 
+            btVector3(verteces[i].x, verteces[i].y, verteces[i].z),
+            btVector3(verteces[i + 1].x, verteces[i+ 1].y, verteces[i+ 1].z),
+            btVector3(verteces[i + 2].x, verteces[i+ 2].y, verteces[i+ 2].z)
+            );
+    }
+    
+    if (m_pShape != nullptr)
+    {
+        delete m_pShape;
+    }
+
+    m_pShape = new btBvhTriangleMeshShape(m_triangleMesh, true, true);
+}
+
+VertexShape::~VertexShape(void)
+{
+    CollisionShape::~CollisionShape();
+
+    delete m_triangleMesh;
+}
+
 }

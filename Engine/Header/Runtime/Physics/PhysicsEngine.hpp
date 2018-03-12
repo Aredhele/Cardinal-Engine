@@ -56,7 +56,7 @@ public:
     static void AddRigidbody(RigidBody* body);
 
     /// \brief TODO
-    static void ReleaseRigidbody(btRigidBody *& pBody);
+    static void ReleaseRigidbody(RigidBody *& pBody);
 
 private:
 

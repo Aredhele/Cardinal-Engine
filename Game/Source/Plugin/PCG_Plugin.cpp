@@ -30,6 +30,8 @@
 #include "Runtime/Rendering/Particle/ParticleSystem.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/Mirror.hpp"
 
+#include "Runtime/Rendering/Debug/Debug.hpp"
+
 #include "ImGUI/imgui.h"
 
 // Game
@@ -87,17 +89,18 @@ void PCG_Plugin::OnPlayStart()
     // Camera and Character
     m_cameraManager.SetCamera(cardinal::RenderingEngine::GetMainCamera());
     m_cameraManager.SetCharacter(&m_character);
+    m_character.SetPosition(glm::vec3(0,0,2000));
 
     // Particle system
-    cardinal::ParticleSystem * pSystem = cardinal::RenderingEngine::AllocateParticleSystem();
-    pSystem->Initialize(200000, 5000, 3.0f, 0.5f, 30.0f, glm::vec3(0.0f, 0.0f, -13.0f), glm::vec3(1.0f), new cardinal::Cone(4.0f, 2.0f));
-    pSystem->SetPosition(glm::vec3(-10.0f, -1.0f, 0.0f));
+    /// cardinal::ParticleSystem * pSystem = cardinal::RenderingEngine::AllocateParticleSystem();
+    /// pSystem->Initialize(200000, 5000, 3.0f, 0.5f, 30.0f, glm::vec3(0.0f, 0.0f, -13.0f), glm::vec3(1.0f), new cardinal::Cone(4.0f, 2.0f));
+    /// pSystem->SetPosition(glm::vec3(-10.0f, -1.0f, 0.0f));
 
-    cardinal::PointLight * pLight = cardinal::LightManager::AllocatePointLight();
-    pLight->SetPosition(glm::vec3(100.0f, 20.0f, 300.0f));
-    pLight->SetRange(20);
-    pLight->SetIntensity(1.0f);
-    pLight->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+    /// cardinal::PointLight * pLight = cardinal::LightManager::AllocatePointLight();
+    /// pLight->SetPosition(glm::vec3(100.0f, 20.0f, 300.0f));
+    /// pLight->SetRange(20);
+    /// pLight->SetIntensity(1.0f);
+    /// pLight->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 /// \brief Called when the game stops

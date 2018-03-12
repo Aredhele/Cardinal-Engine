@@ -54,6 +54,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Renderer/TextRenderer.cpp
         Rendering/Renderer/MeshRenderer.cpp
         Rendering/Renderer/ParticleRenderer.cpp
+        Rendering/Renderer/LineRenderer.cpp
         Rendering/Lighting/LightManager.cpp
         Rendering/Lighting/Lights/PointLight.cpp
         Rendering/Lighting/Lights/DirectionalLight.cpp
