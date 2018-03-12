@@ -47,6 +47,7 @@
 #include "Runtime/Rendering/Shader/ShaderCompiler.hpp"
 #include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
 #include "Runtime/Rendering/Renderer/TextRenderer.hpp"
+#include "Runtime/Rendering/Renderer/LineRenderer.hpp"
 #include "Runtime/Rendering/Texture/TextureLoader.hpp"
 #include "Runtime/Rendering/Texture/TextureManager.hpp"
 #include "Runtime/Rendering/Particle/ParticleSystem.hpp"
@@ -964,6 +965,18 @@ void RenderingEngine::Shutdown()
     ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
 
     TextRenderer *pRenderer = new TextRenderer(); // NOLINT
+    RenderingEngine::s_pInstance->m_renderers.push_back((IRenderer *)pRenderer);
+
+    return pRenderer;
+}
+
+/// \brief Allocates and return a pointer on a renderer
+///        Registers the renderer into the engine
+LineRenderer * RenderingEngine::AllocateLineRenderer()
+{
+    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
+
+    LineRenderer * pRenderer = new LineRenderer(); // NOLINT
     RenderingEngine::s_pInstance->m_renderers.push_back((IRenderer *)pRenderer);
 
     return pRenderer;

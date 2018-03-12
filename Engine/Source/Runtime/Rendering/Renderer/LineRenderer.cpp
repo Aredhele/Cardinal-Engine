@@ -36,7 +36,7 @@ LineRenderer::LineRenderer() : IRenderer()
 {
     m_verticesObject = 0;
     m_elementsCount  = 0;
-    m_maxElement     = 1024;
+    m_maxElement     = 1048576;
 
     inspectorName = "Line Renderer";
 
@@ -52,6 +52,7 @@ LineRenderer::LineRenderer() : IRenderer()
     glBindVertexArray(0);
 
     m_elementsCount = 0;
+    m_isIndexed     = false;
 }
 
 /// \brief Destructor
@@ -102,7 +103,7 @@ void LineRenderer::AddLine(glm::vec3 const &start, glm::vec3 const &end)
     glBindVertexArray(m_vao);
 
     glBindBuffer   (GL_ARRAY_BUFFER, m_verticesObject);
-    glBufferSubData(GL_ARRAY_BUFFER, (m_elementsCount - 2) * sizeof(glm::vec3), m_elementsCount * sizeof(glm::vec3), &m_lines[m_elementsCount - 2]);
+    glBufferSubData(GL_ARRAY_BUFFER, (m_elementsCount - 2) * sizeof(glm::vec3), 2 * sizeof(glm::vec3), &m_lines[m_elementsCount - 2]);
 
     glBindVertexArray(0);
 }
