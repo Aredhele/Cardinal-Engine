@@ -18,6 +18,67 @@ Visual Studio 2017 (CMake support), CLion (tested) and more. The engine is curre
 compiling on Windows and has a theoretical compatibility with Linux and Mac if the right
 flags are passed to CMake because the project contains only sources.
 
+## Features
+
+#### General
+* **Plugins**
+* Independent game loop
+* Message logger
+* Assertion utilities
+* ImGui support
+* **Hierarchy** and Inspector
+    * Inspection of instantiated objects
+    * Modification of object's attributes in real time
+
+#### Rendering
+* **Virtual Reality**
+    * OpenVR
+    * **Working with HTC Vive**
+    * Custom mirror window
+
+
+* **Post-processing**
+    * **Post-processing stack**
+    * Blur (Box blur, Gaussian blur)
+    * Kernel (Edge detection, Sharpen)
+    * Debug (Depth buffer, Light scattering pass)
+    * Utility (Mirror, Negative, Identity)
+    * Sepia tone
+    * Vignette
+    * **Bloom**
+    * **God rays**
+    * **FXAA**
+    
+  
+* Renderer
+    * MeshRenderer
+    * LineRenderer
+    * TextRenderer
+    * **ParticleRenderer**
+ 
+ 
+* Built-in shaders
+    * Unlit / Lit (Color, Texture, Transparent, Line)
+    * Particle
+    * Text
+    * **Standard** (Diffuse + point lights)
+    
+   
+* **Particle system**
+* VBO indexing
+
+
+* **Lighting**
+    * Directional light
+    * Point light
+
+
+* Debug
+    * **Gizmos** (Box, Cone, lights etc.)
+    * Lines
+    * Rays    
+
+
 ## Usage
 
 This section will enumerate all engine-side implemented features. 
