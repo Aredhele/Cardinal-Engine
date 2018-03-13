@@ -65,6 +65,10 @@ flags are passed to CMake because the project contains only sources.
     
    
 * **Particle system**
+    * Customisable particle system
+    * **GPU Instantiation based**
+    
+    
 * VBO indexing
 
 
@@ -78,6 +82,11 @@ flags are passed to CMake because the project contains only sources.
     * Lines
     * Rays    
 
+#### Audio
+* OpenAL
+* Wav file loading
+* **Audio listener**
+* **Audio source**
 
 ## Usage
 
@@ -163,6 +172,55 @@ Output example
 <p align="center">
   <img src="http://image.noelshack.com/fichiers/2018/10/3/1520382473-readme-1.png" width="409" height="89" />
 </p>
+
+#### Rendering
+
+The engine has 4 types of renderers that extends the renderer interface IRenderer :
+MeshRenderer, LineRenderer, TextRenderer and ParticleRenderer. Each renderer can be
+allocated by calling the appropriate function in the Rendering Engine. Calling one of
+those functions will return a pointer on a initialized renderer ready to be used. 
+The renderer will be autonomous and there is nothing more to do, you can send
+your vertices, normals and uvs to the renderer and your mesh will be drawn.
+
+Code
+
+```cpp
+#include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
+#include "Runtime/Rendering/Renderer/TextRenderer.hpp"
+
+/// \brief Called when the game begins
+void MyPlugin::OnPlayStart()
+{
+    ...
+    
+    // Full setup example
+    // Loads a bmp texture from a file and registers it as the given ID
+    TextureLoader::LoadTexture("MyTextureID", "Resources/Textures/MyTexture.bmp");
+    
+    // Getting back our texture from its ID
+    uint myTextureID = cardinal::TextureManager::GetTextureID("MyTextureID");
+    
+    // Creating our shader
+    cardinal::StandardShader * pShader = new cardinal::StandardShader();
+    
+    // Setting the texture of the shader
+    pShader->SetTexture(myTextureID);
+    
+    // Allocating the renderer in one call
+    MeshRenderer * pMeshRenderer = cardinal::RenderingEngine::AllocateMeshRenderer();
+    
+    // Initializing by passing all the geometry 
+    pMeshRenderer->Initialize(...);
+    
+    // Finally
+    pMeshRenderer->SetShader(pShader);
+    
+    // To release a renderer after usage
+    cardinal::RenderingEngine::ReleaseRenderer(pMeshRenderer);
+    
+    ...
+}
+```
 
 #### Virtual Reality
 

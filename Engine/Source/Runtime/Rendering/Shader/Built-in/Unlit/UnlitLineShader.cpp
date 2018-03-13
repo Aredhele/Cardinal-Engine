@@ -46,9 +46,11 @@ UnlitLineShader::UnlitLineShader()
 /// \param MVP The Projection-View-Model matrix to pass to the shader
 void UnlitLineShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights)
 {
+    glEnable(GL_MULTISAMPLE);
     glUseProgram      ((uint)m_shaderID);
     glUniformMatrix4fv(m_matrixID, 1, GL_FALSE, &MVP[0][0]);
     glUniform3f       (m_colorID,  m_color.x, m_color.y, m_color.z);
+    glDisable(GL_MULTISAMPLE);
 }
 
 /// \brief Restore the pipeline state
