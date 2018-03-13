@@ -174,7 +174,8 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
     WorldBuffers::s_chunkUVsBuffer.resize   (vertexIndex);
 
     // Copy vertex for later physical updates before optimizing
-    std::copy(WorldBuffers::s_chunkVertexBuffer.begin(), WorldBuffers::s_chunkVertexBuffer.end(), std::back_inserter(WorldBuffers::s_chunkPhysicalVertexBuffer));
+    for(size_t i = 0ul ; i < WorldBuffers::s_chunkVertexBuffer.size() ; ++i)
+        WorldBuffers::s_chunkPhysicalVertexBuffer.push_back(WorldBuffers::s_chunkVertexBuffer[i] + m_model);
 
     cardinal::VBOIndexer::Index(
             WorldBuffers::s_chunkVertexBuffer,

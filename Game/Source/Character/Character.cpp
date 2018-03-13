@@ -61,15 +61,16 @@ Character::Character()
 void Character::Update(cardinal::Window * pWindow, float dt)
 {
     // Camera debug controls
-    // if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_W) == GLFW_PRESS) Translate( m_pCamera->GetDirection() * dt * m_speed * m_speedMultiplier);
-    // if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_S) == GLFW_PRESS) Translate(-m_pCamera->GetDirection() * dt * m_speed * m_speedMultiplier);
-    // if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_D) == GLFW_PRESS) Translate( m_pCamera->GetRight() * dt * m_speed * m_speedMultiplier);
-    // if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_A) == GLFW_PRESS) Translate(-m_pCamera->GetRight() * dt * m_speed * m_speedMultiplier);
+    glm::vec3 velocity(0, 0, m_pBody->GetLinearVelocity().z);
 
-    glm::vec3 pos = m_pBody->GetPosition();
-    glm::vec3 pos2 = m_meshRenderer->GetPosition();
-    //cardinal::Logger::LogInfo("Player rigid body position %f,%f,%f", pos.x, pos.y, pos.z);
-    //cardinal::Logger::LogInfo("Player renderer position %f,%f,%f",pos2.x, pos2.y, pos2.z );
+    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_W) == GLFW_PRESS) velocity += ( m_pCamera->GetDirection() * dt * m_speed * m_speedMultiplier);
+    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_S) == GLFW_PRESS) velocity += (-m_pCamera->GetDirection() * dt * m_speed * m_speedMultiplier);
+    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_D) == GLFW_PRESS) velocity += ( m_pCamera->GetRight() * dt * m_speed * m_speedMultiplier);
+    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_A) == GLFW_PRESS) velocity += (-m_pCamera->GetRight() * dt * m_speed * m_speedMultiplier);
+    m_pBody->SetLinearVelocity(velocity);
+    cardinal::Logger::LogInfo("Velocity = %f,%f,%f", velocity.x, velocity.y, velocity.z);
+
+
 }
 
 /// \brief Returns the position of the avatar
@@ -84,6 +85,13 @@ void Character::SetPosition(glm::vec3 position)
     m_pBody->SetPosition(position);
     m_meshRenderer->SetPosition(position);
 }
+
+/// \brief Sets the position of the avatar
+void Character::AttachCamera(const cardinal::Camera* camera)
+{
+    m_pCamera = camera;
+}
+
 
 /// \brief Translate the avatar
 /// \param translation The translation vector

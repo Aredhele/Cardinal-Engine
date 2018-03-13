@@ -26,6 +26,10 @@ class CameraManager
         inline void SetCamera(cardinal::Camera* p_camera)
             {m_camera = p_camera;}
         
+        /// \brief Set the camera
+        inline const cardinal::Camera* GetCamera(void) const
+            {return m_camera;}
+
         /// \brief Set the character
         inline void SetCharacter(const Character* p_character)
             {m_character = p_character;}

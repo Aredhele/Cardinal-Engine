@@ -54,6 +54,12 @@ public:
     /// \brief Set body mass
     void SetMass(float mass);
 
+    /// \brief Set velocity
+    void SetLinearVelocity(glm::vec3& const velocity);
+
+    /// \brief Returns current velocity
+    glm::vec3& const GetLinearVelocity(void);
+
     /// \brief Build physics body 
     void BuildPhysics(bool hasInertia = true);
 

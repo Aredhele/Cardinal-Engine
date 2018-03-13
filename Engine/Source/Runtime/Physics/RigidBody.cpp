@@ -65,6 +65,23 @@ void RigidBody::SetMass(float mass)
     m_pBody->setMassProps(mass, btVector3(inertia.x, inertia.y, inertia.z) );
 }
 
+/// \brief Set velocity
+void RigidBody::SetLinearVelocity(glm::vec3& const velocity)
+{
+    ASSERT_NOT_NULL(m_pBody);
+
+    m_pBody->setLinearVelocity(btVector3(velocity.x, velocity.y, velocity.z));
+}
+
+/// \brief Set velocity
+glm::vec3& const RigidBody::GetLinearVelocity(void)
+{
+    ASSERT_NOT_NULL(m_pBody);
+
+    btVector3 vel = m_pBody->getLinearVelocity();
+    return glm::vec3(vel.x(), vel.y(), vel.z());
+}
+
 /// \brief Build physics body and return true on success
 void RigidBody::BuildPhysics(bool hasInertia)
 {

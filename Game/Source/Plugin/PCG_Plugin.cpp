@@ -89,7 +89,8 @@ void PCG_Plugin::OnPlayStart()
     // Camera and Character
     m_cameraManager.SetCamera(cardinal::RenderingEngine::GetMainCamera());
     m_cameraManager.SetCharacter(&m_character);
-    m_character.SetPosition(glm::vec3(0,0,2000));
+    m_character.SetPosition(glm::vec3(100,100,1000));
+    m_character.AttachCamera(m_cameraManager.GetCamera());
 
     // Particle system
     /// cardinal::ParticleSystem * pSystem = cardinal::RenderingEngine::AllocateParticleSystem();

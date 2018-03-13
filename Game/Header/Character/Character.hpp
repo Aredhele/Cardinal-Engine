@@ -56,6 +56,9 @@ public:
     /// \brief Sets the position of the avatar
     void SetPosition(glm::vec3 position);
 
+    /// \brief Gives main camera to character
+    void AttachCamera(const cardinal::Camera* camera);
+
     /// \brief Translate the avatar
     /// \param translation The translation vector
     void Translate(glm::vec3 const& translation);
@@ -75,6 +78,8 @@ private:
     // Physics
     cardinal::RigidBody   * m_pBody;
     cardinal::MeshRenderer* m_meshRenderer;
+
+    const cardinal::Camera* m_pCamera;
 };
 
 #endif // !CARDINAL_ENGINE_CHARACTER_HPP__

@@ -145,6 +145,8 @@ void World::GetNeighbors(int x, int y, int z, Chunk * neighbors[6])
 
 void World::Batch()
 {
+    WorldBuffers::s_chunkPhysicalVertexBuffer.clear();
+
     for(int i = 0; i < WorldSettings::s_matSize; ++i)
     {
         for(int j = 0; j < WorldSettings::s_matSize; ++j)
