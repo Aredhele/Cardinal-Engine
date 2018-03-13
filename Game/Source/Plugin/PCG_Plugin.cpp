@@ -22,9 +22,6 @@
 /// \author     Vincent STEHLY--CALISTO
 
 // Engine
-
-#include <Header/Runtime/Rendering/Renderer/LineRenderer.hpp>
-#include <Header/Runtime/Rendering/Shader/Built-in/Unlit/UnlitLineShader.hpp>
 #include "Runtime/Sound/SoundEngine.hpp"
 #include "Runtime/Sound/Listener/AudioListener.hpp"
 
@@ -101,20 +98,6 @@ void PCG_Plugin::OnPlayStart()
     pLight->SetRange(20);
     pLight->SetIntensity(1.0f);
     pLight->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));*/
-
-    cardinal::LineRenderer * pLineRenderer  = cardinal::RenderingEngine::AllocateLineRenderer();
-    cardinal::UnlitLineShader * pLineShader = new cardinal::UnlitLineShader(); // NOLINT
-
-    pLineRenderer->SetShader(pLineShader);
-    pLineShader->SetColor(glm::vec3(1.0));
-
-    glm::vec3 last = glm::ballRand(100.0f);
-    for(int i = 0; i < 100; ++i)
-    {
-        glm::vec3 randStart = last;
-        last                = glm::ballRand(100.0f);
-        pLineRenderer->AddLine(randStart, last);
-    }
 }
 
 /// \brief Called when the game stops
