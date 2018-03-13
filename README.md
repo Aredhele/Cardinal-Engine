@@ -474,5 +474,5 @@ gizmos window.
 </p>
 
 <p align="center">
-  <img src="http://image.noelshack.com/fichiers/2018/11/2/1520944628-cardinal-engine-76.png" width="768" height="432" />
+  <img src="http://image.noelshack.com/fichiers/2018/11/2/1520945123-cardinal-engine-76.jpg" width="768" height="432" />
 </p>
