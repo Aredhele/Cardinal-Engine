@@ -26,9 +26,9 @@ flags are passed to CMake because the project contains only sources.
 * Message logger
 * Assertion utilities
 * ImGui support
-* **Hierarchy** and Inspector
+* **Hierarchy and Inspector**
     * Inspection of instantiated objects
-    * Modification of object's attributes in real time
+    * Modification of attributes in real time
 
 #### Rendering
 * **Virtual Reality**
