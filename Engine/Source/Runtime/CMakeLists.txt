@@ -63,6 +63,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Texture/TextureImporter.cpp
         Rendering/Particle/ParticleSystem.cpp
         Rendering/Particle/EmissionShape/Cone.cpp
+        Rendering/Particle/EmissionShape/Plane.cpp
         Rendering/Shader/IShader.cpp
         Rendering/Shader/ShaderManager.cpp
         Rendering/Shader/ShaderCompiler.cpp

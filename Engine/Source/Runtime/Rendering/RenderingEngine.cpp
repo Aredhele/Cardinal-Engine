@@ -95,7 +95,7 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     TextureLoader::LoadTexture("Block",             "Resources/Textures/BlockAtlas_2048.bmp");
     TextureLoader::LoadTexture("BlockNearest",      "Resources/Textures/BlockAtlas_2048.bmp");
     TextureLoader::LoadTexture("BlockAlpha",        "Resources/Textures/BlockAtlas_2048.dds");
-    TextureLoader::LoadTexture("BlockAlphaNearest", "Resources/Textures/BlockAtlas_2048.dds");
+    TextureLoader::LoadTexture("BlockAlphaNearest", "Resources/Textures/BlockAtlas_2048.dds", true);
 
     /*
     // Custom mip mapping
@@ -226,7 +226,8 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     glEnable   (GL_MULTISAMPLE);
 
     // TODO : Makes clear color configurable
-    m_clearColor = glm::vec3(0.0f, 0.709f, 0.866f);
+    //m_clearColor = glm::vec3(0.0f, 0.709f, 0.866f);
+    m_clearColor = glm::vec3(0.51f, 0.56, 0.60f);
     glClearColor(m_clearColor.x, m_clearColor.y, m_clearColor.z, 1.0f);
 
     // TODO : Removes magic values
