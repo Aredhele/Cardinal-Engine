@@ -39,9 +39,13 @@ public :
     /// \brief Stores information about a texture
     struct TextureProperty
     {
-        uchar * pBuffer; ///< The data of the texture
-        uint    width;   ///< The width of the texture
-        uint    height;  ///< The height of the texture
+        uchar * pBuffer;     ///< The data of the texture
+        uint    width;       ///< The width of the texture
+        uint    height;      ///< The height of the texture
+        uint    format;      ///< The format of the texture
+        uint    blockSize;   ///< The size of a block
+        uint    mipmapCount; ///< The count of mipmap
+        bool    alpha;       ///< Texture contains alpha channel ?
     };
 
     /// \brief  Imports a BMP file into the engine
@@ -49,6 +53,12 @@ public :
     /// \param  property The properties of the texture
     /// \param  True on success, false on failure
     static bool ImportTexture_BMP(const char* szPath, TextureProperty & property);
+
+    /// \brief  Imports a BMP file into the engine
+    /// \param  szPath The path to the file to import
+    /// \param  property The properties of the texture
+    /// \param  True on success, false on failure
+    static bool ImportTexture_DDS(const char * szPath, TextureProperty & property);
 };
 
 } // !namespace

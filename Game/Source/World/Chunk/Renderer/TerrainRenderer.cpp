@@ -180,7 +180,7 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
             WorldBuffers::s_chunkIndexedNormalBuffer,
             WorldBuffers::s_chunkIndexedUVsBuffer);
 
-   if (WorldBuffers::s_chunkIndexesBuffer.size() != 0)
+   if (WorldBuffers::s_chunkIndexesBuffer.size() != 0) // NOLINT
    {
         m_renderer->Initialize(
                 WorldBuffers::s_chunkIndexesBuffer,

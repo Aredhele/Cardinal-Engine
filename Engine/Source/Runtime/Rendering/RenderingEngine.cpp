@@ -91,8 +91,23 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     LightManager::Initialize();
 
     // Loads Textures
-    TextureLoader::LoadTexture("SAORegular", "Resources/Textures/SAORegular.bmp");
-    TextureLoader::LoadTexture("Block",      "Resources/Textures/BlockAtlas_2048.bmp");
+    TextureLoader::LoadTexture("SAORegular",   "Resources/Textures/SAORegular.bmp");
+    TextureLoader::LoadTexture("Block",        "Resources/Textures/BlockAtlas_2048.bmp");
+    TextureLoader::LoadTexture("BlockNearest", "Resources/Textures/BlockAtlas_2048.bmp");
+    TextureLoader::LoadTexture("BlockAlpha",   "Resources/Textures/BlockAtlas_2048.dds");
+
+    /*
+    // Custom mip mapping
+    std::vector<std::string> blockMipMapping;
+    blockMipMapping.emplace_back("Resources/Textures/BlockAtlas_4096.bmp");
+    blockMipMapping.emplace_back("Resources/Textures/BlockAtlas_2048.bmp");
+    blockMipMapping.emplace_back("Resources/Textures/BlockAtlas_1024.bmp");
+    blockMipMapping.emplace_back("Resources/Textures/BlockAtlas_512.bmp");
+    blockMipMapping.emplace_back("Resources/Textures/BlockAtlas_256.bmp");
+    blockMipMapping.emplace_back("Resources/Textures/BlockAtlas_128.bmp");
+    blockMipMapping.emplace_back("Resources/Textures/BlockAtlas_64.bmp");
+    TextureLoader::LoadMipMapTextures("Block",  blockMipMapping);
+    */
 
     ShaderManager::Register("LitTexture", ShaderCompiler::LoadShaders(
             "Resources/Shaders/Lit/LitTextureVertexShader.glsl",
@@ -214,7 +229,7 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     glClearColor(m_clearColor.x, m_clearColor.y, m_clearColor.z, 1.0f);
 
     // TODO : Removes magic values
-    m_projectionMatrix = glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 10000.0f);
+    m_projectionMatrix = glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 2000.0f);
     // m_projectionMatrix = glm::ortho(0.0f, 1600.0f, 0.0f, 900.0f, -0.1f, 1000.0f);
 
     m_frameDelta   = 1.0 / fps;
@@ -294,6 +309,8 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     ImGui::StyleColorsDark();
 
     Logger::LogInfo("Rendering engine successfully initialized in %3.4lf s.", glfwGetTime());
+
+    return true;
 }
 
 /// \brief Initializes VR rendering

@@ -336,7 +336,7 @@ void BasicWorldGenerator::generateGrass() {
         for (int y = 0; y < WorldSettings::s_matSizeCubes; y++) {
             double noise = noiseGenerator.GetNoise(x, y);
             if (noise > 0)
-                mp_currentWorld->GetCube(x, y, mp_currentWorld->m_worldHeights[x][y])->SetType(ByteCube::EType::Water);
+                mp_currentWorld->GetCube(x, y, mp_currentWorld->m_worldHeights[x][y])->SetType(ByteCube::EType::Grass1);
         }
 }
 

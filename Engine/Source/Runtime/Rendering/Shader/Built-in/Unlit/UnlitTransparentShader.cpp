@@ -46,6 +46,8 @@ void UnlitTransparentShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm
     glUseProgram      ((uint)m_shaderID);
     glUniformMatrix4fv(m_matrixID, 1, GL_FALSE, &MVP[0][0]);
 
+    glDisable      (GL_CULL_FACE);
+    glDisable      (GL_MULTISAMPLE);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture  (GL_TEXTURE_2D, (uint)m_texture);
     glUniform1i    (m_textureID, 0);
@@ -54,7 +56,7 @@ void UnlitTransparentShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm
 /// \brief Restore the pipeline state
 void UnlitTransparentShader::End()
 {
-    // None
+    glEnable  (GL_CULL_FACE);
 }
 
 /// \brief Sets the texture

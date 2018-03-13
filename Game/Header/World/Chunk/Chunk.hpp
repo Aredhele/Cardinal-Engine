@@ -31,6 +31,7 @@
 // Game
 #include "World/Cube/ByteCube.hpp"
 #include "World/WorldSettings.hpp"
+#include "World/Chunk/Renderer/GrassRenderer.hpp"
 #include "World/Chunk/Renderer/TerrainRenderer.hpp"
 
 /// \class Chunk
@@ -82,6 +83,7 @@ private:
 
     Chunk *         m_neighbors[6];
     TerrainRenderer m_terrainRenderer;
+    GrassRenderer   m_grassRenderer;
 };
 
 #include "World/Chunk/Impl/Chunk.inl"
