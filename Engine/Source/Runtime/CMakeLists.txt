@@ -39,6 +39,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Physics/RigidBody.cpp
         Physics/CollisionShape.cpp
         Rendering/Mesh/Cube.cpp
+        Rendering/Hierarchy/Inspector.cpp
         Rendering/Context/Window.cpp
         Rendering/Debug/DebugBox.cpp
         Rendering/Debug/DebugGrid.cpp
@@ -52,6 +53,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Renderer/IRenderer.cpp
         Rendering/Renderer/TextRenderer.cpp
         Rendering/Renderer/MeshRenderer.cpp
+        Rendering/Renderer/LineRenderer.cpp
         Rendering/Renderer/ParticleRenderer.cpp
         Rendering/Lighting/LightManager.cpp
         Rendering/Lighting/Lights/PointLight.cpp
@@ -60,6 +62,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Texture/TextureManager.cpp
         Rendering/Texture/TextureImporter.cpp
         Rendering/Particle/ParticleSystem.cpp
+        Rendering/Particle/EmissionShape/Cone.cpp
         Rendering/Shader/IShader.cpp
         Rendering/Shader/ShaderManager.cpp
         Rendering/Shader/ShaderCompiler.cpp
@@ -70,6 +73,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Shader/Built-in/Unlit/UnlitColorShader.cpp
         Rendering/Shader/Built-in/Unlit/UnlitTextureShader.cpp
         Rendering/Shader/Built-in/Unlit/UnlitTransparentShader.cpp
+        Rendering/Shader/Built-in/Unlit/UnlitLineShader.cpp
         Rendering/Shader/Built-in/Standard/StandardShader.cpp
         Rendering/Shader/Built-in/Particle/ParticleShader.cpp
         Rendering/PostProcessing/PostProcessingStack.cpp

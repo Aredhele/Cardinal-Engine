@@ -26,7 +26,9 @@
 
 #include "Glm/glm/vec3.hpp"
 #include "Runtime/Platform/Configuration/Type.hh"
+#include "Runtime/Rendering/Hierarchy/Inspector.hpp"
 #include "Runtime/Rendering/Renderer/ParticleRenderer.hpp"
+#include "Runtime/Rendering/Particle/EmissionShape/EmissionShape.hpp"
 #include "Runtime/Rendering/Shader/Built-in/Particle/ParticleShader.hpp"
 
 /// \namespace cardinal
@@ -35,7 +37,7 @@ namespace cardinal
 
 /// \class ParticleSystem
 /// \brief System of basic particles
-class ParticleSystem
+class ParticleSystem : public Inspector
 {
 private:
 
@@ -46,14 +48,28 @@ private:
         glm::vec3 color;
 
         float size;
-        float angle;
-        float weight;
         float lifeTime;
     };
 
 public:
 
-    void Initialize();
+    /// \brief Initializes the particle system
+    /// \param maxParticles The max amount of particles
+    /// \param emissionRate The number of particle to emit / s
+    /// \param lifeTime The life time of a particle in s
+    /// \param size The size of a particle
+    /// \param speed The start speed of a particle
+    /// \param gravity The gravity vector
+    /// \param color The color of particle
+    /// \param emissionShape The emission shape
+    void Initialize(int maxParticles, int emissionRate, float lifeTime, float size, float speed, glm::vec3 const& gravity, glm::vec3 const& color, EmissionShape * pEmissionShape);
+
+    /// \brief Sets the position of the particle system
+    /// \param position The new position
+    void SetPosition(glm::vec3 const& position);
+
+    /// \brief Called when the object is inspected
+    void OnInspectorGUI() final;
 
 private:
 
@@ -77,11 +93,16 @@ private:
     Particle *       m_pParticles;
     ParticleRenderer m_renderer;
     ParticleShader   m_shader;
+    EmissionShape *  m_pEmissionShape;
+    glm::vec3        m_gravity;
+    glm::vec3        m_color;
+    glm::vec3        m_position;
     int              m_lastUsedParticle;
     int              m_particleAmount;
     int              m_emissionRate;
     float            m_lifeTime;
     float            m_size;
+    float            m_speed;
 };
 
 } // !namespace

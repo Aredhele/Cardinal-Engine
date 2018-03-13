@@ -15,66 +15,71 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       ParticleShader.cpp
-/// \date       10/03/2018
+/// \file       UnlitLineShader.cpp
+/// \date       13/03/2018
 /// \project    Cardinal Engine
-/// \package    Runtime/Rendering/Shader/Built-in/Particle
+/// \package    Runtime/Rendering/Shader/Built-in
 /// \author     Vincent STEHLY--CALISTO
 
-#include "Glew/include/GL/glew.h"
-#include "ImGUI/Header/ImGUI/imgui.h"
 
+#include "Glew/include/GL/glew.h"
+
+#include "ImGUI/Header/ImGUI/imgui.h"
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
-#include "Runtime/Rendering/Shader/Built-in/Particle/ParticleShader.hpp"
+#include "Runtime/Rendering/Shader/Built-in/Unlit/UnlitLineShader.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
 /// \brief Constructor
-ParticleShader::ParticleShader()
+UnlitLineShader::UnlitLineShader()
 {
-    m_shaderID = ShaderManager::GetShaderID("ParticleShader");
+    m_shaderID = ShaderManager::GetShaderID("LineShader");
+    m_matrixID = glGetUniformLocation((uint)m_shaderID, "MVP");
+    m_colorID  = glGetUniformLocation((uint)m_shaderID, "lineColor");
 
-    m_VPID          = glGetUniformLocation((uint)m_shaderID, "VP");
-    m_cameraUpID    = glGetUniformLocation((uint)m_shaderID, "cameraUpWorld");
-    m_cameraRightID = glGetUniformLocation((uint)m_shaderID, "cameraRightWorld");
-
-    inspectorName = "Particle Shader";
+    inspectorName = "Unlit line shader";
 }
 
 /// \brief Sets up the pipeline for the shader
 /// \param MVP The Projection-View-Model matrix to pass to the shader
-void ParticleShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights)
+void UnlitLineShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights)
 {
+    glEnable(GL_MULTISAMPLE);
     glUseProgram      ((uint)m_shaderID);
-
-    glm::vec3 right = glm::vec3(V[0][0], V[1][0], V[2][0]);
-    glm::vec3 up    = glm::vec3(V[0][1], V[1][1], V[2][1]);
-    glm::mat4 PV    = P * V;
-
-    glUniformMatrix4fv(m_VPID, 1, GL_FALSE, &PV[0][0]);
-    glUniform3f       (m_cameraUpID,    up.x, up.y, up.z);
-    glUniform3f       (m_cameraRightID, right.x, right.y, right.z);
+    glUniformMatrix4fv(m_matrixID, 1, GL_FALSE, &MVP[0][0]);
+    glUniform3f       (m_colorID,  m_color.x, m_color.y, m_color.z);
+    glDisable(GL_MULTISAMPLE);
 }
 
 /// \brief Restore the pipeline state
-void ParticleShader::End()
+void UnlitLineShader::End()
 {
     // None
 }
 
+/// \brief Sets the color of the line
+void UnlitLineShader::SetColor(glm::vec3 const& color)
+{
+    m_color = color;
+}
+
 /// \brief Called when the object is inspected
-void ParticleShader::OnInspectorGUI()
+void UnlitLineShader::OnInspectorGUI()
 {
     if(ImGui::CollapsingHeader("Material"))
     {
         ImGui::Text(inspectorName.c_str());
 
+        if(ImGui::ColorEdit3("", &m_color[0]))
+        {
+            // None
+        }
+
         ImGui::TextDisabled("Shader ID : %d", m_shaderID);
-        ImGui::TextDisabled("Uniform VP ID          : %d", m_VPID);
-        ImGui::TextDisabled("Uniform CameraUp    ID : %d", m_cameraUpID);
-        ImGui::TextDisabled("Uniform CameraRight ID : %d", m_cameraRightID);
+        ImGui::TextDisabled("Uniform MVP ID   : %d", m_matrixID);
+        ImGui::TextDisabled("Uniform color ID : %d", m_colorID);
     }
 }
 

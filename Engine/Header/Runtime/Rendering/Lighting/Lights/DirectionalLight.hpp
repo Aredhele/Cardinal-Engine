@@ -27,6 +27,7 @@
 #include "Glm/glm/glm.hpp"
 #include "Glm/glm/vec3.hpp"
 #include "Runtime/Platform/Configuration/Type.hh"
+#include "Runtime/Rendering/Hierarchy/Inspector.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -34,7 +35,7 @@ namespace cardinal
 
 /// \class DirectionalLight
 /// \brief Stores directional light information
-class DirectionalLight
+class DirectionalLight : public Inspector
 {
 public:
 
@@ -85,6 +86,9 @@ public:
     /// \brief Returns the color of the ambient
     /// \return The ambient color
     glm::vec3 const& GetAmbientColor() const;
+
+    /// \brief Called when the object is inspected
+    void OnInspectorGUI() final;
 
 private:
 

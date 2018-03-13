@@ -15,48 +15,49 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       Shader.hpp
-/// \date       16/02/2018
+/// \file       UnlitLineShader.hpp
+/// \date       13/03/2018
 /// \project    Cardinal Engine
-/// \package    Runtime/Shader
+/// \package    Runtime/Shader/Built-in
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_I_SHADER_HPP__
-#define CARDINAL_ENGINE_I_SHADER_HPP__
+#ifndef CARDINAL_ENGINE_UNLIT_LINE_SHADER_HPP__
+#define CARDINAL_ENGINE_UNLIT_LINE_SHADER_HPP__
 
-#include <vector>
-#include "Glm/glm/glm.hpp"
-#include "Runtime/Platform/Configuration/Type.hh"
-#include "Runtime/Rendering/Hierarchy/Inspector.hpp"
-#include "Runtime/Rendering/Lighting/LightStructure.hpp"
+#include "Runtime/Rendering/Shader/IShader.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
-/// \class IShader
-/// \brief Base class for all built-in shaders
-class IShader : public Inspector
+/// \class UnlitLineShader
+/// \brief Color only shader
+class UnlitLineShader : public IShader
 {
 public:
 
+    /// \brief Constructor
+    UnlitLineShader();
+
+    /// \brief Sets the color of the line
+    void SetColor(glm::vec3 const& color);
+
     /// \brief Sets up the pipeline for the shader
     /// \param MVP The Projection-View-Model matrix to pass to the shader
-    /// \param TODO
-    virtual void Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights) = 0;
+    void Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light,  std::vector<PointLightStructure> const& pointLights) final;
 
     /// \brief Restore the pipeline state
-    virtual void End  () = 0;
+    void End() final;
 
-    /// \brief Sets 4 floats in the shader
-    void SetFloat4(int uniform, float x, float y, float z, float w);
+    /// \brief Called when the object is inspected
+    void OnInspectorGUI() final;
 
-public:
+private:
 
-     int m_shaderID = 0; ///< The shader to use
-     int m_matrixID = 0; ///< The MVP matrix ID
+    int       m_colorID;
+    glm::vec3 m_color;
 };
 
-} // !namespace 
+} // !namespace
 
-#endif // !CARDINAL_ENGINE_I_SHADER_HPP__
+#endif // !CARDINAL_ENGINE_UNLIT_LINE_SHADER_HPP__

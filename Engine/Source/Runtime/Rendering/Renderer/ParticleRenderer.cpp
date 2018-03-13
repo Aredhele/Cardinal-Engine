@@ -22,6 +22,7 @@
 /// \author     Vincent STEHLY--CALISTO
 
 #include "Glew/include/GL/glew.h"
+#include "ImGUI/Header/ImGUI/imgui.h"
 #include "Runtime/Rendering/Renderer/ParticleRenderer.hpp"
 
 /// \namespace cardinal
@@ -42,6 +43,8 @@ ParticleRenderer::ParticleRenderer() : IRenderer()
 
     m_isInstantiated = true;
     m_isIndexed      = false;
+
+    inspectorName = "Particle Renderer";
 }
 
 /// \brief Destructor
@@ -138,6 +141,20 @@ void ParticleRenderer::UpdateBuffer()
     glBufferSubData(GL_ARRAY_BUFFER, 0, m_elementsCount * sizeof(glm::vec3), billboardColorBuffer);
 
     glBindVertexArray(0);
+}
+
+/// \brief Called when the object is inspected
+void ParticleRenderer::OnInspectorGUI()
+{
+    if(ImGui::CollapsingHeader(inspectorName.c_str()))
+    {
+        ImGui::TextDisabled("Vao : %u", m_vao);
+        ImGui::TextDisabled("Vertex buffer     : %u", m_billboardVertexBuffer);
+        ImGui::TextDisabled("Position buffer   : %u", m_billboardPositionBuffer);
+        ImGui::TextDisabled("Color buffer      : %u", m_billboardColorBuffer);
+        ImGui::TextDisabled("Max particle      : %u", m_maxParticleAmount);
+        ImGui::TextDisabled("Currently batched : %u", m_elementsCount);
+    }
 }
 
 } // !namespace

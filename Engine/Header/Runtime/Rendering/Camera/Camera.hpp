@@ -26,14 +26,15 @@
 
 #include "Glm/glm/glm.hpp"
 #include "Glm/glm/ext.hpp"
+#include "Runtime/Rendering/Hierarchy/Inspector.hpp"
 
 /// \namespace cardinal
 namespace cardinal
 {
 
 /// \class Camera
-/// \brief
-class Camera
+/// \brief Engine camera
+class Camera : public Inspector
 {
 public :
 
@@ -85,6 +86,9 @@ public :
 
     /// \brief Returns the view matrix
     glm::mat4 const& GetViewMatrix() const;
+
+    /// \brief Called when the object is inspected
+    void OnInspectorGUI() final;
 
 private:
 

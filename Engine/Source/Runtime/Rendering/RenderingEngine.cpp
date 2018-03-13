@@ -21,6 +21,12 @@
 /// \package    Rendering
 /// \author     Vincent STEHLY--CALISTO
 
+#ifndef _USE_MATH_DEFINES
+#	define _USE_MATH_DEFINES
+#endif
+
+#include <cmath>
+
 #include <chrono>
 #include <iostream>
 #include "windows.h"
@@ -36,10 +42,12 @@
 #include "Runtime/Core/Plugin/PluginManager.hpp"
 #include "Runtime/Rendering/Debug/DebugManager.hpp"
 #include "Header/Runtime/Rendering/Debug/Debug.hpp"
+#include "Runtime/Rendering/Hierarchy/Hierarchy.hpp"
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
 #include "Runtime/Rendering/Shader/ShaderCompiler.hpp"
 #include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
 #include "Runtime/Rendering/Renderer/TextRenderer.hpp"
+#include "Runtime/Rendering/Renderer/LineRenderer.hpp"
 #include "Runtime/Rendering/Texture/TextureLoader.hpp"
 #include "Runtime/Rendering/Texture/TextureManager.hpp"
 #include "Runtime/Rendering/Particle/ParticleSystem.hpp"
@@ -186,6 +194,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/Particle/ParticleVertexShader.glsl",
             "Resources/Shaders/Particle/ParticleFragmentShader.glsl"));
 
+    ShaderManager::Register("LineShader", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/Unlit/UnlitLineVertexShader.glsl",
+            "Resources/Shaders/Unlit/UnlitLineFragmentShader.glsl"));
+
     // Debug
     DebugManager::Initialize();
 
@@ -195,7 +207,7 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     glEnable   (GL_CULL_FACE);
     glCullFace (GL_BACK);
     glFrontFace(GL_CCW);
-    glEnable(GL_MULTISAMPLE);
+    glEnable   (GL_MULTISAMPLE);
 
     // TODO : Makes clear color configurable
     m_clearColor = glm::vec3(0.0f, 0.709f, 0.866f);
@@ -547,6 +559,8 @@ void RenderingEngine::RenderFrame(float step)
 {
     // Triggering ImGUI
     ImGui_ImplGlfwGL3_NewFrame();
+
+    RenderHierarchy();
     m_pPluginManager->OnGUI();
     m_postProcessingStack.OnGUI();
 
@@ -555,20 +569,8 @@ void RenderingEngine::RenderFrame(float step)
     glm::mat4 View           = m_pCamera->GetViewMatrix();
     glm::mat4 ProjectionView = Projection * View;
 
-    // Start debug draw
-    DirectionalLight * pLight = LightManager::GetDirectionalLight();
-    if(pLight != nullptr)
-    {
-        debug::DrawDirectionalLight(pLight->GetPosition(), pLight->GetDirection(), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
-    }
-
+    DirectionalLight * pLight                = LightManager::GetDirectionalLight();
     std::vector<PointLight *> const& pLights = LightManager::GetPointLights();
-    for(const PointLight* pPointLight : pLights)
-    {
-        debug::DrawPointLight(pPointLight->GetPosition(), glm::vec3(1.0f), 32, pPointLight->GetRange(), 1.0f);
-    }
-    // End debug draw
-
 
     // Shadow mapping
     if(pLight != nullptr)
@@ -701,7 +703,7 @@ void RenderingEngine::RenderFrame(float step)
         vr::VRCompositor()->Submit(vr::Eye_Left, &leftEyeTexture );
         vr::Texture_t rightEyeTexture = {(void*)(uintptr_t)rightEyeDesc.m_nResolveTextureId, vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
         vr::VRCompositor()->Submit(vr::Eye_Right, &rightEyeTexture );
-        // vr::VRCompositor()->ShowMirrorWindow();
+        // vr::VRCompositor()->ShowMirrorWindow(); (No need anymore)
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(0, 0, 1600, 900);
@@ -750,7 +752,6 @@ void RenderingEngine::RenderFrame(float step)
 
 #ifdef CARDINAL_DEBUG
     DebugManager::Draw(ProjectionView);
-    DebugManager::Clear();
 #endif
 
     if(m_bIsPostProcessingEnabled)
@@ -881,7 +882,7 @@ void RenderingEngine::RenderScene(vr::Hmd_Eye nEye)
         m_currentTriangle += m_renderers[nRenderer]->GetElementCount();
 
         // Hot code
-        glm::mat4 hmdViewMatrix = GetHMDMatrixPoseEye(nEye) * glm::translate(m_mat4HMDPose, glm::vec3(0.0f, -150.0f, 100.0f));
+        glm::mat4 hmdViewMatrix = GetHMDMatrixPoseEye(nEye) * glm::translate(m_mat4HMDPose, glm::vec3(-200.0f, -300.0f, 200.0f));
         hmdViewMatrix           = glm::rotate(hmdViewMatrix, -(float)M_PI_2,   glm::vec3(1.0f, 0.0f, 0.0f));
         m_renderers[nRenderer]->Draw(GetHMDMatrixProjectionEye(nEye), hmdViewMatrix, glm::vec3(0.0f, 0.0f, 0.0f), LightManager::GetNearestPointLights(m_renderers[nRenderer]->GetPosition()));
     }
@@ -964,6 +965,18 @@ void RenderingEngine::Shutdown()
     ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
 
     TextRenderer *pRenderer = new TextRenderer(); // NOLINT
+    RenderingEngine::s_pInstance->m_renderers.push_back((IRenderer *)pRenderer);
+
+    return pRenderer;
+}
+
+/// \brief Allocates and return a pointer on a renderer
+///        Registers the renderer into the engine
+LineRenderer * RenderingEngine::AllocateLineRenderer()
+{
+    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
+
+    LineRenderer * pRenderer = new LineRenderer(); // NOLINT
     RenderingEngine::s_pInstance->m_renderers.push_back((IRenderer *)pRenderer);
 
     return pRenderer;
@@ -1151,9 +1164,9 @@ void RenderingEngine::DisplayDebugWindow(float step)
 
     if(m_debugTime)
     {
-        ImGui::Begin        ("Engine debug",   &m_debugTime);
-        ImGui::SetWindowPos ("Engine debug",   ImVec2(530.0f, 10.0f));
-        ImGui::SetWindowSize("Engine debug", ImVec2(640.0f, 50.0f));
+        ImGui::Begin        ("Engine debug", &m_debugTime);
+        ImGui::SetWindowPos ("Engine debug", ImVec2(530.0f, 10.0f));
+        ImGui::SetWindowSize("Engine debug", ImVec2(580.0f, 50.0f));
 
         // Computes percentage
         float timeSum = m_renderingTime + m_audioTime + m_pluginTime;
@@ -1167,7 +1180,7 @@ void RenderingEngine::DisplayDebugWindow(float step)
             renderingPercent = 100.0f;
         }
 
-        ImGui::Text("Rendering %lf (%.2lf %)\t Audio %lf (%.2lf %)\t Plugins %lf (%.2lf %)",
+        ImGui::Text("Rendering %.3f (%.2f %)\t Audio %.3f (%.2f %)\t Plugins %.3f (%.2f %)",
                     m_renderingTime, renderingPercent,
                     m_audioTime,     audioPercent,
                     m_pluginTime,    pluginPercent);
@@ -1180,6 +1193,21 @@ void RenderingEngine::DisplayDebugWindow(float step)
 /// \param dt The elapsed time
 void RenderingEngine::Update(float dt)
 {
+    DebugManager::Clear();
+
+    // Start debug draw
+    DirectionalLight * pLight = LightManager::GetDirectionalLight();
+    if(pLight != nullptr)
+    {
+        debug::DrawDirectionalLight(pLight->GetPosition(), pLight->GetDirection(), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
+    }
+
+    std::vector<PointLight *> const& pLights = LightManager::GetPointLights();
+    for(const PointLight* pPointLight : pLights)
+    {
+        debug::DrawPointLight(pPointLight->GetPosition(), glm::vec3(1.0f), 32, pPointLight->GetRange(), 1.0f);
+    }
+
     for(ParticleSystem * pSystem : m_paricleSystems)
     {
         pSystem->Update(dt);
@@ -1206,6 +1234,58 @@ void RenderingEngine::UpdateEngineTime(float audioTime, float renderingTime, flo
 {
     ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
     return s_pInstance->m_pCamera->GetViewMatrix();
+}
+
+/// \brief Called to render the hierarchy
+void RenderingEngine::RenderHierarchy()
+{
+    // ImGui::ShowDemoWindow(&m_debugWindow);
+
+    ImGui::Begin        ("Scene explorer", &m_debugWindow);
+    ImGui::SetWindowPos ("Scene explorer", ImVec2(1300, 10));
+    ImGui::SetWindowSize("Scene explorer", ImVec2(290, 500));
+
+    ImGui::TextColored(ImVec4(1,1,0,1), "Hierarchy\n\n");
+
+    std::vector<Inspector *>  items;
+    std::vector<const char *> cnames;
+
+    // Camera
+    items.emplace_back(m_pCamera);
+
+    // Lights
+    if(LightManager::GetDirectionalLight() != nullptr)
+        items.emplace_back(LightManager::GetDirectionalLight());
+
+    std::vector <PointLight*> pointLights = LightManager::GetPointLights();
+    for(PointLight * pLight : pointLights)
+        items.emplace_back(pLight);
+
+    // Particles
+    for(ParticleSystem * pSystem : m_paricleSystems)
+        items.emplace_back(pSystem);
+
+    // Renderer
+    for(IRenderer * pRenderer : m_renderers)
+        items.emplace_back(pRenderer);
+
+    // Generating names
+    for(Inspector * pInspector : items)
+        cnames.emplace_back(pInspector->inspectorName.c_str());
+
+    static int listbox_item_current = 0;
+
+    ImGui::PushItemWidth(280);
+    ImGui::ListBox("###Hierarchy", &listbox_item_current, cnames.data(), (int)cnames.size(), 14);
+    ImGui::PopItemWidth();
+
+    ImGui::TextColored(ImVec4(1,1,0,1), "Inspector\n\n");
+
+    ImGui::BeginChild("");
+    items[listbox_item_current]->OnInspectorGUI();
+    ImGui::EndChild();
+
+    ImGui::End();
 }
 
 } // !namespace

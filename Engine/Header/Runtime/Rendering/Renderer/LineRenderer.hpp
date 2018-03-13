@@ -15,14 +15,14 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       ParticleRenderer.hpp
-/// \date       10/03/2018
+/// \file       LineRenderer.hpp
+/// \date       12/03/2018
 /// \project    Cardinal Engine
 /// \package    Rendering/Renderer
 /// \author     Vincent STEHLY--CALISTO
 
-#ifndef CARDINAL_ENGINE_PARTICLE_RENDERER_HPP__
-#define CARDINAL_ENGINE_PARTICLE_RENDERER_HPP__
+#ifndef CARDINAL_ENGINE_LINE_RENDERER_HPP__
+#define CARDINAL_ENGINE_LINE_RENDERER_HPP__
 
 #include <vector>
 #include "Glm/glm/glm.hpp"
@@ -35,31 +35,37 @@
 namespace cardinal
 {
 
-/// \class  ParticleRenderer
-/// \brief  Renders instantiated particles
-class ParticleRenderer : public IRenderer
+/// \class  LineRenderer
+/// \brief  Renders lines
+class LineRenderer : public IRenderer
 {
-public :
+public:
 
     /// \brief Default constructor
-    ParticleRenderer();
+    LineRenderer();
 
     /// \brief Destructor
-    ~ParticleRenderer();
+    ~LineRenderer();
 
-    /// \brief Initializes the renderer
-    /// \param particleAmount The max amount of particles
-    void Initialize(int maxParticleAmount);
+    /// \brief Sets the position of the line renderer
+    /// \param position The new position
+    void SetPosition(glm::vec3 const &position);
+
+    /// \brief Translates the model
+    /// \param Translation The translation vector
+    void Translate(glm::vec3 const &Translation);
 
     /// \brief Sets the renderer shader
     /// \param pShader The pointer on the shader
-    void SetShader(IShader * pShader);
+    void SetShader(IShader *pShader);
 
-    /// \brief Sets the currentElementCount
-    void SetElementCount(int count);
+    /// \brief Clears all lines
+    void Clear();
 
-    /// \brief Updates positions and color buffer
-    void UpdateBuffer();
+    /// \brief Adds a line to the renderer
+    /// \param start The start point
+    /// \param end The end point
+    void AddLine(glm::vec3 const& start, glm::vec3 const& end);
 
     /// \brief Base method implementation
     /// \param PV The projection view matrix
@@ -68,19 +74,15 @@ public :
     /// \brief Called when the object is inspected
     void OnInspectorGUI() final;
 
-    float * billboardColorBuffer;
-    float * billboardPositionBuffer;
-
 private:
 
     friend class RenderingEngine;
 
-    uint m_billboardVertexBuffer;
-    uint m_billboardPositionBuffer;
-    uint m_billboardColorBuffer;
-    uint m_maxParticleAmount;
+    std::vector<glm::vec3> m_lines;
+    uint                   m_verticesObject;
+    uint                   m_maxElement;
 };
 
 }  // !namespace
 
-#endif // !CARDINAL_ENGINE_PARTICLE_RENDERER_HPP__
+#endif // !CARDINAL_ENGINE_LINE_RENDERER_HPP__

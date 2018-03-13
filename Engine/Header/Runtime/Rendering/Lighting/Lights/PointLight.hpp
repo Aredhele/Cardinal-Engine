@@ -25,6 +25,7 @@
 #define CARDINAL_ENGINE_POINT_LIGHT_HPP__
 
 #include "Glm/glm/vec3.hpp"
+#include "Runtime/Rendering/Hierarchy/Inspector.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -32,7 +33,7 @@ namespace cardinal
 
 /// \class PointLight
 /// \brief Light with a certain range
-class PointLight
+class PointLight : public Inspector
 {
 public:
 
@@ -67,6 +68,9 @@ public:
     /// \brief Returns the color of the light
     /// \return The color of the light
     glm::vec3 const& GetColor() const;
+
+    /// \brief Called when the object is inspected
+    void OnInspectorGUI() final;
 
 private:
 

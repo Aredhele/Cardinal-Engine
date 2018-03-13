@@ -22,6 +22,7 @@
 /// \author     Vincent STEHLY--CALISTO
 
 #include "Glm/glm/ext.hpp"
+#include "ImGUI/Header/ImGUI/imgui.h"
 #include "Runtime/Rendering/Camera/Camera.hpp"
 
 /// \namespace cardinal
@@ -39,11 +40,12 @@ Camera::Camera()
     m_position  = glm::vec3(-229.0f, -42.0f,  439.0f);
     m_direction = glm::vec3(   0.0f,   0.0f,    1.0f);
 
-    m_viewMatrix = glm::lookAt(m_position, m_lookAt, m_up);
+    m_viewMatrix  = glm::lookAt(m_position, m_lookAt, m_up);
+    inspectorName = "Main Camera";
 }
 
 /// \brief Destructor
-Camera::~Camera()
+Camera::~Camera() // NOLINT
 {
     // None
 }
@@ -162,6 +164,18 @@ glm::vec3 const& Camera::GetUp() const
 glm::mat4 const& Camera::GetViewMatrix() const
 {
     return m_viewMatrix;
+}
+
+/// \brief Called when the object is inspected
+void Camera::OnInspectorGUI()
+{
+    ImGui::Text(inspectorName.c_str());
+    if(ImGui::InputFloat3("Position###Camera_position", &m_position[0], 3))    UpdateVectors();
+    if(ImGui::InputFloat3("Direction###Camera_direction", &m_direction[0], 3)) UpdateVectors();
+
+    ImGui::TextDisabled("\nUp     : %f %f %f", m_up.x,    m_up.y,    m_up.z);
+    ImGui::TextDisabled(  "Right  : %f %f %f", m_right.x, m_right.y, m_right.z);
+    ImGui::TextDisabled(  "Target : %f %f %f", m_lookAt.x, m_lookAt.y, m_lookAt.z);
 }
 
 } // !namespace

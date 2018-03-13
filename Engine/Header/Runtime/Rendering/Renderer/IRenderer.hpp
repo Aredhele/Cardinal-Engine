@@ -26,6 +26,7 @@
 
 #include "Runtime/Rendering/Shader/IShader.hpp"
 #include "Runtime/Platform/Configuration/Type.hh"
+#include "Runtime/Rendering/Hierarchy/Inspector.hpp"
 
 /// \namespace cardinal
 namespace cardinal
@@ -33,7 +34,7 @@ namespace cardinal
 
 /// \class IRenderer
 /// \brief Base class for all renderers
-class IRenderer
+class IRenderer : public Inspector
 {
 public:
 

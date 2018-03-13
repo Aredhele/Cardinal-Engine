@@ -97,6 +97,10 @@ public:
     ///        Registers the renderer into the engine
     static class TextRenderer * AllocateTextRenderer();
 
+    /// \brief Allocates and return a pointer on a renderer
+    ///        Registers the renderer into the engine
+    static class LineRenderer * AllocateLineRenderer();
+
     /// \brief Allocates and return a pointer on a particle system
     ///        Registers the system into the engine
     static class ParticleSystem * AllocateParticleSystem();
@@ -184,6 +188,9 @@ private:
 
     /// \brief Renders the scene in stereo
     void RenderStereoTarget();
+
+    /// \brief Called to render the hierarchy
+    void RenderHierarchy();
 
     /// \brief Returns the wanted string
     std::string GetTrackedDeviceString(vr::IVRSystem *pHmd, vr::TrackedDeviceIndex_t unDevice, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError *peError = NULL);

@@ -21,6 +21,9 @@
 /// \package    Runtime/Rendering/Particle
 /// \author     Vincent STEHLY--CALISTO
 
+#include "ImGUI/Header/ImGUI/imgui.h"
+#include "Runtime/Core/Assertion/Assert.hh"
+#include "Runtime/Rendering/Debug/Debug.hpp"
 #include "Runtime/Rendering/Particle/ParticleSystem.hpp"
 
 /// \namespace cardinal
@@ -31,10 +34,18 @@ namespace cardinal
 ParticleSystem::ParticleSystem()
 {
     m_pParticles       = nullptr;
+    m_pEmissionShape   = nullptr;
     m_particleAmount   = 0;
     m_lastUsedParticle = 0;
     m_emissionRate     = 0;
+    m_speed            = 1.0f;
+    m_size             = 1.0f;
     m_lifeTime         = 0.0f;
+    m_gravity          = glm::vec3(0.0f, 0.0f, -9.81);
+    m_color            = glm::vec3(1.0f, 1.0f, 1.0f);
+    m_position         = glm::vec3(0.0f);
+
+    inspectorName = "Particle System";
 }
 
 /// \brief Destructor
@@ -43,22 +54,35 @@ ParticleSystem::~ParticleSystem() // NOLINT
     delete[] m_pParticles;
 }
 
-/// \brief None
-void ParticleSystem::Initialize()
+/// \brief Initializes the particle system
+/// \param maxParticles The max amount of particles
+/// \param emissionRate The number of particle to emit / s
+/// \param lifeTime The life time of a particle in s
+/// \param size The size of a particle
+/// \param speed The start speed of a particle
+/// \param gravity The gravity vector
+/// \param color The color of particle
+/// \param emissionShape The emission shape
+void ParticleSystem::Initialize(int maxParticles, int emissionRate, float lifeTime, float size,  float speed, glm::vec3 const& gravity, glm::vec3 const& color, EmissionShape * pEmissionShape)
 {
-    m_pParticles     = new Particle[100000];
-    m_particleAmount = 100000;
-    m_emissionRate   = 100;
-    m_lifeTime       = 6.0f;
-    m_size           = 1.0f;
+    m_particleAmount = maxParticles;
+    m_pParticles     = new Particle[m_particleAmount];
+    m_emissionRate   = emissionRate;
+    m_lifeTime       = lifeTime;
+    m_size           = size;
+    m_gravity        = gravity;
+    m_color          = color;
+    m_speed          = speed;
+    m_pEmissionShape = pEmissionShape;
+
+    ASSERT_NOT_NULL(m_pEmissionShape);
 
     for(int i = 0; i < m_particleAmount; ++i)
     {
         m_pParticles[i].lifeTime = 0.0f;
-        m_pParticles[i].color    = glm::vec3(1.0f, 1.0f, 1.0f);
     }
 
-    m_renderer.Initialize(100000);
+    m_renderer.Initialize(m_particleAmount);
     m_renderer.SetShader(&m_shader);
 }
 
@@ -71,25 +95,14 @@ void ParticleSystem::Update(float dt)
     // Emitting
     for(int i = 0; i < particleToEmit; ++i)
     {
-        int index = GetNewParticle();
+        int index                 = GetNewParticle();
         Particle& currentParticle = m_pParticles[index];
-
-        float spread = 2.5f;
-        glm::vec3 randDir = glm::vec3(
-                (rand() % 2000 - 1000.0f) / 1000.0f,  // NOLINT
-                (rand() % 2000 - 1000.0f) / 1000.0f,  // NOLINT
-                (rand() % 2000 - 1000.0f) / 1000.0f); // NOLINT
-
-        glm::vec3 randColor = glm::vec3(
-                (rand() % 1000) / 1000.0f,  // NOLINT
-                (rand() % 1000) / 1000.0f,  // NOLINT
-                (rand() % 1000) / 1000.0f); // NOLINT
 
         currentParticle.size     = m_size;
         currentParticle.lifeTime = m_lifeTime;
-        currentParticle.position = glm::vec3(0.0f, 0.0f, 0.0f);
-        currentParticle.color    = randColor;
-        currentParticle.velocity = glm::vec3(0.0f, 0.0f, 20.0f) + randDir * spread;
+        currentParticle.position = m_pEmissionShape->GetStartPosition(m_position);
+        currentParticle.color    = m_color;
+        currentParticle.velocity = m_pEmissionShape->GetDirection(currentParticle.position, m_position) * m_speed;
     }
 
     // Simulate all particles
@@ -105,7 +118,7 @@ void ParticleSystem::Update(float dt)
             if (currentParticle.lifeTime > 0.0f)
             {
                 // Simple physics : gravity only, no collisions
-                currentParticle.velocity += glm::vec3(0.0f, 0.0f, -9.81f) * dt;
+                currentParticle.velocity += m_gravity * dt;
                 currentParticle.position += currentParticle.velocity * dt;
 
                 // Fill the GPU buffer
@@ -126,6 +139,9 @@ void ParticleSystem::Update(float dt)
     // Update renderer
     m_renderer.SetElementCount(particlesCount);
     m_renderer.UpdateBuffer();
+
+    if(m_pEmissionShape)
+        m_pEmissionShape->DrawGizmo(m_position);
 }
 
 /// \brief Finds and returns a new particle
@@ -153,6 +169,46 @@ int ParticleSystem::GetNewParticle()
 
     // Not enough particles ...
     return 0;
+}
+
+/// \brief Sets the position of the particle system
+/// \param position The new position
+void ParticleSystem::SetPosition(glm::vec3 const& position)
+{
+    m_position = position;
+}
+
+/// \brief Called when the object is inspected
+void ParticleSystem::OnInspectorGUI()
+{
+    ImGui::Text(inspectorName.c_str());
+    ImGui::InputFloat("Life time###Particle_LifeTime",  &m_lifeTime,   0.1f, 0.5f);
+    ImGui::InputFloat("Size###Particle_size",           &m_size,       0.1f, 0.5f);
+    ImGui::InputFloat("Speed###Particle_speed",         &m_speed,      0.1f, 0.5f);
+    ImGui::InputInt  ("Emission###Particle_emission",   &m_emissionRate, 1,   100);
+
+    glm::vec4 lcolor  (m_color.x,   m_color.y,   m_color.z,   1.0f);
+
+    ImGui::Text("\nParticle color");
+    if(ImGui::ColorEdit4("###Particle_lcolor", &lcolor[0]))
+    {
+        m_color.x = lcolor.x;
+        m_color.y = lcolor.y;
+        m_color.z = lcolor.z;
+    }
+
+    ImGui::InputFloat3("Gravity###Particle_direction", &m_gravity[0],  3);
+    ImGui::InputFloat3("Position###Particle_position", &m_position[0], 3);
+
+    // Debugs
+    ImGui::TextDisabled("\nLast index : %d", m_lastUsedParticle);
+    ImGui::TextDisabled(  "Max amount : %d", m_particleAmount);
+
+    // Components
+    ImGui::TextColored(ImVec4(1,1,0,1), "\nAttached components\n\n");
+    m_pEmissionShape->OnInspectorGUI();
+    m_renderer.OnInspectorGUI();
+    m_shader.OnInspectorGUI();
 }
 
 } // !namespace

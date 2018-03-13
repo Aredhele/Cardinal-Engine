@@ -21,6 +21,8 @@
 /// \package    Runtime/Rendering/Lighting/Lights
 /// \author     Vincent STEHLY--CALISTO
 
+#include "Glm/glm/vec4.hpp"
+#include "ImGUI/Header/ImGUI/imgui.h"
 #include "Runtime/Rendering/Lighting/Lights/PointLight.hpp"
 
 /// \namespace cardinal
@@ -30,14 +32,15 @@ namespace cardinal
 /// \brief Constructor
 PointLight::PointLight()
 {
-    m_range     = 10;
-    m_intensity = 1.0f;
-    m_position  = glm::vec3(0.0f);
-    m_color     = glm::vec3(1.0f);
+    m_range       = 10;
+    m_intensity   = 1.0f;
+    m_position    = glm::vec3(0.0f);
+    m_color       = glm::vec3(1.0f);
+    inspectorName = "Point Light";
 }
 
 /// \brief Destructor
-PointLight::~PointLight()
+PointLight::~PointLight() // NOLINT
 {
     // None
 }
@@ -96,6 +99,26 @@ glm::vec3 const& PointLight::GetPosition() const
 glm::vec3 const &PointLight::GetColor() const
 {
     return m_color;
+}
+
+/// \brief Called when the object is inspected
+void PointLight::OnInspectorGUI()
+{
+    ImGui::Text(inspectorName.c_str());
+    ImGui::InputFloat("Light range###Point_lightRange",         &m_range,     0.01f, 0.1f);
+    ImGui::InputFloat("Light intensity###Point_lightIntensity", &m_intensity, 0.01f, 0.1f);
+
+    glm::vec4 lcolor(m_color.x, m_color.y, m_color.z, 1.0f);
+
+    ImGui::Text("\nLight color");
+    if(ImGui::ColorEdit4("###Point_lcolor", &lcolor[0]))
+    {
+        m_color.x = lcolor.x;
+        m_color.y = lcolor.y;
+        m_color.z = lcolor.z;
+    }
+
+    ImGui::InputFloat3("Position###Point_position", &m_position[0], 3);
 }
 
 } // !namespace
