@@ -1,14 +1,14 @@
 # Cardinal Engine
-Cardinal Engine is an experimental game engine programmed in one month for a project at 
-the <a href="http://www.enjmin.fr/">Enjmin</a>, the national school of video games. 
+Cardinal Engine is an experimental game engine programmed **in one month** for a project at 
+the <a href="http://www.enjmin.fr/">**Enjmin**</a>, the national school of video games. 
 The main goal of the project was to learn about rendering and procedural generation 
-in video games. Cardinal Engine is fully written in C++ with OpenGL 3 and use some third party 
+in video games. Cardinal Engine is fully written in **C++ with OpenGL 3** and use some third party 
 libraries :
 * Glew
-* Glfw 
+* **Glfw** 
 * Glm
 * OpenAL
-* OpenVR
+* **OpenVR**
 * Bullet3
 * ImGui
 * Google Test
@@ -119,9 +119,9 @@ This section will enumerate all engine-side implemented features.
 Because the engine was designed to create procedural voxel worlds, the code of 
 the project has been quickly split into two main parts : Engine and Game.
 To achieve that, the game part is compiled separately into a plugin that can
-be registered and called from the engine.
+be registered later and called by the engine.
 
-The first thing to do to create a plugin is to create a class that will extend
+The first thing to do is to create a class that will extend
 the engine plugin interface and implements virtual pure methods.
 
 Code
@@ -204,10 +204,10 @@ Output example
 #### Rendering
 
 The engine has 4 types of renderers that extends the renderer interface IRenderer :
-MeshRenderer, LineRenderer, TextRenderer and ParticleRenderer. Each renderer can be
+**MeshRenderer, LineRenderer, TextRenderer and ParticleRenderer**. Each renderer can be
 allocated by calling the appropriate function in the Rendering Engine. Calling one of
 those functions will return a pointer on a initialized renderer ready to be used. 
-The renderer will be autonomous and there is nothing more to do, you can send
+The renderer will be **autonomous** and there is nothing more to do, you can send
 your vertices, normals and uvs to the renderer and your mesh will be drawn.
 
 Code
@@ -298,8 +298,8 @@ Output (Gizmos enabled)
 
 #### Virtual Reality
 
-The engine supports stereoscopic rendering with OpenVR. It allows you to see the world in
-VR through an HMD (Tested with an HTC Vive). To enable stereoscopic rendering just write 
+The engine supports **stereoscopic rendering with OpenVR**. It allows you to see the world in
+VR through an **HMD** (Tested with an **HTC Vive**). To enable stereoscopic rendering just write 
 the following lines at the beginning of your code.
 
 Code
@@ -418,6 +418,18 @@ gizmos window.
 ## Gallery
 
 <p align="center">
+  <img src="http://image.noelshack.com/fichiers/2018/11/2/1520944633-cardinal-engine-64.png" width="768" height="432" />
+</p>
+
+<p align="center">
+  <img src="http://image.noelshack.com/fichiers/2018/11/2/1520944612-cardinal-engine-77.png" width="768" height="432" />
+</p>
+
+<p align="center">
+  <img src="http://image.noelshack.com/fichiers/2018/11/2/1520944591-cardinal-engine-82.jpg" width="768" height="432" />
+</p>
+
+<p align="center">
   <img src="http://image.noelshack.com/fichiers/2018/10/3/1520383633-gallery-1.png" width="768" height="432" />
 </p>
 
@@ -459,4 +471,8 @@ gizmos window.
 
 <p align="center">
   <img src="http://image.noelshack.com/fichiers/2018/10/3/1520383907-gallery-12.png" width="768" height="432" />
+</p>
+
+<p align="center">
+  <img src="http://image.noelshack.com/fichiers/2018/11/2/1520944628-cardinal-engine-76.png" width="768" height="432" />
 </p>
