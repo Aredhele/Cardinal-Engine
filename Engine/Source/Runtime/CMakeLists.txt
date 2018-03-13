@@ -53,6 +53,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Renderer/IRenderer.cpp
         Rendering/Renderer/TextRenderer.cpp
         Rendering/Renderer/MeshRenderer.cpp
+        Rendering/Renderer/LineRenderer.cpp
         Rendering/Renderer/ParticleRenderer.cpp
         Rendering/Renderer/LineRenderer.cpp
         Rendering/Lighting/LightManager.cpp
@@ -73,6 +74,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Shader/Built-in/Unlit/UnlitColorShader.cpp
         Rendering/Shader/Built-in/Unlit/UnlitTextureShader.cpp
         Rendering/Shader/Built-in/Unlit/UnlitTransparentShader.cpp
+        Rendering/Shader/Built-in/Unlit/UnlitLineShader.cpp
         Rendering/Shader/Built-in/Standard/StandardShader.cpp
         Rendering/Shader/Built-in/Particle/ParticleShader.cpp
         Rendering/PostProcessing/PostProcessingStack.cpp

@@ -47,6 +47,7 @@
 #include "Runtime/Rendering/Shader/ShaderCompiler.hpp"
 #include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
 #include "Runtime/Rendering/Renderer/TextRenderer.hpp"
+#include "Runtime/Rendering/Renderer/LineRenderer.hpp"
 #include "Runtime/Rendering/Texture/TextureLoader.hpp"
 #include "Runtime/Rendering/Texture/TextureManager.hpp"
 #include "Runtime/Rendering/Particle/ParticleSystem.hpp"
@@ -193,6 +194,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/Particle/ParticleVertexShader.glsl",
             "Resources/Shaders/Particle/ParticleFragmentShader.glsl"));
 
+    ShaderManager::Register("LineShader", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/Unlit/UnlitLineVertexShader.glsl",
+            "Resources/Shaders/Unlit/UnlitLineFragmentShader.glsl"));
+
     // Debug
     DebugManager::Initialize();
 
@@ -202,7 +207,7 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     glEnable   (GL_CULL_FACE);
     glCullFace (GL_BACK);
     glFrontFace(GL_CCW);
-    glEnable(GL_MULTISAMPLE);
+    glEnable   (GL_MULTISAMPLE);
 
     // TODO : Makes clear color configurable
     m_clearColor = glm::vec3(0.0f, 0.709f, 0.866f);
@@ -877,7 +882,7 @@ void RenderingEngine::RenderScene(vr::Hmd_Eye nEye)
         m_currentTriangle += m_renderers[nRenderer]->GetElementCount();
 
         // Hot code
-        glm::mat4 hmdViewMatrix = GetHMDMatrixPoseEye(nEye) * glm::translate(m_mat4HMDPose, glm::vec3(0.0f, -150.0f, 100.0f));
+        glm::mat4 hmdViewMatrix = GetHMDMatrixPoseEye(nEye) * glm::translate(m_mat4HMDPose, glm::vec3(-200.0f, -300.0f, 200.0f));
         hmdViewMatrix           = glm::rotate(hmdViewMatrix, -(float)M_PI_2,   glm::vec3(1.0f, 0.0f, 0.0f));
         m_renderers[nRenderer]->Draw(GetHMDMatrixProjectionEye(nEye), hmdViewMatrix, glm::vec3(0.0f, 0.0f, 0.0f), LightManager::GetNearestPointLights(m_renderers[nRenderer]->GetPosition()));
     }
@@ -960,6 +965,18 @@ void RenderingEngine::Shutdown()
     ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
 
     TextRenderer *pRenderer = new TextRenderer(); // NOLINT
+    RenderingEngine::s_pInstance->m_renderers.push_back((IRenderer *)pRenderer);
+
+    return pRenderer;
+}
+
+/// \brief Allocates and return a pointer on a renderer
+///        Registers the renderer into the engine
+LineRenderer * RenderingEngine::AllocateLineRenderer()
+{
+    ASSERT_NOT_NULL(RenderingEngine::s_pInstance);
+
+    LineRenderer * pRenderer = new LineRenderer(); // NOLINT
     RenderingEngine::s_pInstance->m_renderers.push_back((IRenderer *)pRenderer);
 
     return pRenderer;
