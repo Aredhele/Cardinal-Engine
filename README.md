@@ -1,5 +1,5 @@
 # Cardinal Engine
-Cardinal Engine is an experimental game engine programmed for a project at 
+Cardinal Engine is an experimental game engine programmed in one month for a project at 
 the <a href="http://www.enjmin.fr/">Enjmin</a>, the national school of video games. 
 The main goal of the project was to learn about rendering and procedural generation 
 in video games. Cardinal Engine is fully written in C++ with OpenGL 3 and use some third party 
@@ -18,7 +18,25 @@ Visual Studio 2017 (CMake support), CLion (tested) and more. The engine is curre
 compiling on Windows and has a theoretical compatibility with Linux and Mac if the right
 flags are passed to CMake because the project contains only sources.
 
-## Features
+#### Summary
+
+ <ul>
+  <li><a href="#Features">Features</a></li>
+  <li><a href="#Usage">Usage</a></li>
+  <ul>
+        <li><a href="#Plugins">Plugins</a></li>
+        <li><a href="#Log">Log</a></li>
+        <li><a href="#Rendering">Rendering</a></li>
+        <li><a href="#Virtual Reality">Virtual Reality</a></li>
+        <li><a href="#Gizmos">Gizmos</a></li>
+  </ul>
+  <li><a href="#Gallery">Gallery</a></li>
+</ul> 
+
+
+<div id="Features"></div>
+
+### Features
 
 #### General
 * **Plugins**
@@ -88,9 +106,13 @@ flags are passed to CMake because the project contains only sources.
 * **Audio listener**
 * **Audio source**
 
+<div id="Usage"></div>
+
 ## Usage
 
 This section will enumerate all engine-side implemented features. 
+
+<div id="Plugins"></div>
 
 #### Plugins
 Because the engine was designed to create procedural voxel worlds, the code of 
@@ -150,6 +172,8 @@ void OnPluginRegistration()
 }
 ```
 
+<div id="Log"></div>
+
 #### Log
 
 At any time in your code you can log debug messages using the engine built-in log 
@@ -173,6 +197,9 @@ Output example
   <img src="http://image.noelshack.com/fichiers/2018/10/3/1520382473-readme-1.png" width="409" height="89" />
 </p>
 
+
+<div id="Rendering"></div>
+
 #### Rendering
 
 The engine has 4 types of renderers that extends the renderer interface IRenderer :
@@ -186,7 +213,6 @@ Code
 
 ```cpp
 #include "Runtime/Rendering/Renderer/MeshRenderer.hpp"
-#include "Runtime/Rendering/Renderer/TextRenderer.hpp"
 
 /// \brief Called when the game begins
 void MyPlugin::OnPlayStart()
@@ -222,10 +248,12 @@ void MyPlugin::OnPlayStart()
 }
 ```
 
+<div id="Virtual Reality"></div>
+
 #### Virtual Reality
 
 The engine supports stereoscopic rendering with OpenVR. It allows you to see the world in
-VR through an HMD (Tested with an HTC Vive). To enable stereoscopic rendering just type 
+VR through an HMD (Tested with an HTC Vive). To enable stereoscopic rendering just write 
 the following lines at the beginning of your code.
 
 Code
@@ -252,6 +280,8 @@ Output
 
 Note : In VR, the post-processing is disabled but there is at least the MSAA (x4). You can watch a
 <a href="https://www.youtube.com/watch?v=nuETZs1WaYo">short video</a>  showing this feature.
+
+<div id="Particle system"></div>
 
 #### Particle system
 
@@ -287,6 +317,8 @@ Output
 
 Note : Here is a <a href="https://youtu.be/DPy669-xMyU">short video</a> 
 demonstrating the modification of the particle system through the inspector.
+
+<div id="Gizmos"></div>
 
 #### Gizmos
 
@@ -334,6 +366,8 @@ gizmos window.
 <p align="center">
   <img src="http://image.noelshack.com/fichiers/2018/11/1/1520868995-cardinal-engine-79.jpg" width="180" height="260" />
 </p>
+
+<div id="Gallery"></div>
 
 ## Gallery
 
