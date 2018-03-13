@@ -15,34 +15,34 @@
 /// with this program; if not, write to the Free Software Foundation, Inc.,
 /// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-/// \file       TerrainRenderer.cpp
-/// \date       15/02/2018
+/// \file       TransparentCubeRenderer.cpp
+/// \date       13/03/2018
 /// \project    Cardinal Engine
 /// \package    World/Chunk/Renderer
 /// \author     Vincent STEHLY--CALISTO
 
-#include <Header/Runtime/Rendering/Shader/Built-in/Unlit/UnlitTextureShader.hpp>
-#include <Header/Runtime/Rendering/RenderingEngine.hpp>
-#include <Header/Runtime/Rendering/Texture/TextureManager.hpp>
-#include <World/Chunk/Chunk.hpp>
-#include <Header/Runtime/Rendering/Shader/Built-in/Lit/LitTextureShader.hpp>
-#include <Header/Runtime/Rendering/Debug/Debug.hpp>
-#include <Header/Runtime/Rendering/Shader/Built-in/Standard/StandardShader.hpp>
-#include "World/Cube/UVManager.hpp"
+#include "Runtime/Rendering/RenderingEngine.hpp"
+#include "Runtime/Rendering/Texture/TextureManager.hpp"
 #include "Runtime/Rendering/Optimization/VBOIndexer.hpp"
+#include "Runtime/Rendering/Shader/Built-in/Unlit/UnlitTransparentShader.hpp"
 
-/// TODO
-TerrainRenderer::TerrainRenderer()
+#include "World/Chunk/Chunk.hpp"
+#include "World/Cube/UVManager.hpp"
+#include "World/Chunk/Renderer/TransparentCubeRenderer.hpp"
+
+/// \brief Constructor
+TransparentCubeRenderer::TransparentCubeRenderer()
 {
     m_renderer = cardinal::RenderingEngine::AllocateMeshRenderer();
-    cardinal::StandardShader * pShader = new cardinal::StandardShader(); // NOLINT
-    pShader->SetTexture(cardinal::TextureManager::GetTextureID("Block"));
+    cardinal::UnlitTransparentShader * pShader = new cardinal::UnlitTransparentShader(); // NOLINT
+
+    pShader->SetTexture(cardinal::TextureManager::GetTextureID("BlockAlphaNearest"));
     m_renderer->SetShader(pShader);
 }
 
 /// \brief Static batching for terrain cubes
 /// \param pCubes The cubes of the chunk
-void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize], Chunk * neighbors[6])
+void TransparentCubeRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize], Chunk * neighbors[6])
 {
     // Resizing the vector to ensure that the current size
     // is large enough to hold all vertices and UVs
@@ -61,7 +61,7 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
             {
                 // Pre-conditions
                 ByteCube const& cube = pCubes[x][y][z];
-                if(!cube.IsVisible() || !cube.IsSolid() || cube.IsTransparent())
+                if(!cube.IsVisible() || cube.GetType() != ByteCube::EType::Leaf1)
                 {
                     continue;
                 }
@@ -76,18 +76,7 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
                        (nFace == 3 && y != 0        && pCubes[x][y - 1][z].IsSolid()) ||
                        (nFace == 1 && y != size - 1 && pCubes[x][y + 1][z].IsSolid()) ||
                        (nFace == 5 && z != 0        && pCubes[x][y][z - 1].IsSolid()) ||
-                       (nFace == 4 && z != size - 1 && pCubes[x][y][z + 1].IsSolid() && !pCubes[x][y][z + 1].IsTransparent()))
-                    {
-                        continue;
-                    }
-
-                    // Visibility inter-chunk
-                    if((nFace == 0 && (x ==        0) && neighbors[0] != nullptr && neighbors[0]->m_cubes[size - 1][y][z].IsSolid()) ||
-                       (nFace == 2 && (x == size - 1) && neighbors[1] != nullptr && neighbors[1]->m_cubes[0       ][y][z].IsSolid()) ||
-                       (nFace == 3 && (y ==        0) && neighbors[2] != nullptr && neighbors[2]->m_cubes[x][size - 1][z].IsSolid()) ||
-                       (nFace == 1 && (y == size - 1) && neighbors[3] != nullptr && neighbors[3]->m_cubes[x][0       ][z].IsSolid()) ||
-                       (nFace == 5 && (z ==        0) && neighbors[4] != nullptr && neighbors[4]->m_cubes[x][y][size - 1].IsSolid()) ||
-                       (nFace == 4 && (z == size - 1) && neighbors[5] != nullptr && neighbors[5]->m_cubes[x][y][       0].IsSolid()))
+                       (nFace == 4 && z != size - 1 && pCubes[x][y][z + 1].IsSolid()))
                     {
                         continue;
                     }
@@ -179,8 +168,8 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
             WorldBuffers::s_chunkIndexedNormalBuffer,
             WorldBuffers::s_chunkIndexedUVsBuffer);
 
-   if (WorldBuffers::s_chunkIndexesBuffer.size() != 0) // NOLINT
-   {
+    if (WorldBuffers::s_chunkIndexesBuffer.size() != 0) // NOLINT
+    {
         m_renderer->Initialize(
                 WorldBuffers::s_chunkIndexesBuffer,
                 WorldBuffers::s_chunkIndexedVertexBuffer,
@@ -198,7 +187,7 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
 }
 
 /// \brief Translate the chunk terrain renderer
-void TerrainRenderer::SetPosition(glm::vec3 const& position)
+void TransparentCubeRenderer::SetPosition(glm::vec3 const& position)
 {
     m_model = position;
     m_renderer->SetPosition(position);

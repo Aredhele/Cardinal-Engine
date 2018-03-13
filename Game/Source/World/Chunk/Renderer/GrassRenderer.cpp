@@ -61,7 +61,7 @@ void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSetti
             {
                 // Pre-conditions
                 ByteCube const& cube = pCubes[x][y][z];
-                if(cube.GetType() != ByteCube::EType::Grass1)
+                if(!cube.IsVisible() || !cube.IsTransparent() || cube.IsSolid())
                 {
                     continue;
                 }

@@ -33,6 +33,7 @@
 #include "World/WorldSettings.hpp"
 #include "World/Chunk/Renderer/GrassRenderer.hpp"
 #include "World/Chunk/Renderer/TerrainRenderer.hpp"
+#include "World/Chunk/Renderer/TransparentCubeRenderer.hpp"
 
 /// \class Chunk
 /// \brief Represents a chunk in the world
@@ -83,6 +84,7 @@ private:
 
     Chunk *         m_neighbors[6];
     TerrainRenderer m_terrainRenderer;
+    TransparentCubeRenderer m_transparentCubeRenderer;
     GrassRenderer   m_grassRenderer;
 };
 

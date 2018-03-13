@@ -91,10 +91,11 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     LightManager::Initialize();
 
     // Loads Textures
-    TextureLoader::LoadTexture("SAORegular",   "Resources/Textures/SAORegular.bmp");
-    TextureLoader::LoadTexture("Block",        "Resources/Textures/BlockAtlas_2048.bmp");
-    TextureLoader::LoadTexture("BlockNearest", "Resources/Textures/BlockAtlas_2048.bmp");
-    TextureLoader::LoadTexture("BlockAlpha",   "Resources/Textures/BlockAtlas_2048.dds");
+    TextureLoader::LoadTexture("SAORegular",        "Resources/Textures/SAORegular.bmp");
+    TextureLoader::LoadTexture("Block",             "Resources/Textures/BlockAtlas_2048.bmp");
+    TextureLoader::LoadTexture("BlockNearest",      "Resources/Textures/BlockAtlas_2048.bmp");
+    TextureLoader::LoadTexture("BlockAlpha",        "Resources/Textures/BlockAtlas_2048.dds");
+    TextureLoader::LoadTexture("BlockAlphaNearest", "Resources/Textures/BlockAtlas_2048.dds");
 
     /*
     // Custom mip mapping

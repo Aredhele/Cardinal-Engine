@@ -75,6 +75,13 @@ void PCG_Plugin::OnPlayStart()
 
     // Post-processing
     cardinal::RenderingEngine::SetPostProcessingActive(true);
+    cardinal::PostProcessingStack * pStack = cardinal::RenderingEngine::GetPostProcessingStack();
+    pStack->SetEffectActive(cardinal::PostEffect::FXAA, true);
+
+    cardinal::Camera * pCamera = cardinal::RenderingEngine::GetMainCamera();
+    pCamera->SetPosition (glm::vec3(189.0f, 23.0f, 193.0f));
+    pCamera->SetDirection(glm::vec3(0.371f, 0.917f, 0.0143f));
+    pCamera->LookAt      (glm::vec3(257.0f, 194.0f, 193.0f));
 
     // VR
     // cardinal::RenderingEngine::InitializeStereoscopicRendering();
@@ -118,6 +125,8 @@ void PCG_Plugin::OnPostUpdate(float dt)
 {
     m_character.Update(cardinal::RenderingEngine::GetWindow(), dt);
     m_cameraManager.Update(cardinal::RenderingEngine::GetWindow(), dt);
+
+    cardinal::Camera * pCamera = cardinal::RenderingEngine::GetMainCamera();
 }
 
 /// \brief Called when it's time to render the GUI
