@@ -34,7 +34,7 @@ namespace cardinal
 /// \brief Transparent texture only shader
 class UnlitTransparentShader : public IShader
 {
-public :
+public:
 
     /// \brief Constructor
     UnlitTransparentShader();
@@ -45,6 +45,14 @@ public :
 
     /// \brief Restore the pipeline state
     void End() final;
+
+    /// \brief Sets the texture
+    void SetTexture(int texture);
+
+private:
+
+    int m_textureID;
+    int m_texture;
 };
 
 } // !namespace
