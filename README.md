@@ -277,10 +277,10 @@ void MyPlugin::OnPlayStart()
     // For point lights
     cardinal::PointLight * pPoint = cardina::LightManager::AllocatePointLight();
     
-     pPoint->SetRange(20);
-     pPoint->SetIntensity(1.0f);
-     pPoint->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-     pPoint->SetPosition(glm::vec3(100.0f, 20.0f, 300.0f));
+    pPoint->SetRange(20);
+    pPoint->SetIntensity(1.0f);
+    pPoint->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+    pPoint->SetPosition(glm::vec3(100.0f, 20.0f, 300.0f));
 }   
 ```
 
