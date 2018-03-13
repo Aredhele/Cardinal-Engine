@@ -93,7 +93,7 @@ void PCG_Plugin::OnPlayStart()
     pSystem->Initialize(200000, 5000, 3.0f, 0.5f, 30.0f, glm::vec3(0.0f, 0.0f, -13.0f), glm::vec3(1.0f), new cardinal::Cone(4.0f, 2.0f));
     pSystem->SetPosition(glm::vec3(64.0f, 64.0f, 240.0f));
 
-   /* cardinal::PointLight * pLight = cardinal::LightManager::AllocatePointLight();
+    /*cardinal::PointLight * pLight = cardinal::LightManager::AllocatePointLight();
     pLight->SetPosition(glm::vec3(100.0f, 20.0f, 300.0f));
     pLight->SetRange(20);
     pLight->SetIntensity(1.0f);

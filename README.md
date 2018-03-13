@@ -27,6 +27,7 @@ flags are passed to CMake because the project contains only sources.
         <li><a href="#Plugins">Plugins</a></li>
         <li><a href="#Log">Log</a></li>
         <li><a href="#Rendering">Rendering</a></li>
+        <li><a href="#Lighting">Lighting</a></li>
         <li><a href="#Virtual Reality">Virtual Reality</a></li>
         <li><a href="#Gizmos">Gizmos</a></li>
   </ul>
@@ -247,6 +248,51 @@ void MyPlugin::OnPlayStart()
     ...
 }
 ```
+
+<div id="Lighting"></div>
+
+#### Lighting
+
+It is possible to illuminate the scene with two kinds of lights : Directional, Point.
+Just like renderers, there is only one function to call.
+
+Code
+
+```cpp
+#include "Runtime/Rendering/Lighting/Lighting.hh"
+
+/// \brief Called when the game begins
+void MyPlugin::OnPlayStart()
+{
+    // Creating the directional light
+    cardinal::LightManager::CreateDirectionalLight();
+    
+    // Getting an access on it 
+    cardinal::DirectionalLight * pDirectional = cardinal::LightManager::GetDirectionalLight();
+    
+    // The position is debug purpose only
+    pDirectional->SetPosition(glm::vec3(128.0f, 128.0f, 300.0f));
+    pDirectional->SetDirection(glm::vec3(-0.5f, -0.5f, -0.5f)); 
+    
+    // For point lights
+    cardinal::PointLight * pPoint = cardina::LightManager::AllocatePointLight();
+    
+     pPoint->SetRange(20);
+     pPoint->SetIntensity(1.0f);
+     pPoint->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+     pPoint->SetPosition(glm::vec3(100.0f, 20.0f, 300.0f));
+}   
+```
+
+Output (Gizmos enabled)
+
+<p align="center">
+  <img src="http://image.noelshack.com/fichiers/2018/11/2/1520943832-cardinal-engine-83.jpg" width="768" height="432" />
+</p>
+
+<p align="center">
+  <img src="http://image.noelshack.com/fichiers/2018/11/2/1520943830-cardinal-engine-84.jpg" width="768" height="432" />
+</p>
 
 <div id="Virtual Reality"></div>
 
