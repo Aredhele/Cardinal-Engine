@@ -59,6 +59,7 @@ public:
         Vignette,
         FXAA,
         ShadowMap,
+        DepthOfField,
         Experimental1,
         Experimental2
     };

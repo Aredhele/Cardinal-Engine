@@ -202,6 +202,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/Shadow/ShadowMapVertexShader.glsl",
             "Resources/Shaders/Shadow/ShadowMapFragmentShader.glsl"));
 
+    ShaderManager::Register("DepthOfFieldPostProcess", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/PostProcessing/DepthOfFieldVertexShader.glsl",
+            "Resources/Shaders/PostProcessing/DepthOfFieldFragmentShader.glsl"));
+
     ShaderManager::Register("VRMirror", ShaderCompiler::LoadShaders(
             "Resources/Shaders/VR/VRMirrorVertexShader.glsl",
             "Resources/Shaders/VR/VRMirrorFragmentShader.glsl"));
@@ -591,7 +595,7 @@ void RenderingEngine::RenderFrame(float step)
     DirectionalLight * pLight                = LightManager::GetDirectionalLight();
     std::vector<PointLight *> const& pLights = LightManager::GetPointLights();
 
-    // Shadow mapping
+    /*// Shadow mapping
     if(pLight != nullptr)
     {
         glm::mat4 depthProjectionMatrix  = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, 0.1f, 5000.0f);
@@ -635,7 +639,7 @@ void RenderingEngine::RenderFrame(float step)
 
         // Shader end
         glUseProgram(0);
-    }
+    }*/
 
     // Post-processing begin
     if(m_bIsPostProcessingEnabled)

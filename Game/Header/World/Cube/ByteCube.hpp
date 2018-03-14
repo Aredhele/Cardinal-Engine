@@ -68,11 +68,10 @@ public:
         Grass2       = 0x16 << 1, ///< 0010 1100
         Grass3       = 0x17 << 1, ///< 0010 1110
         Grass4       = 0x18 << 1, ///< 0011 0000
-        Grass5       = 0x1A << 1, ///< 0011 0010
-        Grass6       = 0x1B << 1, ///< 0011 0100
-        RedFlower    = 0x1C << 1, ///< 0011 0110
-        YellowFlower = 0x1D << 1, ///< 0011 1000
-
+        Grass5       = 0x19 << 1, ///< 0011 0010
+        Grass6       = 0x1A << 1, ///< 0011 0100
+        RedFlower    = 0x1B << 1, ///< 0011 0110
+        YellowFlower = 0x1C << 1, ///< 0011 1000
     };
 
     /// \brief Constructor

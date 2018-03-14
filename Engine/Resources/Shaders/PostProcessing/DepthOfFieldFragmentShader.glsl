@@ -13,25 +13,6 @@ uniform sampler2D depthTexture;
 uniform float blurPlane;
 uniform int   intensity;
 
-void blur(int blurIntensity)
-{
-    vec3 fColor = vec3(0.0f, 0.0f, 0.0f);
-    vec2 offset = vec2(1.0f / 1600.0f, 1.0f / 900.0f);
-
-    int middle = blurIntensity / 2;
-    for(int u = 0; u < blurIntensity; ++u)
-    {
-        for(int v = 0; v < blurIntensity; ++v)
-        {
-            float oX = (u - middle) * offset.x;
-            float oY = (v - middle) * offset.y;
-            fColor += texture(colorTexture, vec2(textureUV.x + oX, textureUV.y + oY)).rgb;
-        }
-    }
-
-    color = fColor / (blurIntensity * blurIntensity);
-}
-
 float LinearizeDepth(in vec2 uv)
 {
     float zNear = 0.1f;
@@ -42,14 +23,28 @@ float LinearizeDepth(in vec2 uv)
 
 void main(void)
 {
-    float fragmentDepth = texture(depthTexture, textureUV);
+    float fragmentDepth = LinearizeDepth(textureUV);
 
-    if(fragmentDepth >= blurPlane)
+    if(fragmentDepth >= (blurPlane / 2000.0f))
     {
-        blur(max(20, (fragmentDepth / (2000 - blurPlane) * 20)));
+         vec3 fColor = vec3(0.0f, 0.0f, 0.0f);
+         vec2 offset = vec2(1.0f / 1600.0f, 1.0f / 900.0f);
+
+         int middle = intensity / 2;
+         for(int u = 0; u < intensity; ++u)
+         {
+             for(int v = 0; v < intensity; ++v)
+             {
+                 float oX = (u - middle) * offset.x;
+                 float oY = (v - middle) * offset.y;
+                 fColor += texture(colorTexture, vec2(textureUV.x + oX, textureUV.y + oY)).rgb;
+             }
+         }
+
+         color = fColor / (intensity * intensity);
     }
     else
     {
-        color = texture(colorTexture, textureUV);
+        color = texture(colorTexture, textureUV).rgb;
     }
 }
