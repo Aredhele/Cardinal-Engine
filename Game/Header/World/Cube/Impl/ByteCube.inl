@@ -82,7 +82,7 @@ inline bool ByteCube::IsSolid() const
             type != EType::Grass5 &&
             type != EType::Grass6 &&
             type != EType::Bush   &&
-            type != EType::Leaf1  &&
+            type != EType::EighthSnow &&
             type != EType::RedFlower &&
             type != EType::YellowFlower);
 }
@@ -98,8 +98,15 @@ inline bool ByteCube::IsTransparent() const
             type == EType::Grass4 ||
             type == EType::Grass5 ||
             type == EType::Grass6 ||
-            type == EType::Leaf1  ||
             type == EType::Bush   ||
             type == EType::RedFlower ||
             type == EType::YellowFlower);
+}
+
+/// \brief  Tells if the size of the block isn't normalized
+/// \return True or false
+bool ByteCube::IsHeighthBlock() const
+{
+    EType type = GetType();
+    return (type == EType::EighthSnow);
 }

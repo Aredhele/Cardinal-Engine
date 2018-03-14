@@ -62,7 +62,7 @@ void Chunk::Initialize(int chunkIndexX, int chunkIndexY, int chunkIndexZ)
             chunkIndexY * WorldSettings::s_chunkSize * ByteCube::s_cubeSize,
             chunkIndexZ * WorldSettings::s_chunkSize * ByteCube::s_cubeSize));
 
-    m_transparentCubeRenderer.SetPosition(glm::vec3(
+    m_eighthBlockRenderer.SetPosition(glm::vec3(
             chunkIndexX * WorldSettings::s_chunkSize * ByteCube::s_cubeSize,
             chunkIndexY * WorldSettings::s_chunkSize * ByteCube::s_cubeSize,
             chunkIndexZ * WorldSettings::s_chunkSize * ByteCube::s_cubeSize));
@@ -76,7 +76,7 @@ void Chunk::SetNeighbors(Chunk * neighbors[6])
 // TODO
 void Chunk::Batch()
 {
-    m_terrainRenderer.Batch(m_cubes, m_neighbors);
     m_grassRenderer.Batch(m_cubes, m_neighbors);
-    m_transparentCubeRenderer.Batch(m_cubes, m_neighbors);
+    m_terrainRenderer.Batch(m_cubes, m_neighbors);
+    m_eighthBlockRenderer.Batch(m_cubes, m_neighbors);
 }

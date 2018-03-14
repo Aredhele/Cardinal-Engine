@@ -33,6 +33,7 @@
 #include "World/WorldSettings.hpp"
 #include "World/Chunk/Renderer/GrassRenderer.hpp"
 #include "World/Chunk/Renderer/TerrainRenderer.hpp"
+#include "World/Chunk/Renderer/EighthBlockRenderer.hpp"
 #include "World/Chunk/Renderer/TransparentCubeRenderer.hpp"
 
 /// \class Chunk
@@ -82,10 +83,10 @@ private:
     int         m_chunkIndexY;
     int         m_chunkIndexZ;
 
-    Chunk *         m_neighbors[6];
-    TerrainRenderer m_terrainRenderer;
-    TransparentCubeRenderer m_transparentCubeRenderer;
-    GrassRenderer   m_grassRenderer;
+    Chunk *                 m_neighbors[6];
+    GrassRenderer           m_grassRenderer;
+    TerrainRenderer         m_terrainRenderer;
+    EighthBlockRenderer     m_eighthBlockRenderer;
 };
 
 #include "World/Chunk/Impl/Chunk.inl"

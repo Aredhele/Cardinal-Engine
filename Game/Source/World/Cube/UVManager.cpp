@@ -25,7 +25,7 @@
 
 /// \brief Face order
 ///        Left, Front, Right, Back, Top, Bottom
-/* static */ unsigned char UVManager::UV[29][12] =
+/* static */ unsigned char UVManager::UV[30][12] =
 {
     { 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0}, ///< Air
     { 2, 15,  2, 15,  2, 15,  2, 15,  2, 15,  2, 15}, ///< Dirt
@@ -56,4 +56,5 @@
     {16, 10, 16, 10,  0,  0,  0,  0,  0,  0,  0,  0}, ///< Grass detail 6
     {11, 15, 11, 15, 11, 15, 11, 15, 11, 15, 11, 15}, ///< Flower red
     {12, 15, 12, 15, 12, 15, 12, 15, 12, 15, 12, 15}, ///< Flower yellow
+    {10,  1, 10,  1, 10,  1, 10,  1,  2, 11,  2, 11}, ///< Eighth Snow
 };

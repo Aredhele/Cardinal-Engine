@@ -34,8 +34,9 @@ public:
     static const unsigned char s_typeMask  = 0x01; ///< 0000 0001
     static const unsigned char s_stateMask = 0xFE; ///< 1111 1110
 
-    static const float s_vertices[108];
-    static const float s_normals [108];
+    static const float s_vertices [108];
+    static const float s_verticesE[108];
+    static const float s_normals  [108];
 
 public:
 
@@ -72,6 +73,7 @@ public:
         Grass6       = 0x1A << 1, ///< 0011 0100
         RedFlower    = 0x1B << 1, ///< 0011 0110
         YellowFlower = 0x1C << 1, ///< 0011 1000
+        EighthSnow   = 0x1D << 1, ///< 0011 1010
     };
 
     /// \brief Constructor
@@ -102,6 +104,10 @@ public:
     /// \brief Tells if the block has transparency
     /// \return True or false
     inline bool IsTransparent() const;
+
+    /// \brief  Tells if the size of the block isn't normalized
+    /// \return True or false
+    inline bool IsHeighthBlock() const;
 
 private:
 
