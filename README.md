@@ -35,6 +35,12 @@ flags are passed to CMake because the project contains only sources.
 </ul> 
 
 
+**Scene example preview**
+
+<p align="center">
+  <img src="http://image.noelshack.com/fichiers/2018/11/4/1521115782-cardinal-engine-95.jpg" width="768" height="432" />
+</p>
+
 <div id="Features"></div>
 
 ### Features
@@ -64,6 +70,8 @@ flags are passed to CMake because the project contains only sources.
     * Utility (Mirror, Negative, Identity)
     * Sepia tone
     * Vignette
+    * **Depth of field**
+    * Fog
     * **Bloom**
     * **God rays**
     * **FXAA**
@@ -416,6 +424,19 @@ gizmos window.
 <div id="Gallery"></div>
 
 ## Gallery
+
+
+<p align="center">
+  <img src="http://image.noelshack.com/fichiers/2018/11/4/1521115772-cardinal-engine-90.jpg" width="768" height="432" />
+</p>
+
+<p align="center">
+  <img src="http://image.noelshack.com/fichiers/2018/11/4/1521115781-cardinal-engine-91.jpg" width="768" height="432" />
+</p>
+
+<p align="center">
+  <img src="http://image.noelshack.com/fichiers/2018/11/4/1521115782-cardinal-engine-93.jpg" width="768" height="432" />
+</p>
 
 <p align="center">
   <img src="http://image.noelshack.com/fichiers/2018/11/2/1520944633-cardinal-engine-64.png" width="768" height="432" />
