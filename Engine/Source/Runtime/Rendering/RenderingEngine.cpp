@@ -206,6 +206,10 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
             "Resources/Shaders/PostProcessing/DepthOfFieldVertexShader.glsl",
             "Resources/Shaders/PostProcessing/DepthOfFieldFragmentShader.glsl"));
 
+    ShaderManager::Register("FogPostProcess", ShaderCompiler::LoadShaders(
+            "Resources/Shaders/PostProcessing/FogVertexShader.glsl",
+            "Resources/Shaders/PostProcessing/FogFragmentShader.glsl"));
+
     ShaderManager::Register("VRMirror", ShaderCompiler::LoadShaders(
             "Resources/Shaders/VR/VRMirrorVertexShader.glsl",
             "Resources/Shaders/VR/VRMirrorFragmentShader.glsl"));

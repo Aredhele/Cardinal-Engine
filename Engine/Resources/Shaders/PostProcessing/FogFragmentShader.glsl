@@ -10,7 +10,11 @@ out vec3 color;
 uniform sampler2D colorTexture;
 uniform sampler2D depthTexture;
 
-uniform float fogDistance;
+uniform vec3  fogColor;
+uniform float fogDensity;
+
+// Constants
+const float LOG2 = 1.442695f;
 
 float LinearizeDepth(in vec2 uv)
 {
@@ -23,16 +27,10 @@ float LinearizeDepth(in vec2 uv)
 void main(void)
 {
     float fragmentDepth = LinearizeDepth(textureUV);
+    vec4 colorBuffer    = texture(colorTexture, textureUV);
+    vec4 fogColor       = vec4(fogColor.x, fogColor.y, fogColor.z, 1.0f);
 
-    if(fragmentDepth >= (fogDistance / 2000.0f))
-    {
-         vec3 fogColor = vec3(0.7f, 0.7f, 0.7f);
-         color = fColor / (intensity * intensity);
-         color += fogColor;
-         color /= 2;
-    }
-    else
-    {
-        color = texture(colorTexture, textureUV).rgb;
-    }
+    float fogFactor = exp2(-fogDensity * fogDensity * fragmentDepth * fragmentDepth * LOG2);
+    fogFactor       = clamp(fogFactor, 0.0f, 1.0f);
+    color           = mix(fogColor, colorBuffer, fogFactor ).rgb;
 }

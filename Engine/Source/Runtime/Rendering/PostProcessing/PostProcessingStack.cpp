@@ -144,6 +144,7 @@ void PostProcessingStack::Initialize()
     m_stack.push_back(new DepthBuffer());
     m_stack.push_back(new ShadowMap());
     m_stack.push_back(new Mirror());
+    m_stack.push_back(new Fog());
     m_stack.push_back(new Negative());
     m_stack.push_back(new Sepia());
     m_stack.push_back(new BoxBlur());
