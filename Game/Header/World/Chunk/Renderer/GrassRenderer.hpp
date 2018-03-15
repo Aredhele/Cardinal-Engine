@@ -41,13 +41,12 @@ public:
 
     GrassRenderer();
 
-    /// \brief Static batching for grass cubes
+    /// \brief Static batching for terrain cubes
     /// \param pCubes The cubes of the chunk
-    /// \param position The position of the camera
-    void Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize], glm::vec3 const& position);
+    void Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize], class Chunk * neighbors[6]);
 
-    /// \brief Translate the chunk grass renderer
-    void Translate(glm::vec3 const& translation);
+    /// \brief Sets the world position
+    void SetPosition(glm::vec3 const& position);
 
 private:
 

@@ -34,8 +34,9 @@ public:
     static const unsigned char s_typeMask  = 0x01; ///< 0000 0001
     static const unsigned char s_stateMask = 0xFE; ///< 1111 1110
 
-    static const float s_vertices[108];
-    static const float s_normals [108];
+    static const float s_vertices [108];
+    static const float s_verticesE[108];
+    static const float s_normals  [108];
 
 public:
 
@@ -43,27 +44,36 @@ public:
     /// \brief Represents the type of a cube
     enum EType : unsigned char
     {
-        Air       = 0x00 << 1, ///< 0000 0000
-        Dirt      = 0x01 << 1, ///< 0000 0010
-        Grass     = 0x02 << 1, ///< 0000 0100
-        Water     = 0x03 << 1, ///< 0000 0110
-        Lava      = 0x04 << 1, ///< 0000 1000
-        Rock      = 0x05 << 1, ///< 0000 1010
-        Grass1    = 0x06 << 1, ///< 0000 1100
-        Wood1     = 0x07 << 1, ///< 0000 1110
-        Leaf1     = 0x08 << 1, ///< 0001 0000
-        Gold      = 0x09 << 1, ///< 0001 0010
-        Coal      = 0x0A << 1, ///< 0001 0100
-        Redstone  = 0x0B << 1, ///< 0001 0110
-        Diamond   = 0x0C << 1, ///< 0001 1000
-        Emerald   = 0x0D << 1, ///< 0001 1010
-        Snow      = 0x0E << 1, ///< 0001 1100
-        Bedrock   = 0x0F << 1, ///< 0001 1110
-        Sand      = 0x10 << 1, ///< 0010 0000
-        Ice       = 0x11 << 1, ///< 0010 0010
-        WoodPlank = 0x12 << 1, ///< 0010 0100
-        Brick     = 0x13 << 1, ///< 0010 0110
-        Stone     = 0x14 << 1, ///< 0010 1000
+        Air          = 0x00 << 1, ///< 0000 0000
+        Dirt         = 0x01 << 1, ///< 0000 0010
+        Grass        = 0x02 << 1, ///< 0000 0100
+        Water        = 0x03 << 1, ///< 0000 0110
+        Lava         = 0x04 << 1, ///< 0000 1000
+        Rock         = 0x05 << 1, ///< 0000 1010
+        Grass1       = 0x06 << 1, ///< 0000 1100
+        Wood1        = 0x07 << 1, ///< 0000 1110
+        Leaf1        = 0x08 << 1, ///< 0001 0000
+        Gold         = 0x09 << 1, ///< 0001 0010
+        Coal         = 0x0A << 1, ///< 0001 0100
+        Redstone     = 0x0B << 1, ///< 0001 0110
+        Diamond      = 0x0C << 1, ///< 0001 1000
+        Emerald      = 0x0D << 1, ///< 0001 1010
+        Snow         = 0x0E << 1, ///< 0001 1100
+        Bedrock      = 0x0F << 1, ///< 0001 1110
+        Sand         = 0x10 << 1, ///< 0010 0000
+        Ice          = 0x11 << 1, ///< 0010 0010
+        WoodPlank    = 0x12 << 1, ///< 0010 0100
+        Brick        = 0x13 << 1, ///< 0010 0110
+        Stone        = 0x14 << 1, ///< 0010 1000
+        Bush         = 0x15 << 1, ///< 0010 1010
+        Grass2       = 0x16 << 1, ///< 0010 1100
+        Grass3       = 0x17 << 1, ///< 0010 1110
+        Grass4       = 0x18 << 1, ///< 0011 0000
+        Grass5       = 0x19 << 1, ///< 0011 0010
+        Grass6       = 0x1A << 1, ///< 0011 0100
+        RedFlower    = 0x1B << 1, ///< 0011 0110
+        YellowFlower = 0x1C << 1, ///< 0011 1000
+        EighthSnow   = 0x1D << 1, ///< 0011 1010
     };
 
     /// \brief Constructor
@@ -90,6 +100,14 @@ public:
     /// \brief Tells if the block is solid or not
     /// \return True or false
     inline bool IsSolid() const;
+
+    /// \brief Tells if the block has transparency
+    /// \return True or false
+    inline bool IsTransparent() const;
+
+    /// \brief  Tells if the size of the block isn't normalized
+    /// \return True or false
+    inline bool IsHeighthBlock() const;
 
 private:
 

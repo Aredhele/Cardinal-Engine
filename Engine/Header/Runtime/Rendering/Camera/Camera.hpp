@@ -90,6 +90,8 @@ public :
     /// \brief Called when the object is inspected
     void OnInspectorGUI() final;
 
+    void SetDirection(glm::vec3 const &direction);
+
 private:
 
     /// \brief Updates all reference vectors

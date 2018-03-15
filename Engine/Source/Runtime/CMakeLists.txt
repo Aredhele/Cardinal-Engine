@@ -64,6 +64,7 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/Texture/TextureImporter.cpp
         Rendering/Particle/ParticleSystem.cpp
         Rendering/Particle/EmissionShape/Cone.cpp
+        Rendering/Particle/EmissionShape/Plane.cpp
         Rendering/Shader/IShader.cpp
         Rendering/Shader/ShaderManager.cpp
         Rendering/Shader/ShaderCompiler.cpp
@@ -94,6 +95,8 @@ ADD_LIBRARY(CardinalEngine STATIC
         Rendering/PostProcessing/PostEffects/Vignette.cpp
         Rendering/PostProcessing/PostEffects/FXAA.cpp
         Rendering/PostProcessing/PostEffects/ShadowMap.cpp
+        Rendering/PostProcessing/PostEffects/DepthOfField.cpp
+        Rendering/PostProcessing/PostEffects/Fog.cpp
         Rendering/PostProcessing/PostEffects/Experimental/Experimental1.cpp
         Rendering/PostProcessing/PostEffects/Experimental/Experimental2.cpp)
 

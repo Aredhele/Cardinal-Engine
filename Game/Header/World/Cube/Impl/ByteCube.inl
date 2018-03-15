@@ -72,7 +72,41 @@ inline  void ByteCube::SetType(ByteCube::EType type)
 /// \return True or false
 inline bool ByteCube::IsSolid() const
 {
-    return (GetType() != EType::Air);
+    EType type = GetType();
+    return (type != EType::Air    &&
+            type != EType::Water  &&
+            type != EType::Grass1 &&
+            type != EType::Grass2 &&
+            type != EType::Grass3 &&
+            type != EType::Grass4 &&
+            type != EType::Grass5 &&
+            type != EType::Grass6 &&
+            type != EType::Bush   &&
+            type != EType::EighthSnow &&
+            type != EType::RedFlower &&
+            type != EType::YellowFlower);
 }
 
+/// \brief Tells if the block has transparency
+/// \return True or false
+inline bool ByteCube::IsTransparent() const
+{
+    EType type = GetType();
+    return (type == EType::Grass1 ||
+            type == EType::Grass2 ||
+            type == EType::Grass3 ||
+            type == EType::Grass4 ||
+            type == EType::Grass5 ||
+            type == EType::Grass6 ||
+            type == EType::Bush   ||
+            type == EType::RedFlower ||
+            type == EType::YellowFlower);
+}
 
+/// \brief  Tells if the size of the block isn't normalized
+/// \return True or false
+bool ByteCube::IsHeighthBlock() const
+{
+    EType type = GetType();
+    return (type == EType::EighthSnow);
+}

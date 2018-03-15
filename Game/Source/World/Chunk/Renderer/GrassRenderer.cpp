@@ -22,30 +22,30 @@
 /// \author     Vincent STEHLY--CALISTO
 
 #include <algorithm>
-#include <Header/Runtime/Rendering/RenderingEngine.hpp>
-
+#include <Header/Runtime/Rendering/Renderer/LineRenderer.hpp>
+#include <Header/Runtime/Rendering/Shader/Built-in/Unlit/UnlitLineShader.hpp>
 
 #include "World/Cube/UVManager.hpp"
+#include "Runtime/Rendering/RenderingEngine.hpp"
 #include "World/Chunk/Renderer/GrassRenderer.hpp"
+#include "Runtime/Rendering/Texture/TextureManager.hpp"
 #include "Runtime/Rendering/Optimization/VBOIndexer.hpp"
 #include "Runtime/Rendering/Shader/Built-in/Unlit/UnlitTransparentShader.hpp"
 
+/// \brief Constructor
 GrassRenderer::GrassRenderer()
 {
-    if(m_renderer == nullptr)
-    {
-       // m_renderer = cardinal::RenderingEngine::AllocateRenderer();
-    }
+    m_renderer = cardinal::RenderingEngine::AllocateMeshRenderer();
+    cardinal::UnlitTransparentShader * pShader = new cardinal::UnlitTransparentShader(); // NOLINT
+
+    pShader->SetTexture(cardinal::TextureManager::GetTextureID("BlockAlpha"));
+    m_renderer->SetShader(pShader);
 }
 
-/// \brief Static batching for grass cubes
+/// \brief Static batching for terrain cubes
 /// \param pCubes The cubes of the chunk
-void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize], glm::vec3 const& position)
+void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSettings::s_chunkSize][WorldSettings::s_chunkSize], class Chunk * neighbors[6])
 {
-    auto batchingBegin = std::chrono::steady_clock::now();
-
-    // Resizing the vector to ensure that the current size
-    // is large enough to hold all vertices and UVs
     WorldBuffers::s_chunkVertexBuffer.resize(WorldSettings::s_chunkVertexCount);
     WorldBuffers::s_chunkUVsBuffer.resize   (WorldSettings::s_chunkVertexCount);
     WorldBuffers::s_grassBuffer.resize      (WorldSettings::s_chunkBlockCount * 2);
@@ -61,7 +61,7 @@ void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSetti
             {
                 // Pre-conditions
                 ByteCube const& cube = pCubes[x][y][z];
-                if(cube.GetType() != ByteCube::EType::Grass1)
+                if(!cube.IsVisible() || !cube.IsTransparent() || cube.IsSolid())
                 {
                     continue;
                 }
@@ -126,25 +126,9 @@ void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSetti
     // Resize triangles
     WorldBuffers::s_grassBuffer.resize(triangleIndex);
 
-    // We have to sort to avoid transparency depth glitch
-    // Compute camera-triangle distance for all grass object
-    for(size_t nTriangle = 0; nTriangle < triangleIndex; ++nTriangle)
-    {
-        glm::vec3 direction = (WorldBuffers::s_grassBuffer[nTriangle].GetCenter() + m_model) - position;
-        WorldBuffers::s_grassBuffer[nTriangle].squareDistance =
-                        direction.x * direction.x +
-                        direction.y * direction.y +
-                        direction.z * direction.z;
-    }
-
-    // Sorting
-    std::sort(WorldBuffers::s_grassBuffer.begin(), WorldBuffers::s_grassBuffer.end());
-
-    // Flatten grass object into buffers
     size_t vertexIndex   = 0;
     for(size_t nTriangle = 0; nTriangle < triangleIndex; ++nTriangle)
     {
-       // std::cout << "Distance : " << WorldBuffers::s_grassBuffer[nTriangle].squareDistance << std::endl;
         WorldBuffers::s_chunkUVsBuffer[vertexIndex + 0]    = WorldBuffers::s_grassBuffer[nTriangle].uv[0];
         WorldBuffers::s_chunkUVsBuffer[vertexIndex + 1]    = WorldBuffers::s_grassBuffer[nTriangle].uv[1];
         WorldBuffers::s_chunkUVsBuffer[vertexIndex + 2]    = WorldBuffers::s_grassBuffer[nTriangle].uv[2];
@@ -165,16 +149,14 @@ void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSetti
             WorldBuffers::s_chunkIndexedVertexBuffer,
             WorldBuffers::s_chunkIndexedUVsBuffer);
 
-    /*m_renderer->Initialize(
+    m_renderer->Initialize(
             WorldBuffers::s_chunkIndexesBuffer,
             WorldBuffers::s_chunkIndexedVertexBuffer,
-            WorldBuffers::s_chunkIndexedUVsBuffer);*/
+            WorldBuffers::s_chunkIndexedVertexBuffer,
+            WorldBuffers::s_chunkIndexedUVsBuffer);
 
-
-    m_renderer->SetShader(new cardinal::UnlitTransparentShader()); // TODO fix memory leak
-
-    auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - batchingBegin);
-    // std::cout << "Grass Chunk batched in " << elapsedMs.count() << " ms" << std::endl;
+    WorldBuffers::s_chunkUVsBuffer.clear();
+    WorldBuffers::s_chunkVertexBuffer.clear();
 
     WorldBuffers::s_chunkUVsBuffer.clear();
     WorldBuffers::s_chunkVertexBuffer.clear();
@@ -183,9 +165,9 @@ void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSetti
     WorldBuffers::s_chunkIndexedVertexBuffer.clear();
 }
 
-/// \brief Translate the chunk grass renderer
-void GrassRenderer::Translate(glm::vec3 const &translation)
+/// \brief Translate the chunk terrain renderer
+void GrassRenderer::SetPosition(glm::vec3 const& position)
 {
-    m_model += translation;
-    m_renderer->Translate(translation);
+    m_model = position;
+    m_renderer->SetPosition(position);
 }

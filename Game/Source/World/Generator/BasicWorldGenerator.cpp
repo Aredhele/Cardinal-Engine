@@ -77,7 +77,7 @@ void BasicWorldGenerator::buildStack(int x, int y, int height, bool onlyIfZero)
 	{
         ByteCube* cube = mp_currentWorld->GetCube(x, y, height - 1);
 		cube->Enable();
-        cube->SetType(ByteCube::EType::Grass);
+        cube->SetType(ByteCube::EType::Snow);
 	}
 
 	for (int z = height; z < WorldSettings::s_matHeightCubes; z++)
@@ -188,7 +188,7 @@ void BasicWorldGenerator::generate3DPerlinWorld() {
             {
                 double noise = noiseGenerator.GetNoise(x, y, z);
                 if (noise > 0)
-                    mp_currentWorld->GetCube(x, y, z)->SetType(ByteCube::EType::Grass);
+                    mp_currentWorld->GetCube(x, y, z)->SetType(ByteCube::EType::Snow);
                 mp_currentWorld->GetCube(x, y, z)->Enable();
             }
         }
@@ -253,7 +253,7 @@ void BasicWorldGenerator::generateCavesWithCA() {
                     mp_currentWorld->GetCube(x, y, z)->SetType(ByteCube::EType::Air);
                 }
                 else {
-                    mp_currentWorld->GetCube(x, y, z)->SetType(ByteCube::EType::Grass);
+                    mp_currentWorld->GetCube(x, y, z)->SetType(ByteCube::EType::Snow);
                 }
             }
 }
@@ -336,7 +336,7 @@ void BasicWorldGenerator::generateGrass() {
         for (int y = 0; y < WorldSettings::s_matSizeCubes; y++) {
             double noise = noiseGenerator.GetNoise(x, y);
             if (noise > 0)
-                mp_currentWorld->GetCube(x, y, mp_currentWorld->m_worldHeights[x][y])->SetType(ByteCube::EType::Water);
+                mp_currentWorld->GetCube(x, y, mp_currentWorld->m_worldHeights[x][y])->SetType(ByteCube::EType::Grass1);
         }
 }
 

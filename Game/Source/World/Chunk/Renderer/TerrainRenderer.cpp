@@ -63,7 +63,7 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
             {
                 // Pre-conditions
                 ByteCube const& cube = pCubes[x][y][z];
-                if(!cube.IsVisible() || !cube.IsSolid())
+                if(!cube.IsVisible() || !cube.IsSolid() || cube.IsTransparent() || cube.IsHeighthBlock())
                 {
                     continue;
                 }
@@ -73,23 +73,23 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
                 for(unsigned nFace = 0; nFace < 6; ++nFace)
                 {
                     // Visibility determination for faces
-                    if((nFace == 0 && x != 0        && pCubes[x - 1][y][z].IsSolid()) ||
-                       (nFace == 2 && x != size - 1 && pCubes[x + 1][y][z].IsSolid()) ||
-                       (nFace == 3 && y != 0        && pCubes[x][y - 1][z].IsSolid()) ||
-                       (nFace == 1 && y != size - 1 && pCubes[x][y + 1][z].IsSolid()) ||
-                       (nFace == 5 && z != 0        && pCubes[x][y][z - 1].IsSolid()) ||
-                       (nFace == 4 && z != size - 1 && pCubes[x][y][z + 1].IsSolid()))
+                    if((nFace == 0 && x != 0        && pCubes[x - 1][y][z].IsSolid() && !pCubes[x - 1][y][z].IsTransparent() && !pCubes[x - 1][y][z].IsHeighthBlock()) ||
+                       (nFace == 2 && x != size - 1 && pCubes[x + 1][y][z].IsSolid() && !pCubes[x + 1][y][z].IsTransparent() && !pCubes[x + 1][y][z].IsHeighthBlock()) ||
+                       (nFace == 3 && y != 0        && pCubes[x][y - 1][z].IsSolid() && !pCubes[x][y - 1][z].IsTransparent() && !pCubes[x][y - 1][z].IsHeighthBlock()) ||
+                       (nFace == 1 && y != size - 1 && pCubes[x][y + 1][z].IsSolid() && !pCubes[x][y + 1][z].IsTransparent() && !pCubes[x][y + 1][z].IsHeighthBlock()) ||
+                       (nFace == 5 && z != 0        && pCubes[x][y][z - 1].IsSolid() && !pCubes[x][y][z - 1].IsTransparent() && !pCubes[x][y][z - 1].IsHeighthBlock()) ||
+                       (nFace == 4 && z != size - 1 && pCubes[x][y][z + 1].IsSolid() && !pCubes[x][y][z + 1].IsTransparent() && !pCubes[x][y][z + 1].IsHeighthBlock()))
                     {
                         continue;
                     }
 
                     // Visibility inter-chunk
-                    if((nFace == 0 && (x ==        0) && neighbors[0] != nullptr && neighbors[0]->m_cubes[size - 1][y][z].IsSolid()) ||
-                       (nFace == 2 && (x == size - 1) && neighbors[1] != nullptr && neighbors[1]->m_cubes[0       ][y][z].IsSolid()) ||
-                       (nFace == 3 && (y ==        0) && neighbors[2] != nullptr && neighbors[2]->m_cubes[x][size - 1][z].IsSolid()) ||
-                       (nFace == 1 && (y == size - 1) && neighbors[3] != nullptr && neighbors[3]->m_cubes[x][0       ][z].IsSolid()) ||
-                       (nFace == 5 && (z ==        0) && neighbors[4] != nullptr && neighbors[4]->m_cubes[x][y][size - 1].IsSolid()) ||
-                       (nFace == 4 && (z == size - 1) && neighbors[5] != nullptr && neighbors[5]->m_cubes[x][y][       0].IsSolid()))
+                    if((nFace == 0 && (x ==        0) && neighbors[0] != nullptr && neighbors[0]->m_cubes[size - 1][y][z].IsSolid() && !pCubes[size - 1][y][z].IsHeighthBlock()) ||
+                       (nFace == 2 && (x == size - 1) && neighbors[1] != nullptr && neighbors[1]->m_cubes[0       ][y][z].IsSolid() && !pCubes[       0][y][z].IsHeighthBlock()) ||
+                       (nFace == 3 && (y ==        0) && neighbors[2] != nullptr && neighbors[2]->m_cubes[x][size - 1][z].IsSolid() && !pCubes[x][size - 1][z].IsHeighthBlock()) ||
+                       (nFace == 1 && (y == size - 1) && neighbors[3] != nullptr && neighbors[3]->m_cubes[x][0       ][z].IsSolid() && !pCubes[x][       0][z].IsHeighthBlock()) ||
+                       (nFace == 5 && (z ==        0) && neighbors[4] != nullptr && neighbors[4]->m_cubes[x][y][size - 1].IsSolid() && !pCubes[x][y][size - 1].IsHeighthBlock()) ||
+                       (nFace == 4 && (z == size - 1) && neighbors[5] != nullptr && neighbors[5]->m_cubes[x][y][       0].IsSolid() && !pCubes[x][y][       0].IsHeighthBlock()))
                     {
                         continue;
                     }
@@ -162,7 +162,6 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].x = ByteCube::s_vertices[faceIndex + 15] * half + offset.x;
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].y = ByteCube::s_vertices[faceIndex + 16] * half + offset.y;
                     WorldBuffers::s_chunkVertexBuffer[vertexIndex].z = ByteCube::s_vertices[faceIndex + 17] * half + offset.z;
-                    cardinal::debug::DrawRay(WorldBuffers::s_chunkVertexBuffer[vertexIndex], WorldBuffers::s_chunkNormalBuffer[vertexIndex], glm::vec3(1.0f, 0.0f, 0.0f));
                     vertexIndex += 1;
                 }
             }
@@ -186,7 +185,7 @@ void TerrainRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSet
             WorldBuffers::s_chunkIndexedNormalBuffer,
             WorldBuffers::s_chunkIndexedUVsBuffer);
 
-   if (WorldBuffers::s_chunkIndexesBuffer.size() != 0)
+   if (WorldBuffers::s_chunkIndexesBuffer.size() != 0) // NOLINT
    {
         m_renderer->Initialize(
                 WorldBuffers::s_chunkIndexesBuffer,

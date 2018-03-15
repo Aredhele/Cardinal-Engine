@@ -76,6 +76,12 @@ void Camera::SetPosition(glm::vec3 const& position)
     UpdateVectors();
 }
 
+void Camera::SetDirection(const glm::vec3 &direction)
+{
+    m_direction = direction;
+    UpdateVectors();
+}
+
 /// \brief Translates the camera
 /// \param position The offset
 void Camera::Translate(glm::vec3 const& translation)

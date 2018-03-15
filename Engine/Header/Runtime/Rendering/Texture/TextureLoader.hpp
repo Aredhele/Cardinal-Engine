@@ -57,7 +57,7 @@ public:
     /// \brief Loads a texture from a path and register it into the
     /// \param key The key of the texture
     /// \param path The path of the texture
-    static void LoadTexture(std::string const& key, std::string const& path);
+    static void LoadTexture(std::string const& key, std::string const& path, bool nearest = false);
 
     /// \brief Loads a bunch of textures from a list
     /// \param keys Texture keys
@@ -65,12 +65,23 @@ public:
     static void LoadTextures(std::vector<std::string> const& keys,
                              std::vector<std::string> const& paths);
 
+    /// \brief Generates mip mapping from textures
+    /// \param key The key of the texture
+    /// \param path The path of the textures
+    static void LoadMipMapTextures(std::string const& key,
+                                   std::vector<std::string> paths);
+
 private:
 
     /// \brief Binds the texture and load into OpenGL
     /// \param property Properties of the texture
     /// \return The ID of the texture
-    static uint BindTexture(TextureImporter::TextureProperty const& property);
+    static uint BindTexture(TextureImporter::TextureProperty const& property, bool nearest = false);
+
+    /// \brief Binds the texture and load into OpenGL
+    /// \param prop The vector of properties
+    /// \return The ID of the texture
+    static uint BindTexture(std::vector<TextureImporter::TextureProperty> const& prop);
 
 private:
 

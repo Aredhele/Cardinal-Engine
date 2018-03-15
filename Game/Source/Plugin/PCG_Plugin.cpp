@@ -28,6 +28,7 @@
 #include "Runtime/Rendering/Lighting/Lighting.hh"
 #include "Runtime/Rendering/Particle/ParticleSystem.hpp"
 #include "Runtime/Rendering/Particle/EmissionShape/Cone.hpp"
+#include "Runtime/Rendering/Particle/EmissionShape/Plane.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/Mirror.hpp"
 
 #include "Runtime/Rendering/Debug/Debug.hpp"
@@ -77,6 +78,13 @@ void PCG_Plugin::OnPlayStart()
 
     // Post-processing
     cardinal::RenderingEngine::SetPostProcessingActive(true);
+    cardinal::PostProcessingStack * pStack = cardinal::RenderingEngine::GetPostProcessingStack();
+    pStack->SetEffectActive(cardinal::PostEffect::FXAA, true);
+
+    cardinal::Camera * pCamera = cardinal::RenderingEngine::GetMainCamera();
+    pCamera->SetPosition (glm::vec3(189.0f, 23.0f, 193.0f));
+    pCamera->SetDirection(glm::vec3(0.371f, 0.917f, 0.0143f));
+    pCamera->LookAt      (glm::vec3(257.0f, 194.0f, 193.0f));
 
     // VR
     // cardinal::RenderingEngine::InitializeStereoscopicRendering();
@@ -93,6 +101,7 @@ void PCG_Plugin::OnPlayStart()
     m_character.AttachCamera(m_cameraManager.GetCamera());
 
     // Particle system
+<<<<<<< HEAD
     /// cardinal::ParticleSystem * pSystem = cardinal::RenderingEngine::AllocateParticleSystem();
     /// pSystem->Initialize(200000, 5000, 3.0f, 0.5f, 30.0f, glm::vec3(0.0f, 0.0f, -13.0f), glm::vec3(1.0f), new cardinal::Cone(4.0f, 2.0f));
     /// pSystem->SetPosition(glm::vec3(-10.0f, -1.0f, 0.0f));
@@ -102,6 +111,17 @@ void PCG_Plugin::OnPlayStart()
     /// pLight->SetRange(20);
     /// pLight->SetIntensity(1.0f);
     /// pLight->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+=======
+    cardinal::ParticleSystem * pSystem = cardinal::RenderingEngine::AllocateParticleSystem();
+    pSystem->Initialize(200000, 5000, 10.0f, 0.5f, 30.0f, glm::vec3(0.0f, 0.0f, -20.0f), glm::vec3(1.0f), new cardinal::Plane(512.0f, 512.0f));
+    pSystem->SetPosition(glm::vec3(0.0f, 0.0f, 600.0f));
+
+    /*cardinal::PointLight * pLight = cardinal::LightManager::AllocatePointLight();
+    pLight->SetPosition(glm::vec3(100.0f, 20.0f, 300.0f));
+    pLight->SetRange(20);
+    pLight->SetIntensity(1.0f);
+    pLight->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));*/
+>>>>>>> a4b6032ccc598e62d36651e15fe58c425646fc47
 }
 
 /// \brief Called when the game stops
@@ -122,6 +142,8 @@ void PCG_Plugin::OnPostUpdate(float dt)
 {
     m_character.Update(cardinal::RenderingEngine::GetWindow(), dt);
     m_cameraManager.Update(cardinal::RenderingEngine::GetWindow(), dt);
+
+    cardinal::Camera * pCamera = cardinal::RenderingEngine::GetMainCamera();
 }
 
 /// \brief Called when it's time to render the GUI

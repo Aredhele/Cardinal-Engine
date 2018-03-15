@@ -30,7 +30,7 @@ class UVManager
 {
 public :
 
-    static unsigned char UV[21][12];
+    static unsigned char UV[30][12];
 };
 
 #endif // !CARDINAL_ENGINE_UV_MANAGER_HPP__

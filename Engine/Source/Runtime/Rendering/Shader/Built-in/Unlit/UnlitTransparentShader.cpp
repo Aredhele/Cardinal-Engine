@@ -33,8 +33,9 @@ namespace cardinal
 /// \brief Constructor
 UnlitTransparentShader::UnlitTransparentShader()
 {
-    m_shaderID = ShaderManager::GetShaderID("UnlitTransparent");
-    m_matrixID = glGetUniformLocation(m_shaderID, "MVP");
+    m_shaderID  = ShaderManager::GetShaderID("UnlitTransparent");
+    m_matrixID  = glGetUniformLocation((uint)m_shaderID, "MVP");
+    m_textureID = glGetUniformLocation((uint)m_shaderID, "colorTexture");
 }
 
 /// \brief Sets up the pipeline for the shader
@@ -42,14 +43,26 @@ UnlitTransparentShader::UnlitTransparentShader()
 void UnlitTransparentShader::Begin(glm::mat4 const& MVP, glm::mat4 const& P, glm::mat4 const& V, glm::mat4 const& M, glm::vec3 const& light, std::vector<PointLightStructure> const& pointLights)
 {
     // Pre-condition
-    glUseProgram      (m_shaderID);
+    glUseProgram      ((uint)m_shaderID);
     glUniformMatrix4fv(m_matrixID, 1, GL_FALSE, &MVP[0][0]);
+
+    glDisable      (GL_CULL_FACE);
+    glDisable      (GL_MULTISAMPLE);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture  (GL_TEXTURE_2D, (uint)m_texture);
+    glUniform1i    (m_textureID, 0);
 }
 
 /// \brief Restore the pipeline state
 void UnlitTransparentShader::End()
 {
+    glEnable  (GL_CULL_FACE);
+}
 
+/// \brief Sets the texture
+void UnlitTransparentShader::SetTexture(int texture)
+{
+    m_texture = texture;
 }
 
 } // !namespace

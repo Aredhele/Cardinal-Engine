@@ -43,6 +43,8 @@
 #include "Runtime/Rendering/PostProcessing/PostEffects/Vignette.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/FXAA.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/ShadowMap.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/DepthOfField.hpp"
+#include "Runtime/Rendering/PostProcessing/PostEffects/Fog.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/Experimental/Experimental1.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/Experimental/Experimental2.hpp"
 
