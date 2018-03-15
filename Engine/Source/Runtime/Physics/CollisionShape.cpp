@@ -39,12 +39,10 @@ btCollisionShape* CollisionShape::GetShape(void) const
 }
 
 /// \bief Destrucotr
-CollisionShape::~CollisionShape(void)
+CollisionShape::~CollisionShape()
 {
     delete m_pShape;
 }
-
-
 
 /// \Brief Box Shape to represent a box collider
 BoxShape::BoxShape(glm::vec3 halfExtents, float mass) :
@@ -78,7 +76,7 @@ VertexShape::VertexShape(float mass) :
    m_triangleMesh   = new btTriangleMesh();
 }
 
-void VertexShape::SetTriangles(std::vector<glm::vec3>& const verteces )
+void VertexShape::SetTriangles(std::vector<glm::vec3> const& verteces)
 {
     ASSERT_NOT_NULL(m_triangleMesh);
 
@@ -101,10 +99,8 @@ void VertexShape::SetTriangles(std::vector<glm::vec3>& const verteces )
     m_pShape = new btBvhTriangleMeshShape(m_triangleMesh, true, true);
 }
 
-VertexShape::~VertexShape(void)
+VertexShape::~VertexShape()
 {
-    CollisionShape::~CollisionShape();
-
     delete m_triangleMesh;
 }
 

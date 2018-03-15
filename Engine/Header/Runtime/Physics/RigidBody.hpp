@@ -55,16 +55,16 @@ public:
     void SetMass(float mass);
 
     /// \brief Set body gravity
-    void SetGravity(glm::vec3& const gravity);
+    void SetGravity(glm::vec3 const& gravity);
 
     /// \brief Set body restitution
     void SetRestitution(float coef);
 
     /// \brief Set velocity
-    void SetLinearVelocity(glm::vec3& const velocity);
+    void SetLinearVelocity(glm::vec3 const& velocity);
 
     /// \brief Returns current velocity
-    glm::vec3& const GetLinearVelocity(void);
+    glm::vec3 GetLinearVelocity(void);
 
     /// \brief Build physics body 
     void BuildPhysics(bool hasInertia = true);

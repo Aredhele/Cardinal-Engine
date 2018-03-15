@@ -66,7 +66,7 @@ void RigidBody::SetMass(float mass)
 }
 
 /// \brief Set body gravity
-void RigidBody::SetGravity(glm::vec3& const gravity)
+void RigidBody::SetGravity(glm::vec3 const& gravity)
 {
     ASSERT_NOT_NULL(m_pBody);
     m_pBody->setGravity( btVector3(gravity.x, gravity.y, gravity.z) );
@@ -80,7 +80,7 @@ void RigidBody::SetRestitution(float coef)
 }
 
 /// \brief Set velocity
-void RigidBody::SetLinearVelocity(glm::vec3& const velocity)
+void RigidBody::SetLinearVelocity(glm::vec3 const& velocity)
 {
     ASSERT_NOT_NULL(m_pBody);
 
@@ -88,7 +88,7 @@ void RigidBody::SetLinearVelocity(glm::vec3& const velocity)
 }
 
 /// \brief Set velocity
-glm::vec3& const RigidBody::GetLinearVelocity(void)
+glm::vec3 RigidBody::GetLinearVelocity(void)
 {
     ASSERT_NOT_NULL(m_pBody);
 

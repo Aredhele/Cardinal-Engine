@@ -55,7 +55,7 @@ class CollisionShape
         btCollisionShape*   GetShape(void) const;
 
         /// \brief Destructor
-        virtual ~CollisionShape(void);
+        virtual ~CollisionShape();
 
     protected:
         btCollisionShape*   m_pShape            = nullptr;
@@ -108,10 +108,10 @@ public:
     VertexShape(float mass);
     
     /// \biref Set triangle of collision shapes
-    void SetTriangles(std::vector<glm::vec3>& const);
+    void SetTriangles(std::vector<glm::vec3> const&);
     
     /// \brief Destructors
-    ~VertexShape(void);
+    ~VertexShape() override;
 
 protected:
     btTriangleMesh         * m_triangleMesh;
