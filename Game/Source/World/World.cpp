@@ -167,7 +167,7 @@ void World::Batch()
 
     m_body->SetShape(shape);
     m_body->BuildPhysics(false);
-
+    m_body->SetRestitution(0);
     cardinal::PhysicsEngine::AddRigidbody(m_body);
 }
 

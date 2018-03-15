@@ -65,6 +65,20 @@ void RigidBody::SetMass(float mass)
     m_pBody->setMassProps(mass, btVector3(inertia.x, inertia.y, inertia.z) );
 }
 
+/// \brief Set body gravity
+void RigidBody::SetGravity(glm::vec3& const gravity)
+{
+    ASSERT_NOT_NULL(m_pBody);
+    m_pBody->setGravity( btVector3(gravity.x, gravity.y, gravity.z) );
+}
+
+/// \brief Set body restitution
+void RigidBody::SetRestitution(float coef)
+{
+    ASSERT_NOT_NULL(m_pBody);
+    m_pBody->setRestitution(coef);
+}
+
 /// \brief Set velocity
 void RigidBody::SetLinearVelocity(glm::vec3& const velocity)
 {
@@ -109,6 +123,13 @@ glm::vec3 RigidBody::GetPosition(void) const
 
     btVector3 pos = m_pBody->getWorldTransform().getOrigin();
     return glm::vec3(pos.x(), pos.y(), pos.z());
+}
+
+/// \brief Set sleeping threshold
+void RigidBody::SetSleepingThreshold(float linear, float angular)
+{
+    ASSERT_NOT_NULL(m_pBody);
+    m_pBody->setSleepingThresholds(btScalar(linear), btScalar(angular));
 }
 
 /// \brief Destructor

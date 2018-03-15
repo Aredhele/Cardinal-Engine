@@ -46,11 +46,15 @@ Character::Character()
     // Physics
     m_pBody = cardinal::PhysicsEngine::AllocateRigidbody();
 
-    m_pBody->SetShape       ( new cardinal::BoxShape(glm::vec3(2, 2, 2), 45));
+    m_pBody->SetShape       ( new cardinal::CapsuleShape(1,2, 45));
     m_pBody->BuildPhysics   ();
 
     m_pBody->SetPosition    ( glm::vec3(0, 0, 0));
     m_pBody->SetRotation    ( glm::vec4(0, 0, 0, 1));
+
+    m_pBody->SetSleepingThreshold(0, 0);
+    m_pBody->SetGravity(glm::vec3(0, 0, 800 * 9.81));
+    m_pBody->SetRestitution ( 0 );
     
     cardinal::PhysicsEngine::AddRigidbody(m_pBody);
 }
@@ -63,10 +67,15 @@ void Character::Update(cardinal::Window * pWindow, float dt)
     // Camera debug controls
     glm::vec3 velocity(0, 0, m_pBody->GetLinearVelocity().z);
 
-    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_W) == GLFW_PRESS) velocity += ( m_pCamera->GetDirection() * dt * m_speed * m_speedMultiplier);
-    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_S) == GLFW_PRESS) velocity += (-m_pCamera->GetDirection() * dt * m_speed * m_speedMultiplier);
+    glm::vec3 camForward = m_pCamera->GetDirection(); 
+    camForward.z = 0;
+    glm::normalize(camForward);
+
+    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_W) == GLFW_PRESS) velocity += ( camForward * dt * m_speed * m_speedMultiplier);
+    if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_S) == GLFW_PRESS) velocity += (-camForward * dt * m_speed * m_speedMultiplier);
     if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_D) == GLFW_PRESS) velocity += ( m_pCamera->GetRight() * dt * m_speed * m_speedMultiplier);
     if (glfwGetKey(pWindow->GetContext(), GLFW_KEY_A) == GLFW_PRESS) velocity += (-m_pCamera->GetRight() * dt * m_speed * m_speedMultiplier);
+    if ( abs(velocity.z) < 1e-1 && glfwGetKey(pWindow->GetContext(), GLFW_KEY_SPACE) == GLFW_PRESS) velocity.z += m_jumpImpulse;
     m_pBody->SetLinearVelocity(velocity);
     cardinal::Logger::LogInfo("Velocity = %f,%f,%f", velocity.x, velocity.y, velocity.z);
 
@@ -76,7 +85,7 @@ void Character::Update(cardinal::Window * pWindow, float dt)
 /// \brief Returns the position of the avatar
 glm::vec3 Character::GetPosition() const
 {
-   return m_pBody->GetPosition();
+   return m_pBody->GetPosition() + glm::vec3(0,0,2);
 }
 
 /// \brief Sets the position of the avatar

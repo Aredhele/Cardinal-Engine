@@ -123,6 +123,10 @@ void GrassRenderer::Batch(ByteCube pCubes[WorldSettings::s_chunkSize][WorldSetti
         }
     }
 
+    // [Ervan] Ca crash quand ca vaut zero, impossible de comprendre pourquoi y'en a pas là je break salement
+    if (triangleIndex == 0)
+        return;
+
     // Resize triangles
     WorldBuffers::s_grassBuffer.resize(triangleIndex);
 

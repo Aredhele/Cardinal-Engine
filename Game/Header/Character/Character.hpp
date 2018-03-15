@@ -72,8 +72,9 @@ private:
     // Controls
     glm::tvec3<double>      m_lastMouse;
 
-    float                   m_speed           = 50.0f;
-    float                   m_speedMultiplier = 2.0f;
+    float                   m_speed             = 500.0f;
+    float                   m_speedMultiplier   = 2.0f;
+    float                   m_jumpImpulse       = 10;
 
     // Physics
     cardinal::RigidBody   * m_pBody;

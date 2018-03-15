@@ -97,11 +97,10 @@ void PCG_Plugin::OnPlayStart()
     // Camera and Character
     m_cameraManager.SetCamera(cardinal::RenderingEngine::GetMainCamera());
     m_cameraManager.SetCharacter(&m_character);
-    m_character.SetPosition(glm::vec3(100,100,1000));
+    m_character.SetPosition(glm::vec3(100,100,2200));
     m_character.AttachCamera(m_cameraManager.GetCamera());
 
     // Particle system
-<<<<<<< HEAD
     /// cardinal::ParticleSystem * pSystem = cardinal::RenderingEngine::AllocateParticleSystem();
     /// pSystem->Initialize(200000, 5000, 3.0f, 0.5f, 30.0f, glm::vec3(0.0f, 0.0f, -13.0f), glm::vec3(1.0f), new cardinal::Cone(4.0f, 2.0f));
     /// pSystem->SetPosition(glm::vec3(-10.0f, -1.0f, 0.0f));
@@ -111,17 +110,6 @@ void PCG_Plugin::OnPlayStart()
     /// pLight->SetRange(20);
     /// pLight->SetIntensity(1.0f);
     /// pLight->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-=======
-    cardinal::ParticleSystem * pSystem = cardinal::RenderingEngine::AllocateParticleSystem();
-    pSystem->Initialize(200000, 5000, 10.0f, 0.5f, 30.0f, glm::vec3(0.0f, 0.0f, -20.0f), glm::vec3(1.0f), new cardinal::Plane(512.0f, 512.0f));
-    pSystem->SetPosition(glm::vec3(0.0f, 0.0f, 600.0f));
-
-    /*cardinal::PointLight * pLight = cardinal::LightManager::AllocatePointLight();
-    pLight->SetPosition(glm::vec3(100.0f, 20.0f, 300.0f));
-    pLight->SetRange(20);
-    pLight->SetIntensity(1.0f);
-    pLight->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));*/
->>>>>>> a4b6032ccc598e62d36651e15fe58c425646fc47
 }
 
 /// \brief Called when the game stops

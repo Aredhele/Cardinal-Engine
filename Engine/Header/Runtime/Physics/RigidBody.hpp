@@ -54,6 +54,12 @@ public:
     /// \brief Set body mass
     void SetMass(float mass);
 
+    /// \brief Set body gravity
+    void SetGravity(glm::vec3& const gravity);
+
+    /// \brief Set body restitution
+    void SetRestitution(float coef);
+
     /// \brief Set velocity
     void SetLinearVelocity(glm::vec3& const velocity);
 
@@ -68,6 +74,9 @@ public:
 
     /// \brief Get body position
     glm::vec3 GetPosition(void) const;
+
+    /// \brief Set sleeping threshold
+    void SetSleepingThreshold(float linear, float angular);
 
     /// \brief Destructor
     virtual ~RigidBody(void);

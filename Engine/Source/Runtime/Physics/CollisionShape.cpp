@@ -63,6 +63,15 @@ SphereShape::SphereShape(float radius, float mass) :
 }
 
 /// \brief Vertex Shape to represent any collider
+CapsuleShape::CapsuleShape(float radius, float height, float mass) :
+    CollisionShape(mass),
+    m_radius(radius),
+    m_height(height)
+{
+    m_pShape = new btCapsuleShape(radius, height);
+}
+
+/// \brief Vertex Shape to represent any collider
 VertexShape::VertexShape(float mass) :
     CollisionShape(mass)
 {

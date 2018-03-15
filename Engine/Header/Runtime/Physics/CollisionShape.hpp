@@ -86,6 +86,19 @@ protected:
     float m_radius;
 };
 
+/// \brief Shpere Shape to represent a shpere collider
+class CapsuleShape : public CollisionShape
+{
+public:
+    /// \brief Constructor
+    CapsuleShape(float radius, float height, float mass);
+
+protected:
+    float m_radius;
+    float m_height;
+};
+
+
 
 /// \brief Vertex Shape to represent any collider
 class VertexShape : public CollisionShape
