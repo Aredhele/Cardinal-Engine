@@ -73,6 +73,7 @@ void VR_Plugin::OnPlayStart()
 
     m_cameraManager.SetCamera(cardinal::RenderingEngine::GetMainCamera());
     m_cameraManager.SetCharacter(&m_character);
+    m_character.AttachCamera(cardinal::RenderingEngine::GetMainCamera());
 
     m_building.Initialize();
     m_building.Generate();

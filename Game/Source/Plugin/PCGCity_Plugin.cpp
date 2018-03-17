@@ -66,6 +66,7 @@ void PCGCity_Plugin::OnPlayStart()
     cardinal::DebugManager::EnableGizmo(cardinal::DebugManager::EGizmo::Grid);
     cardinal::DebugManager::EnableGizmo(cardinal::DebugManager::EGizmo::Axis);
 
+    m_character.AttachCamera(cardinal::RenderingEngine::GetMainCamera());
     m_cameraManager.SetCamera(cardinal::RenderingEngine::GetMainCamera());
     m_cameraManager.SetCharacter(&m_character);
 

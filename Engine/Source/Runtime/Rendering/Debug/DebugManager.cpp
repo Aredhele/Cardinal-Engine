@@ -154,6 +154,28 @@ DebugManager::~DebugManager() // NOLINT
 {
     ASSERT_NOT_NULL(s_pInstance);
 
+#ifdef CARDINAL_DEBUG
+    static bool debugWindow =  true;
+    if (debugWindow)
+    {
+        ImGui::Begin        ("Gizmos", &debugWindow);
+        ImGui::SetWindowPos ("Gizmos", ImVec2(1120.0f, 10.0f));
+        ImGui::SetWindowSize("Gizmos", ImVec2(170.0f,  250.0f));
+
+        ImGui::TextColored(ImVec4(1,1,0,1), "Built-in components\n\n");
+        ImGui::Checkbox("Box",               &s_pInstance->m_activeGizmos[EGizmo::Box]);
+        ImGui::Checkbox("Ray",               &s_pInstance->m_activeGizmos[EGizmo::Ray]);
+        ImGui::Checkbox("Line",              &s_pInstance->m_activeGizmos[EGizmo::Line]);
+        ImGui::Checkbox("Axis",              &s_pInstance->m_activeGizmos[EGizmo::Axis]);
+        ImGui::Checkbox("Grid",              &s_pInstance->m_activeGizmos[EGizmo::Grid]);
+        ImGui::Checkbox("Cone",              &s_pInstance->m_activeGizmos[EGizmo::Cone]);
+        ImGui::Checkbox("Point Light",       &s_pInstance->m_activeGizmos[EGizmo::PointLight]);
+        ImGui::Checkbox("Directional Light", &s_pInstance->m_activeGizmos[EGizmo::DirectionalLight]);
+
+        ImGui::End();
+    }
+#endif
+
     if(DebugManager::IsGizmoEnabled(EGizmo::Axis))
     {
         AddLine(glm::vec3(-2.0f, -2.0f, 0.0f), glm::vec3(1000.0f, -2.0f,    0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -200,28 +222,6 @@ DebugManager::~DebugManager() // NOLINT
     {
         s_pInstance->m_grid.Draw(PV);
     }
-
-#ifdef CARDINAL_DEBUG
-    static bool debugWindow =  true;
-    if (debugWindow)
-    {
-        ImGui::Begin        ("Gizmos", &debugWindow);
-        ImGui::SetWindowPos ("Gizmos", ImVec2(1120.0f, 10.0f));
-        ImGui::SetWindowSize("Gizmos", ImVec2(170.0f,  250.0f));
-
-        ImGui::TextColored(ImVec4(1,1,0,1), "Built-in components\n\n");
-        ImGui::Checkbox("Box",               &s_pInstance->m_activeGizmos[EGizmo::Box]);
-        ImGui::Checkbox("Ray",               &s_pInstance->m_activeGizmos[EGizmo::Ray]);
-        ImGui::Checkbox("Line",              &s_pInstance->m_activeGizmos[EGizmo::Line]);
-        ImGui::Checkbox("Axis",              &s_pInstance->m_activeGizmos[EGizmo::Axis]);
-        ImGui::Checkbox("Grid",              &s_pInstance->m_activeGizmos[EGizmo::Grid]);
-        ImGui::Checkbox("Cone",              &s_pInstance->m_activeGizmos[EGizmo::Cone]);
-        ImGui::Checkbox("Point Light",       &s_pInstance->m_activeGizmos[EGizmo::PointLight]);
-        ImGui::Checkbox("Directional Light", &s_pInstance->m_activeGizmos[EGizmo::DirectionalLight]);
-
-        ImGui::End();
-    }
-#endif
 }
 
 /// \brief Enables a gizmo

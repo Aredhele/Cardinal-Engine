@@ -25,6 +25,7 @@
 #define CARDINAL_ENGINE_PLUGIN_MANAGER_HPP__
 
 #include <vector>
+#include <cstdlib>
 #include "Runtime/Core/Plugin/Plugin.hpp"
 
 /// \namespace cardinal

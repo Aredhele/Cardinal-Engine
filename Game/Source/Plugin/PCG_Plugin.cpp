@@ -87,9 +87,9 @@ void PCG_Plugin::OnPlayStart()
     pCamera->LookAt      (glm::vec3(257.0f, 194.0f, 193.0f));
 
     // VR
-    // cardinal::RenderingEngine::InitializeStereoscopicRendering();
-    // m_pHMD = cardinal::RenderingEngine::GetHMD();
-    // ASSERT_NOT_NULL(m_pHMD);
+    cardinal::RenderingEngine::InitializeStereoscopicRendering();
+    m_pHMD = cardinal::RenderingEngine::GetHMD();
+    ASSERT_NOT_NULL(m_pHMD);
 
     // Setting up the game
     m_pWorld = m_worldGenerator.generateWorld();
@@ -101,9 +101,9 @@ void PCG_Plugin::OnPlayStart()
     m_character.AttachCamera(m_cameraManager.GetCamera());
 
     // Particle system
-    /// cardinal::ParticleSystem * pSystem = cardinal::RenderingEngine::AllocateParticleSystem();
-    /// pSystem->Initialize(200000, 5000, 3.0f, 0.5f, 30.0f, glm::vec3(0.0f, 0.0f, -13.0f), glm::vec3(1.0f), new cardinal::Cone(4.0f, 2.0f));
-    /// pSystem->SetPosition(glm::vec3(-10.0f, -1.0f, 0.0f));
+    cardinal::ParticleSystem * pSystem = cardinal::RenderingEngine::AllocateParticleSystem();
+    pSystem->Initialize(200000, 5000, 10.0f, 0.5f, 0.0f, glm::vec3(0.0f, 0.0f, -13.0f), glm::vec3(1.0f), new cardinal::Plane(512.0f, 512.0f));
+    pSystem->SetPosition(glm::vec3(0, 0, 600.0f));
 
     /// cardinal::PointLight * pLight = cardinal::LightManager::AllocatePointLight();
     /// pLight->SetPosition(glm::vec3(100.0f, 20.0f, 300.0f));
@@ -132,6 +132,8 @@ void PCG_Plugin::OnPostUpdate(float dt)
     m_cameraManager.Update(cardinal::RenderingEngine::GetWindow(), dt);
 
     cardinal::Camera * pCamera = cardinal::RenderingEngine::GetMainCamera();
+
+
 }
 
 /// \brief Called when it's time to render the GUI

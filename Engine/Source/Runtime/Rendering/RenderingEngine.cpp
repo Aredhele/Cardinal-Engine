@@ -599,7 +599,7 @@ void RenderingEngine::RenderFrame(float step)
     DirectionalLight * pLight                = LightManager::GetDirectionalLight();
     std::vector<PointLight *> const& pLights = LightManager::GetPointLights();
 
-    /*// Shadow mapping
+    // Shadow mapping
     if(pLight != nullptr)
     {
         glm::mat4 depthProjectionMatrix  = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, 0.1f, 5000.0f);
@@ -643,7 +643,7 @@ void RenderingEngine::RenderFrame(float step)
 
         // Shader end
         glUseProgram(0);
-    }*/
+    }
 
     // Post-processing begin
     if(m_bIsPostProcessingEnabled)
