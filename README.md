@@ -18,6 +18,10 @@ Visual Studio 2017 (CMake support), CLion (tested) and more. The engine is curre
 compiling on Windows and has a theoretical compatibility with Linux and Mac if the right
 flags are passed to CMake because the project contains only sources.
 
+You can find <a href="https://www.youtube.com/watch?v=wQ5CTL_yWNIs">here</a> the teaser
+of the project and <a href="https://www.youtube.com/watch?v=B6xjwc-0cTM">here</a> a video of all
+engine features.
+
 #### Summary
 
  <ul>
