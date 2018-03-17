@@ -87,9 +87,9 @@ void PCG_Plugin::OnPlayStart()
     pCamera->LookAt      (glm::vec3(257.0f, 194.0f, 193.0f));
 
     // VR
-    cardinal::RenderingEngine::InitializeStereoscopicRendering();
-    m_pHMD = cardinal::RenderingEngine::GetHMD();
-    ASSERT_NOT_NULL(m_pHMD);
+    // cardinal::RenderingEngine::InitializeStereoscopicRendering();
+    // m_pHMD = cardinal::RenderingEngine::GetHMD();
+    // ASSERT_NOT_NULL(m_pHMD);
 
     // Setting up the game
     m_pWorld = m_worldGenerator.generateWorld();
