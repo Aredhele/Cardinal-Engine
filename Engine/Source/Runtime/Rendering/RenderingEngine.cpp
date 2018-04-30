@@ -97,6 +97,8 @@ bool RenderingEngine::Initialize(int width, int height, const char *szTitle,
     TextureLoader::LoadTexture("BlockAlpha",        "Resources/Textures/BlockAtlas_2048.dds");
     TextureLoader::LoadTexture("BlockAlphaNearest", "Resources/Textures/BlockAtlas_2048.dds", true);
 
+    TextureLoader::LoadTexture("WhiteNoise", "Resources/Textures/white-noise.jpg");
+
     /*
     // Custom mip mapping
     std::vector<std::string> blockMipMapping;

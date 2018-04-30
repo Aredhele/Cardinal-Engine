@@ -40,6 +40,14 @@ public:
 
 private:
 
+    float timer = 0;
+
+    int m_whiteNoiseTextureID;
+    int m_timeID;
+    int m_intensityID;
+
+    float m_intensity;
+
     friend class PostProcessingStack;
 
     /// \brief Constructor

@@ -61,6 +61,8 @@ source_group("VRCommon" FILES
 	${VRCOMMON_FILES}
 )
 
+SET(BUILD_FRAMEWORK 1)
+
 # Build the library.
 if(BUILD_SHARED)
 	add_library(${LIBNAME} SHARED ${SOURCE_FILES})

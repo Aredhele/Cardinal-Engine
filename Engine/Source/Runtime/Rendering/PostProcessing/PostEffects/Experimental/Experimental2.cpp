@@ -21,6 +21,8 @@
 /// \package    Runtime/Rendering/PostProcessing/PostEffects
 /// \author     Vincent STEHLY--CALISTO
 
+#include <Header/Runtime/Rendering/Texture/TextureLoader.hpp>
+#include <Header/Runtime/Rendering/Texture/TextureManager.hpp>
 #include "Glew/include/GL/glew.h"
 #include "Runtime/Rendering/Shader/ShaderManager.hpp"
 #include "Runtime/Rendering/PostProcessing/PostEffects/Experimental/Experimental2.hpp"
@@ -37,6 +39,9 @@ Experimental2::Experimental2() : PostEffect(PostEffect::EType::Experimental2, "E
 
     // Getting uniforms
     m_colorTextureID = glGetUniformLocation(m_shaderID, "colorTexture");
+    m_whiteNoiseTextureID = glGetUniformLocation(m_shaderID, "whiteNoiseTexture");
+    m_timeID = glGetUniformLocation(m_shaderID, "time");
+    m_intensityID = glGetUniformLocation(m_shaderID, "intensity");
 }
 
 /// \brief Destructor
@@ -52,17 +57,31 @@ Experimental2::~Experimental2() // NOLINT
 void Experimental2::ApplyEffect(uint colorTexture, uint depthTexture, uint lightScatteringTexture,
                                 uint shadowMapTexture)
 {
+    timer +=0.01f;
     glUseProgram   (m_shaderID);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture  (GL_TEXTURE_2D, colorTexture);
     glUniform1i    (m_colorTextureID, 0);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture   (GL_TEXTURE_2D, TextureManager::GetTextureID("WhiteNoise"));
+    glUniform1i    (m_whiteNoiseTextureID, 1);
+    glUniform1f    (m_timeID, timer);
+    glUniform1f    (m_intensityID, m_intensity);
 }
 
 /// \brief Called to draw the GUI
 void Experimental2::OnGUI()
 {
     ImGui::Checkbox("Enabled###Enabled_Experimental2", &m_bIsActive);
+
+    ImGui::Text("\nIntensity");
+    if(ImGui::SliderFloat("###Slider_Experimental2Intensity", &m_intensity, 0.0, 1.0))
+    {
+        glUseProgram(m_shaderID);
+        glUniform1f (m_intensityID, m_intensity);
+        glUseProgram(0);
+    }
 }
 
 } // !namespace
