@@ -391,7 +391,7 @@ gizmos for built-in components :
 * Point Light
 * Directional Light
 
-To enable or disable a gizmo, just call on small function :
+To enable or disable a gizmo, just call a small function :
 
 ```cpp
 #include "Runtime/Rendering/Debug/Debug.hpp"
@@ -428,7 +428,6 @@ gizmos window.
 <div id="Gallery"></div>
 
 ## Gallery
-
 
 <p align="center">
   <img src="http://image.noelshack.com/fichiers/2018/11/4/1521115772-cardinal-engine-90.jpg" width="768" height="432" />
